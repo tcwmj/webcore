@@ -162,9 +162,20 @@ public class Driver {
 					capability.setPlatform(Platform.WINDOWS);
 				}
 			}
-			capability
-					.setBrowserName(browser.equalsIgnoreCase("ie") ? BrowserType.IE
-							: browser);
+			// set browser type
+			if (browser.equalsIgnoreCase("ie")) {
+				capability.setBrowserName(BrowserType.IE);
+				capability
+						.setCapability(
+								InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
+								true);
+				capability.setCapability(
+						CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
+						UnexpectedAlertBehaviour.IGNORE);
+			} else {
+				capability.setBrowserName(browser);
+			}
+			// set browser version
 			if (browser_version != null)
 				capability.setVersion(browser_version);
 			try {
