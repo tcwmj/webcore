@@ -165,6 +165,8 @@ public class Driver {
 			capability
 					.setBrowserName(browser.equalsIgnoreCase("ie") ? BrowserType.IE
 							: browser);
+			if (browser_version != null)
+				capability.setVersion(browser_version);
 			try {
 				url = new URL(Property.REMOTE_ADDRESS);
 			} catch (MalformedURLException e) {
