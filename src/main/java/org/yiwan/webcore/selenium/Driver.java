@@ -388,7 +388,7 @@ public class Driver {
 	public void forcedClick(By locator) {
 		try {
 			click(locator);
-		} catch (StaleElementReferenceException | TimeoutException e) {
+		} catch (WebDriverException e) {
 			silentClick(locator);
 		}
 	}
