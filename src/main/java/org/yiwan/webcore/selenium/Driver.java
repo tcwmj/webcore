@@ -489,8 +489,20 @@ public class Driver {
 	 * @param value
 	 */
 	public void type(By locator, CharSequence... value) {
-		logger.info("type value " + value.toString() + " on element "
-				+ locator.toString());
+		logger.info("type value " + value + " on element " + locator.toString());
+		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
+				.sendKeys(value);
+		waitDocumentReady();
+	}
+
+	/**
+	 * Type value into the web edit box if it's visible
+	 * 
+	 * @param locator
+	 * @param value
+	 */
+	public void type(By locator, String value) {
+		logger.info("type value " + value + " on element " + locator.toString());
 		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
 				.sendKeys(value);
 		waitDocumentReady();
@@ -737,7 +749,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void moveTo(By locator) {
-		logger.info("move mouse to " + locator.toString());
+		logger.info("move mouse to element " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		Actions action = new Actions(driver);
