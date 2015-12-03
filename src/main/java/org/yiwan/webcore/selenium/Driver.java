@@ -86,16 +86,20 @@ public class Driver {
 		this.resolution = resolution;
 
 		if (Property.REMOTE) {
+			logger.info("choose remote test mode");
 			driver = setupRemoteBrowser();
 			this.downloaddir = getRemoteDownloadDir();
 		} else {
+			logger.info("choose local test mode");
 			driver = setupLocalBrowser();
 			this.downloaddir = getLocalDownloadDir();
 		}
 		// driver.manage().timeouts()
 		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
-		if (Property.MAXIMIZE_BROSWER)
+		if (Property.MAXIMIZE_BROSWER) {
+			logger.info("maximizing browser");
 			driver.manage().window().maximize();
+		}
 		wait = new WebDriverWait(driver, Property.TIMEOUT_INTERVAL,
 				Property.POLLING_INTERVAL)
 				.ignoring(StaleElementReferenceException.class)
@@ -108,15 +112,25 @@ public class Driver {
 		URL url = null;
 		// setup browserstack remote testing
 		if (Property.BROWSERSTACK) {
-			if (os != null)
+			logger.info("choose browserstack cloud test platform for remote strategy");
+			if (os != null) {
 				capability.setCapability("os", os);
-			if (os_version != null)
+				logger.info("choose test platform " + os);
+			}
+			if (os_version != null) {
 				capability.setCapability("os_version", os_version);
+				logger.info("choose test platform version " + os_version);
+			}
 			capability.setCapability("browser", browser);
-			if (browser_version != null)
+			logger.info("choose test browser " + browser);
+			if (browser_version != null) {
 				capability.setCapability("browser_version", browser_version);
-			if (resolution != null)
+				logger.info("choose test browser version " + browser_version);
+			}
+			if (resolution != null) {
 				capability.setCapability("resolution", resolution);
+				logger.info("choose test platform resolution " + resolution);
+			}
 			capability.setCapability("project", Property.PROJECT);
 			capability.setCapability("build", Property.BUILD);
 			capability.setCapability("browserstack.local",
@@ -131,7 +145,9 @@ public class Driver {
 				logger.error("url " + Property.BROWSERSTACK_URL
 						+ " is malformed");
 			}
-		} else {// setup local remote testing
+		} else {
+			// setup local remote testing
+			logger.info("choose customized cloud test platform for remote strategy");
 			if (os != null) {
 				switch (os.toLowerCase()) {
 				case "mac":
@@ -161,6 +177,7 @@ public class Driver {
 				default:
 					capability.setPlatform(Platform.WINDOWS);
 				}
+				logger.info("choose test platform " + os);
 			}
 			// set browser type
 			if (browser.equalsIgnoreCase("ie")) {
@@ -175,9 +192,12 @@ public class Driver {
 			} else {
 				capability.setBrowserName(browser);
 			}
+			logger.info("choose test browser " + browser);
 			// set browser version
-			if (browser_version != null)
+			if (browser_version != null) {
 				capability.setVersion(browser_version);
+				logger.info("choose test browser version " + browser_version);
+			}
 			try {
 				url = new URL(Property.REMOTE_ADDRESS);
 			} catch (MalformedURLException e) {
@@ -319,7 +339,7 @@ public class Driver {
 	 * @param url
 	 */
 	public void navigateTo(String url) {
-		logger.debug("Try to navigate to url " + url);
+		logger.info("Try to navigate to url " + url);
 		driver.navigate().to(url);
 		waitDocumentReady();
 	}
@@ -329,6 +349,7 @@ public class Driver {
 	 * 
 	 */
 	public void navigateForward() {
+		logger.info("Try to navigate forward");
 		driver.navigate().forward();
 		waitDocumentReady();
 	}
@@ -338,6 +359,7 @@ public class Driver {
 	 * 
 	 */
 	public void navigateBack() {
+		logger.info("Try to navigate back");
 		driver.navigate().back();
 		waitDocumentReady();
 	}
@@ -346,6 +368,7 @@ public class Driver {
 	 * quit driver
 	 */
 	public void quit() {
+		logger.info("Try to quit driver");
 		if (driver instanceof WebDriver)
 			try {
 				driver.quit();
@@ -361,7 +384,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void click(By locator) {
-		logger.debug("Try to click " + locator.toString());
+		logger.info("Try to click " + locator.toString());
 		wait.until(
 				ExpectedConditions.elementToBeClickable(findElement(locator)))
 				.click();
@@ -375,6 +398,7 @@ public class Driver {
 	 * @param locator
 	 */
 	private void silentClick(By locator) {
+		logger.info("Try to silent click " + locator.toString());
 		driver.findElement(locator).click();
 		waitDocumentReady();
 	}
@@ -449,7 +473,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void doubleClick(By locator) {
-		logger.debug("Try to double click " + locator.toString());
+		logger.info("Try to double click " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.elementToBeClickable(findElement(locator)));
 		Actions action = new Actions(driver);
@@ -464,7 +488,7 @@ public class Driver {
 	 * @param value
 	 */
 	public void type(By locator, CharSequence... value) {
-		logger.debug("Try to type value " + value + " on " + locator.toString());
+		logger.info("Try to type value " + value + " on " + locator.toString());
 		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
 				.sendKeys(value);
 		waitDocumentReady();
@@ -476,7 +500,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void clear(By locator) {
-		logger.debug("Try to clear value on " + locator.toString());
+		logger.info("Try to clear value on " + locator.toString());
 		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
 				.clear();
 		waitDocumentReady();
@@ -513,6 +537,7 @@ public class Driver {
 	 *            true indicate tick on, false indicate tick off
 	 */
 	public void tick(By locator, Boolean value) {
+		logger.info("Try to tick " + value + " on " + locator.toString());
 		String checked = getAttribute(locator, "checked");
 		if (checked == null || !checked.toLowerCase().equals("true")) {
 			if (value)
@@ -531,6 +556,8 @@ public class Driver {
 	 *            true indicate tick on, false indicate tick off
 	 */
 	public void alteredTick(By locator, Boolean value) {
+		logger.info("Try to altered tick " + value + " on "
+				+ locator.toString());
 		if (value)
 			setAttribute(locator, "checked", "checked");
 		else
@@ -548,7 +575,7 @@ public class Driver {
 	 *            The visible text to match against
 	 */
 	public void selectByVisibleText(final By locator, final String text) {
-		logger.debug("Try to select text " + text + " on " + locator.toString());
+		logger.info("Try to select text " + text + " on " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		new Select(element).selectByVisibleText(text);
@@ -565,7 +592,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void deselectAll(final By locator) {
-		logger.debug("Try to deselect all options on " + locator.toString());
+		logger.info("Try to deselect all options on " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		new Select(element).deselectAll();
@@ -583,7 +610,7 @@ public class Driver {
 	 *            The visible text to match against
 	 */
 	public void selectByVisibleText(final By locator, final List<String> texts) {
-		logger.debug("Try to select text " + texts.toString() + " on "
+		logger.info("Try to select text " + texts.toString() + " on "
 				+ locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
@@ -603,7 +630,7 @@ public class Driver {
 	 *            The option at this index will be selected
 	 */
 	public void selectByIndex(final By locator, final int index) {
-		logger.debug("Try to select index " + index + " on "
+		logger.info("Try to select index " + index + " on "
 				+ locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
@@ -622,7 +649,7 @@ public class Driver {
 	 *            The value to match against
 	 */
 	public void selectByValue(final By locator, final String value) {
-		logger.debug("Try to select value " + value + " on "
+		logger.info("Try to select value " + value + " on "
 				+ locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
@@ -635,6 +662,8 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextSelected(By locator, String text) {
+		logger.info("wait text " + text + " to be selected on "
+				+ locator.toString());
 		wait.until(ExpectedConditions.textToBePresentInElement(
 				findElement(locator), text));
 	}
@@ -646,6 +675,8 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextTyped(By locator, String text) {
+		logger.info("wait text " + text + " to be typed on "
+				+ locator.toString());
 		wait.until(ExpectedConditions.textToBePresentInElementValue(
 				findElement(locator), text));
 	}
@@ -704,7 +735,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void moveTo(By locator) {
-		logger.debug("Try to move mouse to " + locator.toString());
+		logger.info("Try to move mouse to " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		Actions action = new Actions(driver);
@@ -747,18 +778,9 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			// driver.manage().timeouts()
-			// .implicitlyWait(seconds, TimeUnit.SECONDS);
 			ret = findElement(locator).isEnabled();
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
-			e.printStackTrace();
 		}
-		// finally {
-		// driver.manage()
-		// .timeouts()
-		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
-		// }
-		// return isEnabled(locator, Property.POLLING_INTERVAL);
 		return ret;
 
 	}
@@ -771,17 +793,9 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			// driver.manage().timeouts()
-			// .implicitlyWait(seconds, TimeUnit.SECONDS);
 			ret = driver.findElement(locator).isDisplayed();
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
 		}
-		// finally {
-		// driver.manage()
-		// .timeouts()
-		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
-		// }
-		// return isDisplayed(locator, Property.TIMEOUT_INTERVAL);
 		return ret;
 	}
 
@@ -793,18 +807,9 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			// driver.manage().timeouts()
-			// .implicitlyWait(seconds, TimeUnit.SECONDS);
 			ret = driver.findElement(locator).isSelected();
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
-			e.printStackTrace();
 		}
-		// finally {
-		// driver.manage()
-		// .timeouts()
-		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
-		// }
-		// return isSelected(locator, Property.TIMEOUT_INTERVAL);
 		return ret;
 
 	}
@@ -905,9 +910,12 @@ public class Driver {
 	 * wait the specified locator to be visible
 	 * 
 	 * @param locator
+	 * @return
 	 */
-	public void waitVisible(By locator) {
-		wait.until(ExpectedConditions.visibilityOf(findElement(locator)));
+	public WebElement waitVisible(By locator) {
+		logger.info("wait element " + locator.toString() + " to be visible");
+		return wait
+				.until(ExpectedConditions.visibilityOf(findElement(locator)));
 	}
 
 	/**
@@ -916,6 +924,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void waitInvisible(By locator) {
+		logger.info("wait element " + locator.toString() + " to be invisible");
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
 	}
 
@@ -927,6 +936,8 @@ public class Driver {
 	 *            in seconds
 	 */
 	public void waitVisible(By locator, int timeout) {
+		logger.info("wait element " + locator.toString() + " to be visible in "
+				+ timeout + " seconds");
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
 			if (isPresent(locator)) {
@@ -946,6 +957,8 @@ public class Driver {
 	 *            in seconds
 	 */
 	public void waitInvisible(By locator, int timeout) {
+		logger.info("wait element " + locator.toString()
+				+ " to be invisible in " + timeout + " seconds");
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
 			if (!isPresent(locator)) {
@@ -974,7 +987,7 @@ public class Driver {
 		File image = new File(Property.SCREENSHOT_DIR + File.separator
 				+ fileName == null ? "" : fileName + ".png");
 		tsDriver.getScreenshotAs(OutputType.FILE).renameTo(image);
-		logger.debug("take screenshot to " + image.getPath());
+		logger.info("take screenshot to " + image.getPath());
 	}
 
 	/**
@@ -1007,10 +1020,10 @@ public class Driver {
 					"../../../" + filePath, "<img src=\"../../../" + filePath
 							+ "\" width=\"400\" height=\"300\"/>"));
 		} catch (Exception e) {
-			logger.error(testresult.getTestClass().getName() + "."
-					+ testresult.getName() + " saveScreentshot failed "
-					+ e.getMessage());
-			e.printStackTrace();
+			logger.error(
+					testresult.getTestClass().getName() + "."
+							+ testresult.getName() + " saveScreentshot failed "
+							+ e.getMessage(), e);
 		}
 	}
 
@@ -1029,6 +1042,7 @@ public class Driver {
 	 * @param title
 	 */
 	public void waitTitle(String title) {
+		logger.info("wait page title to be " + title);
 		wait.until(ExpectedConditions.titleIs(title));
 	}
 
@@ -1058,7 +1072,7 @@ public class Driver {
 	 * @param key
 	 */
 	public void typeKeyEvent(int key) {
-		logger.debug("Try to type key event " + key);
+		logger.info("Try to type key event " + key);
 		Robot robot;
 		try {
 			robot = new Robot();
@@ -1076,11 +1090,11 @@ public class Driver {
 	 *            Milliseconds
 	 */
 	public void forceWait(int millis) {
+		logger.info("force wait in " + millis + " seconds");
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 
@@ -1103,6 +1117,7 @@ public class Driver {
 	 * @param text
 	 */
 	public void setText(By locator, String text) {
+		logger.info("set text " + text + " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
 		try {
 			javascript.executeScript(
@@ -1162,6 +1177,8 @@ public class Driver {
 	 *            String, such as "mouseover"
 	 */
 	public void triggerEvent(By locator, String event) {
+		logger.info("trigger event " + event + " on element "
+				+ locator.toString());
 		JavascriptLibrary javascript = new JavascriptLibrary();
 		try {
 			javascript.callEmbeddedSelenium(driver, "triggerEvent",
@@ -1182,6 +1199,7 @@ public class Driver {
 	 *            String, such as "onchange"
 	 */
 	public void fireEvent(By locator, String event) {
+		logger.info("fire event " + event + " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
 		try {
 			javascript.executeScript("arguments[0].fireEvent(\"" + event
@@ -1203,16 +1221,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void scrollIntoView(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
-		try {
-			javascript.executeScript("arguments[0].scrollIntoView(true);",
-					findElement(locator));
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			// e2.printStackTrace();
-		}
-		waitDocumentReady();
+		scrollIntoView(locator, true);
 	}
 
 	/**
@@ -1227,14 +1236,14 @@ public class Driver {
 	 *            visible at the bottom of the window.
 	 */
 	public void scrollIntoView(By locator, Boolean bAlignToTop) {
+		logger.info("scroll into view of element " + locator.toString()
+				+ ", and align to top is " + bAlignToTop);
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
 		try {
 			javascript.executeScript("arguments[0].scrollIntoView("
 					+ bAlignToTop.toString() + ");", findElement(locator));
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			// e2.printStackTrace();
+		} catch (WebDriverException e) {
+			logger.error(e);
 		}
 		waitDocumentReady();
 	}
@@ -1245,6 +1254,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void scrollTo(By locator) {
+		logger.info("scroll to element " + locator.toString());
 		WebElement element = findElement(locator);
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
 		try {
@@ -1252,7 +1262,7 @@ public class Driver {
 					+ element.getLocation().x + "," + element.getLocation().y
 					+ ")");
 		} catch (WebDriverException e) {
-			logger.error(e.getMessage(), e);
+			logger.error(e);
 		}
 		waitDocumentReady();
 	}
@@ -1262,6 +1272,7 @@ public class Driver {
 	 *            frame locator
 	 */
 	public void switchToFrame(By locator) {
+		logger.info("switch to frame " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		driver.switchTo().frame(element);
@@ -1271,6 +1282,7 @@ public class Driver {
 	 * Switch to default content from a frame
 	 */
 	public void switchToDefault() {
+		logger.info("switch to default content");
 		driver.switchTo().defaultContent();
 	}
 
@@ -1282,14 +1294,14 @@ public class Driver {
 	 * @param value
 	 */
 	public void setAttribute(By locator, String attribute, String value) {
+		logger.info("set attribute " + attribute + " to " + value
+				+ " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
 		try {
 			javascript.executeScript("arguments[0].setAttribute('" + attribute
 					+ "', arguments[1])", findElement(locator), value);
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			// e.printStackTrace();
+		} catch (WebDriverException e) {
+			logger.error(e);
 		}
 	}
 
@@ -1300,14 +1312,14 @@ public class Driver {
 	 * @param attribute
 	 */
 	public void removeAttribute(By locator, String attribute) {
+		logger.info("remove attribute " + attribute + " on element "
+				+ locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
 		try {
 			javascript.executeScript("arguments[0].removeAttribute('"
 					+ attribute + "')", findElement(locator));
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			// e.printStackTrace();
+		} catch (WebDriverException e) {
+			logger.error(e);
 		}
 	}
 
@@ -1327,10 +1339,10 @@ public class Driver {
 							"return document.readyState").equals("complete");
 				}
 			});
-		} catch (WebDriverException e) {
-			logger.warn(
-					"excpetion occurred while trying to wait document to be ready\n"
-							+ e.getMessage(), e);
+		} catch (TimeoutException e1) {
+			logger.warn(e1.getMessage());
+		} catch (WebDriverException e2) {
+			logger.warn("excpetion occurred while trying to wait document to be ready");
 		}
 		// generatePageSource();
 	}
@@ -1376,6 +1388,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void waitClickable(By locator) {
+		logger.info("wait element " + locator.toString() + " to be clickable");
 		wait.until(ExpectedConditions
 				.elementToBeClickable(findElement(locator)));
 	}
@@ -1510,6 +1523,7 @@ public class Driver {
 	 * dismiss the alert window
 	 */
 	public void dismissAlert() {
+		logger.info("dismiss alert " + getAlertText());
 		findAlert().dismiss();
 	}
 
@@ -1517,6 +1531,7 @@ public class Driver {
 	 * accept the alert window
 	 */
 	public void acceptAlert() {
+		logger.info("accept alert " + getAlertText());
 		findAlert().accept();
 	}
 
