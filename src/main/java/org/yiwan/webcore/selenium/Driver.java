@@ -213,6 +213,7 @@ public class Driver {
 	 * @return
 	 */
 	private WebDriver setupLocalBrowser() {
+		logger.info("choose test browser " + browser);
 		switch (browser.toLowerCase()) {
 		case "chrome":
 			return setupChome();
@@ -339,7 +340,7 @@ public class Driver {
 	 * @param url
 	 */
 	public void navigateTo(String url) {
-		logger.info("Try to navigate to url " + url);
+		logger.info("navigate to url " + url);
 		driver.navigate().to(url);
 		waitDocumentReady();
 	}
@@ -349,7 +350,7 @@ public class Driver {
 	 * 
 	 */
 	public void navigateForward() {
-		logger.info("Try to navigate forward");
+		logger.info("navigate forward");
 		driver.navigate().forward();
 		waitDocumentReady();
 	}
@@ -359,7 +360,7 @@ public class Driver {
 	 * 
 	 */
 	public void navigateBack() {
-		logger.info("Try to navigate back");
+		logger.info("navigate back");
 		driver.navigate().back();
 		waitDocumentReady();
 	}
@@ -368,7 +369,7 @@ public class Driver {
 	 * quit driver
 	 */
 	public void quit() {
-		logger.info("Try to quit driver");
+		logger.info("quit driver");
 		if (driver instanceof WebDriver)
 			try {
 				driver.quit();
@@ -384,7 +385,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void click(By locator) {
-		logger.info("Try to click " + locator.toString());
+		logger.info("click on element " + locator.toString());
 		wait.until(
 				ExpectedConditions.elementToBeClickable(findElement(locator)))
 				.click();
@@ -398,7 +399,7 @@ public class Driver {
 	 * @param locator
 	 */
 	private void silentClick(By locator) {
-		logger.info("Try to silent click " + locator.toString());
+		logger.info("silent click on element " + locator.toString());
 		driver.findElement(locator).click();
 		waitDocumentReady();
 	}
@@ -473,7 +474,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void doubleClick(By locator) {
-		logger.info("Try to double click " + locator.toString());
+		logger.info("double click on element " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.elementToBeClickable(findElement(locator)));
 		Actions action = new Actions(driver);
@@ -488,7 +489,8 @@ public class Driver {
 	 * @param value
 	 */
 	public void type(By locator, CharSequence... value) {
-		logger.info("Try to type value " + value + " on " + locator.toString());
+		logger.info("type value " + value.toString() + " on element "
+				+ locator.toString());
 		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
 				.sendKeys(value);
 		waitDocumentReady();
@@ -500,7 +502,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void clear(By locator) {
-		logger.info("Try to clear value on " + locator.toString());
+		logger.info("clear value on element " + locator.toString());
 		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
 				.clear();
 		waitDocumentReady();
@@ -537,7 +539,7 @@ public class Driver {
 	 *            true indicate tick on, false indicate tick off
 	 */
 	public void tick(By locator, Boolean value) {
-		logger.info("Try to tick " + value + " on " + locator.toString());
+		logger.info("tick " + value + " on element " + locator.toString());
 		String checked = getAttribute(locator, "checked");
 		if (checked == null || !checked.toLowerCase().equals("true")) {
 			if (value)
@@ -556,7 +558,7 @@ public class Driver {
 	 *            true indicate tick on, false indicate tick off
 	 */
 	public void alteredTick(By locator, Boolean value) {
-		logger.info("Try to altered tick " + value + " on "
+		logger.info("altered tick " + value + " on element "
 				+ locator.toString());
 		if (value)
 			setAttribute(locator, "checked", "checked");
@@ -575,7 +577,7 @@ public class Driver {
 	 *            The visible text to match against
 	 */
 	public void selectByVisibleText(final By locator, final String text) {
-		logger.info("Try to select text " + text + " on " + locator.toString());
+		logger.info("select text " + text + " on element " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		new Select(element).selectByVisibleText(text);
@@ -592,7 +594,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void deselectAll(final By locator) {
-		logger.info("Try to deselect all options on " + locator.toString());
+		logger.info("deselect all options on element " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		new Select(element).deselectAll();
@@ -610,7 +612,7 @@ public class Driver {
 	 *            The visible text to match against
 	 */
 	public void selectByVisibleText(final By locator, final List<String> texts) {
-		logger.info("Try to select text " + texts.toString() + " on "
+		logger.info("select text " + texts.toString() + " on element "
 				+ locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
@@ -630,7 +632,7 @@ public class Driver {
 	 *            The option at this index will be selected
 	 */
 	public void selectByIndex(final By locator, final int index) {
-		logger.info("Try to select index " + index + " on "
+		logger.info("select index " + index + " on element "
 				+ locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
@@ -649,7 +651,7 @@ public class Driver {
 	 *            The value to match against
 	 */
 	public void selectByValue(final By locator, final String value) {
-		logger.info("Try to select value " + value + " on "
+		logger.info("select value " + value + " on element "
 				+ locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
@@ -662,7 +664,7 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextSelected(By locator, String text) {
-		logger.info("wait text " + text + " to be selected on "
+		logger.info("wait text " + text + " to be selected on element "
 				+ locator.toString());
 		wait.until(ExpectedConditions.textToBePresentInElement(
 				findElement(locator), text));
@@ -675,7 +677,7 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextTyped(By locator, String text) {
-		logger.info("wait text " + text + " to be typed on "
+		logger.info("wait text " + text + " to be typed on element "
 				+ locator.toString());
 		wait.until(ExpectedConditions.textToBePresentInElementValue(
 				findElement(locator), text));
@@ -735,7 +737,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void moveTo(By locator) {
-		logger.info("Try to move mouse to " + locator.toString());
+		logger.info("move mouse to " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
 		Actions action = new Actions(driver);
@@ -1072,14 +1074,13 @@ public class Driver {
 	 * @param key
 	 */
 	public void typeKeyEvent(int key) {
-		logger.info("Try to type key event " + key);
+		logger.info("type key event " + key);
 		Robot robot;
 		try {
 			robot = new Robot();
 			robot.keyPress(key);
 		} catch (AWTException e) {
-			logger.error("typeKeyEvent error " + e.getMessage());
-			e.printStackTrace();
+			logger.error("exception occurred while typing key event", e);
 		}
 	}
 
