@@ -366,16 +366,40 @@ public class Driver {
 	}
 
 	/**
+	 * close current browser tab
+	 */
+	public void close() {
+		logger.info("close browser tab with title " + driver.getTitle());
+		try {
+			driver.close();
+		} catch (WebDriverException e) {
+			logger.warn(e);
+		}
+	}
+
+	/**
+	 * close all browser tabs
+	 */
+	public void closeAll() {
+		logger.info("close all browser tabs");
+		if (driver instanceof WebDriver) {
+			for (String handle : driver.getWindowHandles()) {
+				switchToWindow(handle);
+				close();
+			}
+		}
+	}
+
+	/**
 	 * quit driver
 	 */
 	public void quit() {
 		logger.info("quit driver");
-		if (driver instanceof WebDriver)
-			try {
-				driver.quit();
-			} catch (UnreachableBrowserException e) {
-				e.printStackTrace();
-			}
+		try {
+			driver.quit();
+		} catch (WebDriverException e) {
+			logger.warn(e);
+		}
 	}
 
 	/**
@@ -1281,14 +1305,22 @@ public class Driver {
 	}
 
 	/**
+	 * switch to a window with a specified name or handle
+	 * 
+	 * @param nameOrHandle
+	 */
+	public void switchToWindow(String nameOrHandle) {
+		logger.info("switch to window with handle " + nameOrHandle);
+		driver.switchTo().window(nameOrHandle);
+	}
+
+	/**
 	 * @param locator
 	 *            frame locator
 	 */
 	public void switchToFrame(By locator) {
 		logger.info("switch to frame " + locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		driver.switchTo().frame(element);
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator));
 	}
 
 	/**
@@ -1340,6 +1372,7 @@ public class Driver {
 	 * wait until page is loaded completely
 	 */
 	private void waitDocumentReady() {
+		logger.debug("wait document to be ready");
 		final long t = System.currentTimeMillis();
 		try {
 			wait.until(new ExpectedCondition<Boolean>() {

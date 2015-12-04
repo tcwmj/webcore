@@ -88,15 +88,20 @@ public class TestCaseTemplate {
 		driver = new Driver(this, os, os_version, browser, browser_version,
 				resolution);
 
+		report(Helper.getTestReportStyle("../../../target/logs/"
+				+ getTestCaseId() + ".log", "open test execution log"));
+
 		if (new File("data/" + getTestCaseId() + ".xml").exists())
 			report(Helper.getTestReportStyle("../../../data/" + getTestCaseId()
 					+ ".xml", "open source test data"));
 		report(Helper.getTestReportStyle("../../../target/data/"
 				+ getTestCaseId() + ".xml", "open target test data"));
 
-		if (url == null) {
+		// test url load strategy
+		if (url == null) {// if the parameter url is null
+			// acquiring it from system property
 			String serverUrl = System.getProperty("server.url");
-			if (serverUrl == null) {
+			if (serverUrl == null) {// if system doesn't set the url property
 				report(Helper.getTestReportStyle(Property.BASE_URL,
 						"open test server url by property config"));
 				driver.navigateTo(Property.BASE_URL);
@@ -127,6 +132,7 @@ public class TestCaseTemplate {
 	@AfterClass
 	protected void tearDown() {
 		logger.info("teardown");
+		driver.closeAll();
 		driver.quit();
 	}
 
