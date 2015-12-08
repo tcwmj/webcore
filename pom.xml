@@ -16,48 +16,6 @@
 		<xmlFileName>suites/default.xml</xmlFileName>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>nexus</id>
-			<name>nexus</name>
-			<url>http://sha-lri-pc-175:8081/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>nexus</id>
-			<name>nexus</name>
-			<url>http://sha-lri-pc-175:8081/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Project Releases</name>
-			<url>http://sha-lri-pc-175:8081/nexus/content/repositories/thirdparty/</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Project Snapshots</name>
-			<url>http://sha-lri-pc-175:8081/nexus/content/repositories/snapshots/</url>
-			<uniqueVersion>true</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
