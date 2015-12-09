@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
+import net.lightbody.bmp.client.ClientUtil;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
@@ -21,6 +23,7 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
@@ -68,11 +71,13 @@ public class Driver {
 	public String browser;
 	public String browser_version;
 	public String resolution;
-	public String downloaddir;
 
 	private TestCaseTemplate testcase;
 	private WebDriver driver;
 	private Wait<WebDriver> wait;
+
+	private final static Proxy SELENIUM_PROXY = ClientUtil
+			.createSeleniumProxy(TestCaseTemplate.getProxy());
 
 	public Driver(TestCaseTemplate testcase, String os, String os_version,
 			String browser, String browser_version, String resolution) {
@@ -88,12 +93,11 @@ public class Driver {
 		if (Property.REMOTE) {
 			logger.info("choose remote test mode");
 			driver = setupRemoteBrowser();
-			this.downloaddir = getRemoteDownloadDir();
 		} else {
 			logger.info("choose local test mode");
 			driver = setupLocalBrowser();
-			this.downloaddir = getLocalDownloadDir();
 		}
+
 		// driver.manage().timeouts()
 		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
 		if (Property.MAXIMIZE_BROSWER) {
@@ -204,6 +208,8 @@ public class Driver {
 				logger.error("url " + Property.REMOTE_ADDRESS + " is malformed");
 			}
 		}
+
+		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		RemoteWebDriver rwd = new RemoteWebDriver(url, capability);
 		rwd.setFileDetector(new LocalFileDetector());
 		return rwd;
@@ -230,7 +236,9 @@ public class Driver {
 	private WebDriver setupChome() {
 		System.setProperty("webdriver.chrome.driver",
 				Property.WEB_DRIVER_CHROME);
-		return new ChromeDriver();
+		DesiredCapabilities capability = new DesiredCapabilities();
+		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
+		return new ChromeDriver(capability);
 	}
 
 	/**
@@ -253,17 +261,17 @@ public class Driver {
 			System.setProperty("webdriver.ie.driver",
 					Property.WEB_DRIVER_IE_X86);
 
-		DesiredCapabilities capabilities = DesiredCapabilities
-				.internetExplorer();
-		capabilities
+		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
+		capability
 				.setCapability(
 						InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
 						true);
 		// ignore the unexpected alert behavior, so as to handle the business
 		// alert in the test script
-		capabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
+		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
 				UnexpectedAlertBehaviour.IGNORE);
-		return new InternetExplorerDriver(capabilities);
+		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
+		return new InternetExplorerDriver(capability);
 	}
 
 	/**
@@ -287,11 +295,11 @@ public class Driver {
 		firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
 				"application/zip,application/vnd.ms-excel");
 
-		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-		capabilities.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
+		DesiredCapabilities capability = DesiredCapabilities.firefox();
+		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
 				UnexpectedAlertBehaviour.IGNORE);
-
-		return new FirefoxDriver(firefoxBinary, firefoxProfile, capabilities);
+		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
+		return new FirefoxDriver(firefoxBinary, firefoxProfile, capability);
 	}
 
 	/**
@@ -301,37 +309,6 @@ public class Driver {
 		Properties props = System.getProperties();
 		String arch = props.getProperty("os.arch");
 		return arch.contains("64");
-	}
-
-	/**
-	 * @return
-	 */
-	private String getRemoteDownloadDir() {
-		if (os == Property.OSX)
-			return Property.DOWNLOAD_OSX_DIR;
-		else {
-			if (os_version == Property.WINDOWS_XP)
-				return Property.DOWNLOAD_WINXP_DIR;
-			else
-				return Property.DOWNLOAD_WINNT_DIR;
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	private String getLocalDownloadDir() {
-		Properties props = System.getProperties();
-		String osname = props.getProperty("os.name").toUpperCase();
-		String username = props.getProperty("user.name");
-		if (osname.compareTo(Property.WINDOWS) >= 0)
-			if (osname.compareTo(Property.WINDOWS_XP) >= 0)
-				return "C:/Documents and Settings/" + username
-						+ "/My Documents/Downloads";
-			else
-				return "C:/Users/" + username + "/Downloads";
-		else
-			return "/Users/" + username + "/Downloads";
 	}
 
 	/**
@@ -1597,6 +1574,15 @@ public class Driver {
 	 */
 	public void assertAlertText(String text) {
 		Assert.assertEquals(getAlertText(), text);
+	}
+
+	/**
+	 * get page source of current page
+	 * 
+	 * @return page source string
+	 */
+	public String getPageSource() {
+		return driver.getPageSource();
 	}
 
 }

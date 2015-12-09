@@ -1,13 +1,27 @@
 package org.yiwan.webcore.test;
 
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.filters.ResponseFilter;
+import net.lightbody.bmp.util.HttpMessageContents;
+import net.lightbody.bmp.util.HttpMessageInfo;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.yiwan.webcore.selenium.Driver;
@@ -23,6 +37,24 @@ public class TestCaseTemplate {
 	protected Logger logger = Helper.getTestCaseLogger(this.getClass());
 	protected Driver driver;
 	protected String currentUrl = "";
+
+	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
+	private String downloadFileName;
+
+	public static BrowserMobProxy getProxy() {
+		return proxy;
+	}
+
+	/**
+	 * get just download file name with relative path
+	 * 
+	 * @return download file name
+	 */
+	public String getDownloadFileName() {
+		String tempFileName = downloadFileName;
+		downloadFileName = null;
+		return tempFileName;
+	}
 
 	public String getCurrentUrl() {
 		return currentUrl;
@@ -145,4 +177,120 @@ public class TestCaseTemplate {
 		return this.getClass().getSimpleName();
 	}
 
+	@BeforeSuite
+	protected void beforeSuite() {
+		proxy.start(0);
+
+		// set response filter rule for downloading files
+		proxy.addResponseFilter(new ResponseFilter() {
+			@Override
+			public void filterResponse(HttpResponse response,
+					HttpMessageContents contents, HttpMessageInfo messageInfo) {
+				String fileName = "target/data/" + getTestCaseId() + "_"
+						+ Helper.randomize();
+				if (contents.getContentType() != null
+						&& contents.getContentType().contains("text/csv")) {
+					if (contents.getTextContents() != null) {
+						downloadFileName = fileName + ".csv";
+						logger.info("saving csv file to " + downloadFileName);
+						File file = new File(downloadFileName);
+						try {
+							FileUtils.writeStringToFile(file,
+									contents.getTextContents());
+						} catch (UnsupportedCharsetException | IOException e) {
+							logger.error(e);
+						}
+						response.setStatus(HttpResponseStatus.NO_CONTENT);
+					}
+				} else if (contents.getContentType() != null
+						&& contents.getContentType().contains("text/xml")) {
+					if (contents.getTextContents() != null) {
+						downloadFileName = fileName + ".xml";
+						logger.info("saving xml file to " + downloadFileName);
+						File file = new File(downloadFileName);
+						try {
+							FileUtils.writeStringToFile(file,
+									contents.getTextContents());
+						} catch (UnsupportedCharsetException | IOException e) {
+							logger.error(e);
+						}
+						response.setStatus(HttpResponseStatus.NO_CONTENT);
+					}
+				} else if (contents.getContentType() != null
+						&& contents.getContentType().contains(
+								"application/vnd.ms-excel")) {
+					if (contents.getBinaryContents() != null) {
+						downloadFileName = fileName + ".xls";
+						logger.info("saving xls file to " + downloadFileName);
+						File file = new File(downloadFileName);
+						try {
+							FileUtils.writeByteArrayToFile(file,
+									contents.getBinaryContents());
+						} catch (IOException e) {
+							logger.error(e);
+						}
+						response.setStatus(HttpResponseStatus.NO_CONTENT);
+					}
+				} else if (contents.getContentType() != null
+						&& contents.getContentType()
+								.contains("application/pdf")) {
+					if (contents.getBinaryContents() != null) {
+						downloadFileName = fileName + ".pdf";
+						logger.info("saving pdf file to " + downloadFileName);
+						File file = new File(downloadFileName);
+						try {
+							FileUtils.writeByteArrayToFile(file,
+									contents.getBinaryContents());
+						} catch (IOException e) {
+							logger.error(e);
+						}
+						response.setStatus(HttpResponseStatus.NO_CONTENT);
+					}
+				} else if (contents.getContentType() != null
+						&& contents.getContentType()
+								.contains("application/zip")) {
+					if (contents.getBinaryContents() != null) {
+						downloadFileName = fileName + ".zip";
+						logger.info("saving zip file to " + downloadFileName);
+						File file = new File(downloadFileName);
+						try {
+							FileUtils.writeByteArrayToFile(file,
+									contents.getBinaryContents());
+						} catch (IOException e) {
+							logger.error(e);
+						}
+						response.setStatus(HttpResponseStatus.NO_CONTENT);
+					}
+				} else if (contents.getContentType() != null
+						&& contents.getContentType().contains(
+								"application/octet-stream")
+						&& response.headers().get("Content-Disposition") != null
+						&& response.headers().get("Content-Disposition")
+								.contains("attachment;fileName=")) {
+					if (contents.getBinaryContents() != null) {
+						downloadFileName = fileName
+								+ "."
+								+ response.headers().get("Content-Disposition")
+										.replace("attachment;fileName=", "")
+										.replace("\"", "").replace("'", "")
+										.split("\\.")[1];
+						logger.info("saving file to " + downloadFileName);
+						File file = new File(downloadFileName);
+						try {
+							FileUtils.writeByteArrayToFile(file,
+									contents.getBinaryContents());
+						} catch (IOException e) {
+							logger.error(e);
+						}
+						response.setStatus(HttpResponseStatus.NO_CONTENT);
+					}
+				}
+			}
+		});
+	}
+
+	@AfterSuite
+	protected void afterSuite() {
+		proxy.stop();
+	}
 }
