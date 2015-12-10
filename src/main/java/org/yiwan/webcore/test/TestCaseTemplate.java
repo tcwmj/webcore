@@ -282,9 +282,9 @@ public class TestCaseTemplate {
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
+				} else { // if there is no file to download
+					downloadFileName = null;
 				}
-				// set downloadFileName to null if there is no file to download
-				downloadFileName = null;
 			}
 		});
 	}
