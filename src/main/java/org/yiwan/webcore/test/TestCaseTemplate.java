@@ -95,7 +95,7 @@ public class TestCaseTemplate {
 	 * @param testCaseId
 	 * @param isSource
 	 *            true indicates source file, false indicates target file
-	 * @return
+	 * @return target test data file
 	 */
 	protected File getTestData(String testCaseId, Boolean isSource) {
 		if (testCaseId == null)
@@ -169,7 +169,7 @@ public class TestCaseTemplate {
 	/**
 	 * get test case id of current instance
 	 * 
-	 * @return
+	 * @return test case id string
 	 */
 	public String getTestCaseId() {
 		return this.getClass().getSimpleName();
