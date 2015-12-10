@@ -1585,4 +1585,8 @@ public class Driver {
 		return driver.getPageSource();
 	}
 
+	public TestCaseTemplate getTestcase() {
+		return testcase;
+	}
+
 }
