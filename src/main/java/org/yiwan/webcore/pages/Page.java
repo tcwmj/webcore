@@ -58,7 +58,7 @@ public class Page implements IPage {
 	 * assert selected value in the web list element
 	 * 
 	 * @param by
-	 * @param value
+	 * @param text
 	 */
 	public void assertSelectedValue(By by, String text) {
 		driver.assertSelectedValue(by, text);
@@ -91,7 +91,7 @@ public class Page implements IPage {
 	/**
 	 * get text from alert window
 	 * 
-	 * @return
+	 * @return text string on the alert
 	 */
 	public String getAlertText() {
 		return driver.getAlertText();
@@ -109,7 +109,7 @@ public class Page implements IPage {
 	/**
 	 * get current system time
 	 * 
-	 * @return
+	 * @return a current date string with format yyyy-MM-dd
 	 */
 	public String showDate() {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

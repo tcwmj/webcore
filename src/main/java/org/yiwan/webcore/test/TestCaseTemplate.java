@@ -51,9 +51,7 @@ public class TestCaseTemplate {
 	 * @return download file name
 	 */
 	public String getDownloadFileName() {
-		String tempFileName = downloadFileName;
-		downloadFileName = null;
-		return tempFileName;
+		return downloadFileName;
 	}
 
 	public String getCurrentUrl() {
@@ -285,6 +283,8 @@ public class TestCaseTemplate {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				}
+				// set downloadFileName to null if there is no file to download
+				downloadFileName = null;
 			}
 		});
 	}
