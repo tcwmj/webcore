@@ -29,7 +29,7 @@ public class XLSRuntimeReporter {
 	 * get status description from the testng test status id
 	 * 
 	 * @param status
-	 * @return
+	 * @return test case status string
 	 */
 	private String getStatus(int status) {
 		switch (status) {
@@ -119,7 +119,7 @@ public class XLSRuntimeReporter {
 	 * 
 	 * @param workbook
 	 * @param testResult
-	 * @return
+	 * @return row number
 	 */
 	private Integer updateTestSheet(Workbook workbook, ITestResult testResult) {
 		String testCase = testResult.getInstance().getClass().getSimpleName()
@@ -156,15 +156,15 @@ public class XLSRuntimeReporter {
 	 * 
 	 * @param workbook
 	 * @param testResult
-	 * @return
+	 * @return row number
 	 */
 	private Integer updateStepSheet(Workbook workbook, ITestResult testResult) {
 		String testStep = testResult.getMethod().getMethodName();
 		Sheet sheet = workbook.getSheet(STEP_SHEET);
-		int rowCount = sheet.getPhysicalNumberOfRows();
+		int rowNum = sheet.getPhysicalNumberOfRows();
 		// step status is not equal to started
 		if (testResult.getStatus() != 16) {
-			Row row = sheet.createRow(rowCount);
+			Row row = sheet.createRow(rowNum);
 			String testCase = testResult.getInstance().getClass()
 					.getSimpleName().replace("Test", "")
 					.replaceFirst("^0*", "");
@@ -181,7 +181,7 @@ public class XLSRuntimeReporter {
 						Utils.stackTrace(testResult.getThrowable(), false)[0]);
 			return row.getRowNum();
 		}
-		return rowCount;
+		return rowNum;
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class XLSRuntimeReporter {
 	 * if file exists then open it, if file doesn't exit then create it
 	 * 
 	 * @param filePath
-	 * @return
+	 * @return Workbook
 	 */
 	private Workbook openReport(String filePath) {
 		FileInputStream ins = null;

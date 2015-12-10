@@ -699,7 +699,7 @@ public class Driver {
 	/**
 	 * @param locator
 	 * @param text
-	 * @return
+	 * @return whether text is selectable or not
 	 */
 	public Boolean isTextSelectable(By locator, String text) {
 		WebElement element = wait.until(ExpectedConditions
@@ -759,8 +759,10 @@ public class Driver {
 	}
 
 	/**
+	 * whether locator is present or not
+	 * 
 	 * @param locator
-	 * @return
+	 * @return whether locator is present or not
 	 */
 	public boolean isPresent(By locator) {
 		waitDocumentReady();
@@ -774,7 +776,9 @@ public class Driver {
 	}
 
 	/**
-	 * @return
+	 * whether alert is present or not
+	 * 
+	 * @return boolean
 	 */
 	public boolean isAlertPresent() {
 		try {
@@ -786,8 +790,10 @@ public class Driver {
 	}
 
 	/**
+	 * whether locator is enabled or not
+	 * 
 	 * @param locator
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isEnabled(By locator) {
 		waitDocumentReady();
@@ -801,8 +807,10 @@ public class Driver {
 	}
 
 	/**
+	 * whether locator is displayed or not
+	 * 
 	 * @param locator
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isDisplayed(By locator) {
 		waitDocumentReady();
@@ -815,8 +823,10 @@ public class Driver {
 	}
 
 	/**
+	 * whether locator is selected or not
+	 * 
 	 * @param locator
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isSelected(By locator) {
 		waitDocumentReady();
@@ -873,6 +883,8 @@ public class Driver {
 	}
 
 	/**
+	 * assert text on locator
+	 * 
 	 * @param locator
 	 * @param text
 	 */
@@ -884,9 +896,11 @@ public class Driver {
 	}
 
 	/**
+	 * get value of specified attribute
+	 * 
 	 * @param locator
 	 * @param attribute
-	 * @return
+	 * @return attribute value
 	 */
 	public String getAttribute(By locator, String attribute) {
 		WebElement element = findElement(locator);
@@ -906,6 +920,8 @@ public class Driver {
 	}
 
 	/**
+	 * assert value of aria-disabled attribute
+	 * 
 	 * @param locator
 	 * @param value
 	 */
@@ -914,6 +930,8 @@ public class Driver {
 	}
 
 	/**
+	 * assert value of aria-selected attribute
+	 * 
 	 * @param locator
 	 * @param value
 	 */
@@ -925,7 +943,7 @@ public class Driver {
 	 * wait the specified locator to be visible
 	 * 
 	 * @param locator
-	 * @return
+	 * @return WebElement
 	 */
 	public WebElement waitVisible(By locator) {
 		logger.info("wait element " + locator.toString() + " to be visible");
@@ -1144,8 +1162,10 @@ public class Driver {
 	}
 
 	/**
+	 * get all selected options as a web element list
+	 * 
 	 * @param locator
-	 * @return
+	 * @return List&gt;WebElement&lt;
 	 */
 	public List<WebElement> getAllSelectedOptions(By locator) {
 		WebElement element = wait.until(ExpectedConditions
@@ -1481,6 +1501,7 @@ public class Driver {
 	 * using java script to get row count of web table
 	 * 
 	 * @param locator
+	 * @return long
 	 */
 	public long getRowCount(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) driver;
@@ -1500,7 +1521,7 @@ public class Driver {
 	 * is page source contains such text
 	 * 
 	 * @param text
-	 * @return
+	 * @return boolean
 	 */
 	public Boolean isContains(String text) {
 		return driver.getPageSource().contains(text);
@@ -1536,7 +1557,7 @@ public class Driver {
 	/**
 	 * find alert
 	 * 
-	 * @return
+	 * @return Alert
 	 */
 	private Alert findAlert() {
 		return wait.until(ExpectedConditions.alertIsPresent());// driver.switchTo().alert();
@@ -1561,7 +1582,7 @@ public class Driver {
 	/**
 	 * get text from alert window
 	 * 
-	 * @return
+	 * @return alert text string
 	 */
 	public String getAlertText() {
 		return findAlert().getText();
@@ -1585,6 +1606,11 @@ public class Driver {
 		return driver.getPageSource();
 	}
 
+	/**
+	 * get current test case instance
+	 * 
+	 * @return TestCaseTemplate
+	 */
 	public TestCaseTemplate getTestcase() {
 		return testcase;
 	}

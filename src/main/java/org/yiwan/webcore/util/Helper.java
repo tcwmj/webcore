@@ -35,6 +35,14 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Helper {
 
+	/**
+	 * convert a string date from a format to a format
+	 * 
+	 * @param date
+	 * @param fromFormat
+	 * @param toFormat
+	 * @return string
+	 */
 	public static String toDate(String date, String fromFormat, String toFormat) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(fromFormat);
 		try {
@@ -46,6 +54,13 @@ public class Helper {
 		return date;
 	}
 
+	/**
+	 * whether a data string is by a date format
+	 * 
+	 * @param date
+	 * @param format
+	 * @return boolean
+	 */
 	public static boolean isDate(String date, String format) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		try {
@@ -56,6 +71,12 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * whether a data string is by US date format
+	 * 
+	 * @param date
+	 * @return boolean
+	 */
 	public static boolean isDate(String date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
 				I18N.DATE_PATTERN_EN_US);
@@ -67,11 +88,18 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * assert file exists in a time range of Property.FILE_ACCESSABLE
+	 * 
+	 * @param filepath
+	 */
 	public static void assertFileExists(String filepath) {
 		assertFileExists(filepath, true, Property.FILE_ACCESSABLE);
 	}
 
 	/**
+	 * assert file exists or not exists in specified time range
+	 * 
 	 * @param filepath
 	 * @param exist
 	 * @param timeout
@@ -88,18 +116,28 @@ public class Helper {
 				+ " seconds");
 	}
 
+	/**
+	 * delete a file
+	 * 
+	 * @param filepath
+	 */
 	public static void deleteFile(String filepath) {
 		File file = new File(filepath);
 		file.delete();
 	}
 
+	/**
+	 * use current time in milliseconds to generate a string
+	 * 
+	 * @return random string
+	 */
 	public static String randomize() {
-		// SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		// return df.format(new Date());
 		return String.valueOf(System.currentTimeMillis());
 	}
 
 	/**
+	 * validate xml file by a specified xsd file
+	 * 
 	 * @param xmlfile
 	 * @param xsdfile
 	 * @throws SAXException
@@ -127,9 +165,11 @@ public class Helper {
 	}
 
 	/**
+	 * get a string by reporting style
+	 * 
 	 * @param source
 	 * @param text
-	 * @return
+	 * @return report string
 	 */
 	public static String getTestReportStyle(String source, String text) {
 		return "<a href = 'javascript:void(0)' onclick=\"window.open ('"
@@ -142,7 +182,7 @@ public class Helper {
 	 * read xml and xls feed mapping rule from a file
 	 * 
 	 * @param file
-	 * @return
+	 * @return Map
 	 */
 	public static Map<String, Map<String, String>> getFeedMapping(String file) {
 		FileInputStream isr = null;
@@ -194,7 +234,7 @@ public class Helper {
 	 * get test case logger so as to generate test case log one by one
 	 * 
 	 * @param claz
-	 * @return
+	 * @return Logger
 	 */
 	public static Logger getTestCaseLogger(Class<?> claz) {
 		Logger logger = Logger.getLogger(claz);

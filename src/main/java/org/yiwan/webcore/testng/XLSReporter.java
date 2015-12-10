@@ -71,7 +71,7 @@ public class XLSReporter extends CustomizedReporter {
 	 * 
 	 * @param workbook
 	 * @param report
-	 * @return
+	 * @return Sheet
 	 */
 	private Sheet createReport(Workbook workbook, File report) {
 		Sheet sheet = workbook.getSheet("Sheet1");
@@ -92,7 +92,7 @@ public class XLSReporter extends CustomizedReporter {
 	 * create a new report if it doesn't exist or load an existing report
 	 * 
 	 * @param file
-	 * @return
+	 * @return Workbook
 	 */
 	private Workbook openReport(File file) {
 		Workbook workbook = null;
@@ -186,6 +186,12 @@ public class XLSReporter extends CustomizedReporter {
 		}
 	}
 
+	/**
+	 * save test report
+	 * 
+	 * @param workbook
+	 * @param report
+	 */
 	private void saveReport(Workbook workbook, File report) {
 		FileOutputStream fos = null;
 		try {

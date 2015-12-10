@@ -121,8 +121,7 @@ public abstract class CustomizedReporter implements IReporter {
 	 * 
 	 * @param className
 	 * @param method
-	 * @return
-	 * @author Kenny Wang
+	 * @return authors string
 	 */
 	protected String getAuthors(String className, ITestNGMethod method) {
 		JavaClass cls = builder.getClassByName(className);
@@ -157,8 +156,7 @@ public abstract class CustomizedReporter implements IReporter {
 	 * Get comment string of Java class.
 	 * 
 	 * @param className
-	 * @return
-	 * @author Kenny Wang
+	 * @return class comment string
 	 */
 	protected String getClassComment(String className) {
 		JavaClass cls = builder.getClassByName(className);
@@ -169,8 +167,7 @@ public abstract class CustomizedReporter implements IReporter {
 	 * Get ITestResult id by class + method + parameters hash code.
 	 * 
 	 * @param result
-	 * @return
-	 * @author Kenny Wang
+	 * @return test case id
 	 */
 	protected int getId(ITestResult result) {
 		int id = result.getTestClass().getName().hashCode();
@@ -186,7 +183,6 @@ public abstract class CustomizedReporter implements IReporter {
 	 * 
 	 * @param context
 	 * @param suite
-	 * @author Kenny Wang
 	 */
 	protected void getAllTestIds(ITestContext context, ISuite suite) {
 		IResultMap passTests = context.getPassedTests();

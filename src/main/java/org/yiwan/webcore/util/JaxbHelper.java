@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -26,7 +27,7 @@ public class JaxbHelper {
 	 * xml default encoding is UTF-8
 	 * 
 	 * @param obj
-	 * @return
+	 * @return xml string
 	 */
 	public static String marshal(Object obj) {
 		return marshal(obj, "UTF-8");
@@ -37,7 +38,7 @@ public class JaxbHelper {
 	 * 
 	 * @param obj
 	 * @param encoding
-	 * @return
+	 * @return xml string
 	 */
 	public static String marshal(Object obj, String encoding) {
 		String result = null;
@@ -61,17 +62,15 @@ public class JaxbHelper {
 	 * @param xml
 	 * @param xsd
 	 * @param clazz
-	 * @return
+	 * @return object in generic type
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T unmarshal(String xml, String xsd, Class<T> clazz) {
 		T t = null;
 		ValidationEventCollector validation = new ValidationEventCollector();
 		try {
-			// SchemaFactory factory = SchemaFactory
-			// .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			SchemaFactory factory = SchemaFactory
-					.newInstance("http://www.w3.org/2001/XMLSchema");
+					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(new File(xsd));
 			JAXBContext context = JAXBContext.newInstance(clazz);
 			Unmarshaller unmarshaller = context.createUnmarshaller();

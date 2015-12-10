@@ -155,7 +155,6 @@ public class TestCaseTemplate {
 	public void report(String s) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		String now = df.format(new Date());
-		logger.info(s);
 		Reporter.log(now + " " + this.getClass().getName() + " " + s + "<br>");
 	}
 
