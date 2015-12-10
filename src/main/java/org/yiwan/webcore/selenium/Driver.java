@@ -216,7 +216,9 @@ public class Driver {
 	}
 
 	/**
-	 * @return
+	 * setup local browser
+	 * 
+	 * @return WebDriver
 	 */
 	private WebDriver setupLocalBrowser() {
 		logger.info("choose test browser " + browser);
@@ -231,7 +233,9 @@ public class Driver {
 	}
 
 	/**
-	 * @return
+	 * setup chrome browser
+	 * 
+	 * @return WebDriver
 	 */
 	private WebDriver setupChome() {
 		System.setProperty("webdriver.chrome.driver",
@@ -244,7 +248,7 @@ public class Driver {
 	/**
 	 * setup Internet explorer driver
 	 * 
-	 * @return
+	 * @return WebDriver
 	 */
 	private WebDriver setupInternetExplorer() {
 		if (Property.INTERNET_EXPLORER_PREFERRED.equals("x86"))
@@ -277,7 +281,7 @@ public class Driver {
 	/**
 	 * setup firefox driver
 	 * 
-	 * @return
+	 * @return WebDriver
 	 */
 	private WebDriver setupFirefox() {
 		// if (Property.FIREFOX_DIR != null
@@ -303,7 +307,9 @@ public class Driver {
 	}
 
 	/**
-	 * @return
+	 * whether the local environment is arc 64 or not
+	 * 
+	 * @return boolean
 	 */
 	private Boolean isOSX64() {
 		Properties props = System.getProperties();
@@ -433,7 +439,8 @@ public class Driver {
 	 * click the first element if it's displayed, otherwise click the 2nd
 	 * element
 	 * 
-	 * @param locator
+	 * @param locator1
+	 * @param locator2
 	 */
 	public void smartClick(By locator1, By locator2) {
 		if (isDisplayed(locator1))
@@ -447,7 +454,7 @@ public class Driver {
 	 * quit the method until the click action taking effective or elements used
 	 * out
 	 * 
-	 * @param locator
+	 * @param locators
 	 */
 	public void smartClick(List<By> locators) {
 		for (By locator : locators) {
@@ -1080,9 +1087,11 @@ public class Driver {
 	}
 
 	/**
+	 * get css attribute value
+	 * 
 	 * @param locator
 	 * @param attribute
-	 * @return
+	 * @return string
 	 */
 	public String getCSSAttribute(By locator, String attribute) {
 		WebElement element = findElement(locator);
@@ -1090,6 +1099,8 @@ public class Driver {
 	}
 
 	/**
+	 * assert css attribute value
+	 * 
 	 * @param locator
 	 * @param attribute
 	 * @param value
@@ -1184,8 +1195,10 @@ public class Driver {
 	}
 
 	/**
+	 * find element on the page
+	 * 
 	 * @param locator
-	 * @return
+	 * @return WebElement
 	 */
 	private WebElement findElement(By locator) {
 		waitDocumentReady();
@@ -1193,8 +1206,10 @@ public class Driver {
 	}
 
 	/**
+	 * find all elements on the page
+	 * 
 	 * @param locator
-	 * @return
+	 * @return List&gt;WebElement&lt;
 	 */
 	@SuppressWarnings("unused")
 	private List<WebElement> findElements(By locator) {
@@ -1531,7 +1546,7 @@ public class Driver {
 	 * assert page source contains such text
 	 * 
 	 * @param text
-	 * @param contains
+	 * @param displayed
 	 */
 	public void assertTextDisplayed(String text, Boolean displayed) {
 		assertTextDisplayed(text, displayed, Property.NAVIGATION_INTERVAL);
@@ -1541,9 +1556,8 @@ public class Driver {
 	 * assert page source contains such text
 	 * 
 	 * @param text
-	 * @param contains
+	 * @param displayed
 	 * @param timeout
-	 *            in seconds
 	 */
 	public void assertTextDisplayed(String text, Boolean displayed, long timeout) {
 		long t = System.currentTimeMillis();
