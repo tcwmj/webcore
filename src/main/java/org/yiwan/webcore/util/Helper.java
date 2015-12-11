@@ -34,6 +34,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  */
 public class Helper {
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(Helper.class);
 
 	/**
 	 * convert a string date from a format to a format

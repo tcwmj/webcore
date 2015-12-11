@@ -13,7 +13,8 @@ import org.apache.log4j.Logger;
  */
 public class Property {
 
-	private static Logger logger = Logger.getLogger(Property.class);
+	private final static Logger logger = Logger.getLogger(Property.class);
+
 	private static Properties props = null;
 
 	private static final String PROPERTY_FILE = "config/test.properties";

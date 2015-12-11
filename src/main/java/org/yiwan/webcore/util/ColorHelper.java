@@ -2,12 +2,16 @@ package org.yiwan.webcore.util;
 
 import java.awt.Color;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Kenny Wang
  * 
  */
 public class ColorHelper extends Color {
 
+	@SuppressWarnings("unused")
+	private static Logger logger = Logger.getLogger(ColorHelper.class);
 	/**
 	 * 
 	 */

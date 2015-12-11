@@ -1,14 +1,14 @@
 package org.yiwan.webcore.pages;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.yiwan.webcore.elements.IPage;
 import org.yiwan.webcore.selenium.Driver;
 
 public class Page implements IPage {
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(Page.class);
+
 	protected Driver driver;
 
 	public Page(Driver driver) {
@@ -104,17 +104,5 @@ public class Page implements IPage {
 	 */
 	public void assertAlertText(String text) {
 		driver.assertAlertText(text);
-	}
-
-	/**
-	 * get current system time
-	 * 
-	 * @return a current date string with format yyyy-MM-dd
-	 */
-	public String showDate() {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date now = new Date(System.currentTimeMillis());
-		return format.format(now);
-
 	}
 }

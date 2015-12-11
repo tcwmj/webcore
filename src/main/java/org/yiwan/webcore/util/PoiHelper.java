@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -26,6 +27,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
  */
 public class PoiHelper {
 
+	@SuppressWarnings("unused")
+	private static Logger logger = Logger.getLogger(PoiHelper.class);
+	
 	public static <T> HSSFWorkbook marshal(List<T> list) {
 
 		String sheetName = "Sheet1";
