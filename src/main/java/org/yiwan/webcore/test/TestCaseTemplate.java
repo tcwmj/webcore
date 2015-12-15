@@ -119,7 +119,8 @@ public class TestCaseTemplate {
 	protected void beforeClass(@Optional String os,
 			@Optional String os_version, @Optional String browser,
 			@Optional String browser_version, @Optional String resolution,
-			@Optional String url) {
+			@Optional String url, ITestContext testContext) {
+		suiteName = testContext.getCurrentXmlTest().getName();
 		MDC.put(DISCRIMINATOR_KEY, getLogFolder() + getTestCaseId());
 
 		logger.info("setup before class");
@@ -184,9 +185,8 @@ public class TestCaseTemplate {
 	}
 
 	@BeforeSuite
-	protected void beforeSuite(ITestContext testContext) {
+	protected void beforeSuite() {
 		logger.info("setup before suite");
-		suiteName = testContext.getCurrentXmlTest().getName();
 
 		proxy.start(0);
 
