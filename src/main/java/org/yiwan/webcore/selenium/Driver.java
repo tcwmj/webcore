@@ -953,15 +953,15 @@ public class Driver {
 	}
 
 	/**
-	 * wait the specified locator to be inpresent
+	 * wait the specified locator to be absent
 	 * 
 	 * @param locator
 	 * @param timeout
 	 *            in seconds
 	 */
-	public void waitInpresent(By locator, int timeout) {
-		logger.debug("wait element " + locator.toString()
-				+ " to be inpresent in " + timeout + " seconds");
+	public void waitAbsent(By locator, int timeout) {
+		logger.debug("wait element " + locator.toString() + " to be absent in "
+				+ timeout + " seconds");
 		waitDocumentReady();
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
@@ -971,7 +971,7 @@ public class Driver {
 		}
 		logger.warn("Timed out after " + timeout
 				+ " seconds waiting for element " + locator.toString()
-				+ " to be inpresent");
+				+ " to be absent");
 	}
 
 	/**
