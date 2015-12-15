@@ -15,10 +15,15 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.internal.Utils;
 
 public class XLSRuntimeReporter {
+	@SuppressWarnings("unused")
+	private final static Logger logger = LoggerFactory
+			.getLogger(XLSRuntimeReporter.class);
 
 	private String reportName = "runtime-report.xls";
 	private String reportPath = new File("").getAbsolutePath() + "\\target\\";

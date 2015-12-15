@@ -15,7 +15,6 @@ import java.util.Properties;
 import net.lightbody.bmp.client.ClientUtil;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -49,6 +48,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.Reporter;
@@ -64,7 +65,7 @@ import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
  * 
  */
 public class Driver {
-	protected Logger logger = Logger.getLogger(this.getClass());
+	private final static Logger logger = LoggerFactory.getLogger(Driver.class);
 
 	public String os;
 	public String os_version;
@@ -73,7 +74,7 @@ public class Driver {
 	public String resolution;
 
 	private TestCaseTemplate testcase;
-	private WebDriver driver;
+	private WebDriver webDriver;
 	private Wait<WebDriver> wait;
 
 	private final static Proxy SELENIUM_PROXY = ClientUtil
@@ -92,19 +93,19 @@ public class Driver {
 
 		if (Property.REMOTE) {
 			logger.info("choose remote test mode");
-			driver = setupRemoteBrowser();
+			webDriver = setupRemoteBrowser();
 		} else {
 			logger.info("choose local test mode");
-			driver = setupLocalBrowser();
+			webDriver = setupLocalBrowser();
 		}
 
 		// driver.manage().timeouts()
 		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
 		if (Property.MAXIMIZE_BROSWER) {
 			logger.info("maximizing browser");
-			driver.manage().window().maximize();
+			webDriver.manage().window().maximize();
 		}
-		wait = new WebDriverWait(driver, Property.TIMEOUT_INTERVAL,
+		wait = new WebDriverWait(webDriver, Property.TIMEOUT_INTERVAL,
 				Property.POLLING_INTERVAL)
 				.ignoring(StaleElementReferenceException.class)
 				.ignoring(NoSuchElementException.class)
@@ -324,7 +325,7 @@ public class Driver {
 	 */
 	public void navigateTo(String url) {
 		logger.info("navigate to url " + url);
-		driver.navigate().to(url);
+		webDriver.navigate().to(url);
 		waitDocumentReady();
 	}
 
@@ -334,7 +335,7 @@ public class Driver {
 	 */
 	public void navigateForward() {
 		logger.info("navigate forward");
-		driver.navigate().forward();
+		webDriver.navigate().forward();
 		waitDocumentReady();
 	}
 
@@ -344,7 +345,7 @@ public class Driver {
 	 */
 	public void navigateBack() {
 		logger.info("navigate back");
-		driver.navigate().back();
+		webDriver.navigate().back();
 		waitDocumentReady();
 	}
 
@@ -352,11 +353,11 @@ public class Driver {
 	 * close current browser tab
 	 */
 	public void close() {
-		logger.info("close browser tab with title " + driver.getTitle());
+		logger.info("close browser tab with title " + webDriver.getTitle());
 		try {
-			driver.close();
+			webDriver.close();
 		} catch (WebDriverException e) {
-			logger.warn(e);
+			logger.warn("close browser tab", e);
 		}
 	}
 
@@ -365,8 +366,8 @@ public class Driver {
 	 */
 	public void closeAll() {
 		logger.info("close all browser tabs");
-		if (driver instanceof WebDriver) {
-			for (String handle : driver.getWindowHandles()) {
+		if (webDriver instanceof WebDriver) {
+			for (String handle : webDriver.getWindowHandles()) {
 				switchToWindow(handle);
 				close();
 			}
@@ -379,9 +380,9 @@ public class Driver {
 	public void quit() {
 		logger.info("quit driver");
 		try {
-			driver.quit();
+			webDriver.quit();
 		} catch (WebDriverException e) {
-			logger.warn(e);
+			logger.warn("quit driver", e);
 		}
 	}
 
@@ -393,9 +394,7 @@ public class Driver {
 	 */
 	public void click(By locator) {
 		logger.info("click on element " + locator.toString());
-		wait.until(
-				ExpectedConditions.elementToBeClickable(findElement(locator)))
-				.click();
+		waitClickable(locator).click();
 		waitDocumentReady();
 	}
 
@@ -407,7 +406,7 @@ public class Driver {
 	 */
 	private void silentClick(By locator) {
 		logger.info("silent click on element " + locator.toString());
-		driver.findElement(locator).click();
+		webDriver.findElement(locator).click();
 		waitDocumentReady();
 	}
 
@@ -483,9 +482,8 @@ public class Driver {
 	 */
 	public void doubleClick(By locator) {
 		logger.info("double click on element " + locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.elementToBeClickable(findElement(locator)));
-		Actions action = new Actions(driver);
+		WebElement element = waitClickable(locator);
+		Actions action = new Actions(webDriver);
 		action.doubleClick(element).build().perform();
 		waitDocumentReady();
 	}
@@ -498,8 +496,7 @@ public class Driver {
 	 */
 	public void type(By locator, CharSequence... value) {
 		logger.info("type value " + value + " on element " + locator.toString());
-		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
-				.sendKeys(value);
+		waitClickable(locator).sendKeys(value);
 		waitDocumentReady();
 	}
 
@@ -511,8 +508,7 @@ public class Driver {
 	 */
 	public void type(By locator, String value) {
 		logger.info("type value " + value + " on element " + locator.toString());
-		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
-				.sendKeys(value);
+		waitClickable(locator).sendKeys(value);
 		waitDocumentReady();
 	}
 
@@ -523,8 +519,7 @@ public class Driver {
 	 */
 	public void clear(By locator) {
 		logger.info("clear value on element " + locator.toString());
-		wait.until(ExpectedConditions.visibilityOf(findElement(locator)))
-				.clear();
+		waitClickable(locator).clear();
 		waitDocumentReady();
 	}
 
@@ -760,7 +755,7 @@ public class Driver {
 		logger.info("move mouse to element " + locator.toString());
 		WebElement element = wait.until(ExpectedConditions
 				.visibilityOf(findElement(locator)));
-		Actions action = new Actions(driver);
+		Actions action = new Actions(webDriver);
 		action.moveToElement(element).build().perform();
 		waitDocumentReady();
 	}
@@ -775,7 +770,7 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			driver.findElement(locator);
+			webDriver.findElement(locator);
 			ret = true;
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
 		}
@@ -789,7 +784,7 @@ public class Driver {
 	 */
 	public boolean isAlertPresent() {
 		try {
-			driver.switchTo().alert();
+			webDriver.switchTo().alert();
 			return true;
 		} catch (NoAlertPresentException e) {
 			return false;
@@ -823,7 +818,7 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			ret = driver.findElement(locator).isDisplayed();
+			ret = webDriver.findElement(locator).isDisplayed();
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
 		}
 		return ret;
@@ -839,7 +834,7 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			ret = driver.findElement(locator).isSelected();
+			ret = webDriver.findElement(locator).isSelected();
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
 		}
 		return ret;
@@ -1021,9 +1016,9 @@ public class Driver {
 		}
 		TakesScreenshot tsDriver;
 		if (Property.REMOTE)
-			tsDriver = (TakesScreenshot) (new Augmenter().augment(driver));
+			tsDriver = (TakesScreenshot) (new Augmenter().augment(webDriver));
 		else
-			tsDriver = (TakesScreenshot) driver;
+			tsDriver = (TakesScreenshot) webDriver;
 		File image = new File(Property.SCREENSHOT_DIR + File.separator
 				+ fileName == null ? "" : fileName + ".png");
 		tsDriver.getScreenshotAs(OutputType.FILE).renameTo(image);
@@ -1042,9 +1037,9 @@ public class Driver {
 			// if the driver does have the Capabilities to take a screenshot
 			// then Augmenter will add the TakesScreenshot methods to the
 			// instance
-			tsDriver = (TakesScreenshot) (new Augmenter().augment(driver));
+			tsDriver = (TakesScreenshot) (new Augmenter().augment(webDriver));
 		else
-			tsDriver = (TakesScreenshot) driver;
+			tsDriver = (TakesScreenshot) webDriver;
 
 		try {
 			File screenshot = tsDriver.getScreenshotAs(OutputType.FILE);
@@ -1133,11 +1128,11 @@ public class Driver {
 	 *            Milliseconds
 	 */
 	public void forceWait(int millis) {
-		logger.info("force wait in " + millis + " seconds");
+		logger.info("force to wait in " + millis + " seconds");
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			logger.error(e);
+			logger.error("force to wait", e);
 		}
 	}
 
@@ -1161,13 +1156,13 @@ public class Driver {
 	 */
 	public void setText(By locator, String text) {
 		logger.info("set text " + text + " on element " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		try {
 			javascript.executeScript(
 					"arguments[0].innerText = '" + text + "';",
 					findElement(locator));
 		} catch (WebDriverException e) {
-			// e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 	}
@@ -1230,12 +1225,12 @@ public class Driver {
 				+ locator.toString());
 		JavascriptLibrary javascript = new JavascriptLibrary();
 		try {
-			javascript.callEmbeddedSelenium(driver, "triggerEvent",
+			javascript.callEmbeddedSelenium(webDriver, "triggerEvent",
 					findElement(locator), event);
 		} catch (ElementNotFoundException e1) {
 			logger.error("locator " + locator.toString() + " was not found", e1);
 		} catch (WebDriverException e2) {
-			// e2.printStackTrace();
+			logger.error(e2.getMessage(), e2);
 		}
 		waitDocumentReady();
 	}
@@ -1249,14 +1244,14 @@ public class Driver {
 	 */
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on element " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		try {
 			javascript.executeScript("arguments[0].fireEvent(\"" + event
 					+ "\")", findElement(locator));
 		} catch (ElementNotFoundException e1) {
 			logger.error("locator " + locator.toString() + " was not found", e1);
 		} catch (WebDriverException e2) {
-			// e2.printStackTrace();
+			logger.error(e2.getMessage(), e2);
 		}
 		waitDocumentReady();
 	}
@@ -1287,12 +1282,12 @@ public class Driver {
 	public void scrollIntoView(By locator, Boolean bAlignToTop) {
 		logger.info("scroll into view of element " + locator.toString()
 				+ ", and align to top is " + bAlignToTop);
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		try {
 			javascript.executeScript("arguments[0].scrollIntoView("
 					+ bAlignToTop.toString() + ");", findElement(locator));
 		} catch (WebDriverException e) {
-			logger.error(e);
+			logger.error("scroll into view of element", e);
 		}
 		waitDocumentReady();
 	}
@@ -1305,13 +1300,13 @@ public class Driver {
 	public void scrollTo(By locator) {
 		logger.info("scroll to element " + locator.toString());
 		WebElement element = findElement(locator);
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		try {
 			javascript.executeScript("window.scrollTo("
 					+ element.getLocation().x + "," + element.getLocation().y
 					+ ")");
 		} catch (WebDriverException e) {
-			logger.error(e);
+			logger.error("scroll to element", e);
 		}
 		waitDocumentReady();
 	}
@@ -1323,7 +1318,7 @@ public class Driver {
 	 */
 	public void switchToWindow(String nameOrHandle) {
 		logger.info("switch to window with handle " + nameOrHandle);
-		driver.switchTo().window(nameOrHandle);
+		webDriver.switchTo().window(nameOrHandle);
 	}
 
 	/**
@@ -1340,7 +1335,7 @@ public class Driver {
 	 */
 	public void switchToDefault() {
 		logger.info("switch to default content");
-		driver.switchTo().defaultContent();
+		webDriver.switchTo().defaultContent();
 	}
 
 	/**
@@ -1353,12 +1348,12 @@ public class Driver {
 	public void setAttribute(By locator, String attribute, String value) {
 		logger.info("set attribute " + attribute + " to " + value
 				+ " on element " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		try {
 			javascript.executeScript("arguments[0].setAttribute('" + attribute
 					+ "', arguments[1])", findElement(locator), value);
 		} catch (WebDriverException e) {
-			logger.error(e);
+			logger.error("set attribute of element", e);
 		}
 	}
 
@@ -1371,12 +1366,12 @@ public class Driver {
 	public void removeAttribute(By locator, String attribute) {
 		logger.info("remove attribute " + attribute + " on element "
 				+ locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		try {
 			javascript.executeScript("arguments[0].removeAttribute('"
 					+ attribute + "')", findElement(locator));
 		} catch (WebDriverException e) {
-			logger.error(e);
+			logger.error("remove attribute of element", e);
 		}
 	}
 
@@ -1410,11 +1405,11 @@ public class Driver {
 	 */
 	@SuppressWarnings("unused")
 	private void generatePageSource() {
-		String currentUrl = driver.getCurrentUrl();
+		String currentUrl = webDriver.getCurrentUrl();
 		String fileName = currentUrl.replaceFirst("http://.*:\\d+/", "")
 				.replaceFirst("\\?.*", "");
 		if (!testcase.getCurrentUrl().equals(currentUrl)) {
-			String pageSource = driver.getPageSource();
+			String pageSource = webDriver.getPageSource();
 			File file = new File("target/" + fileName + ".html");
 			file.getParentFile().mkdirs();
 			int i = 0;
@@ -1441,14 +1436,16 @@ public class Driver {
 	}
 
 	/**
-	 * wait locator to be clickable
+	 * wait the specified locator to be visible and enable
 	 * 
 	 * @param locator
+	 *            web element locator
+	 * @return web element
 	 */
-	public void waitClickable(By locator) {
-		logger.info("wait element " + locator.toString() + " to be clickable");
-		wait.until(ExpectedConditions
-				.elementToBeClickable(findElement(locator)));
+	public WebElement waitClickable(By locator) {
+		logger.info("wait element " + locator.toString()
+				+ " to be visible and enable");
+		return wait.until(ExpectedConditions.elementToBeClickable(locator));
 	}
 
 	/**
@@ -1457,7 +1454,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getCellRow(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
 		try {
 			ret = (long) javascript.executeScript(
@@ -1467,7 +1464,7 @@ public class Driver {
 		} catch (ElementNotFoundException e1) {
 			logger.error("locator " + locator.toString() + " was not found", e1);
 		} catch (WebDriverException e2) {
-			e2.printStackTrace();
+			logger.error(e2.getMessage(), e2);
 		}
 		return ret;
 	}
@@ -1478,7 +1475,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getCellColumn(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
 		try {
 			ret = (long) javascript.executeScript(
@@ -1487,7 +1484,7 @@ public class Driver {
 		} catch (ElementNotFoundException e1) {
 			logger.error("locator " + locator.toString() + " was not found", e1);
 		} catch (WebDriverException e2) {
-			e2.printStackTrace();
+			logger.error(e2.getMessage(), e2);
 		}
 		return ret;
 	}
@@ -1498,7 +1495,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getRow(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
 		try {
 			ret = (long) javascript.executeScript(
@@ -1507,7 +1504,7 @@ public class Driver {
 		} catch (ElementNotFoundException e1) {
 			logger.error("locator " + locator.toString() + " was not found", e1);
 		} catch (WebDriverException e2) {
-			e2.printStackTrace();
+			logger.error(e2.getMessage(), e2);
 		}
 		return ret;
 	}
@@ -1519,7 +1516,7 @@ public class Driver {
 	 * @return long
 	 */
 	public long getRowCount(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) driver;
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
 		try {
 			ret = (long) javascript.executeScript(
@@ -1527,7 +1524,7 @@ public class Driver {
 		} catch (ElementNotFoundException e1) {
 			logger.error("locator " + locator.toString() + " was not found", e1);
 		} catch (WebDriverException e2) {
-			e2.printStackTrace();
+			logger.error(e2.getMessage(), e2);
 		}
 		return ret;
 	}
@@ -1539,7 +1536,7 @@ public class Driver {
 	 * @return boolean
 	 */
 	public Boolean isContains(String text) {
-		return driver.getPageSource().contains(text);
+		return webDriver.getPageSource().contains(text);
 	}
 
 	/**
@@ -1617,7 +1614,7 @@ public class Driver {
 	 * @return page source string
 	 */
 	public String getPageSource() {
-		return driver.getPageSource();
+		return webDriver.getPageSource();
 	}
 
 	/**
@@ -1627,6 +1624,15 @@ public class Driver {
 	 */
 	public TestCaseTemplate getTestcase() {
 		return testcase;
+	}
+
+	/**
+	 * get selenium webdriver runtime object
+	 * 
+	 * @return selenium webdriver
+	 */
+	public WebDriver getWebDriver() {
+		return webDriver;
 	}
 
 }

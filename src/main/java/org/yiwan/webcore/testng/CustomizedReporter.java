@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IInvokedMethod;
 import org.testng.IReporter;
 import org.testng.IResultMap;
@@ -16,7 +18,6 @@ import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.collections.Lists;
-import org.apache.log4j.Logger;
 import org.testng.xml.XmlSuite;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
@@ -32,7 +33,7 @@ import com.thoughtworks.qdox.model.JavaMethod;
  */
 public abstract class CustomizedReporter implements IReporter {
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger
+	private static final Logger logger = LoggerFactory
 			.getLogger(CustomizedReporter.class);
 
 	// ~ Instance fields ------------------------------------------------------

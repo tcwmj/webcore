@@ -1,13 +1,14 @@
 package org.yiwan.webcore.pages;
 
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.elements.IPage;
 import org.yiwan.webcore.selenium.Driver;
 
 public class Page implements IPage {
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(Page.class);
+	private final static Logger logger = LoggerFactory.getLogger(Page.class);
 
 	protected Driver driver;
 

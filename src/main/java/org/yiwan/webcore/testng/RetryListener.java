@@ -3,6 +3,8 @@ package org.yiwan.webcore.testng;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IRetryAnalyzer;
 import org.testng.annotations.ITestAnnotation;
 import org.testng.internal.annotations.IAnnotationTransformer;
@@ -12,6 +14,10 @@ import org.testng.internal.annotations.IAnnotationTransformer;
  * 
  */
 public class RetryListener implements IAnnotationTransformer {
+
+	@SuppressWarnings("unused")
+	private final static Logger logger = LoggerFactory
+			.getLogger(RetryListener.class);
 
 	@SuppressWarnings("rawtypes")
 	@Override

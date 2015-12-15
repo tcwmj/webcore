@@ -2,7 +2,8 @@ package org.yiwan.webcore.util;
 
 import java.awt.Color;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Kenny Wang
@@ -11,11 +12,12 @@ import org.apache.log4j.Logger;
 public class ColorHelper extends Color {
 
 	@SuppressWarnings("unused")
-	private static Logger logger = Logger.getLogger(ColorHelper.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(ColorHelper.class);
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 	public ColorHelper(int r, int g, int b) {
 		super(r, g, b);

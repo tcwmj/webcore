@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
@@ -19,7 +20,8 @@ import org.yiwan.webcore.selenium.Driver;
  */
 public class ResultListener extends TestListenerAdapter {
 
-	private static Logger logger = Logger.getLogger(ResultListener.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(ResultListener.class);
 	private XLSRuntimeReporter runtimeReporter;
 
 	@Override

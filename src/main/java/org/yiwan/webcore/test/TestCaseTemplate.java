@@ -16,7 +16,10 @@ import net.lightbody.bmp.util.HttpMessageContents;
 import net.lightbody.bmp.util.HttpMessageInfo;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
@@ -34,12 +37,15 @@ import org.yiwan.webcore.util.Property;
  */
 public class TestCaseTemplate {
 
-	protected Logger logger = Helper.getTestCaseLogger(this.getClass());
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected Driver driver;
 	protected String currentUrl = "";
 
+	private final static String DISCRIMINATOR_KEY = "testcase";
+
 	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
 	private String downloadFileName;
+	private String suiteName;
 
 	public static BrowserMobProxy getProxy() {
 		return proxy;
@@ -103,28 +109,31 @@ public class TestCaseTemplate {
 		if (isSource) {
 			return new File("data/" + testCaseId + ".xml");
 		} else {
-			return new File("target/data/" + testCaseId + ".xml");
+			return new File(getTargetDataFolder() + testCaseId + ".xml");
 		}
 	}
 
 	@BeforeClass
 	@Parameters({ "os", "os_version", "browser", "browser_version",
 			"resolution", "url" })
-	protected void setUp(@Optional String os, @Optional String os_version,
-			@Optional String browser, @Optional String browser_version,
-			@Optional String resolution, @Optional String url) {
-		logger.info("setup");
+	protected void beforeClass(@Optional String os,
+			@Optional String os_version, @Optional String browser,
+			@Optional String browser_version, @Optional String resolution,
+			@Optional String url) {
+		MDC.put(DISCRIMINATOR_KEY, getLogFolder() + getTestCaseId());
+
+		logger.info("setup before class");
 
 		driver = new Driver(this, os, os_version, browser, browser_version,
 				resolution);
 
-		report(Helper.getTestReportStyle("../../../target/logs/"
+		report(Helper.getTestReportStyle("../../../" + getLogFolder()
 				+ getTestCaseId() + ".log", "open test execution log"));
 
 		if (new File("data/" + getTestCaseId() + ".xml").exists())
 			report(Helper.getTestReportStyle("../../../data/" + getTestCaseId()
 					+ ".xml", "open source test data"));
-		report(Helper.getTestReportStyle("../../../target/data/"
+		report(Helper.getTestReportStyle("../../../" + getTargetDataFolder()
 				+ getTestCaseId() + ".xml", "open target test data"));
 
 		// test url load strategy
@@ -159,8 +168,8 @@ public class TestCaseTemplate {
 	}
 
 	@AfterClass
-	protected void tearDown() {
-		logger.info("teardown");
+	protected void afterClass() {
+		logger.info("teardown after class");
 		driver.closeAll();
 		driver.quit();
 	}
@@ -175,7 +184,10 @@ public class TestCaseTemplate {
 	}
 
 	@BeforeSuite
-	protected void beforeSuite() {
+	protected void beforeSuite(ITestContext testContext) {
+		logger.info("setup before suite");
+		suiteName = testContext.getCurrentXmlTest().getName();
+
 		proxy.start(0);
 
 		// set response filter rule for downloading files
@@ -183,7 +195,7 @@ public class TestCaseTemplate {
 			@Override
 			public void filterResponse(HttpResponse response,
 					HttpMessageContents contents, HttpMessageInfo messageInfo) {
-				String fileName = "target/data/" + getTestCaseId() + "_"
+				String fileName = getTargetDataFolder() + getTestCaseId() + "_"
 						+ Helper.randomize();
 				if (contents.getContentType() != null
 						&& contents.getContentType().contains("text/csv")) {
@@ -195,7 +207,7 @@ public class TestCaseTemplate {
 							FileUtils.writeStringToFile(file,
 									contents.getTextContents());
 						} catch (UnsupportedCharsetException | IOException e) {
-							logger.error(e);
+							logger.error("chartset was unsupported", e);
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
@@ -209,7 +221,7 @@ public class TestCaseTemplate {
 							FileUtils.writeStringToFile(file,
 									contents.getTextContents());
 						} catch (UnsupportedCharsetException | IOException e) {
-							logger.error(e);
+							logger.error("charset was unsupported", e);
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
@@ -224,7 +236,7 @@ public class TestCaseTemplate {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
 						} catch (IOException e) {
-							logger.error(e);
+							logger.error("IO exception occurred", e);
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
@@ -239,7 +251,7 @@ public class TestCaseTemplate {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
 						} catch (IOException e) {
-							logger.error(e);
+							logger.error("IO exception occurred", e);
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
@@ -254,7 +266,7 @@ public class TestCaseTemplate {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
 						} catch (IOException e) {
-							logger.error(e);
+							logger.error("IO exception occurred", e);
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
@@ -277,7 +289,7 @@ public class TestCaseTemplate {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
 						} catch (IOException e) {
-							logger.error(e);
+							logger.error("IO exception occurred", e);
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
@@ -290,6 +302,19 @@ public class TestCaseTemplate {
 
 	@AfterSuite
 	protected void afterSuite() {
+		logger.info("teardown after suite");
 		proxy.stop();
+	}
+
+	protected String getSuiteName() {
+		return suiteName;
+	}
+
+	protected String getLogFolder() {
+		return "target/" + suiteName + "/logs/";
+	}
+
+	protected String getTargetDataFolder() {
+		return "target/" + suiteName + "/data/";
 	}
 }

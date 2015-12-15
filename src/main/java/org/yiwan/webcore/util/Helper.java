@@ -18,12 +18,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
 import org.apache.xml.utils.DefaultErrorHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -35,7 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Helper {
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(Helper.class);
+	private final static Logger logger = LoggerFactory.getLogger(Helper.class);
 
 	/**
 	 * convert a string date from a format to a format
@@ -232,31 +229,4 @@ public class Helper {
 		return null;
 	}
 
-	/**
-	 * get test case logger so as to generate test case log one by one
-	 * 
-	 * @param claz
-	 * @return Logger
-	 */
-	public static Logger getTestCaseLogger(Class<?> claz) {
-		Logger logger = Logger.getLogger(claz);
-
-		logger.removeAllAppenders();
-		logger.setLevel(Level.DEBUG);
-		logger.setAdditivity(true);
-
-		FileAppender appender = new RollingFileAppender();
-		appender.setName(claz.getSimpleName());
-		PatternLayout layout = new PatternLayout();
-		String conversionPattern = "%d %-5p [%c] (%t:%x) %m%n";
-		layout.setConversionPattern(conversionPattern);
-		appender.setLayout(layout);
-		appender.setFile("target/logs/" + claz.getSimpleName() + ".log");
-		appender.setEncoding("UTF-8");
-		appender.setAppend(false);
-		appender.activateOptions();
-		logger.addAppender(appender);
-
-		return logger;
-	}
 }

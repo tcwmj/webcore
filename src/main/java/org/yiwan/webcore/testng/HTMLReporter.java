@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IResultMap;
 import org.testng.ISuite;
 import org.testng.ISuiteResult;
@@ -23,7 +25,6 @@ import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.internal.Utils;
-import org.apache.log4j.Logger;
 import org.testng.xml.XmlSuite;
 import org.yiwan.webcore.util.Property;
 
@@ -34,7 +35,8 @@ import org.yiwan.webcore.util.Property;
  * @author Kenny Wang
  */
 public class HTMLReporter extends CustomizedReporter {
-	private static final Logger logger = Logger.getLogger(HTMLReporter.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(HTMLReporter.class);
 
 	// ~ Instance fields ------------------------------------------------------
 	private PrintWriter m_out;

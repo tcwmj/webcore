@@ -13,12 +13,13 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ISuite;
 import org.testng.ISuiteResult;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.internal.Utils;
-import org.apache.log4j.Logger;
 import org.testng.xml.XmlSuite;
 
 /**
@@ -29,7 +30,8 @@ import org.testng.xml.XmlSuite;
  */
 public class XLSReporter extends CustomizedReporter {
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(XLSReporter.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(XLSReporter.class);
 
 	// ~ Instance fields ------------------------------------------------------
 	private static final String REPORT_NAME = "customized-report.xls";

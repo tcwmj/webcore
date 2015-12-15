@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Kenny Wang
@@ -13,7 +14,8 @@ import org.apache.log4j.Logger;
  */
 public class Property {
 
-	private final static Logger logger = Logger.getLogger(Property.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(Property.class);
 
 	private static Properties props = null;
 

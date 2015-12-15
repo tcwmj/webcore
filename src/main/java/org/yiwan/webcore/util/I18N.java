@@ -8,7 +8,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Kenny Wang
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class I18N {
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(I18N.class);
+	private final static Logger logger = LoggerFactory.getLogger(I18N.class);
 
 	private final String langPath = "config/lang";
 
