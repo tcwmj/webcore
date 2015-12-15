@@ -57,7 +57,6 @@ import org.yiwan.webcore.test.TestCaseTemplate;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.Property;
 
-import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
 /**
@@ -325,8 +324,8 @@ public class Driver {
 	 */
 	public void navigateTo(String url) {
 		logger.info("navigate to url " + url);
-		webDriver.navigate().to(url);
 		waitDocumentReady();
+		webDriver.navigate().to(url);
 	}
 
 	/**
@@ -335,8 +334,8 @@ public class Driver {
 	 */
 	public void navigateForward() {
 		logger.info("navigate forward");
-		webDriver.navigate().forward();
 		waitDocumentReady();
+		webDriver.navigate().forward();
 	}
 
 	/**
@@ -345,8 +344,8 @@ public class Driver {
 	 */
 	public void navigateBack() {
 		logger.info("navigate back");
-		webDriver.navigate().back();
 		waitDocumentReady();
+		webDriver.navigate().back();
 	}
 
 	/**
@@ -395,7 +394,6 @@ public class Driver {
 	public void click(By locator) {
 		logger.info("click on element " + locator.toString());
 		waitClickable(locator).click();
-		waitDocumentReady();
 	}
 
 	/**
@@ -406,8 +404,8 @@ public class Driver {
 	 */
 	private void silentClick(By locator) {
 		logger.info("silent click on element " + locator.toString());
-		webDriver.findElement(locator).click();
 		waitDocumentReady();
+		webDriver.findElement(locator).click();
 	}
 
 	/**
@@ -482,10 +480,8 @@ public class Driver {
 	 */
 	public void doubleClick(By locator) {
 		logger.info("double click on element " + locator.toString());
-		WebElement element = waitClickable(locator);
 		Actions action = new Actions(webDriver);
-		action.doubleClick(element).build().perform();
-		waitDocumentReady();
+		action.doubleClick(waitClickable(locator)).build().perform();
 	}
 
 	/**
@@ -497,7 +493,6 @@ public class Driver {
 	public void type(By locator, CharSequence... value) {
 		logger.info("type value " + value + " on element " + locator.toString());
 		waitClickable(locator).sendKeys(value);
-		waitDocumentReady();
 	}
 
 	/**
@@ -509,7 +504,6 @@ public class Driver {
 	public void type(By locator, String value) {
 		logger.info("type value " + value + " on element " + locator.toString());
 		waitClickable(locator).sendKeys(value);
-		waitDocumentReady();
 	}
 
 	/**
@@ -520,7 +514,6 @@ public class Driver {
 	public void clear(By locator) {
 		logger.info("clear value on element " + locator.toString());
 		waitClickable(locator).clear();
-		waitDocumentReady();
 	}
 
 	/**
@@ -593,10 +586,8 @@ public class Driver {
 	 */
 	public void selectByVisibleText(final By locator, final String text) {
 		logger.info("select text " + text + " on element " + locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		new Select(element).selectByVisibleText(text);
 		waitDocumentReady();
+		new Select(waitVisible(locator)).selectByVisibleText(text);
 	}
 
 	/**
@@ -610,10 +601,8 @@ public class Driver {
 	 */
 	public void deselectAll(final By locator) {
 		logger.info("deselect all options on element " + locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		new Select(element).deselectAll();
 		waitDocumentReady();
+		new Select(waitVisible(locator)).deselectAll();
 	}
 
 	/**
@@ -629,9 +618,8 @@ public class Driver {
 	public void selectByVisibleText(final By locator, final List<String> texts) {
 		logger.info("select text " + texts.toString() + " on element "
 				+ locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		Select select = new Select(element);
+		waitDocumentReady();
+		Select select = new Select(waitVisible(locator));
 		for (String text : texts) {
 			select.selectByVisibleText(text);
 			waitDocumentReady();
@@ -649,10 +637,7 @@ public class Driver {
 	public void selectByIndex(final By locator, final int index) {
 		logger.info("select index " + index + " on element "
 				+ locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		new Select(element).selectByIndex(index);
-		waitDocumentReady();
+		new Select(waitVisible(locator)).selectByIndex(index);
 	}
 
 	/**
@@ -668,10 +653,7 @@ public class Driver {
 	public void selectByValue(final By locator, final String value) {
 		logger.info("select value " + value + " on element "
 				+ locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		new Select(element).selectByValue(value);
-		waitDocumentReady();
+		new Select(waitVisible(locator)).selectByValue(value);
 	}
 
 	/**
@@ -679,10 +661,11 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextSelected(By locator, String text) {
-		logger.info("wait text " + text + " to be selected on element "
+		logger.debug("wait text " + text + " to be selected on element "
 				+ locator.toString());
-		wait.until(ExpectedConditions.textToBePresentInElement(
-				findElement(locator), text));
+		waitDocumentReady();
+		wait.until(ExpectedConditions.textToBePresentInElementLocated(locator,
+				text));
 	}
 
 	/**
@@ -692,10 +675,11 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextTyped(By locator, String text) {
-		logger.info("wait text " + text + " to be typed on element "
+		logger.debug("wait text " + text + " to be typed on element "
 				+ locator.toString());
-		wait.until(ExpectedConditions.textToBePresentInElementValue(
-				findElement(locator), text));
+		waitDocumentReady();
+		wait.until(ExpectedConditions.textToBePresentInElementLocated(locator,
+				text));
 	}
 
 	/**
@@ -704,10 +688,7 @@ public class Driver {
 	 * @return whether text is selectable or not
 	 */
 	public Boolean isTextSelectable(By locator, String text) {
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		List<WebElement> elements = element.findElements(By.tagName("option"));
-		for (WebElement e : elements) {
+		for (WebElement e : getAllSelectedOptions(locator)) {
 			if (text.equals(e.getText())) {
 				return true;
 			}
@@ -753,11 +734,8 @@ public class Driver {
 	 */
 	public void moveTo(By locator) {
 		logger.info("move mouse to element " + locator.toString());
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
 		Actions action = new Actions(webDriver);
-		action.moveToElement(element).build().perform();
-		waitDocumentReady();
+		action.moveToElement(waitVisible(locator)).build().perform();
 	}
 
 	/**
@@ -798,14 +776,9 @@ public class Driver {
 	 * @return boolean
 	 */
 	public boolean isEnabled(By locator) {
-		waitDocumentReady();
 		Boolean ret = false;
-		try {
-			ret = findElement(locator).isEnabled();
-		} catch (NoSuchElementException | StaleElementReferenceException e) {
-		}
+		ret = findElement(locator).isEnabled();
 		return ret;
-
 	}
 
 	/**
@@ -831,14 +804,9 @@ public class Driver {
 	 * @return boolean
 	 */
 	public boolean isSelected(By locator) {
-		waitDocumentReady();
 		Boolean ret = false;
-		try {
-			ret = webDriver.findElement(locator).isSelected();
-		} catch (NoSuchElementException | StaleElementReferenceException e) {
-		}
+		ret = findElement(locator).isSelected();
 		return ret;
-
 	}
 
 	/**
@@ -891,10 +859,8 @@ public class Driver {
 	 * @param text
 	 */
 	public void assertText(By locator, String text) {
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
 		String message = "assert text of locator " + locator.toString();
-		Assert.assertEquals(element.getText(), text, message);
+		Assert.assertEquals(findElement(locator).getText(), text, message);
 	}
 
 	/**
@@ -905,8 +871,7 @@ public class Driver {
 	 * @return attribute value
 	 */
 	public String getAttribute(By locator, String attribute) {
-		WebElement element = findElement(locator);
-		return element.getAttribute(attribute);
+		return findElement(locator).getAttribute(attribute);
 	}
 
 	/**
@@ -948,7 +913,8 @@ public class Driver {
 	 * @return WebElement
 	 */
 	public WebElement waitVisible(By locator) {
-		logger.info("wait element " + locator.toString() + " to be visible");
+		logger.debug("wait element " + locator.toString() + " to be visible");
+		waitDocumentReady();
 		return wait
 				.until(ExpectedConditions.visibilityOf(findElement(locator)));
 	}
@@ -959,20 +925,22 @@ public class Driver {
 	 * @param locator
 	 */
 	public void waitInvisible(By locator) {
-		logger.info("wait element " + locator.toString() + " to be invisible");
+		logger.debug("wait element " + locator.toString() + " to be invisible");
+		waitDocumentReady();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
 	}
 
 	/**
-	 * wait the specified locator to be visible
+	 * wait the specified locator to be present
 	 * 
 	 * @param locator
 	 * @param timeout
 	 *            in seconds
 	 */
-	public void waitVisible(By locator, int timeout) {
-		logger.info("wait element " + locator.toString() + " to be visible in "
-				+ timeout + " seconds");
+	public void waitPresent(By locator, int timeout) {
+		logger.debug("wait element " + locator.toString()
+				+ " to be present in " + timeout + " seconds");
+		waitDocumentReady();
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
 			if (isPresent(locator)) {
@@ -981,19 +949,20 @@ public class Driver {
 		}
 		logger.warn("Timed out after " + timeout
 				+ " seconds waiting for element " + locator.toString()
-				+ " to be visible");
+				+ " to be present");
 	}
 
 	/**
-	 * wait the specified locator to be invisible
+	 * wait the specified locator to be inpresent
 	 * 
 	 * @param locator
 	 * @param timeout
 	 *            in seconds
 	 */
-	public void waitInvisible(By locator, int timeout) {
-		logger.info("wait element " + locator.toString()
-				+ " to be invisible in " + timeout + " seconds");
+	public void waitInpresent(By locator, int timeout) {
+		logger.debug("wait element " + locator.toString()
+				+ " to be inpresent in " + timeout + " seconds");
+		waitDocumentReady();
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
 			if (!isPresent(locator)) {
@@ -1002,7 +971,7 @@ public class Driver {
 		}
 		logger.warn("Timed out after " + timeout
 				+ " seconds waiting for element " + locator.toString()
-				+ " to be invisible");
+				+ " to be inpresent");
 	}
 
 	/**
@@ -1068,7 +1037,7 @@ public class Driver {
 	 * @param title
 	 */
 	public void assertTitle(String title) {
-		wait.until(ExpectedConditions.titleIs(title));
+		waitTitle(title);
 	}
 
 	/**
@@ -1077,7 +1046,8 @@ public class Driver {
 	 * @param title
 	 */
 	public void waitTitle(String title) {
-		logger.info("wait page title to be " + title);
+		logger.debug("wait page title to be " + title);
+		waitDocumentReady();
 		wait.until(ExpectedConditions.titleIs(title));
 	}
 
@@ -1088,9 +1058,8 @@ public class Driver {
 	 * @param attribute
 	 * @return string
 	 */
-	public String getCSSAttribute(By locator, String attribute) {
-		WebElement element = findElement(locator);
-		return element.getCssValue(attribute);
+	public String getCssValue(By locator, String attribute) {
+		return findElement(locator).getCssValue(attribute);
 	}
 
 	/**
@@ -1100,8 +1069,8 @@ public class Driver {
 	 * @param attribute
 	 * @param value
 	 */
-	public void assertCSSAttribute(By locator, String attribute, String value) {
-		String actual = getCSSAttribute(locator, attribute);
+	public void assertCssValue(By locator, String attribute, String value) {
+		String actual = getCssValue(locator, attribute);
 		String message = "assert css attribute " + attribute + " of locator "
 				+ locator.toString();
 		Assert.assertEquals(actual, value, message);
@@ -1143,9 +1112,7 @@ public class Driver {
 	 * @return string
 	 */
 	public String getText(By locator) {
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		return element.getText();
+		return waitVisible(locator).getText();
 	}
 
 	/**
@@ -1157,14 +1124,8 @@ public class Driver {
 	public void setText(By locator, String text) {
 		logger.info("set text " + text + " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		try {
-			javascript.executeScript(
-					"arguments[0].innerText = '" + text + "';",
-					findElement(locator));
-		} catch (WebDriverException e) {
-			logger.error(e.getMessage(), e);
-		}
-
+		javascript.executeScript("arguments[0].innerText = '" + text + "';",
+				findElement(locator));
 	}
 
 	/**
@@ -1174,9 +1135,7 @@ public class Driver {
 	 * @return List&gt;WebElement&lt;
 	 */
 	public List<WebElement> getAllSelectedOptions(By locator) {
-		WebElement element = wait.until(ExpectedConditions
-				.visibilityOf(findElement(locator)));
-		return new Select(element).getAllSelectedOptions();
+		return new Select(waitVisible(locator)).getAllSelectedOptions();
 	}
 
 	/**
@@ -1190,7 +1149,7 @@ public class Driver {
 	}
 
 	/**
-	 * find element on the page
+	 * find element in presence on the page
 	 * 
 	 * @param locator
 	 * @return WebElement
@@ -1201,7 +1160,7 @@ public class Driver {
 	}
 
 	/**
-	 * find all elements on the page
+	 * find all elements in presence on the page
 	 * 
 	 * @param locator
 	 * @return List&gt;WebElement&lt;
@@ -1224,15 +1183,8 @@ public class Driver {
 		logger.info("trigger event " + event + " on element "
 				+ locator.toString());
 		JavascriptLibrary javascript = new JavascriptLibrary();
-		try {
-			javascript.callEmbeddedSelenium(webDriver, "triggerEvent",
-					findElement(locator), event);
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
-		waitDocumentReady();
+		javascript.callEmbeddedSelenium(webDriver, "triggerEvent",
+				findElement(locator), event);
 	}
 
 	/**
@@ -1245,15 +1197,8 @@ public class Driver {
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		try {
-			javascript.executeScript("arguments[0].fireEvent(\"" + event
-					+ "\")", findElement(locator));
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
-		waitDocumentReady();
+		javascript.executeScript("arguments[0].fireEvent(\"" + event + "\")",
+				findElement(locator));
 	}
 
 	/**
@@ -1283,13 +1228,9 @@ public class Driver {
 		logger.info("scroll into view of element " + locator.toString()
 				+ ", and align to top is " + bAlignToTop);
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		try {
-			javascript.executeScript("arguments[0].scrollIntoView("
-					+ bAlignToTop.toString() + ");", findElement(locator));
-		} catch (WebDriverException e) {
-			logger.error("scroll into view of element", e);
-		}
-		waitDocumentReady();
+		javascript.executeScript(
+				"arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");",
+				findElement(locator));
 	}
 
 	/**
@@ -1301,14 +1242,8 @@ public class Driver {
 		logger.info("scroll to element " + locator.toString());
 		WebElement element = findElement(locator);
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		try {
-			javascript.executeScript("window.scrollTo("
-					+ element.getLocation().x + "," + element.getLocation().y
-					+ ")");
-		} catch (WebDriverException e) {
-			logger.error("scroll to element", e);
-		}
-		waitDocumentReady();
+		javascript.executeScript("window.scrollTo(" + element.getLocation().x
+				+ "," + element.getLocation().y + ")");
 	}
 
 	/**
@@ -1349,12 +1284,8 @@ public class Driver {
 		logger.info("set attribute " + attribute + " to " + value
 				+ " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		try {
-			javascript.executeScript("arguments[0].setAttribute('" + attribute
-					+ "', arguments[1])", findElement(locator), value);
-		} catch (WebDriverException e) {
-			logger.error("set attribute of element", e);
-		}
+		javascript.executeScript("arguments[0].setAttribute('" + attribute
+				+ "', arguments[1])", findElement(locator), value);
 	}
 
 	/**
@@ -1367,12 +1298,8 @@ public class Driver {
 		logger.info("remove attribute " + attribute + " on element "
 				+ locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		try {
-			javascript.executeScript("arguments[0].removeAttribute('"
-					+ attribute + "')", findElement(locator));
-		} catch (WebDriverException e) {
-			logger.error("remove attribute of element", e);
-		}
+		javascript.executeScript("arguments[0].removeAttribute('" + attribute
+				+ "')", findElement(locator));
 	}
 
 	/**
@@ -1392,10 +1319,8 @@ public class Driver {
 							"return document.readyState").equals("complete");
 				}
 			});
-		} catch (TimeoutException e1) {
-			logger.warn(e1.getMessage());
-		} catch (WebDriverException e2) {
-			logger.warn("excpetion occurred while trying to wait document to be ready");
+		} catch (WebDriverException e) {
+			logger.warn("wait document to be ready", e);
 		}
 		// generatePageSource();
 	}
@@ -1443,8 +1368,9 @@ public class Driver {
 	 * @return web element
 	 */
 	public WebElement waitClickable(By locator) {
-		logger.info("wait element " + locator.toString()
+		logger.debug("wait element " + locator.toString()
 				+ " to be visible and enable");
+		waitDocumentReady();
 		return wait.until(ExpectedConditions.elementToBeClickable(locator));
 	}
 
@@ -1456,16 +1382,10 @@ public class Driver {
 	public long getCellRow(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
-		try {
-			ret = (long) javascript.executeScript(
-					"return arguments[0].parentNode.rowIndex",
-					findElement(locator));
-			ret++;// row index starts with zero
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
+		ret = (long) javascript
+				.executeScript("return arguments[0].parentNode.rowIndex",
+						findElement(locator));
+		ret++;// row index starts with zero
 		return ret;
 	}
 
@@ -1477,15 +1397,9 @@ public class Driver {
 	public long getCellColumn(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
-		try {
-			ret = (long) javascript.executeScript(
-					"return arguments[0].cellIndex", findElement(locator));
-			ret++;// column index starts with zero
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
+		ret = (long) javascript.executeScript("return arguments[0].cellIndex",
+				findElement(locator));
+		ret++;// column index starts with zero
 		return ret;
 	}
 
@@ -1497,15 +1411,9 @@ public class Driver {
 	public long getRow(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
-		try {
-			ret = (long) javascript.executeScript(
-					"return arguments[0].rowIndex", findElement(locator));
-			ret++;// row index starts with zero
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
+		ret = (long) javascript.executeScript("return arguments[0].rowIndex",
+				findElement(locator));
+		ret++;// row index starts with zero
 		return ret;
 	}
 
@@ -1518,14 +1426,8 @@ public class Driver {
 	public long getRowCount(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		long ret = -1;
-		try {
-			ret = (long) javascript.executeScript(
-					"return arguments[0].rows.length", findElement(locator));
-		} catch (ElementNotFoundException e1) {
-			logger.error("locator " + locator.toString() + " was not found", e1);
-		} catch (WebDriverException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
+		ret = (long) javascript.executeScript(
+				"return arguments[0].rows.length", findElement(locator));
 		return ret;
 	}
 
@@ -1536,6 +1438,7 @@ public class Driver {
 	 * @return boolean
 	 */
 	public Boolean isContains(String text) {
+		waitDocumentReady();
 		return webDriver.getPageSource().contains(text);
 	}
 
@@ -1546,22 +1449,6 @@ public class Driver {
 	 * @param displayed
 	 */
 	public void assertTextDisplayed(String text, Boolean displayed) {
-		assertTextDisplayed(text, displayed, Property.NAVIGATION_INTERVAL);
-	}
-
-	/**
-	 * assert page source contains such text
-	 * 
-	 * @param text
-	 * @param displayed
-	 * @param timeout
-	 */
-	public void assertTextDisplayed(String text, Boolean displayed, long timeout) {
-		long t = System.currentTimeMillis();
-		while (System.currentTimeMillis() - t < timeout * 1000) {
-			if (displayed.equals(isContains(text)))
-				break;
-		}
 		Assert.assertEquals(isContains(text), displayed);
 	}
 
@@ -1614,6 +1501,7 @@ public class Driver {
 	 * @return page source string
 	 */
 	public String getPageSource() {
+		waitDocumentReady();
 		return webDriver.getPageSource();
 	}
 
