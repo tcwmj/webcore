@@ -306,15 +306,15 @@ public class TestCaseTemplate {
 		proxy.stop();
 	}
 
-	protected String getSuiteName() {
+	public String getSuiteName() {
 		return suiteName;
 	}
 
-	protected String getLogFolder() {
+	public String getLogFolder() {
 		return "target/" + suiteName + "/logs/";
 	}
 
-	protected String getTargetDataFolder() {
+	public String getTargetDataFolder() {
 		return "target/" + suiteName + "/data/";
 	}
 }
