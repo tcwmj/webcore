@@ -1116,15 +1116,29 @@ public class Driver {
 	}
 
 	/**
-	 * set text on such web element
+	 * set innert text on such web element
 	 * 
 	 * @param locator
 	 * @param text
 	 */
 	public void setText(By locator, String text) {
-		logger.info("set text " + text + " on element " + locator.toString());
+		logger.info("set innert text to " + text + " on element "
+				+ locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
 		javascript.executeScript("arguments[0].innerText = '" + text + "';",
+				findElement(locator));
+	}
+
+	/**
+	 * set value on such web element, an alternative approach for method input
+	 * 
+	 * @param locator
+	 * @param value
+	 */
+	public void setValue(By locator, String value) {
+		logger.info("set value " + value + " on element " + locator.toString());
+		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		javascript.executeScript("arguments[0].value = '" + value + "';",
 				findElement(locator));
 	}
 
@@ -1197,7 +1211,7 @@ public class Driver {
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		javascript.executeScript("arguments[0].fireEvent('" + event + "')",
+		javascript.executeScript("arguments[0].fireEvent('" + event + "');",
 				findElement(locator));
 	}
 
