@@ -1322,20 +1322,23 @@ public class Driver {
 	private void waitDocumentReady() {
 		logger.debug("wait document to be ready");
 		final long t = System.currentTimeMillis();
-		try {
-			wait.until(new ExpectedCondition<Boolean>() {
-				public Boolean apply(WebDriver driver) {
-					if (System.currentTimeMillis() - t > Property.TIMEOUT_DOCUMENT_COMPLETE * 1000)
-						throw new TimeoutException("Timed out after "
-								+ Property.TIMEOUT_DOCUMENT_COMPLETE
-								+ " seconds waiting for document to be ready");
-					return ((JavascriptExecutor) driver).executeScript(
+		wait.until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				boolean ready = false;
+				if (System.currentTimeMillis() - t > Property.TIMEOUT_DOCUMENT_COMPLETE * 1000)
+					throw new TimeoutException("Timed out after "
+							+ Property.TIMEOUT_DOCUMENT_COMPLETE
+							+ " seconds while waiting for document to be ready");
+				try {
+					ready = ((JavascriptExecutor) driver).executeScript(
 							"return document.readyState").equals("complete");
+				} catch (WebDriverException e) {
+					logger.warn("javascript error while waiting document to be ready");
 				}
-			});
-		} catch (WebDriverException e) {
-			logger.warn("wait document to be ready", e);
-		}
+				return ready;
+			}
+		});
+
 		// generatePageSource();
 	}
 

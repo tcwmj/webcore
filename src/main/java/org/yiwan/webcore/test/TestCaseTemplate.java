@@ -275,14 +275,15 @@ public class TestCaseTemplate {
 								"application/octet-stream")
 						&& response.headers().get("Content-Disposition") != null
 						&& response.headers().get("Content-Disposition")
-								.contains("attachment;fileName=")) {
+								.contains("attachment;filename=")) {
 					if (contents.getBinaryContents() != null) {
 						downloadFileName = fileName
 								+ "."
 								+ response.headers().get("Content-Disposition")
-										.replace("attachment;fileName=", "")
-										.replace("\"", "").replace("'", "")
-										.split("\\.")[1];
+										.replace("attachment;filename=", "")
+										.replace(";", "").replace("\"", "")
+										.replace("'", "").split("\\.")[1]
+										.trim();
 						logger.info("saving file to " + downloadFileName);
 						File file = new File(downloadFileName);
 						try {

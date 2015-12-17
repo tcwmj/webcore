@@ -8,6 +8,7 @@
 		<sift>
 			<appender name="TEST_CASE_LOG" class="ch.qos.logback.core.FileAppender">
 				<file>${testcase}.log</file>
+				<Append>false</Append>
 				<layout class="ch.qos.logback.classic.PatternLayout">
 					<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
 					</pattern>
