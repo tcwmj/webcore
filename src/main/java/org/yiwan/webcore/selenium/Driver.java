@@ -1197,7 +1197,7 @@ public class Driver {
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on element " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
-		javascript.executeScript("arguments[0].fireEvent(\"" + event + "\")",
+		javascript.executeScript("arguments[0].fireEvent('" + event + "')",
 				findElement(locator));
 	}
 
