@@ -39,10 +39,11 @@ public class TestCaseTemplate {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected Driver driver;
-	protected String currentUrl = "";
 
+	private String currentUrl = "";
+	private String intialUrl = "";
+	private String j_winname = "";
 	private final static String DISCRIMINATOR_KEY = "testcase";
-
 	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
 	private String downloadFileName;
 	private String suiteName;
@@ -66,6 +67,18 @@ public class TestCaseTemplate {
 
 	public void setCurrentUrl(String currentUrl) {
 		this.currentUrl = currentUrl;
+	}
+
+	public String getIntialUrl() {
+		return intialUrl;
+	}
+
+	public void setJ_winname(String j_winname) {
+		this.j_winname = j_winname;
+	}
+
+	public String getJ_winname() {
+		return j_winname;
 	}
 
 	/**
@@ -138,23 +151,23 @@ public class TestCaseTemplate {
 				+ getTestCaseId() + ".xml", "open target test data"));
 
 		// test url load strategy
-		if (url == null) {// if the parameter url is null
-			// acquiring it from system property
-			String serverUrl = System.getProperty("server.url");
-			if (serverUrl == null) {// if system doesn't set the url property
+		// acquiring it from system property
+		intialUrl = System.getProperty("server.url");
+		if (intialUrl == null) {// if system doesn't set the url property
+			intialUrl = url;
+			if (intialUrl == null) {// if the parameter url is null
 				report(Helper.getTestReportStyle(Property.BASE_URL,
-						"open test server url by property config"));
-				driver.navigateTo(Property.BASE_URL);
+						"open test server url from property config"));
+				intialUrl = Property.BASE_URL;
 			} else {
-				report(Helper.getTestReportStyle(serverUrl,
-						"open test server url by system property server.url"));
-				driver.navigateTo(serverUrl);
+				report(Helper.getTestReportStyle(url,
+						"open test server url from test suites config"));
 			}
 		} else {
-			report(Helper.getTestReportStyle(url,
-					"open test server url by testng config"));
-			driver.navigateTo(url);
+			report(Helper.getTestReportStyle(intialUrl,
+					"open test server url from system property server.url"));
 		}
+		driver.navigateTo(intialUrl);
 	}
 
 	/**
@@ -318,4 +331,5 @@ public class TestCaseTemplate {
 	public String getTargetDataFolder() {
 		return "target/" + suiteName + "/data/";
 	}
+
 }

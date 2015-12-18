@@ -73,7 +73,7 @@ public class Driver {
 	public String resolution;
 
 	private TestCaseTemplate testcase;
-	private WebDriver webDriver;
+	private WebDriver wd;
 	private Wait<WebDriver> wait;
 
 	private final static Proxy SELENIUM_PROXY = ClientUtil
@@ -92,19 +92,19 @@ public class Driver {
 
 		if (Property.REMOTE) {
 			logger.info("choose remote test mode");
-			webDriver = setupRemoteBrowser();
+			wd = setupRemoteBrowser();
 		} else {
 			logger.info("choose local test mode");
-			webDriver = setupLocalBrowser();
+			wd = setupLocalBrowser();
 		}
 
 		// driver.manage().timeouts()
 		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
 		if (Property.MAXIMIZE_BROSWER) {
 			logger.info("maximizing browser");
-			webDriver.manage().window().maximize();
+			wd.manage().window().maximize();
 		}
-		wait = new WebDriverWait(webDriver, Property.TIMEOUT_INTERVAL,
+		wait = new WebDriverWait(wd, Property.TIMEOUT_INTERVAL,
 				Property.POLLING_INTERVAL)
 				.ignoring(StaleElementReferenceException.class)
 				.ignoring(NoSuchElementException.class)
@@ -325,7 +325,7 @@ public class Driver {
 	public void navigateTo(String url) {
 		logger.info("navigate to url " + url);
 		waitDocumentReady();
-		webDriver.navigate().to(url);
+		wd.navigate().to(url);
 	}
 
 	/**
@@ -335,7 +335,7 @@ public class Driver {
 	public void navigateForward() {
 		logger.info("navigate forward");
 		waitDocumentReady();
-		webDriver.navigate().forward();
+		wd.navigate().forward();
 	}
 
 	/**
@@ -345,16 +345,16 @@ public class Driver {
 	public void navigateBack() {
 		logger.info("navigate back");
 		waitDocumentReady();
-		webDriver.navigate().back();
+		wd.navigate().back();
 	}
 
 	/**
 	 * close current browser tab
 	 */
 	public void close() {
-		logger.info("close browser tab with title " + webDriver.getTitle());
+		logger.info("close browser tab with title " + wd.getTitle());
 		try {
-			webDriver.close();
+			wd.close();
 		} catch (WebDriverException e) {
 			logger.warn("close browser tab", e);
 		}
@@ -365,8 +365,8 @@ public class Driver {
 	 */
 	public void closeAll() {
 		logger.info("close all browser tabs");
-		if (webDriver instanceof WebDriver) {
-			for (String handle : webDriver.getWindowHandles()) {
+		if (wd instanceof WebDriver) {
+			for (String handle : wd.getWindowHandles()) {
 				switchToWindow(handle);
 				close();
 			}
@@ -379,7 +379,7 @@ public class Driver {
 	public void quit() {
 		logger.info("quit driver");
 		try {
-			webDriver.quit();
+			wd.quit();
 		} catch (WebDriverException e) {
 			logger.warn("quit driver", e);
 		}
@@ -405,7 +405,7 @@ public class Driver {
 	private void silentClick(By locator) {
 		logger.info("silent click on element " + locator.toString());
 		waitDocumentReady();
-		webDriver.findElement(locator).click();
+		wd.findElement(locator).click();
 	}
 
 	/**
@@ -480,7 +480,7 @@ public class Driver {
 	 */
 	public void doubleClick(By locator) {
 		logger.info("double click on element " + locator.toString());
-		Actions action = new Actions(webDriver);
+		Actions action = new Actions(wd);
 		action.doubleClick(waitClickable(locator)).build().perform();
 	}
 
@@ -734,7 +734,7 @@ public class Driver {
 	 */
 	public void moveTo(By locator) {
 		logger.info("move mouse to element " + locator.toString());
-		Actions action = new Actions(webDriver);
+		Actions action = new Actions(wd);
 		action.moveToElement(waitVisible(locator)).build().perform();
 	}
 
@@ -748,7 +748,7 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			webDriver.findElement(locator);
+			wd.findElement(locator);
 			ret = true;
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
 		}
@@ -762,7 +762,7 @@ public class Driver {
 	 */
 	public boolean isAlertPresent() {
 		try {
-			webDriver.switchTo().alert();
+			wd.switchTo().alert();
 			return true;
 		} catch (NoAlertPresentException e) {
 			return false;
@@ -791,7 +791,7 @@ public class Driver {
 		waitDocumentReady();
 		Boolean ret = false;
 		try {
-			ret = webDriver.findElement(locator).isDisplayed();
+			ret = wd.findElement(locator).isDisplayed();
 		} catch (NoSuchElementException | StaleElementReferenceException e) {
 		}
 		return ret;
@@ -985,9 +985,9 @@ public class Driver {
 		}
 		TakesScreenshot tsDriver;
 		if (Property.REMOTE)
-			tsDriver = (TakesScreenshot) (new Augmenter().augment(webDriver));
+			tsDriver = (TakesScreenshot) (new Augmenter().augment(wd));
 		else
-			tsDriver = (TakesScreenshot) webDriver;
+			tsDriver = (TakesScreenshot) wd;
 		File image = new File(Property.SCREENSHOT_DIR + File.separator
 				+ fileName == null ? "" : fileName + ".png");
 		tsDriver.getScreenshotAs(OutputType.FILE).renameTo(image);
@@ -1006,9 +1006,9 @@ public class Driver {
 			// if the driver does have the Capabilities to take a screenshot
 			// then Augmenter will add the TakesScreenshot methods to the
 			// instance
-			tsDriver = (TakesScreenshot) (new Augmenter().augment(webDriver));
+			tsDriver = (TakesScreenshot) (new Augmenter().augment(wd));
 		else
-			tsDriver = (TakesScreenshot) webDriver;
+			tsDriver = (TakesScreenshot) wd;
 
 		try {
 			File screenshot = tsDriver.getScreenshotAs(OutputType.FILE);
@@ -1124,7 +1124,7 @@ public class Driver {
 	public void setText(By locator, String text) {
 		logger.info("set innert text to " + text + " on element "
 				+ locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].innerText = '" + text + "';",
 				findElement(locator));
 	}
@@ -1137,7 +1137,7 @@ public class Driver {
 	 */
 	public void setValue(By locator, String value) {
 		logger.info("set value " + value + " on element " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].value = '" + value + "';",
 				findElement(locator));
 	}
@@ -1197,7 +1197,7 @@ public class Driver {
 		logger.info("trigger event " + event + " on element "
 				+ locator.toString());
 		JavascriptLibrary javascript = new JavascriptLibrary();
-		javascript.callEmbeddedSelenium(webDriver, "triggerEvent",
+		javascript.callEmbeddedSelenium(wd, "triggerEvent",
 				findElement(locator), event);
 	}
 
@@ -1210,7 +1210,7 @@ public class Driver {
 	 */
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on element " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].fireEvent('" + event + "');",
 				findElement(locator));
 	}
@@ -1241,7 +1241,7 @@ public class Driver {
 	public void scrollIntoView(By locator, Boolean bAlignToTop) {
 		logger.info("scroll into view of element " + locator.toString()
 				+ ", and align to top is " + bAlignToTop);
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript(
 				"arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");",
 				findElement(locator));
@@ -1255,7 +1255,7 @@ public class Driver {
 	public void scrollTo(By locator) {
 		logger.info("scroll to element " + locator.toString());
 		WebElement element = findElement(locator);
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("window.scrollTo(" + element.getLocation().x
 				+ "," + element.getLocation().y + ")");
 	}
@@ -1267,7 +1267,7 @@ public class Driver {
 	 */
 	public void switchToWindow(String nameOrHandle) {
 		logger.info("switch to window with handle " + nameOrHandle);
-		webDriver.switchTo().window(nameOrHandle);
+		wd.switchTo().window(nameOrHandle);
 	}
 
 	/**
@@ -1284,7 +1284,7 @@ public class Driver {
 	 */
 	public void switchToDefault() {
 		logger.info("switch to default content");
-		webDriver.switchTo().defaultContent();
+		wd.switchTo().defaultContent();
 	}
 
 	/**
@@ -1297,7 +1297,7 @@ public class Driver {
 	public void setAttribute(By locator, String attribute, String value) {
 		logger.info("set attribute " + attribute + " to " + value
 				+ " on element " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].setAttribute('" + attribute
 				+ "', arguments[1])", findElement(locator), value);
 	}
@@ -1311,7 +1311,7 @@ public class Driver {
 	public void removeAttribute(By locator, String attribute) {
 		logger.info("remove attribute " + attribute + " on element "
 				+ locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].removeAttribute('" + attribute
 				+ "')", findElement(locator));
 	}
@@ -1347,11 +1347,11 @@ public class Driver {
 	 */
 	@SuppressWarnings("unused")
 	private void generatePageSource() {
-		String currentUrl = webDriver.getCurrentUrl();
+		String currentUrl = wd.getCurrentUrl();
 		String fileName = currentUrl.replaceFirst("http://.*:\\d+/", "")
 				.replaceFirst("\\?.*", "");
 		if (!testcase.getCurrentUrl().equals(currentUrl)) {
-			String pageSource = webDriver.getPageSource();
+			String pageSource = wd.getPageSource();
 			File file = new File("target/" + fileName + ".html");
 			file.getParentFile().mkdirs();
 			int i = 0;
@@ -1397,7 +1397,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getCellRow(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
 		ret = (long) javascript
 				.executeScript("return arguments[0].parentNode.rowIndex",
@@ -1412,7 +1412,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getCellColumn(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
 		ret = (long) javascript.executeScript("return arguments[0].cellIndex",
 				findElement(locator));
@@ -1426,7 +1426,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getRow(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
 		ret = (long) javascript.executeScript("return arguments[0].rowIndex",
 				findElement(locator));
@@ -1441,7 +1441,7 @@ public class Driver {
 	 * @return long
 	 */
 	public long getRowCount(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) webDriver;
+		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
 		ret = (long) javascript.executeScript(
 				"return arguments[0].rows.length", findElement(locator));
@@ -1456,7 +1456,7 @@ public class Driver {
 	 */
 	public Boolean isContains(String text) {
 		waitDocumentReady();
-		return webDriver.getPageSource().contains(text);
+		return wd.getPageSource().contains(text);
 	}
 
 	/**
@@ -1519,7 +1519,7 @@ public class Driver {
 	 */
 	public String getPageSource() {
 		waitDocumentReady();
-		return webDriver.getPageSource();
+		return wd.getPageSource();
 	}
 
 	/**
@@ -1537,7 +1537,26 @@ public class Driver {
 	 * @return selenium webdriver
 	 */
 	public WebDriver getWebDriver() {
-		return webDriver;
+		return wd;
 	}
 
+	/**
+	 * get current url address
+	 * 
+	 * @return string value of current url
+	 */
+	public String getCurrentUrl() {
+		waitDocumentReady();
+		return wd.getCurrentUrl();
+	}
+
+	/**
+	 * get current page title
+	 * 
+	 * @return string value of title
+	 */
+	public String getTitle() {
+		waitDocumentReady();
+		return wd.getTitle();
+	}
 }
