@@ -45,7 +45,7 @@ public class TestCaseTemplate {
 	private String j_winname = "";
 	private final static String DISCRIMINATOR_KEY = "testcase";
 	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
-	private String downloadFileName;
+	private String lastDownloadFileName;
 	private String suiteName;
 
 	public static BrowserMobProxy getProxy() {
@@ -53,12 +53,12 @@ public class TestCaseTemplate {
 	}
 
 	/**
-	 * get just download file name with relative path
+	 * get last download file name with relative path
 	 * 
 	 * @return download file name
 	 */
-	public String getDownloadFileName() {
-		return downloadFileName;
+	public String getLastDownloadFileName() {
+		return lastDownloadFileName;
 	}
 
 	public String getCurrentUrl() {
@@ -213,9 +213,10 @@ public class TestCaseTemplate {
 				if (contents.getContentType() != null
 						&& contents.getContentType().contains("text/csv")) {
 					if (contents.getTextContents() != null) {
-						downloadFileName = fileName + ".csv";
-						logger.info("saving csv file to " + downloadFileName);
-						File file = new File(downloadFileName);
+						lastDownloadFileName = fileName + ".csv";
+						logger.info("saving csv file to "
+								+ lastDownloadFileName);
+						File file = new File(lastDownloadFileName);
 						try {
 							FileUtils.writeStringToFile(file,
 									contents.getTextContents());
@@ -227,9 +228,10 @@ public class TestCaseTemplate {
 				} else if (contents.getContentType() != null
 						&& contents.getContentType().contains("text/xml")) {
 					if (contents.getTextContents() != null) {
-						downloadFileName = fileName + ".xml";
-						logger.info("saving xml file to " + downloadFileName);
-						File file = new File(downloadFileName);
+						lastDownloadFileName = fileName + ".xml";
+						logger.info("saving xml file to "
+								+ lastDownloadFileName);
+						File file = new File(lastDownloadFileName);
 						try {
 							FileUtils.writeStringToFile(file,
 									contents.getTextContents());
@@ -242,9 +244,10 @@ public class TestCaseTemplate {
 						&& contents.getContentType().contains(
 								"application/vnd.ms-excel")) {
 					if (contents.getBinaryContents() != null) {
-						downloadFileName = fileName + ".xls";
-						logger.info("saving xls file to " + downloadFileName);
-						File file = new File(downloadFileName);
+						lastDownloadFileName = fileName + ".xls";
+						logger.info("saving xls file to "
+								+ lastDownloadFileName);
+						File file = new File(lastDownloadFileName);
 						try {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
@@ -257,9 +260,10 @@ public class TestCaseTemplate {
 						&& contents.getContentType()
 								.contains("application/pdf")) {
 					if (contents.getBinaryContents() != null) {
-						downloadFileName = fileName + ".pdf";
-						logger.info("saving pdf file to " + downloadFileName);
-						File file = new File(downloadFileName);
+						lastDownloadFileName = fileName + ".pdf";
+						logger.info("saving pdf file to "
+								+ lastDownloadFileName);
+						File file = new File(lastDownloadFileName);
 						try {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
@@ -272,9 +276,10 @@ public class TestCaseTemplate {
 						&& contents.getContentType()
 								.contains("application/zip")) {
 					if (contents.getBinaryContents() != null) {
-						downloadFileName = fileName + ".zip";
-						logger.info("saving zip file to " + downloadFileName);
-						File file = new File(downloadFileName);
+						lastDownloadFileName = fileName + ".zip";
+						logger.info("saving zip file to "
+								+ lastDownloadFileName);
+						File file = new File(lastDownloadFileName);
 						try {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
@@ -290,15 +295,15 @@ public class TestCaseTemplate {
 						&& response.headers().get("Content-Disposition")
 								.contains("attachment;filename=")) {
 					if (contents.getBinaryContents() != null) {
-						downloadFileName = fileName
+						lastDownloadFileName = fileName
 								+ "."
 								+ response.headers().get("Content-Disposition")
 										.replace("attachment;filename=", "")
 										.replace(";", "").replace("\"", "")
 										.replace("'", "").split("\\.")[1]
 										.trim();
-						logger.info("saving file to " + downloadFileName);
-						File file = new File(downloadFileName);
+						logger.info("saving file to " + lastDownloadFileName);
+						File file = new File(lastDownloadFileName);
 						try {
 							FileUtils.writeByteArrayToFile(file,
 									contents.getBinaryContents());
@@ -307,8 +312,6 @@ public class TestCaseTemplate {
 						}
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
-				} else { // if there is no file to download
-					downloadFileName = null;
 				}
 			}
 		});
