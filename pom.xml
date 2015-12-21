@@ -12,8 +12,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<argLine>-Dfile.encoding=UTF-8</argLine>
-		<xmlFileName>suites/default.xml</xmlFileName>
 	</properties>
 
 	<dependencies>
