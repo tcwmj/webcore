@@ -42,8 +42,10 @@ public class PoiHelper {
 		HSSFRow firstrow = sheet.createRow(0);
 
 		Class<?> clazz = list.get(0).getClass();
-		Map<String, Map<String, String>> map = Helper.getFeedMapping("config/"
-				+ clazz.getSimpleName() + ".map");
+		Map<String, Map<String, String>> map = Helper
+				.getFeedMapping(ClassLoader.getSystemResource(
+						Property.MAPS_FOLDER + clazz.getSimpleName() + ".map")
+						.getPath());
 		Field[] fields = clazz.getDeclaredFields();
 		int columnOffset = 0;
 		// set headers here

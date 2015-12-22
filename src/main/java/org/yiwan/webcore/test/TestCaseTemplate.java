@@ -120,7 +120,8 @@ public class TestCaseTemplate {
 		if (testCaseId == null)
 			throw new IllegalArgumentException("parameter testCaseId was null!");
 		if (isSource) {
-			return new File("data/" + testCaseId + ".xml");
+			return new File(ClassLoader.getSystemResource(testCaseId + ".xml")
+					.getPath());
 		} else {
 			return new File(getTargetDataFolder() + testCaseId + ".xml");
 		}

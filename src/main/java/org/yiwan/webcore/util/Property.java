@@ -49,7 +49,9 @@ public class Property {
 	public static final String SCREENSHOT_DIR = getProperty("path.screenshot");
 	public static final String DATA_SCHEMA = getProperty("path.dataschema");
 	public static final String SYSTEM_DATA = getProperty("path.systemdata");
-
+	public static final String TEST_DATA_FOLDER = getProperty("path.testdata.folder");
+	public static final String MAPS_FOLDER = getProperty("path.maps.folder");
+	
 	public static final String WINDOWS = getProperty("system.windows");
 	public static final String WINDOWS_XP = getProperty("system.windows.xp");
 	public static final String WINDOWS_7 = getProperty("system.windows.7");
