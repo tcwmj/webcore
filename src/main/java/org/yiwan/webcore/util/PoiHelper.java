@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
  */
 public class PoiHelper {
 
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(PoiHelper.class);
 
@@ -43,9 +42,10 @@ public class PoiHelper {
 
 		Class<?> clazz = list.get(0).getClass();
 		Map<String, Map<String, String>> map = Helper
-				.getFeedMapping(ClassLoader.getSystemResource(
-						Property.MAPS_FOLDER + clazz.getSimpleName() + ".map")
-						.getPath());
+				.getFeedMapping(ClassLoader
+						.getSystemResourceAsStream(Property.MAPS_FOLDER
+								+ Helper.firstLetterToLowerCase(clazz
+										.getSimpleName()) + ".map"));
 		Field[] fields = clazz.getDeclaredFields();
 		int columnOffset = 0;
 		// set headers here
@@ -135,7 +135,7 @@ public class PoiHelper {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return workbook;
 	}
@@ -145,16 +145,14 @@ public class PoiHelper {
 		try {
 			fis = new FileInputStream(excel);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		HSSFWorkbook workBook = null;
 		try {
 			workBook = new HSSFWorkbook(fis);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		HSSFSheet sheet = workBook.getSheetAt(0);

@@ -56,7 +56,7 @@ public class I18N {
 			props.load(in);
 			in.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		HashMap<String, String> ret = new HashMap<String, String>();
 		try {
@@ -69,7 +69,7 @@ public class I18N {
 				ret.put(key, value);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return ret;
 	}

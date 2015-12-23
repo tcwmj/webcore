@@ -1,8 +1,8 @@
 package org.yiwan.webcore.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.ParseException;
@@ -31,7 +31,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  */
 public class Helper {
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(Helper.class);
 
 	/**
@@ -48,7 +47,7 @@ public class Helper {
 			Date d = dateFormat.parse(date);
 			return (new SimpleDateFormat(toFormat)).format(d);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return date;
 	}
@@ -180,15 +179,14 @@ public class Helper {
 	/**
 	 * read xml and xls feed mapping rule from a file
 	 * 
-	 * @param file
+	 * @param stream
 	 * @return Map
 	 */
-	public static Map<String, Map<String, String>> getFeedMapping(String file) {
-		FileInputStream isr = null;
+	public static Map<String, Map<String, String>> getFeedMapping(
+			InputStream stream) {
 		Reader r = null;
 		try {
-			isr = new FileInputStream(file);
-			r = new InputStreamReader(isr, "utf-8");
+			r = new InputStreamReader(stream, "utf-8");
 			Properties props = new Properties();
 			props.load(r);
 			Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
@@ -208,25 +206,27 @@ public class Helper {
 			}
 			return map;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (r != null) {
 				try {
 					r.close();
 				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (isr != null) {
-				try {
-					isr.close();
-				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * convert a word's first letter to lower case
+	 * 
+	 * @param s
+	 * @return word with first letter in lower case
+	 */
+	public static String firstLetterToLowerCase(String s) {
+		return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0)))
+				.append(s.substring(1)).toString();
+	}
 }

@@ -34,8 +34,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 					.getMethod("setSkipTest", Boolean.class);
 			method.invoke(testResult.getInstance(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return false;

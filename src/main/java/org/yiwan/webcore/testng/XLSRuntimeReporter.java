@@ -235,13 +235,13 @@ public class XLSRuntimeReporter {
 				workbook = new HSSFWorkbook(ins);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ins != null) {
 				try {
 					ins.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -260,13 +260,13 @@ public class XLSRuntimeReporter {
 			fos = new FileOutputStream(filePath);
 			workbook.write(fos);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fos != null)
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 		}
 	}

@@ -105,7 +105,7 @@ public class XLSReporter extends CustomizedReporter {
 				workbook = new HSSFWorkbook(new FileInputStream(file.getPath()));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return workbook;
 	}
@@ -200,13 +200,13 @@ public class XLSReporter extends CustomizedReporter {
 			fos = new FileOutputStream(report.getPath());
 			workbook.write(fos);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fos != null)
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 		}
 	}

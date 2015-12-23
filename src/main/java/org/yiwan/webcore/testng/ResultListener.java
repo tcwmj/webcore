@@ -36,8 +36,7 @@ public class ResultListener extends TestListenerAdapter {
 			Driver driver = (Driver) method.invoke(testResult.getInstance());
 			driver.saveScreenShot(testResult);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		runtimeReporter.updateReport(testResult);
@@ -72,8 +71,7 @@ public class ResultListener extends TestListenerAdapter {
 		// method.invoke(testResult.getInstance(), testResult.getName() + " "
 		// + testResult.getMethod().getDescription());
 		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
+		// logger.error(e.getMessage(), e);
 		// }
 
 		runtimeReporter.updateReport(testResult);

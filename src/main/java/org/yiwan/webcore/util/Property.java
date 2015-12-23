@@ -100,8 +100,7 @@ public class Property {
 			props.load(in);
 			in.close();
 		} catch (Exception e) {
-			logger.info(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
