@@ -25,7 +25,6 @@ import org.xml.sax.SAXException;
  * 
  */
 public class JaxbHelper {
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(JaxbHelper.class);
 
@@ -57,7 +56,7 @@ public class JaxbHelper {
 			marshaller.marshal(obj, writer);
 			result = writer.toString();
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return result;
 	}
@@ -75,15 +74,16 @@ public class JaxbHelper {
 		T t = null;
 		ValidationEventCollector validation = new ValidationEventCollector();
 		try {
-			SchemaFactory factory = SchemaFactory
-					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = factory.newSchema(new StreamSource(xsd));
+//			SchemaFactory factory = SchemaFactory
+//					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//			Schema schema = factory.newSchema(new StreamSource(xsd));
 			JAXBContext context = JAXBContext.newInstance(clazz);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setSchema(schema);
+//			unmarshaller.setSchema(schema);
 			unmarshaller.setEventHandler(validation);
 			t = (T) unmarshaller.unmarshal(new StringReader(xml));
-		} catch (JAXBException | SAXException e) {
+		} catch (JAXBException e) {
+//		} catch (JAXBException | SAXException e) {
 			e.printStackTrace();
 		} finally {
 			if (validation != null && validation.hasEvents()) {
@@ -92,9 +92,9 @@ public class JaxbHelper {
 					ValidationEventLocator vel = ve.getLocator();
 					int line = vel.getLineNumber();
 					int column = vel.getColumnNumber();
-					System.out.println();
-					System.err.println("At line " + line + ", column " + column
-							+ ": " + msg);
+					logger.error("xml unmarshal exception, file " + xml
+							+ "\nat line " + line + ", column " + column + ": "
+							+ msg);
 				}
 			}
 		}
