@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.Reporter;
-import org.yiwan.webcore.test.TestCaseTemplate;
+import org.yiwan.webcore.test.TestCaseBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.Property;
 
@@ -72,14 +72,14 @@ public class Driver {
 	public String browser_version;
 	public String resolution;
 
-	private TestCaseTemplate testcase;
+	private TestCaseBase testcase;
 	private WebDriver wd;
 	private Wait<WebDriver> wait;
 
 	private final static Proxy SELENIUM_PROXY = ClientUtil
-			.createSeleniumProxy(TestCaseTemplate.getProxy());
+			.createSeleniumProxy(TestCaseBase.getProxy());
 
-	public Driver(TestCaseTemplate testcase, String os, String os_version,
+	public Driver(TestCaseBase testcase, String os, String os_version,
 			String browser, String browser_version, String resolution) {
 		super();
 		this.testcase = testcase;
@@ -1527,7 +1527,7 @@ public class Driver {
 	 * 
 	 * @return TestCaseTemplate
 	 */
-	public TestCaseTemplate getTestcase() {
+	public TestCaseBase getTestcase() {
 		return testcase;
 	}
 
