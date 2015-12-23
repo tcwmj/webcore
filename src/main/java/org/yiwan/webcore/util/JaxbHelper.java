@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import javax.xml.XMLConstants;
+//import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -12,13 +12,14 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventLocator;
 import javax.xml.bind.util.ValidationEventCollector;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
+//import javax.xml.transform.stream.StreamSource;
+//import javax.xml.validation.Schema;
+//import javax.xml.validation.SchemaFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
+
+//import org.xml.sax.SAXException;
 
 /**
  * @author Kenny Wang
@@ -84,21 +85,19 @@ public class JaxbHelper {
 			t = (T) unmarshaller.unmarshal(new StringReader(xml));
 		} catch (JAXBException e) {
 //		} catch (JAXBException | SAXException e) {
-			e.printStackTrace();
-		} finally {
+			logger.error("xml unmarshal exception", e);
 			if (validation != null && validation.hasEvents()) {
 				for (ValidationEvent ve : validation.getEvents()) {
 					String msg = ve.getMessage();
 					ValidationEventLocator vel = ve.getLocator();
 					int line = vel.getLineNumber();
 					int column = vel.getColumnNumber();
-					logger.error("xml unmarshal exception, file " + xml
-							+ "\nat line " + line + ", column " + column + ": "
-							+ msg);
+					logger.error("at line " + line + ", column " + column
+							+ ", " + msg + "\n" + xml);
 				}
 			}
 		}
-
+		
 		return t;
 	}
 
