@@ -1,6 +1,6 @@
 package org.yiwan.webcore.util;
 
-import java.io.File;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -12,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventLocator;
 import javax.xml.bind.util.ValidationEventCollector;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -70,13 +71,13 @@ public class JaxbHelper {
 	 * @return object in generic type
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T unmarshal(String xml, String xsd, Class<T> clazz) {
+	public static <T> T unmarshal(String xml, InputStream xsd, Class<T> clazz) {
 		T t = null;
 		ValidationEventCollector validation = new ValidationEventCollector();
 		try {
 			SchemaFactory factory = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = factory.newSchema(new File(xsd));
+			Schema schema = factory.newSchema(new StreamSource(xsd));
 			JAXBContext context = JAXBContext.newInstance(clazz);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			unmarshaller.setSchema(schema);
