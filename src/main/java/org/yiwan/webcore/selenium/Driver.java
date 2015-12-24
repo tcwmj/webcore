@@ -205,7 +205,8 @@ public class Driver {
 			try {
 				url = new URL(PropHelper.REMOTE_ADDRESS);
 			} catch (MalformedURLException e) {
-				logger.error("url " + PropHelper.REMOTE_ADDRESS + " is malformed");
+				logger.error("url " + PropHelper.REMOTE_ADDRESS
+						+ " is malformed");
 			}
 		}
 
@@ -254,8 +255,7 @@ public class Driver {
 		if (PropHelper.DEFAULT_IE_ARCH.equals("x86"))
 			System.setProperty("webdriver.ie.driver",
 					PropHelper.IE_WEBDRIVER_X86);
-		else if (PropHelper.DEFAULT_IE_ARCH.equals("x64")
-				&& isOSX64())
+		else if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64())
 			System.setProperty("webdriver.ie.driver",
 					PropHelper.IE_WEBDRIVER_X64);
 		else if (isOSX64())
@@ -392,7 +392,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void click(By locator) {
-		logger.info("click on element " + locator.toString());
+		logger.info("click " + locator.toString());
 		waitClickable(locator).click();
 	}
 
@@ -403,7 +403,7 @@ public class Driver {
 	 * @param locator
 	 */
 	private void silentClick(By locator) {
-		logger.info("silent click on element " + locator.toString());
+		logger.info("silent click " + locator.toString());
 		waitDocumentReady();
 		wd.findElement(locator).click();
 	}
@@ -479,7 +479,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void doubleClick(By locator) {
-		logger.info("double click on element " + locator.toString());
+		logger.info("double click " + locator.toString());
 		Actions action = new Actions(wd);
 		action.doubleClick(waitClickable(locator)).build().perform();
 	}
@@ -491,7 +491,7 @@ public class Driver {
 	 * @param value
 	 */
 	public void type(By locator, CharSequence... value) {
-		logger.info("type value " + value + " on element " + locator.toString());
+		logger.info("type " + value + " on " + locator.toString());
 		waitClickable(locator).sendKeys(value);
 	}
 
@@ -502,7 +502,7 @@ public class Driver {
 	 * @param value
 	 */
 	public void type(By locator, String value) {
-		logger.info("type value " + value + " on element " + locator.toString());
+		logger.info("type " + value + " on " + locator.toString());
 		waitClickable(locator).sendKeys(value);
 	}
 
@@ -512,7 +512,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void clear(By locator) {
-		logger.info("clear value on element " + locator.toString());
+		logger.info("clear " + locator.toString());
 		waitClickable(locator).clear();
 	}
 
@@ -547,7 +547,7 @@ public class Driver {
 	 *            true indicate tick on, false indicate tick off
 	 */
 	public void tick(By locator, Boolean value) {
-		logger.info("tick " + value + " on element " + locator.toString());
+		logger.info("tick " + value + " on " + locator.toString());
 		String checked = getAttribute(locator, "checked");
 		if (checked == null || !checked.toLowerCase().equals("true")) {
 			if (value)
@@ -566,8 +566,7 @@ public class Driver {
 	 *            true indicate tick on, false indicate tick off
 	 */
 	public void alteredTick(By locator, Boolean value) {
-		logger.info("altered tick " + value + " on element "
-				+ locator.toString());
+		logger.info("altered tick " + value + " on " + locator.toString());
 		if (value)
 			setAttribute(locator, "checked", "checked");
 		else
@@ -585,7 +584,7 @@ public class Driver {
 	 *            The visible text to match against
 	 */
 	public void selectByVisibleText(final By locator, final String text) {
-		logger.info("select text " + text + " on element " + locator.toString());
+		logger.info("select " + text + " on " + locator.toString());
 		waitDocumentReady();
 		new Select(waitVisible(locator)).selectByVisibleText(text);
 	}
@@ -600,7 +599,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void deselectAll(final By locator) {
-		logger.info("deselect all options on element " + locator.toString());
+		logger.info("deselect all options on " + locator.toString());
 		waitDocumentReady();
 		new Select(waitVisible(locator)).deselectAll();
 	}
@@ -616,8 +615,7 @@ public class Driver {
 	 *            The visible text to match against
 	 */
 	public void selectByVisibleText(final By locator, final List<String> texts) {
-		logger.info("select text " + texts.toString() + " on element "
-				+ locator.toString());
+		logger.info("select " + texts.toString() + " on " + locator.toString());
 		waitDocumentReady();
 		Select select = new Select(waitVisible(locator));
 		for (String text : texts) {
@@ -635,8 +633,7 @@ public class Driver {
 	 *            The option at this index will be selected
 	 */
 	public void selectByIndex(final By locator, final int index) {
-		logger.info("select index " + index + " on element "
-				+ locator.toString());
+		logger.info("select index " + index + " on " + locator.toString());
 		new Select(waitVisible(locator)).selectByIndex(index);
 	}
 
@@ -651,8 +648,7 @@ public class Driver {
 	 *            The value to match against
 	 */
 	public void selectByValue(final By locator, final String value) {
-		logger.info("select value " + value + " on element "
-				+ locator.toString());
+		logger.info("select value " + value + " on " + locator.toString());
 		new Select(waitVisible(locator)).selectByValue(value);
 	}
 
@@ -733,7 +729,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void moveTo(By locator) {
-		logger.info("move mouse to element " + locator.toString());
+		logger.info("move mouse to " + locator.toString());
 		Actions action = new Actions(wd);
 		action.moveToElement(waitVisible(locator)).build().perform();
 	}
@@ -1097,7 +1093,7 @@ public class Driver {
 	 *            Milliseconds
 	 */
 	public void forceWait(int millis) {
-		logger.info("force to wait in " + millis + " seconds");
+		logger.info("force to wait in " + millis + " milliseconds");
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
@@ -1122,8 +1118,7 @@ public class Driver {
 	 * @param text
 	 */
 	public void setText(By locator, String text) {
-		logger.info("set innert text to " + text + " on element "
-				+ locator.toString());
+		logger.info("set innertext to " + text + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].innerText = '" + text + "';",
 				findElement(locator));
@@ -1136,7 +1131,7 @@ public class Driver {
 	 * @param value
 	 */
 	public void setValue(By locator, String value) {
-		logger.info("set value " + value + " on element " + locator.toString());
+		logger.info("set value " + value + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].value = '" + value + "';",
 				findElement(locator));
@@ -1194,8 +1189,7 @@ public class Driver {
 	 *            String, such as "mouseover"
 	 */
 	public void triggerEvent(By locator, String event) {
-		logger.info("trigger event " + event + " on element "
-				+ locator.toString());
+		logger.info("trigger event " + event + " on " + locator.toString());
 		JavascriptLibrary javascript = new JavascriptLibrary();
 		javascript.callEmbeddedSelenium(wd, "triggerEvent",
 				findElement(locator), event);
@@ -1209,7 +1203,7 @@ public class Driver {
 	 *            String, such as "onchange"
 	 */
 	public void fireEvent(By locator, String event) {
-		logger.info("fire event " + event + " on element " + locator.toString());
+		logger.info("fire event " + event + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].fireEvent('" + event + "');",
 				findElement(locator));
@@ -1239,7 +1233,7 @@ public class Driver {
 	 *            visible at the bottom of the window.
 	 */
 	public void scrollIntoView(By locator, Boolean bAlignToTop) {
-		logger.info("scroll into view of element " + locator.toString()
+		logger.info("scroll into view of " + locator.toString()
 				+ ", and align to top is " + bAlignToTop);
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript(
@@ -1253,7 +1247,7 @@ public class Driver {
 	 * @param locator
 	 */
 	public void scrollTo(By locator) {
-		logger.info("scroll to element " + locator.toString());
+		logger.info("scroll to " + locator.toString());
 		WebElement element = findElement(locator);
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("window.scrollTo(" + element.getLocation().x
@@ -1266,7 +1260,7 @@ public class Driver {
 	 * @param nameOrHandle
 	 */
 	public void switchToWindow(String nameOrHandle) {
-		logger.info("switch to window with handle " + nameOrHandle);
+		logger.info("switch to window with name or handle " + nameOrHandle);
 		wd.switchTo().window(nameOrHandle);
 	}
 
@@ -1295,8 +1289,8 @@ public class Driver {
 	 * @param value
 	 */
 	public void setAttribute(By locator, String attribute, String value) {
-		logger.info("set attribute " + attribute + " to " + value
-				+ " on element " + locator.toString());
+		logger.info("set attribute " + attribute + " to " + value + " on "
+				+ locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].setAttribute('" + attribute
 				+ "', arguments[1])", findElement(locator), value);
@@ -1309,7 +1303,7 @@ public class Driver {
 	 * @param attribute
 	 */
 	public void removeAttribute(By locator, String attribute) {
-		logger.info("remove attribute " + attribute + " on element "
+		logger.info("remove attribute " + attribute + " on "
 				+ locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		javascript.executeScript("arguments[0].removeAttribute('" + attribute
