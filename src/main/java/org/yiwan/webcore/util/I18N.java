@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class I18N {
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(I18N.class);
 
 	private final String langPath = "config/lang";
