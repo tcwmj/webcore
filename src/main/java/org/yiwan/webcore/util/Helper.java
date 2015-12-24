@@ -89,7 +89,7 @@ public class Helper {
 	/**
 	 * assert file exists in a time range of Property.FILE_ACCESSABLE
 	 * 
-	 * @param file
+	 * @param path
 	 */
 	public static void assertFileExists(String path) {
 		File file = new File(path);
