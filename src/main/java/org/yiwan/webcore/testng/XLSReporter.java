@@ -29,7 +29,6 @@ import org.testng.xml.XmlSuite;
  * @author Kenny Wang
  */
 public class XLSReporter extends CustomizedReporter {
-	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory
 			.getLogger(XLSReporter.class);
 

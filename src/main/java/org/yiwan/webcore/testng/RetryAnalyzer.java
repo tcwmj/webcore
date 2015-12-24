@@ -13,7 +13,6 @@ import org.yiwan.webcore.util.PropHelper;
  * 
  */
 public class RetryAnalyzer implements IRetryAnalyzer {
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(RetryAnalyzer.class);
 

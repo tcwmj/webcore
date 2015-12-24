@@ -44,8 +44,6 @@ public class ResultListener extends TestListenerAdapter {
 
 	@Override
 	public void onTestSkipped(ITestResult testResult) {
-		logger.info(testResult.getTestClass().getName() + "."
-				+ testResult.getName() + " skipped");
 		super.onTestSkipped(testResult);
 		runtimeReporter.updateReport(testResult);
 	}
@@ -60,8 +58,6 @@ public class ResultListener extends TestListenerAdapter {
 
 	@Override
 	public void onTestStart(ITestResult testResult) {
-		logger.info(testResult.getTestClass().getName() + "."
-				+ testResult.getName() + " started");
 		super.onTestStart(testResult);
 
 		// commented as there is too many log in the test reports

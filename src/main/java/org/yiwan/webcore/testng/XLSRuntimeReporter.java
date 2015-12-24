@@ -21,7 +21,6 @@ import org.testng.ITestResult;
 import org.testng.internal.Utils;
 
 public class XLSRuntimeReporter {
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(XLSRuntimeReporter.class);
 
