@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
-import org.yiwan.webcore.util.Property;
+import org.yiwan.webcore.util.PropHelper;
 
 /**
  * @author Kenny Wang
@@ -17,7 +17,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 	private final static Logger logger = LoggerFactory
 			.getLogger(RetryAnalyzer.class);
 
-	private static final int MAX_RETRY_COUNT = Property.RETRY_COUNT;
+	private static final int MAX_RETRY_COUNT = PropHelper.TEST_RETRY_COUNT;
 	private int retryCount = 0;
 
 	@Override

@@ -89,29 +89,11 @@ public class Helper {
 	/**
 	 * assert file exists in a time range of Property.FILE_ACCESSABLE
 	 * 
-	 * @param filepath
+	 * @param file
 	 */
-	public static void assertFileExists(String filepath) {
-		assertFileExists(filepath, true, Property.FILE_ACCESSABLE);
-	}
-
-	/**
-	 * assert file exists or not exists in specified time range
-	 * 
-	 * @param filepath
-	 * @param exist
-	 * @param timeout
-	 */
-	public static void assertFileExists(String filepath, Boolean exist,
-			int timeout) {
-		File file = new File(filepath);
-		long curtime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - curtime <= timeout * 1000) {
-			if (file.exists())
-				return;
-		}
-		Assert.fail("fail to get file " + filepath + " in " + timeout
-				+ " seconds");
+	public static void assertFileExists(String path) {
+		File file = new File(path);
+		Assert.assertTrue(file.exists(), path);
 	}
 
 	/**

@@ -43,7 +43,7 @@ public class PoiHelper {
 		Class<?> clazz = list.get(0).getClass();
 		Map<String, Map<String, String>> map = Helper
 				.getFeedMapping(ClassLoader
-						.getSystemResourceAsStream(Property.MAPS_FOLDER
+						.getSystemResourceAsStream(PropHelper.MAPS_FOLDER
 								+ Helper.firstLetterToLowerCase(clazz
 										.getSimpleName()) + ".map"));
 		Field[] fields = clazz.getDeclaredFields();

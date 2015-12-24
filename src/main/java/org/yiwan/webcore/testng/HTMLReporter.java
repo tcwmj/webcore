@@ -26,7 +26,7 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.internal.Utils;
 import org.testng.xml.XmlSuite;
-import org.yiwan.webcore.util.Property;
+import org.yiwan.webcore.util.PropHelper;
 
 /**
  * Reported designed to render self-contained HTML top down view of a testing
@@ -55,7 +55,7 @@ public class HTMLReporter extends CustomizedReporter {
 			return;
 		}
 		// builder.setEncoding(Property.SOURCE_CODE_ENCODING);
-		builder.addSourceTree(new File(Property.SOURCE_CODE_PATH));
+		builder.addSourceTree(new File(PropHelper.SOURCE_CODE_PATH));
 		startHtml(m_out);
 		generateSuiteSummaryReport(suites);
 		testIds.clear();

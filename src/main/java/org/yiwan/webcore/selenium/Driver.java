@@ -55,7 +55,7 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.yiwan.webcore.test.TestCaseBase;
 import org.yiwan.webcore.util.Helper;
-import org.yiwan.webcore.util.Property;
+import org.yiwan.webcore.util.PropHelper;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
@@ -83,14 +83,14 @@ public class Driver {
 			String browser, String browser_version, String resolution) {
 		super();
 		this.testcase = testcase;
-		this.os = (null == os) ? Property.WINDOWS : os;
-		this.os_version = (null == os_version) ? Property.WINDOWS_7
+		this.os = (null == os) ? PropHelper.DEFAULT_OS : os;
+		this.os_version = (null == os_version) ? PropHelper.DEFAULT_OS_VERSION
 				: os_version;
-		this.browser = (null == browser) ? Property.DEFAULT_BROSWER : browser;
+		this.browser = (null == browser) ? PropHelper.DEFAULT_BROSWER : browser;
 		this.browser_version = browser_version;
 		this.resolution = resolution;
 
-		if (Property.REMOTE) {
+		if (PropHelper.REMOTE) {
 			logger.info("choose remote test mode");
 			wd = setupRemoteBrowser();
 		} else {
@@ -100,12 +100,12 @@ public class Driver {
 
 		// driver.manage().timeouts()
 		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
-		if (Property.MAXIMIZE_BROSWER) {
+		if (PropHelper.MAXIMIZE_BROSWER) {
 			logger.info("maximizing browser");
 			wd.manage().window().maximize();
 		}
-		wait = new WebDriverWait(wd, Property.TIMEOUT_INTERVAL,
-				Property.POLLING_INTERVAL)
+		wait = new WebDriverWait(wd, PropHelper.TIMEOUT_INTERVAL,
+				PropHelper.TIMEOUT_POLLING_INTERVAL)
 				.ignoring(StaleElementReferenceException.class)
 				.ignoring(NoSuchElementException.class)
 				.ignoring(UnreachableBrowserException.class);
@@ -115,7 +115,7 @@ public class Driver {
 		DesiredCapabilities capability = new DesiredCapabilities();
 		URL url = null;
 		// setup browserstack remote testing
-		if (Property.BROWSERSTACK) {
+		if (PropHelper.BROWSERSTACK) {
 			logger.info("choose browserstack cloud test platform for remote strategy");
 			if (os != null) {
 				capability.setCapability("os", os);
@@ -135,18 +135,18 @@ public class Driver {
 				capability.setCapability("resolution", resolution);
 				logger.info("choose test platform resolution " + resolution);
 			}
-			capability.setCapability("project", Property.PROJECT);
-			capability.setCapability("build", Property.BUILD);
+			capability.setCapability("project", PropHelper.PROJECT);
+			capability.setCapability("build", PropHelper.BUILD);
 			capability.setCapability("browserstack.local",
-					Property.BROWSERSTACK_LOCAL);
+					PropHelper.BROWSERSTACK_LOCAL);
 			capability.setCapability("browserstack.localIdentifier",
-					Property.BROWSERSTACK_LOCAL_IDENTIFIER);
+					PropHelper.BROWSERSTACK_LOCAL_IDENTIFIER);
 			capability.setCapability("browserstack.debug",
-					Property.BROWSERSTACK_DEBUG);
+					PropHelper.BROWSERSTACK_DEBUG);
 			try {
-				url = new URL(Property.BROWSERSTACK_URL);
+				url = new URL(PropHelper.BROWSERSTACK_URL);
 			} catch (MalformedURLException e) {
-				logger.error("url " + Property.BROWSERSTACK_URL
+				logger.error("url " + PropHelper.BROWSERSTACK_URL
 						+ " is malformed");
 			}
 		} else {
@@ -203,9 +203,9 @@ public class Driver {
 				logger.info("choose test browser version " + browser_version);
 			}
 			try {
-				url = new URL(Property.REMOTE_ADDRESS);
+				url = new URL(PropHelper.REMOTE_ADDRESS);
 			} catch (MalformedURLException e) {
-				logger.error("url " + Property.REMOTE_ADDRESS + " is malformed");
+				logger.error("url " + PropHelper.REMOTE_ADDRESS + " is malformed");
 			}
 		}
 
@@ -239,7 +239,7 @@ public class Driver {
 	 */
 	private WebDriver setupChome() {
 		System.setProperty("webdriver.chrome.driver",
-				Property.WEB_DRIVER_CHROME);
+				PropHelper.CHROME_WEBDRIVER);
 		DesiredCapabilities capability = new DesiredCapabilities();
 		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		return new ChromeDriver(capability);
@@ -251,19 +251,19 @@ public class Driver {
 	 * @return WebDriver
 	 */
 	private WebDriver setupInternetExplorer() {
-		if (Property.INTERNET_EXPLORER_PREFERRED.equals("x86"))
+		if (PropHelper.DEFAULT_IE_ARCH.equals("x86"))
 			System.setProperty("webdriver.ie.driver",
-					Property.WEB_DRIVER_IE_X86);
-		else if (Property.INTERNET_EXPLORER_PREFERRED.equals("x64")
+					PropHelper.IE_WEBDRIVER_X86);
+		else if (PropHelper.DEFAULT_IE_ARCH.equals("x64")
 				&& isOSX64())
 			System.setProperty("webdriver.ie.driver",
-					Property.WEB_DRIVER_IE_X64);
+					PropHelper.IE_WEBDRIVER_X64);
 		else if (isOSX64())
 			System.setProperty("webdriver.ie.driver",
-					Property.WEB_DRIVER_IE_X64);
+					PropHelper.IE_WEBDRIVER_X64);
 		else
 			System.setProperty("webdriver.ie.driver",
-					Property.WEB_DRIVER_IE_X86);
+					PropHelper.IE_WEBDRIVER_X86);
 
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
 		capability
@@ -289,9 +289,9 @@ public class Driver {
 		// System.setProperty("webdriver.firefox.bin", Property.FIREFOX_DIR);
 
 		FirefoxBinary firefoxBinary;
-		if (Property.FIREFOX_DIR != null
-				&& !Property.FIREFOX_DIR.trim().isEmpty())
-			firefoxBinary = new FirefoxBinary(new File(Property.FIREFOX_DIR));
+		if (PropHelper.FIREFOX_PATH != null
+				&& !PropHelper.FIREFOX_PATH.trim().isEmpty())
+			firefoxBinary = new FirefoxBinary(new File(PropHelper.FIREFOX_PATH));
 		else
 			firefoxBinary = new FirefoxBinary();
 
@@ -980,15 +980,15 @@ public class Driver {
 	 * @param fileName
 	 */
 	public void saveScreenShot(String fileName) {
-		if (!(new File(Property.SCREENSHOT_DIR).isDirectory())) {
-			new File(Property.SCREENSHOT_DIR).mkdir();
+		if (!(new File(PropHelper.SCREENSHOT_PATH).isDirectory())) {
+			new File(PropHelper.SCREENSHOT_PATH).mkdir();
 		}
 		TakesScreenshot tsDriver;
-		if (Property.REMOTE)
+		if (PropHelper.REMOTE)
 			tsDriver = (TakesScreenshot) (new Augmenter().augment(wd));
 		else
 			tsDriver = (TakesScreenshot) wd;
-		File image = new File(Property.SCREENSHOT_DIR + File.separator
+		File image = new File(PropHelper.SCREENSHOT_PATH + File.separator
 				+ fileName == null ? "" : fileName + ".png");
 		tsDriver.getScreenshotAs(OutputType.FILE).renameTo(image);
 		logger.info("take screenshot to " + image.getPath());
@@ -1001,7 +1001,7 @@ public class Driver {
 	 */
 	public void saveScreenShot(ITestResult testresult) {
 		TakesScreenshot tsDriver;
-		if (Property.REMOTE)
+		if (PropHelper.REMOTE)
 			// RemoteWebDriver does not implement the TakesScreenshot class
 			// if the driver does have the Capabilities to take a screenshot
 			// then Augmenter will add the TakesScreenshot methods to the
@@ -1012,7 +1012,7 @@ public class Driver {
 
 		try {
 			File screenshot = tsDriver.getScreenshotAs(OutputType.FILE);
-			String filePath = Property.SCREENSHOT_DIR + File.separator
+			String filePath = PropHelper.SCREENSHOT_PATH + File.separator
 					+ testresult.getTestClass().getName() + "."
 					+ testresult.getName() + ".png";
 			FileUtils.copyFile(screenshot, new File(filePath));
@@ -1325,9 +1325,9 @@ public class Driver {
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				boolean ready = false;
-				if (System.currentTimeMillis() - t > Property.TIMEOUT_DOCUMENT_COMPLETE * 1000)
+				if (System.currentTimeMillis() - t > PropHelper.TIMEOUT_DOCUMENT_COMPLETE * 1000)
 					throw new TimeoutException("Timed out after "
-							+ Property.TIMEOUT_DOCUMENT_COMPLETE
+							+ PropHelper.TIMEOUT_DOCUMENT_COMPLETE
 							+ " seconds while waiting for document to be ready");
 				try {
 					ready = ((JavascriptExecutor) driver).executeScript(
