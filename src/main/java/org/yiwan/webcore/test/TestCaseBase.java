@@ -3,13 +3,13 @@ package org.yiwan.webcore.test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
 import org.yiwan.webcore.selenium.Driver;
+
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
 
 /**
  * @author Kenny Wang
@@ -128,12 +128,30 @@ public class TestCaseBase {
 		return this.getClass().getSimpleName();
 	}
 
+	/**
+	 * get log folder
+	 * 
+	 * @return
+	 */
 	public String getLogFolder() {
-		return "target/" + suiteName + "/logs/";
+		return ("target/" + (suiteName == null ? "" : suiteName) + "/logs/").replace("//", "/");
 	}
 
+	/**
+	 * get target data folder
+	 * 
+	 * @return
+	 */
 	public String getTargetDataFolder() {
-		return "target/" + suiteName + "/data/";
+		return ("target/" + (suiteName == null ? "" : suiteName) + "/data/").replace("//", "/");
 	}
 
+	/**
+	 * get screenshot folder
+	 * 
+	 * @return
+	 */
+	public String getScreenshotFolder() {
+		return ("target/" + (suiteName == null ? "" : suiteName) + "/screenshot/").replace("//", "/");
+	}
 }

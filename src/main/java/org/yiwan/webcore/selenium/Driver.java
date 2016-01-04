@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
-import net.lightbody.bmp.client.ClientUtil;
-
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -59,6 +57,8 @@ import org.yiwan.webcore.util.PropHelper;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
+import net.lightbody.bmp.client.ClientUtil;
+
 /**
  * @author Kenny Wang
  * 
@@ -76,16 +76,14 @@ public class Driver {
 	private WebDriver wd;
 	private Wait<WebDriver> wait;
 
-	private final static Proxy SELENIUM_PROXY = ClientUtil
-			.createSeleniumProxy(TestCaseBase.getProxy());
+	private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(TestCaseBase.getProxy());
 
-	public Driver(TestCaseBase testcase, String os, String os_version,
-			String browser, String browser_version, String resolution) {
+	public Driver(TestCaseBase testcase, String os, String os_version, String browser, String browser_version,
+			String resolution) {
 		super();
 		this.testcase = testcase;
 		this.os = (null == os) ? PropHelper.DEFAULT_OS : os;
-		this.os_version = (null == os_version) ? PropHelper.DEFAULT_OS_VERSION
-				: os_version;
+		this.os_version = (null == os_version) ? PropHelper.DEFAULT_OS_VERSION : os_version;
 		this.browser = (null == browser) ? PropHelper.DEFAULT_BROSWER : browser;
 		this.browser_version = browser_version;
 		this.resolution = resolution;
@@ -104,10 +102,8 @@ public class Driver {
 			logger.info("maximizing browser");
 			wd.manage().window().maximize();
 		}
-		wait = new WebDriverWait(wd, PropHelper.TIMEOUT_INTERVAL,
-				PropHelper.TIMEOUT_POLLING_INTERVAL)
-				.ignoring(StaleElementReferenceException.class)
-				.ignoring(NoSuchElementException.class)
+		wait = new WebDriverWait(wd, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL)
+				.ignoring(StaleElementReferenceException.class).ignoring(NoSuchElementException.class)
 				.ignoring(UnreachableBrowserException.class);
 	}
 
@@ -137,17 +133,13 @@ public class Driver {
 			}
 			capability.setCapability("project", PropHelper.PROJECT);
 			capability.setCapability("build", PropHelper.BUILD);
-			capability.setCapability("browserstack.local",
-					PropHelper.BROWSERSTACK_LOCAL);
-			capability.setCapability("browserstack.localIdentifier",
-					PropHelper.BROWSERSTACK_LOCAL_IDENTIFIER);
-			capability.setCapability("browserstack.debug",
-					PropHelper.BROWSERSTACK_DEBUG);
+			capability.setCapability("browserstack.local", PropHelper.BROWSERSTACK_LOCAL);
+			capability.setCapability("browserstack.localIdentifier", PropHelper.BROWSERSTACK_LOCAL_IDENTIFIER);
+			capability.setCapability("browserstack.debug", PropHelper.BROWSERSTACK_DEBUG);
 			try {
 				url = new URL(PropHelper.BROWSERSTACK_URL);
 			} catch (MalformedURLException e) {
-				logger.error("url " + PropHelper.BROWSERSTACK_URL
-						+ " is malformed");
+				logger.error("url " + PropHelper.BROWSERSTACK_URL + " is malformed");
 			}
 		} else {
 			// setup local remote testing
@@ -186,13 +178,8 @@ public class Driver {
 			// set browser type
 			if (browser.equalsIgnoreCase("ie")) {
 				capability.setBrowserName(BrowserType.IE);
-				capability
-						.setCapability(
-								InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
-								true);
-				capability.setCapability(
-						CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-						UnexpectedAlertBehaviour.IGNORE);
+				capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+				capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 			} else {
 				capability.setBrowserName(browser);
 			}
@@ -205,8 +192,7 @@ public class Driver {
 			try {
 				url = new URL(PropHelper.REMOTE_ADDRESS);
 			} catch (MalformedURLException e) {
-				logger.error("url " + PropHelper.REMOTE_ADDRESS
-						+ " is malformed");
+				logger.error("url " + PropHelper.REMOTE_ADDRESS + " is malformed");
 			}
 		}
 
@@ -239,8 +225,7 @@ public class Driver {
 	 * @return WebDriver
 	 */
 	private WebDriver setupChome() {
-		System.setProperty("webdriver.chrome.driver",
-				PropHelper.CHROME_WEBDRIVER);
+		System.setProperty("webdriver.chrome.driver", PropHelper.CHROME_WEBDRIVER);
 		DesiredCapabilities capability = new DesiredCapabilities();
 		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		return new ChromeDriver(capability);
@@ -253,27 +238,19 @@ public class Driver {
 	 */
 	private WebDriver setupInternetExplorer() {
 		if (PropHelper.DEFAULT_IE_ARCH.equals("x86"))
-			System.setProperty("webdriver.ie.driver",
-					PropHelper.IE_WEBDRIVER_X86);
+			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
 		else if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64())
-			System.setProperty("webdriver.ie.driver",
-					PropHelper.IE_WEBDRIVER_X64);
+			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
 		else if (isOSX64())
-			System.setProperty("webdriver.ie.driver",
-					PropHelper.IE_WEBDRIVER_X64);
+			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
 		else
-			System.setProperty("webdriver.ie.driver",
-					PropHelper.IE_WEBDRIVER_X86);
+			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
 
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-		capability
-				.setCapability(
-						InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
-						true);
+		capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		// ignore the unexpected alert behavior, so as to handle the business
 		// alert in the test script
-		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-				UnexpectedAlertBehaviour.IGNORE);
+		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		return new InternetExplorerDriver(capability);
 	}
@@ -289,8 +266,7 @@ public class Driver {
 		// System.setProperty("webdriver.firefox.bin", Property.FIREFOX_DIR);
 
 		FirefoxBinary firefoxBinary;
-		if (PropHelper.FIREFOX_PATH != null
-				&& !PropHelper.FIREFOX_PATH.trim().isEmpty())
+		if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty())
 			firefoxBinary = new FirefoxBinary(new File(PropHelper.FIREFOX_PATH));
 		else
 			firefoxBinary = new FirefoxBinary();
@@ -300,8 +276,7 @@ public class Driver {
 				"application/zip,application/vnd.ms-excel");
 
 		DesiredCapabilities capability = DesiredCapabilities.firefox();
-		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-				UnexpectedAlertBehaviour.IGNORE);
+		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		return new FirefoxDriver(firefoxBinary, firefoxProfile, capability);
 	}
@@ -657,11 +632,9 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextSelected(By locator, String text) {
-		logger.debug("wait text " + text + " to be selected on element "
-				+ locator.toString());
+		logger.debug("wait text " + text + " to be selected on element " + locator.toString());
 		waitDocumentReady();
-		wait.until(ExpectedConditions.textToBePresentInElementLocated(locator,
-				text));
+		wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, text));
 	}
 
 	/**
@@ -671,11 +644,9 @@ public class Driver {
 	 * @param text
 	 */
 	public void waitTextTyped(By locator, String text) {
-		logger.debug("wait text " + text + " to be typed on element "
-				+ locator.toString());
+		logger.debug("wait text " + text + " to be typed on element " + locator.toString());
 		waitDocumentReady();
-		wait.until(ExpectedConditions.textToBePresentInElementLocated(locator,
-				text));
+		wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, text));
 	}
 
 	/**
@@ -699,8 +670,7 @@ public class Driver {
 	 * @param text
 	 */
 	public void assertTextSelectable(By locator, String text) {
-		String message = "assert text " + text + " of locator "
-				+ locator.toString() + " to be selectable";
+		String message = "assert text " + text + " of locator " + locator.toString() + " to be selectable";
 		Assert.assertTrue(isTextSelectable(locator, text), message);
 	}
 
@@ -711,10 +681,8 @@ public class Driver {
 	 * @param text
 	 */
 	public void assertSelectedValue(By locator, String text) {
-		String message = "assert option text " + text
-				+ " to be selected of locator " + locator.toString();
-		List<WebElement> elements = new Select(findElement(locator))
-				.getAllSelectedOptions();
+		String message = "assert option text " + text + " to be selected of locator " + locator.toString();
+		List<WebElement> elements = new Select(findElement(locator)).getAllSelectedOptions();
 		Boolean selected = false;
 		for (WebElement element : elements) {
 			if (element.getText().trim().equals(text)) {
@@ -839,8 +807,7 @@ public class Driver {
 	 */
 	public void assertSelected(By locator, Boolean selected) {
 		Boolean actual = isSelected(locator);
-		String message = "assert being selected of locator "
-				+ locator.toString();
+		String message = "assert being selected of locator " + locator.toString();
 		if (selected) {
 			Assert.assertTrue(actual, message);
 		} else {
@@ -877,8 +844,7 @@ public class Driver {
 	 */
 	public void assertAttribute(By locator, String attribute, String value) {
 		String actual = getAttribute(locator, attribute);
-		String message = "assert attribute " + attribute + " of locator "
-				+ locator.toString();
+		String message = "assert attribute " + attribute + " of locator " + locator.toString();
 		Assert.assertEquals(actual, value, message);
 	}
 
@@ -911,8 +877,7 @@ public class Driver {
 	public WebElement waitVisible(By locator) {
 		logger.debug("wait element " + locator.toString() + " to be visible");
 		waitDocumentReady();
-		return wait
-				.until(ExpectedConditions.visibilityOf(findElement(locator)));
+		return wait.until(ExpectedConditions.visibilityOf(findElement(locator)));
 	}
 
 	/**
@@ -934,8 +899,7 @@ public class Driver {
 	 *            in seconds
 	 */
 	public void waitPresent(By locator, int timeout) {
-		logger.debug("wait element " + locator.toString()
-				+ " to be present in " + timeout + " seconds");
+		logger.debug("wait element " + locator.toString() + " to be present in " + timeout + " seconds");
 		waitDocumentReady();
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
@@ -943,9 +907,8 @@ public class Driver {
 				return;
 			}
 		}
-		logger.warn("Timed out after " + timeout
-				+ " seconds waiting for element " + locator.toString()
-				+ " to be present");
+		logger.warn(
+				"Timed out after " + timeout + " seconds waiting for element " + locator.toString() + " to be present");
 	}
 
 	/**
@@ -956,8 +919,7 @@ public class Driver {
 	 *            in seconds
 	 */
 	public void waitAbsent(By locator, int timeout) {
-		logger.debug("wait element " + locator.toString() + " to be absent in "
-				+ timeout + " seconds");
+		logger.debug("wait element " + locator.toString() + " to be absent in " + timeout + " seconds");
 		waitDocumentReady();
 		long t = System.currentTimeMillis();
 		while (System.currentTimeMillis() - t < timeout * 100) {
@@ -965,27 +927,23 @@ public class Driver {
 				return;
 			}
 		}
-		logger.warn("Timed out after " + timeout
-				+ " seconds waiting for element " + locator.toString()
-				+ " to be absent");
+		logger.warn(
+				"Timed out after " + timeout + " seconds waiting for element " + locator.toString() + " to be absent");
 	}
 
 	/**
-	 * save sreenshot for local or remote testing
+	 * save screenshot for local or remote testing
 	 * 
 	 * @param fileName
 	 */
 	public void saveScreenShot(String fileName) {
-		if (!(new File(PropHelper.SCREENSHOT_PATH).isDirectory())) {
-			new File(PropHelper.SCREENSHOT_PATH).mkdir();
-		}
+		new File(getTestcase().getScreenshotFolder()).mkdirs();
 		TakesScreenshot tsDriver;
 		if (PropHelper.REMOTE)
 			tsDriver = (TakesScreenshot) (new Augmenter().augment(wd));
 		else
 			tsDriver = (TakesScreenshot) wd;
-		File image = new File(PropHelper.SCREENSHOT_PATH + File.separator
-				+ fileName == null ? "" : fileName + ".png");
+		File image = new File(getTestcase().getScreenshotFolder() + fileName == null ? "" : fileName + ".png");
 		tsDriver.getScreenshotAs(OutputType.FILE).renameTo(image);
 		logger.info("take screenshot to " + image.getPath());
 	}
@@ -1008,22 +966,17 @@ public class Driver {
 
 		try {
 			File screenshot = tsDriver.getScreenshotAs(OutputType.FILE);
-			String filePath = PropHelper.SCREENSHOT_PATH + File.separator
-					+ testresult.getTestClass().getName() + "."
+			String filePath = getTestcase().getScreenshotFolder() + testresult.getTestClass().getName() + "."
 					+ testresult.getName() + ".png";
 			FileUtils.copyFile(screenshot, new File(filePath));
 			Reporter.setCurrentTestResult(testresult);
 			filePath = filePath.replaceAll("\\\\", "/");
-			Method method = testresult.getInstance().getClass()
-					.getMethod("report", String.class);
-			method.invoke(testresult.getInstance(), Helper.getTestReportStyle(
-					"../../../" + filePath, "<img src=\"../../../" + filePath
-							+ "\" width=\"400\" height=\"300\"/>"));
+			Method method = testresult.getInstance().getClass().getMethod("report", String.class);
+			method.invoke(testresult.getInstance(), Helper.getTestReportStyle("../../../" + filePath,
+					"<img src=\"../../../" + filePath + "\" width=\"400\" height=\"300\"/>"));
 		} catch (Exception e) {
-			logger.error(
-					testresult.getTestClass().getName() + "."
-							+ testresult.getName() + " saveScreentshot failed "
-							+ e.getMessage(), e);
+			logger.error(testresult.getTestClass().getName() + "." + testresult.getName() + " saveScreentshot failed "
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -1067,8 +1020,7 @@ public class Driver {
 	 */
 	public void assertCssValue(By locator, String attribute, String value) {
 		String actual = getCssValue(locator, attribute);
-		String message = "assert css attribute " + attribute + " of locator "
-				+ locator.toString();
+		String message = "assert css attribute " + attribute + " of locator " + locator.toString();
 		Assert.assertEquals(actual, value, message);
 	}
 
@@ -1120,8 +1072,7 @@ public class Driver {
 	public void setText(By locator, String text) {
 		logger.info("set innertext to " + text + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].innerText = '" + text + "';",
-				findElement(locator));
+		javascript.executeScript("arguments[0].innerText = '" + text + "';", findElement(locator));
 	}
 
 	/**
@@ -1133,8 +1084,7 @@ public class Driver {
 	public void setValue(By locator, String value) {
 		logger.info("set value " + value + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].value = '" + value + "';",
-				findElement(locator));
+		javascript.executeScript("arguments[0].value = '" + value + "';", findElement(locator));
 	}
 
 	/**
@@ -1177,8 +1127,7 @@ public class Driver {
 	@SuppressWarnings("unused")
 	private List<WebElement> findElements(By locator) {
 		waitDocumentReady();
-		return wait.until(ExpectedConditions
-				.presenceOfAllElementsLocatedBy(locator));
+		return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
 	}
 
 	/**
@@ -1191,8 +1140,7 @@ public class Driver {
 	public void triggerEvent(By locator, String event) {
 		logger.info("trigger event " + event + " on " + locator.toString());
 		JavascriptLibrary javascript = new JavascriptLibrary();
-		javascript.callEmbeddedSelenium(wd, "triggerEvent",
-				findElement(locator), event);
+		javascript.callEmbeddedSelenium(wd, "triggerEvent", findElement(locator), event);
 	}
 
 	/**
@@ -1205,8 +1153,7 @@ public class Driver {
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].fireEvent('" + event + "');",
-				findElement(locator));
+		javascript.executeScript("arguments[0].fireEvent('" + event + "');", findElement(locator));
 	}
 
 	/**
@@ -1233,12 +1180,9 @@ public class Driver {
 	 *            visible at the bottom of the window.
 	 */
 	public void scrollIntoView(By locator, Boolean bAlignToTop) {
-		logger.info("scroll into view of " + locator.toString()
-				+ ", and align to top is " + bAlignToTop);
+		logger.info("scroll into view of " + locator.toString() + ", and align to top is " + bAlignToTop);
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript(
-				"arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");",
-				findElement(locator));
+		javascript.executeScript("arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");", findElement(locator));
 	}
 
 	/**
@@ -1250,8 +1194,7 @@ public class Driver {
 		logger.info("scroll to " + locator.toString());
 		WebElement element = findElement(locator);
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("window.scrollTo(" + element.getLocation().x
-				+ "," + element.getLocation().y + ")");
+		javascript.executeScript("window.scrollTo(" + element.getLocation().x + "," + element.getLocation().y + ")");
 	}
 
 	/**
@@ -1289,11 +1232,10 @@ public class Driver {
 	 * @param value
 	 */
 	public void setAttribute(By locator, String attribute, String value) {
-		logger.info("set attribute " + attribute + " to " + value + " on "
-				+ locator.toString());
+		logger.info("set attribute " + attribute + " to " + value + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].setAttribute('" + attribute
-				+ "', arguments[1])", findElement(locator), value);
+		javascript.executeScript("arguments[0].setAttribute('" + attribute + "', arguments[1])", findElement(locator),
+				value);
 	}
 
 	/**
@@ -1303,11 +1245,9 @@ public class Driver {
 	 * @param attribute
 	 */
 	public void removeAttribute(By locator, String attribute) {
-		logger.info("remove attribute " + attribute + " on "
-				+ locator.toString());
+		logger.info("remove attribute " + attribute + " on " + locator.toString());
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].removeAttribute('" + attribute
-				+ "')", findElement(locator));
+		javascript.executeScript("arguments[0].removeAttribute('" + attribute + "')", findElement(locator));
 	}
 
 	/**
@@ -1320,14 +1260,15 @@ public class Driver {
 			public Boolean apply(WebDriver driver) {
 				boolean ready = false;
 				if (System.currentTimeMillis() - t > PropHelper.TIMEOUT_DOCUMENT_COMPLETE * 1000)
-					throw new TimeoutException("Timed out after "
-							+ PropHelper.TIMEOUT_DOCUMENT_COMPLETE
+					throw new TimeoutException("Timed out after " + PropHelper.TIMEOUT_DOCUMENT_COMPLETE
 							+ " seconds while waiting for document to be ready");
 				try {
-					ready = ((JavascriptExecutor) driver).executeScript(
-							"return document.readyState").equals("complete");
+					ready = ((JavascriptExecutor) driver).executeScript("return document.readyState")
+							.equals("complete");
 				} catch (WebDriverException e) {
-					logger.warn("javascript error while waiting document to be ready");
+					// logger.warn("javascript error while waiting document to
+					// be ready");
+					ready = true;
 				}
 				return ready;
 			}
@@ -1342,8 +1283,7 @@ public class Driver {
 	@SuppressWarnings("unused")
 	private void generatePageSource() {
 		String currentUrl = wd.getCurrentUrl();
-		String fileName = currentUrl.replaceFirst("http://.*:\\d+/", "")
-				.replaceFirst("\\?.*", "");
+		String fileName = currentUrl.replaceFirst("http://.*:\\d+/", "").replaceFirst("\\?.*", "");
 		if (!testcase.getCurrentUrl().equals(currentUrl)) {
 			String pageSource = wd.getPageSource();
 			File file = new File("target/" + fileName + ".html");
@@ -1364,8 +1304,7 @@ public class Driver {
 					logger.warn(e.getMessage(), e);
 				}
 			} else {
-				logger.warn("skipped generatePageSource due to counts of same page "
-						+ currentUrl + " exceeds 100.");
+				logger.warn("skipped generatePageSource due to counts of same page " + currentUrl + " exceeds 100.");
 			}
 			testcase.setCurrentUrl(currentUrl);
 		}
@@ -1379,8 +1318,7 @@ public class Driver {
 	 * @return web element
 	 */
 	public WebElement waitClickable(By locator) {
-		logger.debug("wait element " + locator.toString()
-				+ " to be visible and enable");
+		logger.debug("wait element " + locator.toString() + " to be visible and enable");
 		waitDocumentReady();
 		return wait.until(ExpectedConditions.elementToBeClickable(locator));
 	}
@@ -1393,9 +1331,7 @@ public class Driver {
 	public long getCellRow(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript
-				.executeScript("return arguments[0].parentNode.rowIndex",
-						findElement(locator));
+		ret = (long) javascript.executeScript("return arguments[0].parentNode.rowIndex", findElement(locator));
 		ret++;// row index starts with zero
 		return ret;
 	}
@@ -1408,8 +1344,7 @@ public class Driver {
 	public long getCellColumn(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript("return arguments[0].cellIndex",
-				findElement(locator));
+		ret = (long) javascript.executeScript("return arguments[0].cellIndex", findElement(locator));
 		ret++;// column index starts with zero
 		return ret;
 	}
@@ -1422,8 +1357,7 @@ public class Driver {
 	public long getRow(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript("return arguments[0].rowIndex",
-				findElement(locator));
+		ret = (long) javascript.executeScript("return arguments[0].rowIndex", findElement(locator));
 		ret++;// row index starts with zero
 		return ret;
 	}
@@ -1437,8 +1371,7 @@ public class Driver {
 	public long getRowCount(By locator) {
 		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript(
-				"return arguments[0].rows.length", findElement(locator));
+		ret = (long) javascript.executeScript("return arguments[0].rows.length", findElement(locator));
 		return ret;
 	}
 
