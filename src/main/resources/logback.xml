@@ -16,6 +16,9 @@
 						<pattern>%d{HH:mm:ss.SSS}%thread%level%logger%msg</pattern>
 					</layout>
 				</encoder>
+				<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+					<level>INFO</level>
+				</filter>
 			</appender>
 		</sift>
 	</appender>
@@ -24,6 +27,9 @@
 		<encoder>
 			<pattern>%-4relative [%thread] %-5level %logger - %msg%n</pattern>
 		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
 	</appender>
 	<appender name="ERROR"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -57,12 +63,12 @@
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>DEBUG</level>
-		</filter>
+		</filter>		
 	</appender>
 	<logger name="org.apache.http" level="ERROR" />
 	<logger name="ch.qos.logback" level="ERROR" />
 	<logger name="org.littleshoot.proxy.impl.ClientToProxyConnection" level="OFF" />
-	<root level="INFO">
+	<root level="ALL">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="SIFT" />
 		<appender-ref ref="ERROR" />
