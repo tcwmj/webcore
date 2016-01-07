@@ -21,6 +21,10 @@ public class ProxyHelper {
 	private final static Logger logger = LoggerFactory.getLogger(ProxyHelper.class);
 	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
 
+	static {
+		proxy.start(0);
+	}
+
 	public static BrowserMobProxy getProxy() {
 		return proxy;
 	}
@@ -40,7 +44,7 @@ public class ProxyHelper {
 	 * @param testcase
 	 */
 	public static void supportFileDownload(final TestCaseBase testcase) {
-		logger.info("setup before suite");
+		logger.info("setup proxy to support file download mechianism");
 		// set response filter rule for downloading files
 		proxy.addResponseFilter(new ResponseFilter() {
 			@Override

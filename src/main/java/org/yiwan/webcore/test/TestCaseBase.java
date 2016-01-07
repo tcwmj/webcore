@@ -6,10 +6,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
 import org.yiwan.webcore.selenium.Driver;
-import org.yiwan.webcore.util.ProxyHelper;
 
 /**
  * @author Kenny Wang
@@ -199,16 +196,4 @@ public class TestCaseBase {
 	public String getScreenshotFolder() {
 		return getTestResultFolder() + "screenshot/";
 	}
-
-	@BeforeSuite
-	protected void beforeSuite() {
-		ProxyHelper.startProxy();
-		ProxyHelper.supportFileDownload(this);
-	}
-
-	@AfterSuite
-	protected void afterSuite() {
-		ProxyHelper.stopProxy();
-	}
-
 }
