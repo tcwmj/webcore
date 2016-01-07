@@ -6,10 +6,10 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.yiwan.webcore.selenium.Driver;
-
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
+import org.yiwan.webcore.util.ProxyHelper;
 
 /**
  * @author Kenny Wang
@@ -18,6 +18,7 @@ import net.lightbody.bmp.BrowserMobProxyServer;
 public class TestCaseBase {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	protected Driver driver;
 
 	/**
@@ -49,25 +50,65 @@ public class TestCaseBase {
 		this.baseUrl = intialUrl;
 	}
 
+	/**
+	 * testng test suite name
+	 */
 	private String suiteName;
 
+	/**
+	 * get testng test suite name
+	 * 
+	 * @return testng suite name
+	 */
 	public String getSuiteName() {
 		return suiteName;
 	}
 
+	/**
+	 * set testng test suite name
+	 * 
+	 * @param suiteName
+	 */
 	public void setSuiteName(String suiteName) {
 		this.suiteName = suiteName;
 	}
 
-	protected String lastDownloadFileName;
+	/**
+	 * testng test name
+	 */
+	private String testName;
+
+	/**
+	 * get testng test name
+	 * 
+	 * @return testng test name
+	 */
+	public String getTestName() {
+		return testName;
+	}
+
+	/**
+	 * set testng test name
+	 * 
+	 * @param suiteName
+	 */
+	public void setTestName(String suiteName) {
+		this.testName = suiteName;
+	}
+
+	private String downloadFile;
 
 	/**
 	 * get last download file name with relative path
 	 * 
 	 * @return download file name
 	 */
-	public String getLastDownloadFileName() {
-		return lastDownloadFileName;
+	public String getDownloadFile() {
+		return downloadFile;
+	}
+
+	public void setDownloadFile(String downloadFile) {
+		this.downloadFile = downloadFile;
 	}
 
 	private String j_winname = "";
@@ -81,12 +122,6 @@ public class TestCaseBase {
 	}
 
 	protected final static String DISCRIMINATOR_KEY = "testcase";
-
-	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
-
-	public static BrowserMobProxy getProxy() {
-		return proxy;
-	}
 
 	/**
 	 * whether to skip next execution of left test methods
@@ -129,29 +164,51 @@ public class TestCaseBase {
 	}
 
 	/**
-	 * get log folder
+	 * get test result folder against suite name and test name
 	 * 
 	 * @return
 	 */
+	private String getTestResultFolder() {
+		return ("target/testng/" + (suiteName == null ? "" : suiteName) + "/" + (testName == null ? "" : testName)
+				+ "/").replace("//", "/");
+	}
+
+	/**
+	 * get log folder
+	 * 
+	 * @return log folder string
+	 */
 	public String getLogFolder() {
-		return ("target/" + (suiteName == null ? "" : suiteName) + "/logs/").replace("//", "/");
+		return getTestResultFolder() + "log/";
 	}
 
 	/**
 	 * get target data folder
 	 * 
-	 * @return
+	 * @return target data folder string
 	 */
 	public String getTargetDataFolder() {
-		return ("target/" + (suiteName == null ? "" : suiteName) + "/data/").replace("//", "/");
+		return getTestResultFolder() + "data/";
 	}
 
 	/**
 	 * get screenshot folder
 	 * 
-	 * @return
+	 * @return screenshot folder string
 	 */
 	public String getScreenshotFolder() {
-		return ("target/" + (suiteName == null ? "" : suiteName) + "/screenshot/").replace("//", "/");
+		return getTestResultFolder() + "screenshot/";
 	}
+
+	@BeforeSuite
+	protected void beforeSuite() {
+		ProxyHelper.startProxy();
+		ProxyHelper.supportFileDownload(this);
+	}
+
+	@AfterSuite
+	protected void afterSuite() {
+		ProxyHelper.stopProxy();
+	}
+
 }

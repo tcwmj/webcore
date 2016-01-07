@@ -54,6 +54,7 @@ import org.testng.Reporter;
 import org.yiwan.webcore.test.TestCaseBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
+import org.yiwan.webcore.util.ProxyHelper;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
@@ -76,7 +77,7 @@ public class Driver {
 	private WebDriver wd;
 	private Wait<WebDriver> wait;
 
-	private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(TestCaseBase.getProxy());
+	private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyHelper.getProxy());
 
 	public Driver(TestCaseBase testcase, String os, String os_version, String browser, String browser_version,
 			String resolution) {
