@@ -169,7 +169,7 @@ public class TestCaseBase {
 	 * @return
 	 */
 	private String getTestResultFolder() {
-		return ("target/testng/" + (suiteName == null ? "" : suiteName) + "/" + (testName == null ? "" : testName)
+		return ("target/result/" + (suiteName == null ? "" : suiteName) + "/" + (testName == null ? "" : testName)
 				+ "/").replace("//", "/");
 	}
 
