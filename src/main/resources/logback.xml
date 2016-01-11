@@ -31,8 +31,7 @@
 			<level>INFO</level>
 		</filter>
 	</appender>
-	<appender name="ERROR"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<appender name="ERROR"	class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>${output_folder}error.log</File>
 		<Append>true</Append>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -48,13 +47,12 @@
 			<level>ERROR</level>
 		</filter>
 	</appender>
-	<appender name="DEBUG"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${output_folder}debug.log</File>
+	<appender name="ALL"	class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${output_folder}all.log</File>
 		<Append>true</Append>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<fileNamePattern>${output_folder}debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${output_folder}all.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<!-- keep 30 days' worth of history -->
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
@@ -65,13 +63,51 @@
 			<level>DEBUG</level>
 		</filter>		
 	</appender>
-	<logger name="org.apache.http" level="ERROR" />
-	<logger name="ch.qos.logback" level="ERROR" />
-	<logger name="org.littleshoot.proxy.impl.ClientToProxyConnection" level="OFF" />
+	<appender name="BUSINESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${output_folder}business.log</File>
+		<Append>true</Append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${output_folder}business.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>		
+	</appender>	
+	<appender name="PROXY"	class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${output_folder}proxy.log</File>
+		<Append>true</Append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${output_folder}proxy.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>		
+	</appender>	
+	<logger name="org.littleshoot.proxy" level="DEBUG" additivity="false" >
+		<appender-ref ref="PROXY" />
+	</logger>
+	<logger name="org.yiwan" >
+		<appender-ref ref="BUSINESS" />
+	</logger>
+	<logger name="com.lombardrisk" >
+		<appender-ref ref="BUSINESS" />
+	</logger>
 	<root level="ALL">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="SIFT" />
+		<appender-ref ref="SIFT" />	
+		<appender-ref ref="ALL" />
 		<appender-ref ref="ERROR" />
-		<appender-ref ref="DEBUG" />
 	</root>
 </configuration>
