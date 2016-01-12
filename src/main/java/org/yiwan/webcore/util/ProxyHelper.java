@@ -72,24 +72,30 @@ public class ProxyHelper {
 			proxy.newHar(initialPageRef, initialPageTitle);
 	}
 
+	/**
+	 * write har to a file
+	 * 
+	 * @param testcase
+	 * @param filename
+	 *            file name without extension
+	 */
 	public static void writeHAR(TestCaseBase testcase, final String filename) {
-		FilenameFilter filter = new FilenameFilter() {
-			private String name = Helper.getFileNameWithoutExtension(filename);
-
-			public boolean accept(File dir, String name) {
-				if (name.startsWith(this.name))
-					return true;
-				return false;
+		if (testcase.isEnableHAR()) {
+			FilenameFilter filter = new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					if (name.startsWith(filename))
+						return true;
+					return false;
+				}
+			};
+			File[] files = new File(testcase.getHARFolder()).listFiles(filter);
+			String filePath = testcase.getHARFolder() + filename + "_" + (files == null ? 0 : files.length) + ".har";
+			new File(testcase.getHARFolder()).mkdirs();
+			try {
+				proxy.getHar().writeTo(new FileWriter(filePath));
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
 			}
-		};
-		File[] files = new File(testcase.getHARFolder()).listFiles(filter);
-		String filePath = testcase.getHARFolder() + Helper.getFileNameWithoutExtension(filename) + "_"
-				+ (files == null ? 0 : files.length) + "." + Helper.getFileExtension(filename);
-		new File(testcase.getHARFolder()).mkdirs();
-		try {
-			proxy.getHar().writeTo(new FileWriter(filePath));
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
 		}
 	}
 
