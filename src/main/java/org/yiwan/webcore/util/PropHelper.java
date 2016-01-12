@@ -75,6 +75,7 @@ public class PropHelper {
 
 	public static final Boolean REMOTE = Boolean.parseBoolean(props.getProperty("remote"));
 	public static final Boolean BROWSERSTACK = Boolean.parseBoolean(props.getProperty("browserstack"));
+	public static final Boolean ENABLE_HAR = Boolean.parseBoolean(props.getProperty("HAR.enable"));
 
 	/**
 	 * load properties from external file

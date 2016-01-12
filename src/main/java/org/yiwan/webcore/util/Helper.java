@@ -76,8 +76,7 @@ public class Helper {
 	 * @return boolean
 	 */
 	public static boolean isDate(String date) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				I18N.DATE_PATTERN_EN_US);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(I18N.DATE_PATTERN_EN_US);
 		try {
 			dateFormat.parse(date);
 			return true;
@@ -152,8 +151,7 @@ public class Helper {
 	 * @return report string
 	 */
 	public static String getTestReportStyle(String source, String text) {
-		return "<a href = 'javascript:void(0)' onclick=\"window.open ('"
-				+ source
+		return "<a href = 'javascript:void(0)' onclick=\"window.open ('" + source
 				+ "','newwindow','height=600,width=800,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no')\">"
 				+ text + "</a>";
 	}
@@ -164,8 +162,7 @@ public class Helper {
 	 * @param stream
 	 * @return Map
 	 */
-	public static Map<String, Map<String, String>> getFeedMapping(
-			InputStream stream) {
+	public static Map<String, Map<String, String>> getFeedMapping(InputStream stream) {
 		Reader r = null;
 		try {
 			r = new InputStreamReader(stream, "utf-8");
@@ -180,8 +177,7 @@ public class Helper {
 					s = s.substring(1, s.length() - 1);
 					String[] kvs = s.split(",");
 					for (String kv : kvs) {
-						m.put(kv.substring(0, kv.indexOf('=')).trim(), kv
-								.substring(kv.indexOf('=') + 1).trim());
+						m.put(kv.substring(0, kv.indexOf('=')).trim(), kv.substring(kv.indexOf('=') + 1).trim());
 						map.put(((String) entry.getKey()).trim(), m);
 					}
 				}
@@ -208,7 +204,38 @@ public class Helper {
 	 * @return word with first letter in lower case
 	 */
 	public static String firstLetterToLowerCase(String s) {
-		return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0)))
-				.append(s.substring(1)).toString();
+		return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0))).append(s.substring(1)).toString();
+	}
+
+	/**
+	 * get file extension
+	 * 
+	 * @param filename
+	 * @return file extension string
+	 */
+	public static String getFileExtension(String filename) {
+		if ((filename != null) && (filename.length() > 0)) {
+			int dot = filename.lastIndexOf('.');
+			if ((dot > -1) && (dot < (filename.length() - 1))) {
+				return filename.substring(dot + 1);
+			}
+		}
+		return filename;
+	}
+
+	/**
+	 * get file name without extension
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public static String getFileNameWithoutExtension(String filename) {
+		if ((filename != null) && (filename.length() > 0)) {
+			int dot = filename.lastIndexOf('.');
+			if ((dot > -1) && (dot < (filename.length()))) {
+				return filename.substring(0, dot);
+			}
+		}
+		return filename;
 	}
 }

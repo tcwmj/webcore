@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
 import org.yiwan.webcore.selenium.Driver;
+import org.yiwan.webcore.util.PropHelper;
 
 /**
  * @author Kenny Wang
@@ -118,6 +119,30 @@ public class TestCaseBase {
 		return j_winname;
 	}
 
+	/**
+	 * enable http request archive, default value should be false, true for
+	 * performance use
+	 */
+	private boolean enableHAR = PropHelper.ENABLE_HAR;
+
+	/**
+	 * is enable http request archive
+	 * 
+	 * @return enabled or disabled
+	 */
+	public boolean isEnableHAR() {
+		return enableHAR;
+	}
+
+	/**
+	 * enable or disable http request archive
+	 * 
+	 * @param enableHAR
+	 */
+	public void setEnableHAR(boolean enableHAR) {
+		this.enableHAR = enableHAR;
+	}
+
 	protected final static String DISCRIMINATOR_KEY = "testcase";
 
 	/**
@@ -195,5 +220,14 @@ public class TestCaseBase {
 	 */
 	public String getScreenshotFolder() {
 		return getTestResultFolder() + "screenshot/";
+	}
+
+	/**
+	 * get HAR folder
+	 * 
+	 * @return HAR folder string
+	 */
+	public String getHARFolder() {
+		return getTestResultFolder() + "har/" + getTestCaseId() + "/";
 	}
 }
