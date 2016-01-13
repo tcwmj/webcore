@@ -1,23 +1,30 @@
 package org.yiwan.webcore.util;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.xml.utils.DefaultErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,15 +110,6 @@ public class Helper {
 	public static void deleteFile(String filepath) {
 		File file = new File(filepath);
 		file.delete();
-	}
-
-	/**
-	 * use current time in milliseconds to generate a string
-	 * 
-	 * @return random string
-	 */
-	public static String randomize() {
-		return String.valueOf(System.currentTimeMillis());
 	}
 
 	/**
@@ -237,5 +235,71 @@ public class Helper {
 			}
 		}
 		return filename;
+	}
+
+	/**
+	 * get an generic object from list by specified name
+	 * 
+	 * @param list
+	 * @param name
+	 * @return an generic object
+	 */
+	public static T byName(List<T> list, String name) {
+		try {
+			Method method = T.class.getDeclaredMethod("getName");
+			for (T element : list) {
+				if (method.invoke(element).equals(name))
+					return element;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * use uuid or current time in milliseconds to generate a random string
+	 * 
+	 * @return random string
+	 */
+	public static String randomize() {
+		String ret;
+		if (PropHelper.RANDOM_RULE.equals("uuid")) {
+			String s = UUID.randomUUID().toString();
+			ret = s.substring(0, 8) + s.substring(9, 13) + s.substring(14, 18) + s.substring(19, 23) + s.substring(24);
+		} else {
+			ret = String.valueOf(System.currentTimeMillis());
+		}
+		return ret;
+	}
+
+	/**
+	 * randomize any string field that was previously equal to "random" without
+	 * case sensitive
+	 * 
+	 * @param object
+	 * @return an input object
+	 */
+	public static T randomize(T object) {
+		Class<?> clazz = object.getClass();
+		java.lang.reflect.Field[] fields = clazz.getDeclaredFields();
+		for (java.lang.reflect.Field field : fields) {
+			PropertyDescriptor pd;
+			try {
+				pd = new PropertyDescriptor(field.getName(), clazz);
+
+				Method getMethod = pd.getReadMethod();
+				Object ret = getMethod.invoke(object);
+				if (ret instanceof String && ((String) ret).toLowerCase().equals(PropHelper.RANDOM_SYMBOL)) {
+					Method setMethod = pd.getWriteMethod();
+					setMethod.invoke(object, field.getName() + "_" + randomize());
+				}
+			} catch (IntrospectionException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		return object;
 	}
 }

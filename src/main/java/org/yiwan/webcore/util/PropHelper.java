@@ -34,6 +34,8 @@ public class PropHelper {
 	public static final int TIMEOUT_DOCUMENT_COMPLETE = Integer
 			.parseInt(props.getProperty("timeout.document.complete"));
 	public static final Integer TEST_RETRY_COUNT = Integer.valueOf(props.getProperty("test.retry.count"));
+	public static final String RANDOM_RULE = props.getProperty("random.rule");
+	public static final String RANDOM_SYMBOL = props.getProperty("random.symbol");
 	public static final String SOURCE_CODE_PATH = props.getProperty("sourcecode.path");
 	public static final String SOURCE_CODE_ENCODING = props.getProperty("sourcecode.encoding");
 
