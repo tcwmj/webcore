@@ -61,6 +61,17 @@ public class JaxbHelper {
 	}
 
 	/**
+	 * convert xml string java bean without schema validation
+	 * 
+	 * @param xml
+	 * @param clazz
+	 * @return object in generic type
+	 */
+	public static <T> T unmarshal(String xml, Class<T> clazz) {
+		return unmarshal(xml, null, clazz);
+	}
+
+	/**
 	 * convert xml string java bean
 	 * 
 	 * @param xml
@@ -73,11 +84,13 @@ public class JaxbHelper {
 		T t = null;
 		ValidationEventCollector validation = new ValidationEventCollector();
 		try {
-			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// http://www.w3.org/2001/XMLSchema
-			Schema schema = factory.newSchema(new StreamSource(xsd));
 			JAXBContext context = JAXBContext.newInstance(clazz);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setSchema(schema);
+			if (xsd != null) {
+				SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// http://www.w3.org/2001/XMLSchema
+				Schema schema = factory.newSchema(new StreamSource(xsd));
+				unmarshaller.setSchema(schema);
+			}
 			unmarshaller.setEventHandler(validation);
 			t = (T) unmarshaller.unmarshal(new StringReader(xml));
 		} catch (JAXBException | SAXException e) {
