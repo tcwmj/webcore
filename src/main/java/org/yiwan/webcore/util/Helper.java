@@ -327,7 +327,7 @@ public class Helper {
 	 * @param targetXml
 	 * @param finalXml
 	 */
-	public static void mergeXml(String sourceXml, String targetXml, String finalXml) {
+	public static void mergeXml(InputStream sourceXml, File targetXml, File finalXml) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setIgnoringComments(true);
 		DocumentBuilder builder = null;
@@ -339,8 +339,8 @@ public class Helper {
 		Document d1 = null;
 		Document d2 = null;
 		try {
-			d1 = builder.parse(new File(sourceXml));
-			d2 = builder.parse(new File(targetXml));
+			d1 = builder.parse(sourceXml);
+			d2 = builder.parse(targetXml);
 		} catch (SAXException | IOException e) {
 			logger.error(e.getMessage(), e);
 		}
