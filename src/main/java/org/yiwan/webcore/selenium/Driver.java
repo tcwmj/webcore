@@ -249,9 +249,9 @@ public class Driver {
 			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
 
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-		capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-		// ignore the unexpected alert behavior, so as to handle the business
-		// alert in the test script
+		// ignore ie protected mode behavior
+		// capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
+		// true);
 		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		return new InternetExplorerDriver(capability);
