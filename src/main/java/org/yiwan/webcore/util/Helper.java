@@ -328,6 +328,7 @@ public class Helper {
 	 * @param finalXml
 	 */
 	public static void mergeXml(InputStream sourceXml, File targetXml, File finalXml) {
+		logger.info("merge " + sourceXml + " and " + targetXml + " into " + finalXml);
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setIgnoringComments(true);
 		DocumentBuilder builder = null;
@@ -369,9 +370,9 @@ public class Helper {
 			logger.error(e.getMessage(), e);
 		}
 		String output = result.getWriter().toString();
-		Writer writer = null;
+		finalXml.getParentFile().mkdirs();
 		try {
-			writer = new BufferedWriter(new FileWriter(finalXml));
+			Writer writer = new BufferedWriter(new FileWriter(finalXml));
 			writer.write(output);
 			writer.close();
 		} catch (IOException e) {

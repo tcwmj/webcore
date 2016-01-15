@@ -1,5 +1,7 @@
 package org.yiwan.webcore.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -16,6 +18,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -35,6 +39,21 @@ public class JaxbHelper {
 	 */
 	public static String marshal(Object obj) {
 		return marshal(obj, "UTF-8");
+	}
+
+	/**
+	 * marshal object into a xml file with default encoding is UTF-8
+	 * 
+	 * @param obj
+	 * @param file
+	 */
+	public static void marshal(Object obj, File file) {
+		String xml = marshal(obj, "UTF-8");
+		try {
+			FileUtils.write(file, xml);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -61,7 +80,7 @@ public class JaxbHelper {
 	}
 
 	/**
-	 * convert xml string java bean without schema validation
+	 * convert xml string to java bean without schema validation
 	 * 
 	 * @param xml
 	 * @param clazz
@@ -69,6 +88,64 @@ public class JaxbHelper {
 	 */
 	public static <T> T unmarshal(String xml, Class<T> clazz) {
 		return unmarshal(xml, null, clazz);
+	}
+
+	/**
+	 * convert file to java bean without schema validation
+	 * 
+	 * @param xml
+	 * @param clazz
+	 * @return object in generic type
+	 */
+	public static <T> T unmarshal(File file, Class<T> clazz) {
+		return unmarshal(file, null, clazz);
+	}
+
+	/**
+	 * convert input stream to java bean without schema validation
+	 * 
+	 * @param in
+	 * @param clazz
+	 * @return object in generic type
+	 */
+	public static <T> T unmarshal(InputStream in, Class<T> clazz) {
+		return unmarshal(in, null, clazz);
+	}
+
+	/**
+	 * convert file to java bean
+	 * 
+	 * @param file
+	 * @param xsd
+	 * @param clazz
+	 * @return object in generic type
+	 */
+	public static <T> T unmarshal(File file, InputStream xsd, Class<T> clazz) {
+		String xml = "";
+		try {
+			xml = FileUtils.readFileToString(file, "UTF-8");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return unmarshal(xml, xsd, clazz);
+	}
+
+	/**
+	 * convert input stream to java bean
+	 * 
+	 * @param in
+	 * @param xsd
+	 * @param clazz
+	 * @return object in generic type
+	 */
+	public static <T> T unmarshal(InputStream in, InputStream xsd, Class<T> clazz) {
+		String xml = "";
+		try {
+			xml = IOUtils.toString(in, "UTF-8");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return unmarshal(xml, xsd, clazz);
 	}
 
 	/**
