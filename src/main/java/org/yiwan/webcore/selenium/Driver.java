@@ -75,6 +75,7 @@ public class Driver {
 
 	private TestCaseBase testcase;
 	private WebDriver wd;
+	private JavascriptExecutor js;
 	private Wait<WebDriver> wait;
 
 	private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyHelper.getProxy());
@@ -96,7 +97,7 @@ public class Driver {
 			logger.info("choose local test mode");
 			wd = setupLocalBrowser();
 		}
-
+		js = (JavascriptExecutor) wd;
 		// driver.manage().timeouts()
 		// .implicitlyWait(Property.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
 		if (PropHelper.MAXIMIZE_BROSWER) {
@@ -436,6 +437,16 @@ public class Driver {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * click a locator by javascript
+	 * 
+	 * @param locator
+	 */
+	public void jsClick(By locator) {
+		logger.info("click " + locator.toString() + " by javascript");
+		js.executeScript("arguments[0].click();", findElement(locator));
 	}
 
 	/**
@@ -1072,8 +1083,7 @@ public class Driver {
 	 */
 	public void setText(By locator, String text) {
 		logger.info("set innertext to " + text + " on " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].innerText = '" + text + "';", findElement(locator));
+		js.executeScript("arguments[0].innerText = '" + text + "';", findElement(locator));
 	}
 
 	/**
@@ -1084,8 +1094,7 @@ public class Driver {
 	 */
 	public void setValue(By locator, String value) {
 		logger.info("set value " + value + " on " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].value = '" + value + "';", findElement(locator));
+		js.executeScript("arguments[0].value = '" + value + "';", findElement(locator));
 	}
 
 	/**
@@ -1153,8 +1162,7 @@ public class Driver {
 	 */
 	public void fireEvent(By locator, String event) {
 		logger.info("fire event " + event + " on " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].fireEvent('" + event + "');", findElement(locator));
+		js.executeScript("arguments[0].fireEvent('" + event + "');", findElement(locator));
 	}
 
 	/**
@@ -1182,8 +1190,7 @@ public class Driver {
 	 */
 	public void scrollIntoView(By locator, Boolean bAlignToTop) {
 		logger.info("scroll into view of " + locator.toString() + ", and align to top is " + bAlignToTop);
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");", findElement(locator));
+		js.executeScript("arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");", findElement(locator));
 	}
 
 	/**
@@ -1194,8 +1201,7 @@ public class Driver {
 	public void scrollTo(By locator) {
 		logger.info("scroll to " + locator.toString());
 		WebElement element = findElement(locator);
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("window.scrollTo(" + element.getLocation().x + "," + element.getLocation().y + ")");
+		js.executeScript("window.scrollTo(" + element.getLocation().x + "," + element.getLocation().y + ")");
 	}
 
 	/**
@@ -1234,9 +1240,7 @@ public class Driver {
 	 */
 	public void setAttribute(By locator, String attribute, String value) {
 		logger.info("set attribute " + attribute + " to " + value + " on " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].setAttribute('" + attribute + "', arguments[1])", findElement(locator),
-				value);
+		js.executeScript("arguments[0].setAttribute('" + attribute + "', arguments[1])", findElement(locator), value);
 	}
 
 	/**
@@ -1247,8 +1251,7 @@ public class Driver {
 	 */
 	public void removeAttribute(By locator, String attribute) {
 		logger.info("remove attribute " + attribute + " on " + locator.toString());
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
-		javascript.executeScript("arguments[0].removeAttribute('" + attribute + "')", findElement(locator));
+		js.executeScript("arguments[0].removeAttribute('" + attribute + "')", findElement(locator));
 	}
 
 	/**
@@ -1264,8 +1267,7 @@ public class Driver {
 					throw new TimeoutException("Timed out after " + PropHelper.TIMEOUT_DOCUMENT_COMPLETE
 							+ " seconds while waiting for document to be ready");
 				try {
-					ready = ((JavascriptExecutor) driver).executeScript("return document.readyState")
-							.equals("complete");
+					ready = js.executeScript("return document.readyState").equals("complete");
 				} catch (WebDriverException e) {
 					// logger.warn("javascript error while waiting document to
 					// be ready");
@@ -1330,9 +1332,8 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getCellRow(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript("return arguments[0].parentNode.rowIndex", findElement(locator));
+		ret = (long) js.executeScript("return arguments[0].parentNode.rowIndex", findElement(locator));
 		ret++;// row index starts with zero
 		return ret;
 	}
@@ -1343,9 +1344,8 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getCellColumn(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript("return arguments[0].cellIndex", findElement(locator));
+		ret = (long) js.executeScript("return arguments[0].cellIndex", findElement(locator));
 		ret++;// column index starts with zero
 		return ret;
 	}
@@ -1356,9 +1356,8 @@ public class Driver {
 	 * @param locator
 	 */
 	public long getRow(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript("return arguments[0].rowIndex", findElement(locator));
+		ret = (long) js.executeScript("return arguments[0].rowIndex", findElement(locator));
 		ret++;// row index starts with zero
 		return ret;
 	}
@@ -1370,9 +1369,8 @@ public class Driver {
 	 * @return long
 	 */
 	public long getRowCount(By locator) {
-		JavascriptExecutor javascript = (JavascriptExecutor) wd;
 		long ret = -1;
-		ret = (long) javascript.executeScript("return arguments[0].rows.length", findElement(locator));
+		ret = (long) js.executeScript("return arguments[0].rows.length", findElement(locator));
 		return ret;
 	}
 
