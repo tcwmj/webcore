@@ -2,11 +2,15 @@ package org.yiwan.webcore.util;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -20,15 +24,28 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.xml.utils.DefaultErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -302,4 +319,64 @@ public class Helper {
 		}
 		return object;
 	}
+
+	/**
+	 * merge source and target xml file into a single xml file
+	 * 
+	 * @param sourceXml
+	 * @param targetXml
+	 * @param finalXml
+	 */
+	public static void mergeXml(String sourceXml, String targetXml, String finalXml) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setIgnoringComments(true);
+		DocumentBuilder builder = null;
+		try {
+			builder = dbf.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			logger.error(e.getMessage(), e);
+		}
+		Document d1 = null;
+		Document d2 = null;
+		try {
+			d1 = builder.parse(new File(sourceXml));
+			d2 = builder.parse(new File(targetXml));
+		} catch (SAXException | IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		NodeList n1 = d1.getDocumentElement().getChildNodes();
+		NodeList n2 = d2.getDocumentElement().getChildNodes();
+
+		for (int i = 0; i < n2.getLength(); i = i + 1) {
+			Node n = (Node) d1.importNode(n2.item(i), true);
+			n1.item(i).getParentNode().appendChild(n);
+		}
+
+		Transformer transformer = null;
+		try {
+			transformer = TransformerFactory.newInstance().newTransformer();
+		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
+			logger.error(e.getMessage(), e);
+		}
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+		StreamResult result = new StreamResult(new StringWriter());
+		DOMSource source = new DOMSource(d1);
+		try {
+			transformer.transform(source, result);
+		} catch (TransformerException e) {
+			logger.error(e.getMessage(), e);
+		}
+		String output = result.getWriter().toString();
+		Writer writer = null;
+		try {
+			writer = new BufferedWriter(new FileWriter(finalXml));
+			writer.write(output);
+			writer.close();
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
 }
