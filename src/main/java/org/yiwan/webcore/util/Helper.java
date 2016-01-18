@@ -259,10 +259,33 @@ public class Helper {
 	 * @return an generic object
 	 */
 	public static <T> Object filterListById(List<T> list, String id) {
+		return filterListBy(list, "getId", id);
+	}
+
+	/**
+	 * get an generic object from a list by specified name
+	 * 
+	 * @param list
+	 * @param name
+	 * @return an generic object
+	 */
+	public static <T> Object filterListByName(List<T> list, String name) {
+		return filterListBy(list, "getName", name);
+	}
+
+	/**
+	 * get an generic object from a list by specified method
+	 * 
+	 * @param list
+	 * @param by
+	 * @param value
+	 * @return an generic object
+	 */
+	public static <T> Object filterListBy(List<T> list, String by, String value) {
 		try {
-			Method method = list.get(0).getClass().getDeclaredMethod("getId");
+			Method method = list.get(0).getClass().getDeclaredMethod(by);
 			for (T element : list) {
-				if (method.invoke(element).equals(id))
+				if (method.invoke(element).equals(value))
 					return element;
 			}
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
