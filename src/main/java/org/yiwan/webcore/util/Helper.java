@@ -1,7 +1,5 @@
 package org.yiwan.webcore.util;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -38,7 +36,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.xml.utils.DefaultErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,17 +252,17 @@ public class Helper {
 	}
 
 	/**
-	 * get an generic object from list by specified name
+	 * get an generic object from a list by specified id
 	 * 
 	 * @param list
-	 * @param name
+	 * @param id
 	 * @return an generic object
 	 */
-	public static T byName(List<T> list, String name) {
+	public static <T> Object filterListById(List<T> list, String id) {
 		try {
-			Method method = T.class.getDeclaredMethod("getName");
+			Method method = list.get(0).getClass().getDeclaredMethod("getId");
 			for (T element : list) {
-				if (method.invoke(element).equals(name))
+				if (method.invoke(element).equals(id))
 					return element;
 			}
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
@@ -289,35 +286,6 @@ public class Helper {
 			ret = String.valueOf(System.currentTimeMillis());
 		}
 		return ret;
-	}
-
-	/**
-	 * randomize any string field that was previously equal to "random" without
-	 * case sensitive
-	 * 
-	 * @param object
-	 * @return an input object
-	 */
-	public static T randomize(T object) {
-		Class<?> clazz = object.getClass();
-		java.lang.reflect.Field[] fields = clazz.getDeclaredFields();
-		for (java.lang.reflect.Field field : fields) {
-			PropertyDescriptor pd;
-			try {
-				pd = new PropertyDescriptor(field.getName(), clazz);
-
-				Method getMethod = pd.getReadMethod();
-				Object ret = getMethod.invoke(object);
-				if (ret instanceof String && ((String) ret).toLowerCase().equals(PropHelper.RANDOM_SYMBOL)) {
-					Method setMethod = pd.getWriteMethod();
-					setMethod.invoke(object, field.getName() + "_" + randomize());
-				}
-			} catch (IntrospectionException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return object;
 	}
 
 	/**

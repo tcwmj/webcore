@@ -33,7 +33,6 @@ public class PropHelper {
 	public static final int TIMEOUT_DOCUMENT_COMPLETE = Integer.parseInt(getProperty("timeout.document.complete"));
 	public static final Integer TEST_RETRY_COUNT = Integer.valueOf(getProperty("test.retry.count"));
 	public static final String RANDOM_RULE = getProperty("random.rule");
-	public static final String RANDOM_SYMBOL = getProperty("random.symbol");
 	public static final String SOURCE_CODE_PATH = getProperty("sourcecode.path");
 	public static final String SOURCE_CODE_ENCODING = getProperty("sourcecode.encoding");
 
