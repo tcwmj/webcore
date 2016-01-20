@@ -35,6 +35,7 @@ public class PropHelper {
 	public static final String RANDOM_RULE = getProperty("random.rule");
 	public static final String SOURCE_CODE_PATH = getProperty("sourcecode.path");
 	public static final String SOURCE_CODE_ENCODING = getProperty("sourcecode.encoding");
+	public static final String REPLACEMENT_SYMBOL = getProperty("symbol.replacement");
 
 	// from biz conf
 	public static final int TIMEOUT_DIALOG_APPEAR = Integer.parseInt(getProperty("timeout.dialog.appear"));

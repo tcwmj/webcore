@@ -1,9 +1,8 @@
-package org.yiwan.webcore.pages;
+package org.yiwan.webcore.page;
 
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.elements.IPage;
 import org.yiwan.webcore.selenium.Driver;
 
 public class Page implements IPage {
