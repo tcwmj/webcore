@@ -36,6 +36,7 @@ public class PropHelper {
 	public static final String SOURCE_CODE_PATH = getProperty("sourcecode.path");
 	public static final String SOURCE_CODE_ENCODING = getProperty("sourcecode.encoding");
 	public static final String REPLACEMENT_SYMBOL = getProperty("symbol.replacement");
+	public static final String LOCATOR_SCHEMA = getProperty("path.locator.schema");
 
 	// from biz conf
 	public static final int TIMEOUT_DIALOG_APPEAR = Integer.parseInt(getProperty("timeout.dialog.appear"));
@@ -43,7 +44,7 @@ public class PropHelper {
 
 	public static final String DEFAULT_LANG = getProperty("lang.default");
 
-	public static final String DATA_SCHEMA_FILE = getProperty("path.dataschema");
+	public static final String DATA_SCHEMA_FILE = getProperty("path.data.schema");
 	public static final String LOCATORS_FILE = getProperty("path.locator");
 	public static final String TEST_DATA_FOLDER = getProperty("path.testdata.folder");
 	public static final String MAPS_FOLDER = getProperty("path.maps.folder");
