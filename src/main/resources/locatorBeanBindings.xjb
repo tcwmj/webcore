@@ -10,14 +10,14 @@
 			underscoreBinding="asCharInWord" /> -->
 		<jxb:bindings node="//xs:element[@name='locatorBean']/xs:complexType">
 			<ci:code>
-	public Page getPage(String id) {
+	public Page page(String id) {
 		return (Page) org.yiwan.webcore.util.Helper.filterListById(this.getPage(), id);
 	}
 			</ci:code>
 		</jxb:bindings>
 		<jxb:bindings node="//xs:complexType[@name='page']">
 			<ci:code>
-	public Locator getLocator(String id) {
+	public Locator locator(String id) {
 		Locator locator = (Locator) org.yiwan.webcore.util.Helper.filterListById(this.getLocator(), id);
 		if (locator != null &amp;&amp; locator.getRef() != null)
 			locator = locator.getRef();
@@ -27,13 +27,12 @@
 		</jxb:bindings>
 		<jxb:bindings node="//xs:complexType[@name='locator']">
 			<ci:code>
-	public org.openqa.selenium.By locator(Locator locator, String... replacements) {
-		String expression = locator.getExpression();
+	public org.openqa.selenium.By by(String... replacements) {
 		for (int i = 0; i &lt; replacements.length; i++) {
 			int index = expression.indexOf(org.yiwan.webcore.util.PropHelper.REPLACEMENT_SYMBOL);
 			expression = expression.substring(0, index) + replacements[i] + expression.substring(index + 1);
 		}
-		switch (locator.getBy()) {
+		switch (by) {
 		case ID:
 			return org.openqa.selenium.By.id(expression);
 		case NAME:
