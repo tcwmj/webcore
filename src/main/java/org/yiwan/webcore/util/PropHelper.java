@@ -43,7 +43,8 @@ public class PropHelper {
 
 	public static final String DEFAULT_LANG = getProperty("lang.default");
 
-	public static final String DATA_SCHEMA = getProperty("path.dataschema");
+	public static final String DATA_SCHEMA_FILE = getProperty("path.dataschema");
+	public static final String LOCATORS_FILE = getProperty("path.locator");
 	public static final String TEST_DATA_FOLDER = getProperty("path.testdata.folder");
 	public static final String MAPS_FOLDER = getProperty("path.maps.folder");
 
