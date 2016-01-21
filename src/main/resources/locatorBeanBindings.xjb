@@ -30,11 +30,12 @@
 				locator = locator.getRef();
 			if (locator.getPage() == null)
 				locator.setPage(this);
+			String expression = locator.getExpression();
 			for (int i = 0; i &lt; replacements.length; i++) {
-				int index = locator.getExpression().indexOf(org.yiwan.webcore.util.PropHelper.REPLACEMENT_SYMBOL);
-				locator.setExpression(locator.getExpression().substring(0, index) + replacements[i]
-						+ locator.getExpression().substring(index + 1));
+				int index = expression.indexOf(org.yiwan.webcore.util.PropHelper.REPLACEMENT_SYMBOL);
+				expression = expression.substring(0, index) + replacements[i] + expression.substring(index + 1);
 			}
+			locator.setExpression_(expression);
 		}
 		return locator;
 	}
@@ -50,21 +51,21 @@
 	public org.openqa.selenium.By by() {
 		switch (by) {
 		case ID:
-			return org.openqa.selenium.By.id(expression);
+			return org.openqa.selenium.By.id(expression_);
 		case NAME:
-			return org.openqa.selenium.By.name(expression);
+			return org.openqa.selenium.By.name(expression_);
 		case CLASS_NAME:
-			return org.openqa.selenium.By.className(expression);
+			return org.openqa.selenium.By.className(expression_);
 		case TAG_NAME:
-			return org.openqa.selenium.By.tagName(expression);
+			return org.openqa.selenium.By.tagName(expression_);
 		case CSS_SELECTOR:
-			return org.openqa.selenium.By.cssSelector(expression);
+			return org.openqa.selenium.By.cssSelector(expression_);
 		case XPATH:
-			return org.openqa.selenium.By.xpath(expression);
+			return org.openqa.selenium.By.xpath(expression_);
 		case LINK_TEXT:
-			return org.openqa.selenium.By.linkText(expression);
+			return org.openqa.selenium.By.linkText(expression_);
 		case PARTIAL_LINK_TEXT:
-			return org.openqa.selenium.By.partialLinkText(expression);
+			return org.openqa.selenium.By.partialLinkText(expression_);
 		case JAVASCRIPT:
 			return null;
 		}
@@ -73,7 +74,7 @@
 
 	@Override
 	public String toString() {
-		return type + " " + name + " [" + id + "] " + description + " expression " + expression + " located by " + by;
+		return type + " " + name + " [" + id + "] " + description + " expression " + expression_ + " located by " + by;
 	}
 	
 	private Page page;
@@ -84,7 +85,17 @@
 
 	public void setPage(Page page) {
 		this.page = page;
-	}	
+	}
+
+	private String expression_;
+
+	public String getExpression_() {
+		return expression_;
+	}
+
+	public void setExpression_(String expression_) {
+		this.expression_ = expression_;
+	}
 			</ci:code>
 		</jxb:bindings>		
 		<jxb:bindings node="//xs:complexType[@name='locator']//xs:attribute[@name='ref']">
