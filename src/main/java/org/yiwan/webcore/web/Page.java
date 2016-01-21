@@ -36,7 +36,7 @@ import org.yiwan.webcore.util.TestTemplate;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
 public class Page implements IPage {
-	private final static Logger logger = LoggerFactory.getLogger(Page.class);
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	protected final static LocatorBean l = JaxbHelper.unmarshal(
 			ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),

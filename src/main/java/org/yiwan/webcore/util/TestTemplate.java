@@ -14,8 +14,7 @@ import org.testng.Reporter;
  */
 public class TestTemplate {
 
-	@SuppressWarnings("unused")
-	private final static Logger logger = LoggerFactory.getLogger(TestTemplate.class);
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	protected WebDriver driver;
 
