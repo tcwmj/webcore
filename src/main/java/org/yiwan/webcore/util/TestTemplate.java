@@ -3,10 +3,10 @@ package org.yiwan.webcore.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
-import org.yiwan.webcore.web.WebDriverFactory;
 
 /**
  * @author Kenny Wang
@@ -17,14 +17,9 @@ public class TestTemplate {
 	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(TestTemplate.class);
 
-	protected WebDriverFactory driver;
+	protected WebDriver driver;
 
-	/**
-	 * get wrapper driver
-	 * 
-	 * @return the driver
-	 */
-	public WebDriverFactory getDriver() {
+	public WebDriver getDriver() {
 		return driver;
 	}
 
