@@ -11,8 +11,6 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.Augmenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
@@ -20,7 +18,6 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestListenerAdapter;
 import org.yiwan.webcore.util.Helper;
-import org.yiwan.webcore.util.PropHelper;
 
 /**
  * @author Kenny Wang
@@ -38,12 +35,12 @@ public class ResultListener extends TestListenerAdapter {
 
 		Method method;
 		try {
-			method = testResult.getInstance().getClass().getMethod("getDriver");
-			WebDriver driver = (WebDriver) method.invoke(testResult.getInstance());
+			method = testResult.getInstance().getClass().getMethod("getTakesScreenshot");
+			TakesScreenshot ts = (TakesScreenshot) method.invoke(testResult.getInstance());
 			method = testResult.getInstance().getClass().getMethod("getScreenshotFolder");
 			String saveTo = ((String) method.invoke(testResult.getInstance())) + testResult.getTestClass().getName()
 					+ "." + testResult.getName() + ".png";
-			captureScreenShot(driver, testResult, saveTo);
+			captureScreenShot(ts, testResult, saveTo);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -158,17 +155,7 @@ public class ResultListener extends TestListenerAdapter {
 	 * @param testResult
 	 * @param saveTo
 	 */
-	private void captureScreenShot(WebDriver driver, ITestResult testResult, String saveTo) {
-		TakesScreenshot ts;
-		if (PropHelper.REMOTE)
-			// RemoteWebDriver does not implement the TakesScreenshot class
-			// if the driver does have the Capabilities to take a screenshot
-			// then Augmenter will add the TakesScreenshot methods to the
-			// instance
-			ts = (TakesScreenshot) (new Augmenter().augment(driver));
-		else
-			ts = (TakesScreenshot) driver;
-
+	private void captureScreenShot(TakesScreenshot ts, ITestResult testResult, String saveTo) {
 		try {
 			File screenshot = ts.getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(screenshot, new File(saveTo));

@@ -19,12 +19,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -48,26 +46,16 @@ public class Page implements IPage {
 		return testcase;
 	}
 
-	protected WebDriver driver;
+	private WebDriver driver;
 	private JavascriptExecutor js;
 	private Wait<WebDriver> wait;
 
-	public Page(TestTemplate testcase, WebDriver driver) {
+	public Page(TestTemplate testcase) {
 		this.testcase = testcase;
-		this.driver = driver;
-		this.js = getJavascriptExecutor(driver);
-		this.wait = getWebDriverWait(driver);
+		this.driver = testcase.getDriver();
+		this.js = testcase.getJavascriptExecutor();
+		this.wait = testcase.getWebDriverWait();
 		// driver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL,TimeUnit.SECONDS);
-	}
-
-	private JavascriptExecutor getJavascriptExecutor(WebDriver driver) {
-		return (JavascriptExecutor) driver;
-	}
-
-	private Wait<WebDriver> getWebDriverWait(WebDriver driver) {
-		return new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL)
-				.ignoring(StaleElementReferenceException.class).ignoring(NoSuchElementException.class)
-				.ignoring(UnreachableBrowserException.class);
 	}
 
 	/**
