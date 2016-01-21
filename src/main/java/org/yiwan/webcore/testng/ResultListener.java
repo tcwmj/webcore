@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
-import org.yiwan.webcore.selenium.Driver;
+import org.yiwan.webcore.web.WebDriverFactory;
 
 /**
  * @author Kenny Wang
@@ -33,7 +33,7 @@ public class ResultListener extends TestListenerAdapter {
 		Method method;
 		try {
 			method = testResult.getInstance().getClass().getMethod("getDriver");
-			Driver driver = (Driver) method.invoke(testResult.getInstance());
+			WebDriverFactory driver = (WebDriverFactory) method.invoke(testResult.getInstance());
 			driver.saveScreenShot(testResult);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

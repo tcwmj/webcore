@@ -1,17 +1,23 @@
-package org.yiwan.webcore.page;
+package org.yiwan.webcore.web;
 
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.selenium.Driver;
+import org.yiwan.webcore.locator.LocatorBean;
+import org.yiwan.webcore.util.JaxbHelper;
+import org.yiwan.webcore.util.PropHelper;
 
 public class Page implements IPage {
 	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(Page.class);
 
-	protected Driver driver;
+	protected final static LocatorBean l = JaxbHelper.unmarshal(
+			ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),
+			ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
 
-	public Page(Driver driver) {
+	protected WebDriverFactory driver;
+
+	public Page(WebDriverFactory driver) {
 		this.driver = driver;
 	}
 

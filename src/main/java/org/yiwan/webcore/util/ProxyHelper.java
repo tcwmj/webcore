@@ -9,7 +9,6 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.TestCaseBase;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
@@ -57,17 +56,17 @@ public class ProxyHelper {
 		proxy.addRequestFilter(filter);
 	}
 
-	public static void newHAR(TestCaseBase testcase) {
+	public static void newHAR(TestTemplate testcase) {
 		if (testcase.isEnableHAR())
 			proxy.newHar();
 	}
 
-	public static void newHAR(TestCaseBase testcase, String initialPageRef) {
+	public static void newHAR(TestTemplate testcase, String initialPageRef) {
 		if (testcase.isEnableHAR())
 			proxy.newHar(initialPageRef);
 	}
 
-	public static void newHAR(TestCaseBase testcase, String initialPageRef, String initialPageTitle) {
+	public static void newHAR(TestTemplate testcase, String initialPageRef, String initialPageTitle) {
 		if (testcase.isEnableHAR())
 			proxy.newHar(initialPageRef, initialPageTitle);
 	}
@@ -79,7 +78,7 @@ public class ProxyHelper {
 	 * @param filename
 	 *            file name without extension
 	 */
-	public static void writeHAR(TestCaseBase testcase, final String filename) {
+	public static void writeHAR(TestTemplate testcase, final String filename) {
 		if (testcase.isEnableHAR()) {
 			FilenameFilter filter = new FilenameFilter() {
 				public boolean accept(File dir, String name) {
@@ -99,7 +98,7 @@ public class ProxyHelper {
 		}
 	}
 
-	public static void supportRecordTime(final TestCaseBase testcase) {
+	public static void supportRecordTime(final TestTemplate testcase) {
 		addReqeustFilter(new RequestFilter() {
 
 			@Override
@@ -117,7 +116,7 @@ public class ProxyHelper {
 	 * 
 	 * @param testcase
 	 */
-	public static void supportFileDownload(final TestCaseBase testcase) {
+	public static void supportFileDownload(final TestTemplate testcase) {
 		logger.info("setup proxy to support file download mechianism");
 		// set response filter rule for downloading files
 		addResponseFilter(new ResponseFilter() {

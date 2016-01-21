@@ -1,4 +1,4 @@
-package org.yiwan.webcore.test;
+package org.yiwan.webcore.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,25 +6,25 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
-import org.yiwan.webcore.selenium.Driver;
-import org.yiwan.webcore.util.PropHelper;
+import org.yiwan.webcore.web.WebDriverFactory;
 
 /**
  * @author Kenny Wang
  * 
  */
-public class TestCaseBase {
+public class TestTemplate {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	@SuppressWarnings("unused")
+	private final static Logger logger = LoggerFactory.getLogger(TestTemplate.class);
 
-	protected Driver driver;
+	protected WebDriverFactory driver;
 
 	/**
 	 * get wrapper driver
 	 * 
 	 * @return the driver
 	 */
-	public Driver getDriver() {
+	public WebDriverFactory getDriver() {
 		return driver;
 	}
 

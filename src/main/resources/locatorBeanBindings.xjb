@@ -13,16 +13,31 @@
 	public Page page(String id) {
 		return (Page) org.yiwan.webcore.util.Helper.filterListById(this.getPage(), id);
 	}
+	
+	public Locator locator(String id) {
+		int index = id.indexOf(".");
+		String pageid = id.substring(0, index);
+		String locatorid = id.substring(index);
+		return page(pageid).locator(locatorid);
+	}	
 			</ci:code>
 		</jxb:bindings>
 		<jxb:bindings node="//xs:complexType[@name='page']">
 			<ci:code>
 	public Locator locator(String id) {
 		Locator locator = (Locator) org.yiwan.webcore.util.Helper.filterListById(this.getLocator(), id);
-		if (locator != null &amp;&amp; locator.getRef() != null)
-			locator = locator.getRef();
+		if (locator != null) {
+			if (locator.getRef() != null)
+				locator = locator.getRef();
+			locator.setPage(this);
+		}			
 		return locator;
-	}			
+	}
+	
+	@Override
+	public String toString() {
+		return "page " + name + " [" + id + "] " + description;
+	}
 			</ci:code>
 		</jxb:bindings>
 		<jxb:bindings node="//xs:complexType[@name='locator']">
@@ -53,7 +68,22 @@
 			return null;
 		}
 		return null;
-	}			
+	}
+
+	@Override
+	public String toString() {
+		return type + " " + name + " [" + id + "] " + description + " expression " + expression + " located by " + by;
+	}
+	
+	private Page page;
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}	
 			</ci:code>
 		</jxb:bindings>		
 		<jxb:bindings node="//xs:complexType[@name='locator']//xs:attribute[@name='ref']">

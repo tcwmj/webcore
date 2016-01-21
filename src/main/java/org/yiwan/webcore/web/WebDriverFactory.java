@@ -1,4 +1,4 @@
-package org.yiwan.webcore.selenium;
+package org.yiwan.webcore.web;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -51,10 +51,10 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.Reporter;
-import org.yiwan.webcore.test.TestCaseBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.util.ProxyHelper;
+import org.yiwan.webcore.util.TestTemplate;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
@@ -64,8 +64,8 @@ import net.lightbody.bmp.client.ClientUtil;
  * @author Kenny Wang
  * 
  */
-public class Driver {
-	private final static Logger logger = LoggerFactory.getLogger(Driver.class);
+public class WebDriverFactory {
+	private final static Logger logger = LoggerFactory.getLogger(WebDriverFactory.class);
 
 	public String os;
 	public String os_version;
@@ -73,14 +73,14 @@ public class Driver {
 	public String browser_version;
 	public String resolution;
 
-	private TestCaseBase testcase;
+	private TestTemplate testcase;
 	private WebDriver wd;
 	private JavascriptExecutor js;
 	private Wait<WebDriver> wait;
 
 	private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyHelper.getProxy());
 
-	public Driver(TestCaseBase testcase, String os, String os_version, String browser, String browser_version,
+	public WebDriverFactory(TestTemplate testcase, String os, String os_version, String browser, String browser_version,
 			String resolution) {
 		super();
 		this.testcase = testcase;
@@ -109,6 +109,10 @@ public class Driver {
 				.ignoring(UnreachableBrowserException.class);
 	}
 
+	public WebDriver createWebDriver(){
+		return null;
+	}
+	
 	private WebDriver setupRemoteBrowser() {
 		DesiredCapabilities capability = new DesiredCapabilities();
 		URL url = null;
@@ -1453,7 +1457,7 @@ public class Driver {
 	 * 
 	 * @return TestCaseTemplate
 	 */
-	public TestCaseBase getTestcase() {
+	public TestTemplate getTestcase() {
 		return testcase;
 	}
 
