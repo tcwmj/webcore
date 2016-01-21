@@ -12,16 +12,12 @@
 					<table border="1">
 						<tr bgcolor="#00CD00">
 							<th align="left">id</th>
-							<th align="left">ref</th>
 							<th align="left">name</th>
 							<th align="left">description</th>
 						</tr>
 						<tr>
 							<td>
 								<xsl:value-of select="@id"/>
-							</td>
-							<td>
-								<xsl:value-of select="@ref"/>
 							</td>
 							<td>
 								<xsl:value-of select="@name"/>
