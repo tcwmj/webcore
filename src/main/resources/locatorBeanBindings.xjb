@@ -28,7 +28,8 @@
 		if (locator != null) {
 			if (locator.getRef() != null)
 				locator = locator.getRef();
-			locator.setPage(this);
+			if (locator.getPage() == null)
+				locator.setPage(this);
 		}			
 		return locator;
 	}

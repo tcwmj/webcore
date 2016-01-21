@@ -58,10 +58,6 @@ public class Page implements IPage {
 		this.js = getJavascriptExecutor(driver);
 		this.wait = getWebDriverWait(driver);
 		// driver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL,TimeUnit.SECONDS);
-		if (PropHelper.MAXIMIZE_BROSWER) {
-			logger.info("maximizing browser");
-			driver.manage().window().maximize();
-		}
 	}
 
 	private JavascriptExecutor getJavascriptExecutor(WebDriver driver) {
@@ -1197,5 +1193,13 @@ public class Page implements IPage {
 	public String getTitle() {
 		waitDocumentReady();
 		return driver.getTitle();
+	}
+
+	/**
+	 * maximize browser window
+	 */
+	public void maximize() {
+		logger.info("maximizing browser");
+		driver.manage().window().maximize();
 	}
 }
