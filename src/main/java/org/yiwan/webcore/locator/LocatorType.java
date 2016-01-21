@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="WebEdit"/>
  *     &lt;enumeration value="WebButton"/>
  *     &lt;enumeration value="WebCheckBox"/>
- *     &lt;enumeration value="WebRadioButton"/>
+ *     &lt;enumeration value="WebRadioGroup"/>
  *     &lt;enumeration value="WebFile"/>
  *     &lt;enumeration value="WebList"/>
  *     &lt;enumeration value="WebTable"/>
@@ -52,8 +52,8 @@ public enum LocatorType {
     WEB_BUTTON("WebButton"),
     @XmlEnumValue("WebCheckBox")
     WEB_CHECK_BOX("WebCheckBox"),
-    @XmlEnumValue("WebRadioButton")
-    WEB_RADIO_BUTTON("WebRadioButton"),
+    @XmlEnumValue("WebRadioGroup")
+    WEB_RADIO_BUTTON("WebRadioGroup"),
     @XmlEnumValue("WebFile")
     WEB_FILE("WebFile"),
     @XmlEnumValue("WebList")

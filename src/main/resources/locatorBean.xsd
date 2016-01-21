@@ -30,7 +30,7 @@
 			<xs:enumeration value="WebEdit"/>
 			<xs:enumeration value="WebButton"/>
 			<xs:enumeration value="WebCheckBox"/>
-			<xs:enumeration value="WebRadioButton"/>
+			<xs:enumeration value="WebRadioGroup"/>
 			<xs:enumeration value="WebFile"/>
 			<xs:enumeration value="WebList"/>
 			<xs:enumeration value="WebTable"/>
