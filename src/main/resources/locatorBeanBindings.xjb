@@ -17,8 +17,7 @@
 	public Locator locator(String id) {
 		int index = id.indexOf(".");
 		String pageid = id.substring(0, index);
-		String locatorid = id.substring(index);
-		return page(pageid).locator(locatorid);
+		return page(pageid).locator(id);
 	}	
 			</ci:code>
 		</jxb:bindings>
