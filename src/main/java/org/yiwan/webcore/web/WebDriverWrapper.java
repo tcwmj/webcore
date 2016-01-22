@@ -222,8 +222,13 @@ public class WebDriverWrapper {
 	 * @param locator
 	 */
 	protected void loopClick(Locator locator) {
+		long now = System.currentTimeMillis();
 		while (isDisplayed(locator)) {
 			click(locator);
+			if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
+				logger.warn("Time out on loop clicking " + locator.toString());
+				return;
+			}
 		}
 	}
 
