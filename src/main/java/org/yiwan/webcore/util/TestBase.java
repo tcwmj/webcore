@@ -20,7 +20,7 @@ import org.testng.Reporter;
  * @author Kenny Wang
  * 
  */
-public class TestTemplate {
+public class TestBase {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 

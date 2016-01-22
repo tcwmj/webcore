@@ -29,20 +29,20 @@ import org.testng.Assert;
 import org.yiwan.webcore.locator.LocatorBean;
 import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.util.TestTemplate;
+import org.yiwan.webcore.util.TestBase;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
-public class Page implements IPage {
+public class WebDriverWrapper {
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	protected final static LocatorBean l = JaxbHelper.unmarshal(
 			ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),
 			ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
 
-	protected TestTemplate testcase;
+	protected TestBase testcase;
 
-	public TestTemplate getTestcase() {
+	public TestBase getTestcase() {
 		return testcase;
 	}
 
@@ -50,7 +50,7 @@ public class Page implements IPage {
 	private JavascriptExecutor js;
 	private Wait<WebDriver> wait;
 
-	public Page(TestTemplate testcase) {
+	public WebDriverWrapper(TestBase testcase) {
 		this.testcase = testcase;
 		this.driver = testcase.getDriver();
 		this.js = testcase.getJavascriptExecutor();

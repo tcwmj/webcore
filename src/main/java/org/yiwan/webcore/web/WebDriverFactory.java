@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.util.ProxyHelper;
-import org.yiwan.webcore.util.TestTemplate;
+import org.yiwan.webcore.util.TestBase;
 
 import net.lightbody.bmp.client.ClientUtil;
 
@@ -35,7 +35,7 @@ public class WebDriverFactory {
 	private final static Logger logger = LoggerFactory.getLogger(WebDriverFactory.class);
 	private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyHelper.getProxy());
 
-	public WebDriverFactory(TestTemplate testcase) {
+	public WebDriverFactory(TestBase testcase) {
 		super();
 	}
 
