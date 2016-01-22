@@ -2,6 +2,7 @@ package org.yiwan.webcore.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -28,6 +29,12 @@ public class TestBase {
 
 	public WebDriver getDriver() {
 		return driver;
+	}
+
+	protected final HashMap<String, String> testMap = new HashMap<String, String>();
+
+	public HashMap<String, String> getTestMap() {
+		return testMap;
 	}
 
 	private String currentUrl;
@@ -109,16 +116,6 @@ public class TestBase {
 
 	public void setDownloadFile(String downloadFile) {
 		this.downloadFile = downloadFile;
-	}
-
-	private String j_winname = "";
-
-	public void setJ_winname(String j_winname) {
-		this.j_winname = j_winname;
-	}
-
-	public String getJ_winname() {
-		return j_winname;
 	}
 
 	/**
