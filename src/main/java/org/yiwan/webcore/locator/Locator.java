@@ -260,7 +260,7 @@ public class Locator {
 
 	@Override
 	public String toString() {
-		return type + " " + name + " [" + id + "] " + description + " expression " + expression_ + " located by " + by;
+		return name + " [" + id + "] " + type + " by [" + expression_ + "] located by " + by + ", " + description + " on " + page.toString();
 	}
 	
 	private Page page;
