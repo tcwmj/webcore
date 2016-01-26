@@ -273,6 +273,21 @@ public class WebDriverWrapper {
 	}
 
 	/**
+	 * input value in the first locator if it exists, or the second locator if
+	 * the first doesn't exist
+	 * 
+	 * @param locator1
+	 * @param locator2
+	 * @param value
+	 */
+	protected void smartInput(Locator locator1, Locator locator2, String value) {
+		if (isDisplayed(locator1))
+			input(locator1, value);
+		else
+			input(locator2, value);
+	}
+
+	/**
 	 * clear the web edit box and input the value, then click the ajax locator
 	 * 
 	 * @param locator
