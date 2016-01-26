@@ -74,7 +74,8 @@
 
 	@Override
 	public String toString() {
-		return name + " [" + id + "] " + type + " by [" + expression_ + "] located by " + by + ", " + description + " on " + page.toString();
+		return type.value() + " " + name + " [" + id + "] by [" + expression_ + "] located by " + by.value() + " "
+				+ description + ", on " + page.toString();
 	}
 	
 	private Page page;
