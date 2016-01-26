@@ -177,27 +177,13 @@ public class WebDriverWrapper {
 	}
 
 	/**
-	 * click the first element if it's displayed, otherwise click the 2nd
-	 * element
+	 * click element if it's displayed, otherwise click the next one
 	 * 
-	 * @param locator1
-	 * @param locator2
-	 */
-	protected void smartClick(Locator locator1, Locator locator2) {
-		if (isDisplayed(locator1))
-			click(locator1);
-		else
-			click(locator2);
-	}
-
-	/**
-	 * click the element if it's displayed, otherwise click the next element,
-	 * quit the method until the click action taking effective or elements used
-	 * out
+	 * /**
 	 * 
 	 * @param locators
 	 */
-	protected void smartClick(List<Locator> locators) {
+	protected void smartClick(Locator... locators) {
 		for (Locator locator : locators) {
 			if (isDisplayed(locator)) {
 				click(locator);
