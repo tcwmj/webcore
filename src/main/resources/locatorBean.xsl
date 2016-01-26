@@ -43,8 +43,8 @@
 							<th align="left">description</th>
 						</tr>
 						<xsl:for-each select="current()/locator">
-						<xsl:sort select="@id"/>
-						<xsl:sort select="@type"/>
+						<!--<xsl:sort select="@id"/>
+						<xsl:sort select="@type"/>-->
 							<tr>
 								<td>
 									<xsl:value-of select="@id"/>
