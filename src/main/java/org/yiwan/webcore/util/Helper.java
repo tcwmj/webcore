@@ -1,14 +1,11 @@
 package org.yiwan.webcore.util;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -312,14 +309,13 @@ public class Helper {
 	}
 
 	/**
-	 * merge source and target xml file into a single xml file
+	 * merge source and target xml input stream into a single xml string
 	 * 
-	 * @param sourceXml
-	 * @param targetXml
-	 * @param finalXml
+	 * @param src
+	 * @param tar
+	 * @return xml string
 	 */
-	public static void mergeXml(InputStream sourceXml, File targetXml, File finalXml) {
-		logger.info("merge sourceXml and " + targetXml + " into " + finalXml);
+	public static String mergeXml(InputStream src, InputStream tar) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setIgnoringComments(true);
 		DocumentBuilder builder = null;
@@ -331,8 +327,8 @@ public class Helper {
 		Document d1 = null;
 		Document d2 = null;
 		try {
-			d1 = builder.parse(targetXml);
-			d2 = builder.parse(sourceXml);
+			d1 = builder.parse(tar);
+			d2 = builder.parse(src);
 		} catch (SAXException | IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -360,15 +356,39 @@ public class Helper {
 		} catch (TransformerException e) {
 			logger.error(e.getMessage(), e);
 		}
-		String output = result.getWriter().toString();
-		finalXml.getParentFile().mkdirs();
-		try {
-			Writer writer = new BufferedWriter(new FileWriter(finalXml));
-			writer.write(output);
-			writer.close();
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		return result.getWriter().toString();
 	}
 
+	/**
+	 * remove list items with the same id in src object from tar object
+	 * 
+	 * @param src
+	 * @param tar
+	 * @return generic object same as parameters
+	 */
+	public static <T> Object removeListItemById(T src, T tar) {
+		Method[] methods = src.getClass().getMethods();
+		for (Method method : methods) {
+			if (method.getParameterTypes().length == 0 && method.getReturnType().equals(List.class)) {
+				try {
+					List<?> list1 = (List<?>) method.invoke(src);
+					List<?> list2 = (List<?>) method.invoke(tar);
+					for (int i = 0; i < list1.size(); i++) {
+						Object obj = list1.get(i);
+						Method m = null;
+						try {
+							m = obj.getClass().getMethod("getId");
+						} catch (NoSuchMethodException | SecurityException e) {
+							logger.error(e.getMessage(), e);
+						}
+						String id = (String) m.invoke(obj);
+						list2.remove(filterListById(list2, id));
+					}
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+		return tar;
+	}
 }
