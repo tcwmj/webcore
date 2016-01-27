@@ -1,11 +1,14 @@
 package org.yiwan.webcore.util;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +18,7 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITestResult;
 import org.testng.Reporter;
 
 /**
@@ -240,13 +244,80 @@ public class TestBase {
 				.ignoring(UnreachableBrowserException.class);
 	}
 
-	public TakesScreenshot getTakesScreenshot() {
+	/**
+	 * capture screenshot for local or remote testing
+	 * 
+	 * @param result
+	 */
+	private void captureScreenShot(ITestResult result) {
+		TakesScreenshot ts = null;
 		if (PropHelper.REMOTE)
 			// RemoteWebDriver does not implement the TakesScreenshot class if
 			// the driver does have the Capabilities to take a screenshot then
 			// Augmenter will add the TakesScreenshot methods to the instance
-			return (TakesScreenshot) (new Augmenter().augment(driver));
+			ts = (TakesScreenshot) (new Augmenter().augment(driver));
 		else
-			return (TakesScreenshot) driver;
+			ts = (TakesScreenshot) driver;
+		String saveTo = getScreenshotFolder() + result.getTestClass().getName() + "." + result.getName() + ".png";
+		saveTo = saveTo.replaceAll("\\\\", "/");
+		try {
+			File screenshot = ts.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(screenshot, new File(saveTo));
+			// Reporter.setCurrentTestResult(result);
+			report(Helper.getTestReportStyle("../../../" + saveTo,
+					"<img src=\"../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
+		} catch (Exception e) {
+			logger.error("capture screentshot failed due to " + e.getMessage(), e);
+		}
 	}
+
+	/**
+	 * Invoked each time before a test will be invoked. The
+	 * <code>ITestResult</code> is only partially filled with the references to
+	 * class, method, start millis and status.
+	 *
+	 * @param result
+	 *            the partially filled <code>ITestResult</code>
+	 * @see ITestResult#STARTED
+	 */
+	public void onTestStart(ITestResult result) {
+		logger.info(result.getTestClass().getName() + "." + result.getName() + " started");
+	};
+
+	/**
+	 * Invoked each time a test succeeds.
+	 *
+	 * @param result
+	 *            <code>ITestResult</code> containing information about the run
+	 *            test
+	 * @see ITestResult#SUCCESS
+	 */
+	public void onTestSuccess(ITestResult result) {
+		logger.info(result.getTestClass().getName() + "." + result.getName() + " passed");
+	};
+
+	/**
+	 * Invoked each time a test fails.
+	 *
+	 * @param result
+	 *            <code>ITestResult</code> containing information about the run
+	 *            test
+	 * @see ITestResult#FAILURE
+	 */
+	public void onTestFailure(ITestResult result) {
+		logger.info(result.getTestClass().getName() + "." + result.getName() + " failed");
+		captureScreenShot(result);
+	};
+
+	/**
+	 * Invoked each time a test is skipped.
+	 *
+	 * @param result
+	 *            <code>ITestResult</code> containing information about the run
+	 *            test
+	 * @see ITestResult#SKIP
+	 */
+	public void onTestSkipped(ITestResult result) {
+		logger.info(result.getTestClass().getName() + "." + result.getName() + " skipped");
+	};
 }

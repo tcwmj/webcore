@@ -1,6 +1,9 @@
 package org.yiwan.webcore.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -14,9 +17,12 @@ public class PropHelper {
 
 	private final static Logger logger = LoggerFactory.getLogger(PropHelper.class);
 
-	private static final String BASE_CONF = "base.properties";
-	private static final String BIZ_CONF = "biz.properties";
-	private static final String TEST_CONF = "test.properties";
+	private static final String BASE_CONF = System.getProperty("base.prop") == null ? "base.properties"
+			: System.getProperty("base.prop");
+	private static final String BIZ_CONF = System.getProperty("biz.prop") == null ? "biz.properties"
+			: System.getProperty("biz.prop");
+	private static final String TEST_CONF = System.getProperty("test.prop") == null ? "test.properties"
+			: System.getProperty("test.prop");
 
 	private static Properties props = new Properties();
 
@@ -84,12 +90,20 @@ public class PropHelper {
 	 * 
 	 * @param path
 	 */
+	@SuppressWarnings("resource")
 	private static void load(String path) {
+		InputStream is = null;
 		try {
-			logger.info("get conf from " + path);
-			props.load(ClassLoader.getSystemResourceAsStream(path));
+			logger.debug("search conf file in folder");
+			is = new FileInputStream(path);
+		} catch (FileNotFoundException e) {
+			logger.debug("search conf file in resource");
+			is = ClassLoader.getSystemResourceAsStream(path);
+		}
+		try {
+			props.load(is);
 		} catch (IOException e) {
-			logger.warn("conf file " + path + " doesn't exist");
+			logger.error("conf file " + path + " doesn't exist");
 		}
 	}
 
