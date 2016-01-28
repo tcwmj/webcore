@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.Alert;
@@ -806,6 +807,20 @@ public class WebDriverWrapper {
 	}
 
 	/**
+	 * get all text on found locators
+	 * 
+	 * @param locator
+	 * @return text list
+	 */
+	protected List<String> getTexts(Locator locator) {
+		List<String> Texts = new ArrayList<String>();
+		for (WebElement element : findElements(locator)) {
+			Texts.add(element.getText());
+		}
+		return Texts;
+	}
+
+	/**
 	 * set innert text on such web element
 	 * 
 	 * @param locator
@@ -864,7 +879,6 @@ public class WebDriverWrapper {
 	 * @param locator
 	 * @return List&gt;WebElement&lt;
 	 */
-	@SuppressWarnings("unused")
 	private List<WebElement> findElements(Locator locator) {
 		waitDocumentReady();
 		return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator.by()));
