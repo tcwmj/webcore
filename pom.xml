@@ -12,25 +12,38 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<logback.version>1.1.3</logback.version>
+		<bmp.version>2.1.0-beta-4</bmp.version>
+		<selenium.version>2.48.2</selenium.version>
+		<testng.version>6.8.8</testng.version>
+		<reportng.version>1.1.4</reportng.version>
+		<poi.version>3.10-FINAL</poi.version>
+		<xml.apis.version>1.4.01</xml.apis.version>
+		<qdox.version>1.12.1</qdox.version>
+		<guice.version>3.0</guice.version>
+		<jave.version>1.7</jave.version>
+		<maven.compiler.version>2.3.2</maven.compiler.version>
+		<maven.source.version>2.4</maven.source.version>
+		<maven.javadoc.version>2.10.3</maven.javadoc.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.3</version>
+			<version>${logback.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.lightbody.bmp</groupId>
 			<artifactId>browsermob-core-littleproxy</artifactId>
-			<version>2.1.0-beta-3</version>
+			<version>${bmp.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.48.2</version>
+			<version>${selenium.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>xml-apis</groupId>
@@ -42,7 +55,7 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>6.8.8</version>
+			<version>${testng.version}</version>
 		</dependency>
 
 		<!-- <dependency> <groupId>org.databene</groupId> <artifactId>feed4testng</artifactId> 
@@ -52,12 +65,12 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.10-FINAL</version>
+			<version>${poi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.10-FINAL</version>
+			<version>${poi.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>xml-apis</groupId>
@@ -68,20 +81,20 @@
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
+			<version>${xml.apis.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.thoughtworks.qdox</groupId>
 			<artifactId>qdox</artifactId>
-			<version>1.12.1</version>
+			<version>${qdox.version}</version>
 		</dependency>
 
 		<!-- reportng dependencies -->
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>
-			<version>1.1.4</version>
+			<version>${reportng.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.testng</groupId>
@@ -92,9 +105,8 @@
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>3.0</version>
+			<version>${guice.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -102,10 +114,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${maven.compiler.version}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>${jave.version}</source>
+					<target>${jave.version}</target>
 				</configuration>
 			</plugin>
 
@@ -113,7 +125,7 @@
 			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
+				<version>${maven.source.version]</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -128,7 +140,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
