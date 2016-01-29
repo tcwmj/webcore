@@ -114,6 +114,21 @@ public class TestBase {
 		this.testName = suiteName;
 	}
 
+	private String defaultDownloadFileName;
+
+	/**
+	 * get default name of download file
+	 * 
+	 * @return
+	 */
+	public String getDefaultDownloadFileName() {
+		return defaultDownloadFileName;
+	}
+
+	public void setDefaultDownloadFileName(String defaultDownloadFileName) {
+		this.defaultDownloadFileName = defaultDownloadFileName;
+	}
+
 	private String downloadFile;
 
 	/**

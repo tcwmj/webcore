@@ -9,7 +9,6 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
@@ -128,10 +127,11 @@ public class ProxyHelper {
 				String fileName = testcase.getTargetDataFolder() + testcase.getTestCaseId() + "_" + Helper.randomize()
 						+ ".";
 				if (contents.getContentType() != null && contents.getContentType().contains("text/csv")) {
-					defaultFileName = getAttachmentFileName(response);
+					testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
 					if (contents.getTextContents() != null) {
-						if (defaultFileName != null) {
-							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						if (testcase.getDefaultDownloadFileName() != null) {
+							testcase.setDownloadFile(
+									fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
 						} else {
 							testcase.setDownloadFile(fileName + "csv");
 						}
@@ -145,10 +145,11 @@ public class ProxyHelper {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				} else if (contents.getContentType() != null && contents.getContentType().contains("text/xml")) {
-					defaultFileName = getAttachmentFileName(response);
+					testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
 					if (contents.getTextContents() != null) {
-						if (defaultFileName != null) {
-							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						if (testcase.getDefaultDownloadFileName() != null) {
+							testcase.setDownloadFile(
+									fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
 						} else {
 							testcase.setDownloadFile(fileName + "xml");
 						}
@@ -163,10 +164,11 @@ public class ProxyHelper {
 					}
 				} else if (contents.getContentType() != null
 						&& contents.getContentType().contains("application/vnd.ms-excel")) {
-					defaultFileName = getAttachmentFileName(response);
+					testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
 					if (contents.getBinaryContents() != null) {
-						if (defaultFileName != null) {
-							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						if (testcase.getDefaultDownloadFileName() != null) {
+							testcase.setDownloadFile(
+									fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
 						} else {
 							testcase.setDownloadFile(fileName + "xls");
 						}
@@ -180,10 +182,11 @@ public class ProxyHelper {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				} else if (contents.getContentType() != null && contents.getContentType().contains("application/pdf")) {
-					defaultFileName = getAttachmentFileName(response);
+					testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
 					if (contents.getBinaryContents() != null) {
-						if (defaultFileName != null) {
-							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						if (testcase.getDefaultDownloadFileName() != null) {
+							testcase.setDownloadFile(
+									fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
 						} else {
 							testcase.setDownloadFile(fileName + "pdf");
 						}
@@ -197,10 +200,11 @@ public class ProxyHelper {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				} else if (contents.getContentType() != null && contents.getContentType().contains("application/zip")) {
-					defaultFileName = getAttachmentFileName(response);
+					testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
 					if (contents.getBinaryContents() != null) {
-						if (defaultFileName != null) {
-							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						if (testcase.getDefaultDownloadFileName() != null) {
+							testcase.setDownloadFile(
+									fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
 						} else {
 							testcase.setDownloadFile(fileName + "zip");
 						}
@@ -217,9 +221,10 @@ public class ProxyHelper {
 						&& contents.getContentType().contains("application/octet-stream")
 						&& response.headers().get(CONTENT_DISPOSITION) != null
 						&& response.headers().get(CONTENT_DISPOSITION).contains("attachment;filename=")) {
-					defaultFileName = getAttachmentFileName(response);
+					testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
 					if (contents.getBinaryContents() != null) {
-						testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						testcase.setDownloadFile(
+								fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
 						logger.info("saving file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -245,14 +250,5 @@ public class ProxyHelper {
 			return response.headers().get(CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "")
 					.replace("\"", "").replace("'", "").trim();
 		return null;
-	}
-
-	private static String defaultFileName;
-
-	/**
-	 * @param filename
-	 */
-	public static void assertDefaultFileName(String filename) {
-		Assert.assertEquals(filename, defaultFileName);
 	}
 }
