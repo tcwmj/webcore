@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.Reporter;
+import org.yiwan.webcore.web.PageFactory;
 
 /**
  * @author Kenny Wang
@@ -33,6 +34,12 @@ public class TestBase {
 
 	public WebDriver getDriver() {
 		return driver;
+	}
+
+	protected PageFactory pageFactory = new PageFactory(this);
+
+	public PageFactory getPageFactory() {
+		return pageFactory;
 	}
 
 	protected final HashMap<String, String> testMap = new HashMap<String, String>();

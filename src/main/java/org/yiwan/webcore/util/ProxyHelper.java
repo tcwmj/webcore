@@ -9,6 +9,7 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
@@ -23,6 +24,7 @@ import net.lightbody.bmp.util.HttpMessageInfo;
 public class ProxyHelper {
 	private final static Logger logger = LoggerFactory.getLogger(ProxyHelper.class);
 	private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
+	private final static String CONTENT_DISPOSITION = "Content-Disposition";
 
 	static {
 		proxy.start(0);
@@ -123,10 +125,16 @@ public class ProxyHelper {
 			@Override
 			public void filterResponse(HttpResponse response, HttpMessageContents contents,
 					HttpMessageInfo messageInfo) {
-				String fileName = testcase.getTargetDataFolder() + testcase.getTestCaseId() + "_" + Helper.randomize();
+				String fileName = testcase.getTargetDataFolder() + testcase.getTestCaseId() + "_" + Helper.randomize()
+						+ ".";
 				if (contents.getContentType() != null && contents.getContentType().contains("text/csv")) {
+					defaultFileName = getAttachmentFileName(response);
 					if (contents.getTextContents() != null) {
-						testcase.setDownloadFile(fileName + ".csv");
+						if (defaultFileName != null) {
+							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						} else {
+							testcase.setDownloadFile(fileName + "csv");
+						}
 						logger.info("saving csv file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -137,8 +145,13 @@ public class ProxyHelper {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				} else if (contents.getContentType() != null && contents.getContentType().contains("text/xml")) {
+					defaultFileName = getAttachmentFileName(response);
 					if (contents.getTextContents() != null) {
-						testcase.setDownloadFile(fileName + ".xml");
+						if (defaultFileName != null) {
+							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						} else {
+							testcase.setDownloadFile(fileName + "xml");
+						}
 						logger.info("saving xml file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -150,8 +163,13 @@ public class ProxyHelper {
 					}
 				} else if (contents.getContentType() != null
 						&& contents.getContentType().contains("application/vnd.ms-excel")) {
+					defaultFileName = getAttachmentFileName(response);
 					if (contents.getBinaryContents() != null) {
-						testcase.setDownloadFile(fileName + ".xls");
+						if (defaultFileName != null) {
+							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						} else {
+							testcase.setDownloadFile(fileName + "xls");
+						}
 						logger.info("saving xls file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -162,8 +180,13 @@ public class ProxyHelper {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				} else if (contents.getContentType() != null && contents.getContentType().contains("application/pdf")) {
+					defaultFileName = getAttachmentFileName(response);
 					if (contents.getBinaryContents() != null) {
-						testcase.setDownloadFile(fileName + ".pdf");
+						if (defaultFileName != null) {
+							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						} else {
+							testcase.setDownloadFile(fileName + "pdf");
+						}
 						logger.info("saving pdf file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -174,8 +197,13 @@ public class ProxyHelper {
 						response.setStatus(HttpResponseStatus.NO_CONTENT);
 					}
 				} else if (contents.getContentType() != null && contents.getContentType().contains("application/zip")) {
+					defaultFileName = getAttachmentFileName(response);
 					if (contents.getBinaryContents() != null) {
-						testcase.setDownloadFile(fileName + ".zip");
+						if (defaultFileName != null) {
+							testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
+						} else {
+							testcase.setDownloadFile(fileName + "zip");
+						}
 						logger.info("saving zip file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -187,14 +215,11 @@ public class ProxyHelper {
 					}
 				} else if (contents.getContentType() != null
 						&& contents.getContentType().contains("application/octet-stream")
-						&& response.headers().get("Content-Disposition") != null
-						&& response.headers().get("Content-Disposition").contains("attachment;filename=")) {
+						&& response.headers().get(CONTENT_DISPOSITION) != null
+						&& response.headers().get(CONTENT_DISPOSITION).contains("attachment;filename=")) {
+					defaultFileName = getAttachmentFileName(response);
 					if (contents.getBinaryContents() != null) {
-						testcase.setDownloadFile(
-								fileName + "."
-										+ response.headers().get("Content-Disposition")
-												.replace("attachment;filename=", "").replace(";", "").replace("\"", "")
-												.replace("'", "").split("\\.")[1].trim());
+						testcase.setDownloadFile(fileName + Helper.getFileExtension(defaultFileName));
 						logger.info("saving file to " + testcase.getDownloadFile());
 						File file = new File(testcase.getDownloadFile());
 						try {
@@ -209,4 +234,25 @@ public class ProxyHelper {
 		});
 	}
 
+	/**
+	 * get attachment file name from response header Content-Disposition
+	 * 
+	 * @return string or null
+	 */
+	private static String getAttachmentFileName(HttpResponse response) {
+		if (response.headers().get(CONTENT_DISPOSITION) != null
+				&& response.headers().get(CONTENT_DISPOSITION).contains("attachment;filename="))
+			return response.headers().get(CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "")
+					.replace("\"", "").replace("'", "").trim();
+		return null;
+	}
+
+	private static String defaultFileName;
+
+	/**
+	 * @param filename
+	 */
+	public static void assertDefaultFileName(String filename) {
+		Assert.assertEquals(filename, defaultFileName);
+	}
 }
