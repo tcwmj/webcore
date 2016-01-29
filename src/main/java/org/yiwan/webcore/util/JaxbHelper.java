@@ -93,7 +93,7 @@ public class JaxbHelper {
 	/**
 	 * convert file to java bean without schema validation
 	 * 
-	 * @param xml
+	 * @param file
 	 * @param clazz
 	 * @return object in generic type
 	 */

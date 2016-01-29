@@ -111,7 +111,7 @@ public class PropHelper {
 	 * get property from system first, if null then get from properties file
 	 * 
 	 * @param key
-	 * @return
+	 * @return property value
 	 */
 	public static String getProperty(String key) {
 		return System.getProperty(key) == null ? props.getProperty(key) : System.getProperty(key);

@@ -191,7 +191,7 @@ public class TestBase {
 	/**
 	 * get test result folder against suite name and test name
 	 * 
-	 * @return
+	 * @return relative result folder string
 	 */
 	private String getTestResultFolder() {
 		return ("target/result/" + (suiteName == null ? "" : suiteName) + "/" + (testName == null ? "" : testName)

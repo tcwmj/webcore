@@ -236,9 +236,9 @@ public class Helper {
 	 * get file name without extension
 	 * 
 	 * @param filename
-	 * @return
+	 * @return file name string without extension
 	 */
-	public static String getFileNameWithoutExtension(String filename) {
+	public static String removeFileExtension(String filename) {
 		if ((filename != null) && (filename.length() > 0)) {
 			int dot = filename.lastIndexOf('.');
 			if ((dot > -1) && (dot < (filename.length()))) {
