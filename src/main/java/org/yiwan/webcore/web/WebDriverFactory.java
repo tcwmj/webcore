@@ -195,7 +195,7 @@ public class WebDriverFactory {
 			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
 
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-		// capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
+		// capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
 		// true);
 		capability.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
 		capability.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);

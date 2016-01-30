@@ -124,125 +124,35 @@ public class ProxyHelper {
 			@Override
 			public void filterResponse(HttpResponse response, HttpMessageContents contents,
 					HttpMessageInfo messageInfo) {
-				if (testcase.isPrepareToDownload()) {
-					String fileName = testcase.getTargetDataFolder() + testcase.getTestCaseId() + "_"
+				if (testcase.isPrepareToDownload() && contents.getContentType() != null) {
+					String filename = testcase.getTargetDataFolder() + testcase.getTestCaseId() + "_"
 							+ Helper.randomize() + ".";
-					if (contents.getContentType() != null && contents.getContentType().contains("text/csv")) {
-						testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
-						if (contents.getTextContents() != null) {
-							if (testcase.getDefaultDownloadFileName() != null) {
-								testcase.setDownloadFile(
-										fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
-							} else {
-								testcase.setDownloadFile(fileName + "csv");
-							}
-							logger.info("saving csv file to " + testcase.getDownloadFile());
-							File file = new File(testcase.getDownloadFile());
-							try {
-								FileUtils.writeStringToFile(file, contents.getTextContents());
-							} catch (UnsupportedCharsetException | IOException e) {
-								logger.error("chartset was unsupported", e);
-							}
-							response.setStatus(HttpResponseStatus.NO_CONTENT);
-							testcase.setPrepareToDownload(false);
-						}
-					} else if (contents.getContentType() != null && contents.getContentType().contains("text/xml")) {
-						testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
-						if (contents.getTextContents() != null) {
-							if (testcase.getDefaultDownloadFileName() != null) {
-								testcase.setDownloadFile(
-										fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
-							} else {
-								testcase.setDownloadFile(fileName + "xml");
-							}
-							logger.info("saving xml file to " + testcase.getDownloadFile());
-							File file = new File(testcase.getDownloadFile());
-							try {
-								FileUtils.writeStringToFile(file, contents.getTextContents());
-							} catch (UnsupportedCharsetException | IOException e) {
-								logger.error("charset was unsupported", e);
-							}
-							response.setStatus(HttpResponseStatus.NO_CONTENT);
-							testcase.setPrepareToDownload(false);
-						}
-					} else if (contents.getContentType() != null
-							&& contents.getContentType().contains("application/vnd.ms-excel")) {
-						testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
-						if (contents.getBinaryContents() != null) {
-							if (testcase.getDefaultDownloadFileName() != null) {
-								testcase.setDownloadFile(
-										fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
-							} else {
-								testcase.setDownloadFile(fileName + "xls");
-							}
-							logger.info("saving xls file to " + testcase.getDownloadFile());
-							File file = new File(testcase.getDownloadFile());
-							try {
-								FileUtils.writeByteArrayToFile(file, contents.getBinaryContents());
-							} catch (IOException e) {
-								logger.error("IO exception occurred", e);
-							}
-							response.setStatus(HttpResponseStatus.NO_CONTENT);
-							testcase.setPrepareToDownload(false);
-						}
-					} else if (contents.getContentType() != null
-							&& contents.getContentType().contains("application/pdf")) {
-						testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
-						if (contents.getBinaryContents() != null) {
-							if (testcase.getDefaultDownloadFileName() != null) {
-								testcase.setDownloadFile(
-										fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
-							} else {
-								testcase.setDownloadFile(fileName + "pdf");
-							}
-							logger.info("saving pdf file to " + testcase.getDownloadFile());
-							File file = new File(testcase.getDownloadFile());
-							try {
-								FileUtils.writeByteArrayToFile(file, contents.getBinaryContents());
-							} catch (IOException e) {
-								logger.error("IO exception occurred", e);
-							}
-							response.setStatus(HttpResponseStatus.NO_CONTENT);
-							testcase.setPrepareToDownload(false);
-						}
-					} else if (contents.getContentType() != null
-							&& contents.getContentType().contains("application/zip")) {
-						testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
-						if (contents.getBinaryContents() != null) {
-							if (testcase.getDefaultDownloadFileName() != null) {
-								testcase.setDownloadFile(
-										fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
-							} else {
-								testcase.setDownloadFile(fileName + "zip");
-							}
-							logger.info("saving zip file to " + testcase.getDownloadFile());
-							File file = new File(testcase.getDownloadFile());
-							try {
-								FileUtils.writeByteArrayToFile(file, contents.getBinaryContents());
-							} catch (IOException e) {
-								logger.error("IO exception occurred", e);
-							}
-							response.setStatus(HttpResponseStatus.NO_CONTENT);
-							testcase.setPrepareToDownload(false);
-						}
-					} else if (contents.getContentType() != null
-							&& contents.getContentType().contains("application/octet-stream")
+					if (contents.getContentType().contains("text/csv")) {
+						setDownloadFile(response, testcase, filename, "csv");
+						downloadTextFile(testcase, contents.getTextContents());
+						completeDownload(response, testcase);
+					} else if (contents.getContentType().contains("text/xml")) {
+						setDownloadFile(response, testcase, filename, "xml");
+						downloadTextFile(testcase, contents.getTextContents());
+						completeDownload(response, testcase);
+					} else if (contents.getContentType().contains("application/vnd.ms-excel")) {
+						setDownloadFile(response, testcase, filename, "xls");
+						downloadBinaryFile(testcase, contents.getBinaryContents());
+						completeDownload(response, testcase);
+					} else if (contents.getContentType().contains("application/pdf")) {
+						setDownloadFile(response, testcase, filename, "pdf");
+						downloadBinaryFile(testcase, contents.getBinaryContents());
+						completeDownload(response, testcase);
+					} else if (contents.getContentType().contains("application/zip")) {
+						setDownloadFile(response, testcase, filename, "zip");
+						downloadBinaryFile(testcase, contents.getBinaryContents());
+						completeDownload(response, testcase);
+					} else if (contents.getContentType().contains("application/octet-stream")
 							&& response.headers().get(CONTENT_DISPOSITION) != null
 							&& response.headers().get(CONTENT_DISPOSITION).contains("attachment;filename=")) {
-						testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
-						if (contents.getBinaryContents() != null) {
-							testcase.setDownloadFile(
-									fileName + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
-							logger.info("saving file to " + testcase.getDownloadFile());
-							File file = new File(testcase.getDownloadFile());
-							try {
-								FileUtils.writeByteArrayToFile(file, contents.getBinaryContents());
-							} catch (IOException e) {
-								logger.error("IO exception occurred", e);
-							}
-							response.setStatus(HttpResponseStatus.NO_CONTENT);
-							testcase.setPrepareToDownload(false);
-						}
+						setDownloadFile(response, testcase, filename, "unknown");
+						downloadBinaryFile(testcase, contents.getBinaryContents());
+						completeDownload(response, testcase);
 					}
 				}
 			}
@@ -260,5 +170,37 @@ public class ProxyHelper {
 			return response.headers().get(CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "")
 					.replace("\"", "").replace("'", "").trim();
 		return null;
+	}
+
+	private static void setDownloadFile(HttpResponse response, TestBase testcase, String filename, String extension) {
+		testcase.setDefaultDownloadFileName(getAttachmentFileName(response));
+		if (testcase.getDefaultDownloadFileName() != null) {
+			testcase.setDownloadFile(filename + Helper.getFileExtension(testcase.getDefaultDownloadFileName()));
+		} else {
+			testcase.setDownloadFile(filename + extension);
+		}
+	}
+
+	private static void downloadTextFile(TestBase testcase, String text) {
+		logger.info("saving text file to " + testcase.getDownloadFile());
+		try {
+			FileUtils.writeStringToFile(new File(testcase.getDownloadFile()), text);
+		} catch (UnsupportedCharsetException | IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private static void downloadBinaryFile(TestBase testcase, byte[] bytes) {
+		logger.info("saving binary file to " + testcase.getDownloadFile());
+		try {
+			FileUtils.writeByteArrayToFile(new File(testcase.getDownloadFile()), bytes);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private static void completeDownload(HttpResponse response, TestBase testcase) {
+		response.setStatus(HttpResponseStatus.NO_CONTENT);
+		testcase.setPrepareToDownload(false);
 	}
 }
