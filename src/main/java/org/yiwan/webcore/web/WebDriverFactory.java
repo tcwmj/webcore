@@ -195,9 +195,14 @@ public class WebDriverFactory {
 			System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
 
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-		// ignore ie protected mode behavior
-		// capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
+		// capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
 		// true);
+		capability.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+		capability.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
+		capability.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+		capability.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+		// capability.setCapability("disable-popup-blocking", true);
+		capability.setCapability(CapabilityType.HAS_NATIVE_EVENTS, false);
 		capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
 		capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
 		return new InternetExplorerDriver(capability);
