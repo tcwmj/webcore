@@ -342,4 +342,20 @@ public class TestBase {
 	public void onTestSkipped(ITestResult result) {
 		logger.info(result.getTestClass().getName() + "." + result.getName() + " skipped");
 	};
+
+	private boolean prepareToDownload = false;
+
+	public boolean isPrepareToDownload() {
+		return prepareToDownload;
+	}
+
+	/**
+	 * set it to true if you want to download something from the web
+	 * 
+	 * @param prepareToDownload
+	 */
+	public void setPrepareToDownload(boolean prepareToDownload) {
+		this.prepareToDownload = prepareToDownload;
+	}
+
 }
