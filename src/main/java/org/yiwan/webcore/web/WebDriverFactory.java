@@ -197,7 +197,8 @@ public class WebDriverFactory {
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
 		// capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
 		// true);
-		capability.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+		// capability.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL,
+		// "about:blank");
 		capability.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
 		capability.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
 		capability.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
