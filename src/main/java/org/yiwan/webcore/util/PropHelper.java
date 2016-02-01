@@ -78,6 +78,16 @@ public class PropHelper {
 	public static final String DEFAULT_OS = getProperty("os.default");
 	public static final String DEFAULT_OS_VERSION = getProperty("os.version.default");
 	public static final String DEFAULT_BROSWER = getProperty("broswer.default");
+	public static final Boolean IGNORE_PROTECTED_MODE_SETTINGS = Boolean
+			.parseBoolean(getProperty("browser.ie.ignoreProtectedModeSettings"));
+	public static final String INITIAL_BROWSER_URL = getProperty("browser.ie.initialBrowserUrl");
+	public static final Boolean IGNORE_ZOOM_SETTING = Boolean.parseBoolean(getProperty("browser.ie.ignoreZoomSetting"));
+	public static final Boolean REQUIRE_WINDOW_FOCUS = Boolean
+			.parseBoolean(getProperty("browser.ie.requireWindowFocus"));
+	public static final Boolean ENABLE_PERSISTENT_HOVER = Boolean
+			.parseBoolean(getProperty("browser.ie.enablePersistentHover"));
+	public static final Boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.ie.nativeEvents"));
+	public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
 	public static final String DEFAULT_IE_ARCH = getProperty("broswer.ie.arch.default");
 	public static final Boolean MAXIMIZE_BROSWER = Boolean.parseBoolean(getProperty("browser.maximize"));
 
