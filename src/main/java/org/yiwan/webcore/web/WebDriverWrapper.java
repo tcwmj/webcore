@@ -1209,4 +1209,14 @@ public class WebDriverWrapper {
 		waitDocumentReady();
 		return driver.getTitle();
 	}
+
+	/**
+	 * assert text containing in the page source
+	 * 
+	 * @param text
+	 * @param contain
+	 */
+	protected void assertContain(String text, boolean contain) {
+		Assert.assertEquals(isContain(text), contain, "assert text " + text + " containing in the page source");
+	}
 }
