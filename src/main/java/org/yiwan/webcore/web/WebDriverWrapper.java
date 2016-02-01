@@ -863,6 +863,21 @@ public class WebDriverWrapper {
 	}
 
 	/**
+	 * get selected text on such web list
+	 * 
+	 * @param locator
+	 * @return string
+	 */
+	protected List<String> getSelectedTexts(Locator locator) {
+		List<String> list = new ArrayList<String>();
+		List<WebElement> options = getAllSelectedOptions(locator);
+		for (WebElement option : options) {
+			list.add(option.getText());
+		}
+		return list;
+	}
+
+	/**
 	 * find element in presence on the page
 	 * 
 	 * @param locator
