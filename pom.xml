@@ -4,7 +4,7 @@
 
 	<groupId>org.yiwan</groupId>
 	<artifactId>webcore</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>webcore</name>
@@ -12,19 +12,16 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<maven.compiler.version>3.3</maven.compiler.version>		
 		<logback.version>1.1.3</logback.version>
 		<bmp.version>2.1.0-beta-4</bmp.version>
 		<selenium.version>2.48.2</selenium.version>
-		<testng.version>6.8.8</testng.version>
-		<reportng.version>1.1.4</reportng.version>
 		<poi.version>3.10-FINAL</poi.version>
 		<xml.apis.version>1.4.01</xml.apis.version>
-		<qdox.version>1.12.1</qdox.version>
-		<guice.version>3.0</guice.version>
-		<jave.version>1.7</jave.version>
-		<maven.compiler.version>2.3.2</maven.compiler.version>
-		<maven.source.version>2.4</maven.source.version>
-		<maven.javadoc.version>2.10.3</maven.javadoc.version>
+		<cucumber.version>1.2.4</cucumber.version>
+		<junit.version>4.12</junit.version>
+		<picocontainer.version>2.15</picocontainer.version>
 	</properties>
 
 	<dependencies>
@@ -52,15 +49,6 @@
 			</exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${testng.version}</version>
-		</dependency>
-
-		<!-- <dependency> <groupId>org.databene</groupId> <artifactId>feed4testng</artifactId> 
-			<version>0.6.2</version> </dependency> -->
-
 		<!-- POI dependencies -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -83,29 +71,30 @@
 			<artifactId>xml-apis</artifactId>
 			<version>${xml.apis.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>com.thoughtworks.qdox</groupId>
-			<artifactId>qdox</artifactId>
-			<version>${qdox.version}</version>
-		</dependency>
-
-		<!-- reportng dependencies -->
-		<dependency>
-			<groupId>org.uncommons</groupId>
-			<artifactId>reportng</artifactId>
-			<version>${reportng.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.testng</groupId>
-					<artifactId>testng</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-java8</artifactId>
+			<version>${cucumber.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>${guice.version}</version>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-picocontainer</artifactId>
+			<version>${cucumber.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>${cucumber.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.picocontainer</groupId>
+			<artifactId>picocontainer</artifactId>
+			<version>${picocontainer.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -116,41 +105,13 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.version}</version>
 				<configuration>
-					<source>${jave.version}</source>
-					<target>${jave.version}</target>
+					<encoding>UTF-8</encoding>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<!-- treat warnings as errors -->
+					<!-- <compilerArgument>-Werror</compilerArgument> -->
 				</configuration>
 			</plugin>
-
-			<!-- generate a javasource -->
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>${maven.source.version]</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
-
-			<!-- generate a javadoc -->
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.version}</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
 		</plugins>
 	</build>
-
 </project>

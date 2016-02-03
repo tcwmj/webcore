@@ -36,7 +36,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.xml.utils.DefaultErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -101,16 +100,6 @@ public class Helper {
 		} catch (Exception e) {
 			return false;
 		}
-	}
-
-	/**
-	 * assert file exists in a time range of Property.FILE_ACCESSABLE
-	 * 
-	 * @param path
-	 */
-	public static void assertFileExists(String path) {
-		File file = new File(path);
-		Assert.assertTrue(file.exists(), path);
 	}
 
 	/**
