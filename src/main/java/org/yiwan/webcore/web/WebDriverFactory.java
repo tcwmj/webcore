@@ -43,10 +43,10 @@ public class WebDriverFactory {
 	public static WebDriver createWebDriver() {
 		WebDriver driver = null;
 		if (PropHelper.REMOTE) {
-			logger.info("choose remote test mode");
+			logger.debug("choose remote test mode");
 			driver = setupRemoteBrowser();
 		} else {
-			logger.info("choose local test mode");
+			logger.debug("choose local test mode");
 			driver = setupLocalBrowser();
 		}
 		if (PropHelper.MAXIMIZE_BROWSER)
@@ -60,10 +60,10 @@ public class WebDriverFactory {
 		DesiredCapabilities capability = new DesiredCapabilities();
 		URL url = null;
 		if (PropHelper.BROWSERSTACK) {
-			logger.info("choose browserstack cloud test platform");
+			logger.debug("choose browserstack cloud test platform");
 			configBrowserStackCapablities(capability, url);
 		} else {
-			logger.info("choose self remote test platform");
+			logger.debug("choose self remote test platform");
 			setupSelfRemoteCapabilities(capability, url);
 		}
 		RemoteWebDriver rwd = new RemoteWebDriver(url, capability);
@@ -74,21 +74,21 @@ public class WebDriverFactory {
 	private static void configBrowserStackCapablities(DesiredCapabilities capability, URL url) {
 		if (os != null) {
 			capability.setCapability("os", os);
-			logger.info("choose platform " + os);
+			logger.debug("choose platform " + os);
 			if (os_version != null) {
 				capability.setCapability("os_version", os_version);
-				logger.info("choose platform version " + os_version);
+				logger.debug("choose platform version " + os_version);
 			}
 		}
 		capability.setCapability("browser", browser);
-		logger.info("choose browser " + browser);
+		logger.debug("choose browser " + browser);
 		if (browser_version != null) {
 			capability.setCapability("browser_version", browser_version);
-			logger.info("choose browser version " + browser_version);
+			logger.debug("choose browser version " + browser_version);
 		}
 		if (resolution != null) {
 			capability.setCapability("resolution", resolution);
-			logger.info("choose platform resolution " + resolution);
+			logger.debug("choose platform resolution " + resolution);
 		}
 		// set browser type
 		switch (browser.toLowerCase()) {
@@ -116,7 +116,7 @@ public class WebDriverFactory {
 	private static void setupSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
 		if (os != null) {
 			capability.setPlatform(Platform.fromString(os));
-			logger.info("choose platform " + os);
+			logger.debug("choose platform " + os);
 		} else {
 			capability.setPlatform(Platform.ANY);
 		}
@@ -131,11 +131,11 @@ public class WebDriverFactory {
 		default:
 			configFirefoxCapbilities(capability);
 		}
-		logger.info("choose browser " + browser);
+		logger.debug("choose browser " + browser);
 		// set browser version
 		if (browser_version != null) {
 			capability.setVersion(browser_version);
-			logger.info("choose browser version " + browser_version);
+			logger.debug("choose browser version " + browser_version);
 		}
 		try {
 			url = new URL(PropHelper.REMOTE_ADDRESS);
@@ -150,7 +150,7 @@ public class WebDriverFactory {
 	 * @return WebDriver
 	 */
 	private static WebDriver setupLocalBrowser() {
-		logger.info("choose test browser " + browser);
+		logger.debug("choose test browser " + browser);
 		switch (browser.toLowerCase()) {
 		case "chrome":
 			return setupLocalChomeDriver();

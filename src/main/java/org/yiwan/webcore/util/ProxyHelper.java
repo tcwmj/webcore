@@ -36,7 +36,7 @@ public class ProxyHelper {
     @Before
     public void setUp() {
         if (PropHelper.ENABLE_PROXY) {
-            logger.info("start proxy");
+            logger.debug("start proxy");
             proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
             proxy.start(0);
             if (PropHelper.ENABLE_DOWNLOAD)
@@ -47,7 +47,7 @@ public class ProxyHelper {
     @After
     public void tearDown() {
         if (proxy.isStarted()) {
-            logger.info("stop proxy");
+            logger.debug("stop proxy");
             proxy.stop();
         }
     }
@@ -59,7 +59,7 @@ public class ProxyHelper {
      * @param filter filter instance
      */
     private static void addResponseFilter(ResponseFilter filter) {
-        logger.info("add a new response filter to the proxy");
+        logger.debug("add a new response filter to the proxy");
         proxy.addResponseFilter(filter);
     }
 
@@ -70,7 +70,7 @@ public class ProxyHelper {
      * @param filter filter instance
      */
     private static void addReqeustFilter(RequestFilter filter) {
-        logger.info("add a new request filter to the proxy");
+        logger.debug("add a new request filter to the proxy");
         proxy.addRequestFilter(filter);
     }
 
@@ -132,7 +132,7 @@ public class ProxyHelper {
      * @param testcase
      */
     public static void supportFileDownload() {
-        logger.info("setup proxy to support file download mechianism");
+        logger.debug("setup proxy to support file download mechianism");
         // set response filter rule for downloading files
         addResponseFilter(new ResponseFilter() {
             @Override
@@ -195,7 +195,7 @@ public class ProxyHelper {
     }
 
     private static void downloadTextFile(String text) {
-        logger.info("saving text file to " + getDownloadFile());
+        logger.debug("saving text file to " + getDownloadFile());
         try {
             FileUtils.writeStringToFile(new File(getDownloadFile()), text);
         } catch (UnsupportedCharsetException | IOException e) {
@@ -204,7 +204,7 @@ public class ProxyHelper {
     }
 
     private static void downloadBinaryFile(byte[] bytes) {
-        logger.info("saving binary file to " + getDownloadFile());
+        logger.debug("saving binary file to " + getDownloadFile());
         try {
             FileUtils.writeByteArrayToFile(new File(getDownloadFile()), bytes);
         } catch (IOException e) {
