@@ -2,7 +2,6 @@ package org.yiwan.webcore.web;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.slf4j.Logger;
@@ -71,11 +70,9 @@ public class SharedDriver extends EventFiringWebDriver {
 
 	@After
 	public void embedScreenshot(Scenario scenario) {
-		try {
+		if (scenario.isFailed()) {
 			byte[] screenshot = getScreenshotAs(OutputType.BYTES);
 			scenario.embed(screenshot, "image/png");
-		} catch (WebDriverException somePlatformsDontSupportScreenshots) {
-			logger.error(somePlatformsDontSupportScreenshots.getMessage(), somePlatformsDontSupportScreenshots);
 		}
 		quit();
 	}
