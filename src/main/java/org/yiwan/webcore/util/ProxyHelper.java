@@ -1,7 +1,5 @@
 package org.yiwan.webcore.util;
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -33,19 +31,19 @@ public class ProxyHelper {
 
     private final static String CONTENT_DISPOSITION = "Content-Disposition";
 
-    @Before
-    public void setUp() {
+    static {
         if (PropHelper.ENABLE_PROXY) {
             logger.debug("start proxy");
             proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
             proxy.start(0);
-            if (PropHelper.ENABLE_DOWNLOAD)
+            if (PropHelper.ENABLE_DOWNLOAD) {
                 supportFileDownload();
+            }
         }
     }
 
-    @After
-    public void tearDown() {
+    //    @After
+    public static void tearDown() {
         if (proxy.isStarted()) {
             logger.debug("stop proxy");
             proxy.stop();
@@ -92,7 +90,6 @@ public class ProxyHelper {
     /**
      * write har to a file
      *
-     * @param testcase
      * @param filename file name without extension
      */
     public static void writeHar(final String filename) {
@@ -128,8 +125,6 @@ public class ProxyHelper {
 
     /**
      * support download file mechanism through the proxy
-     *
-     * @param testcase
      */
     public static void supportFileDownload() {
         logger.debug("setup proxy to support file download mechianism");
@@ -263,4 +258,5 @@ public class ProxyHelper {
     public static boolean isEnableHar() {
         return enableHar;
     }
+
 }
