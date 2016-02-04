@@ -4,6 +4,7 @@ import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class WebDriverWrapper {
             ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),
             ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
 
-    private SharedDriver driver;
+    private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<WebDriver> wait;
     private String baseUrl = PropHelper.getProperty("server.url");
@@ -36,7 +37,7 @@ public class WebDriverWrapper {
 
     public final static HashMap<String, String> testmap = new HashMap<String, String>();
 
-    public WebDriverWrapper(SharedDriver driver) {
+    public WebDriverWrapper(WebDriver driver) {
         this.driver = driver;
         this.js = (JavascriptExecutor) driver;
         this.wait = new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL)
@@ -45,11 +46,18 @@ public class WebDriverWrapper {
     }
 
     /**
+     * browse base url
+     */
+    public void browse() {
+        browse(getBaseUrl());
+    }
+
+    /**
      * navigate to a specified url
      *
      * @param url
      */
-    protected void browse(String url) {
+    public void browse(String url) {
         logger.debug("navigate to url " + url);
         waitDocumentReady();
         driver.navigate().to(url);
@@ -58,7 +66,7 @@ public class WebDriverWrapper {
     /**
      * navigate forward
      */
-    protected void forward() {
+    public void forward() {
         logger.debug("navigate forward");
         waitDocumentReady();
         driver.navigate().forward();
@@ -67,7 +75,7 @@ public class WebDriverWrapper {
     /**
      * navigate back
      */
-    protected void back() {
+    public void back() {
         logger.debug("navigate back");
         waitDocumentReady();
         driver.navigate().back();
@@ -76,7 +84,7 @@ public class WebDriverWrapper {
     /**
      * maximize browser window
      */
-    protected void maximize() {
+    public void maximize() {
         logger.debug("maximizing browser");
         driver.manage().window().maximize();
     }
@@ -84,7 +92,7 @@ public class WebDriverWrapper {
     /**
      * close current browser tab
      */
-    protected void close() {
+    public void close() {
         logger.debug("close browser tab with title " + getTitle());
         try {
             driver.close();
@@ -96,7 +104,7 @@ public class WebDriverWrapper {
     /**
      * close all browser tabs
      */
-    protected void closeAll() {
+    public void closeAll() {
         logger.debug("close all browser tabs");
         if (driver instanceof WebDriver) {
             for (String handle : driver.getWindowHandles()) {
@@ -109,13 +117,38 @@ public class WebDriverWrapper {
     /**
      * quit driver
      */
-    protected void quit() {
+    public void quit() {
         logger.debug("quit driver");
         try {
             driver.quit();
         } catch (WebDriverException e) {
             logger.warn("quit driver", e);
         }
+    }
+
+    /**
+     * delete all cookies
+     */
+    public void deleteAllCookies() {
+        logger.debug("delete all cookies");
+        driver.manage().deleteAllCookies();
+    }
+
+    /**
+     * capture screenshot for local or remote testing
+     *
+     * @return screenshot byte[]
+     */
+    public byte[] captureScreenShot() {
+        TakesScreenshot ts = null;
+        if (PropHelper.REMOTE)
+            // RemoteWebDriver does not implement the TakesScreenshot class if
+            // the driver does have the Capabilities to take a screenshot then
+            // Augmenter will add the TakesScreenshot methods to the instance
+            ts = (TakesScreenshot) (new Augmenter().augment(driver));
+        else
+            ts = (TakesScreenshot) driver;
+        return ts.getScreenshotAs(OutputType.BYTES);
     }
 
     /**

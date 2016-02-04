@@ -39,14 +39,14 @@ public class ProxyHelper {
             if (PropHelper.ENABLE_DOWNLOAD) {
                 supportFileDownload();
             }
-        }
-    }
-
-    //    @After
-    public static void tearDown() {
-        if (proxy.isStarted()) {
-            logger.debug("stop proxy");
-            proxy.stop();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    logger.debug("gracefully shutting down proxy");
+                    if (proxy.isStarted()) {
+                        proxy.stop();
+                    }
+                }
+            });
         }
     }
 
@@ -56,6 +56,7 @@ public class ProxyHelper {
      *
      * @param filter filter instance
      */
+
     private static void addResponseFilter(ResponseFilter filter) {
         logger.debug("add a new response filter to the proxy");
         proxy.addResponseFilter(filter);
