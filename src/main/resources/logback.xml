@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <configuration>
+    <!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>-->
     <property name="output_folder" value="target/result/log/"/>
     <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
-        <discriminator class="org.yiwan.webcore.util.ScenarioBasedDiscriminator"/>
+        <!--<discriminator class="org.yiwan.webcore.util.ScenarioBasedDiscriminator"/>-->
+        <discriminator>
+            <key>scenario</key>
+            <defaultValue>default</defaultValue>
+        </discriminator>
         <sift>
-            <appender class="ch.qos.logback.core.FileAppender">
+            <appender name="${scenario}" class="ch.qos.logback.core.FileAppender">
                 <file>${output_folder}${scenario}.html</file>
                 <Append>false</Append>
                 <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
@@ -60,22 +65,6 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    <appender name="BUSINESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${output_folder}business.log</File>
-        <Append>true</Append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${output_folder}business.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
-        </filter>
-    </appender>
     <appender name="PROXY" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${output_folder}proxy.log</File>
         <Append>true</Append>
@@ -96,14 +85,13 @@
         <appender-ref ref="PROXY"/>
     </logger>
     <logger name="org.yiwan" level="DEBUG">
-        <appender-ref ref="BUSINESS"/>
+        <appender-ref ref="SIFT"/>
     </logger>
     <logger name="com.lombardrisk" level="DEBUG">
-        <appender-ref ref="BUSINESS"/>
+        <appender-ref ref="SIFT"/>
     </logger>
     <root level="ALL">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="SIFT"/>
         <appender-ref ref="ALL"/>
         <appender-ref ref="ERROR"/>
     </root>

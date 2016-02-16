@@ -11,19 +11,22 @@ import cucumber.api.java.Before;
 public class ScenarioBasedDiscriminator implements Discriminator<ILoggingEvent> {
 
     private static final String KEY = "scenario";
+    private static final String DEFAULT_DISCRIMINATING_VALUE = "default";
 
     private boolean started;
 
     private Scenario scenario;
 
-    @Before
+//    @Before
     public void before(Scenario scenario) {
         this.scenario = scenario;
     }
 
     @Override
     public String getDiscriminatingValue(ILoggingEvent iLoggingEvent) {
-        return scenario.getId();
+        if (scenario == null)
+            return DEFAULT_DISCRIMINATING_VALUE;
+        return scenario.getId() == null ? DEFAULT_DISCRIMINATING_VALUE : scenario.getId();
     }
 
     @Override
