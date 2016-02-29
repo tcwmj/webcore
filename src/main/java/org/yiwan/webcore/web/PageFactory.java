@@ -38,4 +38,27 @@ public class PageFactory {
         }
         return null;
     }
+
+   /* private TestBase testcase;
+
+    public PageFactory(TestBase testcase) {
+        this.testcase = testcase;
+    }
+
+    public <T> Object newPage(Class<?> clazz) {
+        Constructor<?> c = null;
+        try {
+            c = clazz.getDeclaredConstructor(TestBase.class);
+        } catch (NoSuchMethodException | SecurityException e) {
+            logger.error(e.getMessage(), e);
+        }
+        c.setAccessible(true);
+        try {
+            return c.newInstance(testcase);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return null;
+    }*/
 }
