@@ -863,6 +863,31 @@ public class WebDriverWrapper {
     }
 
     /**
+     * get all select options
+     *
+     * @param locator
+     * @return
+     */
+    protected List<WebElement> getOptions(Locator locator) {
+        return new Select(waitVisible(locator)).getOptions();
+    }
+
+    /**
+     * get all select options' text
+     *
+     * @param locator
+     * @return
+     */
+    protected List<String> getOptionTexts(Locator locator) {
+        List<String> list = new ArrayList<String>();
+        List<WebElement> options = getOptions(locator);
+        for (WebElement option : options) {
+            list.add(option.getText());
+        }
+        return list;
+    }
+
+    /**
      * get selected text on such web list
      *
      * @param locator
