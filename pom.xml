@@ -12,7 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jave.version>1.7</jave.version>
+        <java.version>1.7</java.version>
         <maven.compiler.version>3.3</maven.compiler.version>
         <maven.source.version>2.4</maven.source.version>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
@@ -112,14 +112,14 @@
         </dependency>
         <dependency>
             <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java8</artifactId>
+            <artifactId>cucumber-java</artifactId>
             <version>${cucumber.version}</version>
         </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-picocontainer</artifactId>
-            <version>${cucumber.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>info.cukes</groupId>-->
+        <!--<artifactId>cucumber-picocontainer</artifactId>-->
+        <!--<version>${cucumber.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
@@ -130,11 +130,11 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.picocontainer</groupId>
-            <artifactId>picocontainer</artifactId>
-            <version>${picocontainer.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.picocontainer</groupId>-->
+        <!--<artifactId>picocontainer</artifactId>-->
+        <!--<version>${picocontainer.version}</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -145,8 +145,8 @@
                 <version>${maven.compiler.version}</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>${jave.version}</source>
-                    <target>${jave.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <!-- treat warnings as errors -->
                     <!-- <compilerArgument>-Werror</compilerArgument> -->
                 </configuration>
