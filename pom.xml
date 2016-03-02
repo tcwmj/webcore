@@ -21,16 +21,16 @@
         <selenium.version>2.48.2</selenium.version>
         <poi.version>3.10-FINAL</poi.version>
         <xml.apis.version>1.4.01</xml.apis.version>
-        <cucumber.version>1.2.4</cucumber.version>
-        <junit.version>4.12</junit.version>
-        <picocontainer.version>2.15</picocontainer.version>
-        <testng.version>6.8.8</testng.version>
-        <reportng.version>1.1.4</reportng.version>
-        <qdox.version>1.12.1</qdox.version>
-        <guice.version>3.0</guice.version>
+        <assertj.verion>2.2.0</assertj.verion>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.verion}</version>
+        </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -55,39 +55,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-        </dependency>
-
-        <!-- <dependency> <groupId>org.databene</groupId> <artifactId>feed4testng</artifactId>
-            <version>0.6.2</version> </dependency> -->
-
-        <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>${qdox.version}</version>
-        </dependency>
-
-        <!-- reportng dependencies -->
-        <dependency>
-            <groupId>org.uncommons</groupId>
-            <artifactId>reportng</artifactId>
-            <version>${reportng.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.testng</groupId>
-                    <artifactId>testng</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>${guice.version}</version>
-        </dependency>
-
         <!-- POI dependencies -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -110,31 +77,6 @@
             <artifactId>xml-apis</artifactId>
             <version>${xml.apis.version}</version>
         </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>${cucumber.version}</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>info.cukes</groupId>-->
-        <!--<artifactId>cucumber-picocontainer</artifactId>-->
-        <!--<version>${cucumber.version}</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>${cucumber.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.picocontainer</groupId>-->
-        <!--<artifactId>picocontainer</artifactId>-->
-        <!--<version>${picocontainer.version}</version>-->
-        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -144,7 +86,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <!-- treat warnings as errors -->

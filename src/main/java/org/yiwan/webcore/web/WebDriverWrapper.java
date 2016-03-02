@@ -1,7 +1,6 @@
 package org.yiwan.webcore.web;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
-import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
@@ -18,6 +17,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebDriverWrapper {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -478,7 +479,7 @@ public class WebDriverWrapper {
      */
     protected void assertTextSelectable(Locator locator, String text) {
         String message = "assert " + text + " to be selectable on " + locator.toString();
-        Assert.assertTrue(message, isTextSelectable(locator, text));
+        assertThat(isTextSelectable(locator, text)).as(message).isTrue();
     }
 
     /**
@@ -497,7 +498,7 @@ public class WebDriverWrapper {
                 break;
             }
         }
-        Assert.assertTrue(message, selected);
+        assertThat(selected).as(message).isTrue();
     }
 
     /**
@@ -588,9 +589,9 @@ public class WebDriverWrapper {
         Boolean actual = isEnabled(locator);
         String message = "assert enabled of " + locator.toString();
         if (enabled) {
-            Assert.assertTrue(message, actual);
+            assertThat(actual).as(message).isTrue();
         } else {
-            Assert.assertFalse(message, actual);
+            assertThat(actual).as(message).isFalse();
         }
     }
 
@@ -602,9 +603,9 @@ public class WebDriverWrapper {
         Boolean actual = isDisplayed(locator);
         String message = "assert displayed of " + locator.toString();
         if (displayed) {
-            Assert.assertTrue(message, actual);
+            assertThat(actual).as(message).isTrue();
         } else {
-            Assert.assertFalse(message, actual);
+            assertThat(actual).as(message).isFalse();
         }
     }
 
@@ -616,9 +617,9 @@ public class WebDriverWrapper {
         Boolean actual = isSelected(locator);
         String message = "assert selected of " + locator.toString();
         if (selected) {
-            Assert.assertTrue(message, actual);
+            assertThat(actual).as(message).isTrue();
         } else {
-            Assert.assertFalse(message, actual);
+            assertThat(actual).as(message).isFalse();
         }
     }
 
@@ -630,7 +631,7 @@ public class WebDriverWrapper {
      */
     protected void assertText(Locator locator, String text) {
         String message = "assert text is " + text + " on " + locator.toString();
-        Assert.assertEquals(findElement(locator).getText(), text, message);
+        assertThat(findElement(locator).getText()).as(message).isEqualTo(text);
     }
 
     /**
@@ -652,7 +653,7 @@ public class WebDriverWrapper {
     protected void assertAttribute(Locator locator, String attribute, String value) {
         String actual = getAttribute(locator, attribute);
         String message = "assert " + attribute + " is " + value + " on " + locator.toString();
-        Assert.assertEquals(actual, value, message);
+        assertThat(actual).as(message).isEqualTo(value);
     }
 
     /**
@@ -775,7 +776,7 @@ public class WebDriverWrapper {
     protected void assertCssValue(Locator locator, String attribute, String value) {
         String actual = getCssValue(locator, attribute);
         String message = "assert css " + attribute + " is " + value + " on " + locator.toString();
-        Assert.assertEquals(actual, value, message);
+        assertThat(actual).as(message).isEqualTo(value);
     }
 
     /**
@@ -1181,7 +1182,8 @@ public class WebDriverWrapper {
      * @param displayed
      */
     protected void assertTextDisplayed(String text, boolean displayed) {
-        Assert.assertEquals(displayed, isContain(text));
+        String message = "assert text displayed";
+        assertThat(isContain(text)).as(message).isEqualTo(displayed);
     }
 
     /**
@@ -1224,7 +1226,8 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void assertAlertText(String text) {
-        Assert.assertEquals(getAlertText(), text);
+        String message = "assert alert text";
+        assertThat(getAlertText()).as(message).isEqualTo(text);
     }
 
     /**
@@ -1265,6 +1268,6 @@ public class WebDriverWrapper {
      */
     protected void assertContain(String text, boolean contain) {
         String message = "assert text " + text + " containing in the page source";
-        Assert.assertEquals(message, isContain(text), contain);
+        assertThat(isContain(text)).as(message).isEqualTo(contain);
     }
 }

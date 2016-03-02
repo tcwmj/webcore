@@ -3,7 +3,7 @@ package org.yiwan.webcore.web;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.util.TestBase;
+import org.yiwan.webcore.test.ITestBase;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -13,7 +13,7 @@ public class PageFactory {
     private final static Logger logger = LoggerFactory.getLogger(PageFactory.class);
     private WebDriver driver;
 
-    public PageFactory(TestBase testBase) {
+    public PageFactory(ITestBase testBase) {
         this.driver = testBase.getDriver();
     }
     
