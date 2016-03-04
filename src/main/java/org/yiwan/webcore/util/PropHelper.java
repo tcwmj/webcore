@@ -36,7 +36,6 @@ public class PropHelper {
 
     public static final String RESULT_FOLDER = getProperty("path.result.folder");
     public static final String LOG_FOLDER = getProperty("path.log.folder");
-    public static final String TARGET_DATA_FOLDER = getProperty("path.target.data.folder");
     public static final String HAR_FOLDER = getProperty("path.har.folder");
 
     // from biz conf
@@ -47,7 +46,10 @@ public class PropHelper {
 
     public static final String DATA_SCHEMA_FILE = getProperty("path.data.schema");
     public static final String LOCATORS_FILE = getProperty("path.locator");
-    public static final String SOURCE_DATA_FOLDER = getProperty("path.source.data.folder");
+    public static final String FEATURE_DATA_FOLDER = getProperty("path.source.feature.data.folder");
+    public static final String SOURCE_SCENARIO_DATA_FOLDER = getProperty("path.source.scenario.data.folder");
+    public static final String TARGET_SCENARIO_DATA_FOLDER = getProperty("path.target.scenario.data.folder");
+    public static final String DOWNLOAD_FOLDER = getProperty("path.download.folder");
     public static final String MAPS_FOLDER = getProperty("path.maps.folder");
 
     public static final String REMOTE_ADDRESS = getProperty("remote.address");

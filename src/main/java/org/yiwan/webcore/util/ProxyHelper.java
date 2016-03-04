@@ -135,7 +135,7 @@ public class ProxyHelper {
             public void filterResponse(HttpResponse response, HttpMessageContents contents,
                                        HttpMessageInfo messageInfo) {
                 if (isPrepareToDownload() && contents.getContentType() != null) {
-                    String filename = PropHelper.TARGET_DATA_FOLDER + Helper.randomize() + ".";
+                    String filename = PropHelper.DOWNLOAD_FOLDER + Helper.randomize() + ".";
                     if (contents.getContentType().contains("text/csv")) {
                         setDownloadFile(response, filename, "csv");
                         downloadTextFile(contents.getTextContents());
