@@ -27,7 +27,7 @@ import java.util.Map.Entry;
  */
 public class Helper {
     private final static Logger logger = LoggerFactory.getLogger(Helper.class);
-    public final static String DISCRIMINATOR_KEY = "scenario";
+    public final static String DISCRIMINATOR_KEY = PropHelper.DISCRIMINATOR_KEY;
 
     /**
      * convert a string date from a format to a format
