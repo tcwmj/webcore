@@ -10,6 +10,7 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.*;
 import javax.xml.bind.util.ValidationEventCollector;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -198,5 +199,43 @@ public class JaxbHelper {
 
         return t;
     }
+
+    /**
+     * convert xml string java bean
+     *
+     * @param xml
+     * @param xsd
+     * @param clazz
+     * @return object in generic type
+     */
+    public static <T> T unmarshal(Source xml, InputStream xsd, Class<T> clazz) {
+        T t = null;
+        ValidationEventCollector validation = new ValidationEventCollector();
+        try {
+            JAXBContext context = JAXBContext.newInstance(clazz);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            if (xsd != null) {
+                SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// http://www.w3.org/2001/XMLSchema
+                Schema schema = factory.newSchema(new StreamSource(xsd));
+                unmarshaller.setSchema(schema);
+            }
+            unmarshaller.setEventHandler(validation);
+            t = (T) unmarshaller.unmarshal(xml);
+        } catch (JAXBException | SAXException e) {
+            logger.error("xml unmarshal exception", e);
+            if (validation != null && validation.hasEvents()) {
+                for (ValidationEvent ve : validation.getEvents()) {
+                    String msg = ve.getMessage();
+                    ValidationEventLocator vel = ve.getLocator();
+                    int line = vel.getLineNumber();
+                    int column = vel.getColumnNumber();
+                    logger.error("at line " + line + ", column " + column + ", " + msg + "\n" + xml);
+                }
+            }
+        }
+
+        return t;
+    }
+
 
 }

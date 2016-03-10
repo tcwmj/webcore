@@ -31,11 +31,23 @@ public class ProxyHelper {
 
     private final static String CONTENT_DISPOSITION = "Content-Disposition";
 
+    private static long requestTimestamp;
+    private static long responseTimestamp;
+
+    public static long getRequestTimestamp() {
+        return requestTimestamp;
+    }
+
+    public static long getResponseTimestamp() {
+        return responseTimestamp;
+    }
+
     static {
         if (PropHelper.ENABLE_PROXY) {
             logger.debug("start proxy");
             proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
             proxy.start(0);
+            supprotRecordTransactionTimestamp();
             if (PropHelper.ENABLE_DOWNLOAD) {
                 supportFileDownload();
             }
@@ -48,6 +60,28 @@ public class ProxyHelper {
                 }
             });
         }
+    }
+
+    private static void supprotRecordTransactionTimestamp() {
+        addReqeustFilter(new RequestFilter() {
+
+            @Override
+            public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents,
+                                              HttpMessageInfo messageInfo) {
+                requestTimestamp = System.currentTimeMillis();
+                return null;
+            }
+
+        });
+        addResponseFilter(new ResponseFilter() {
+
+            @Override
+            public void filterResponse(HttpResponse response, HttpMessageContents contents,
+                                       HttpMessageInfo messageInfo) {
+                responseTimestamp = System.currentTimeMillis();
+
+            }
+        });
     }
 
     /**

@@ -247,15 +247,17 @@ public class Helper {
      * @return an generic object
      */
     public static <T> Object filterListBy(List<T> list, String by, String value) {
-        try {
-            Method method = list.get(0).getClass().getDeclaredMethod(by);
-            for (T element : list) {
-                if (method.invoke(element).equals(value))
-                    return element;
+        if (!list.isEmpty()) {
+            try {
+                Method method = list.get(0).getClass().getDeclaredMethod(by);
+                for (T element : list) {
+                    if (method.invoke(element).equals(value))
+                        return element;
+                }
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException e) {
+                logger.error(e.getMessage(), e);
             }
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-            logger.error(e.getMessage(), e);
         }
         return null;
     }
