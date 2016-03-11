@@ -49,12 +49,12 @@
             <level>ERROR</level>
         </filter>
     </appender>
-    <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${output_folder}all.log</File>
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${output_folder}debug.log</File>
         <Append>true</Append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${output_folder}all.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${output_folder}debug.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
@@ -90,9 +90,9 @@
     <logger name="com.lombardrisk" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
-    <root level="ALL">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="ALL"/>
+        <appender-ref ref="DEBUG"/>
         <appender-ref ref="ERROR"/>
     </root>
 </configuration>
