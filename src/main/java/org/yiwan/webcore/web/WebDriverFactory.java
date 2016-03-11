@@ -108,6 +108,13 @@ public class WebDriverFactory {
             default:
                 configFirefoxCapbilities(capability);
         }
+        capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, PropHelper.ACCEPT_SSL_CERTS);
+        capability.setCapability(CapabilityType.HAS_NATIVE_EVENTS, PropHelper.NATIVE_EVENTS);
+        if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null)
+            capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
+                    UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
+        if (PropHelper.ENABLE_PROXY)
+            capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
     }
 
     private void setupSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
@@ -226,31 +233,13 @@ public class WebDriverFactory {
         capability.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, PropHelper.REQUIRE_WINDOW_FOCUS);
         capability.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, PropHelper.ENABLE_PERSISTENT_HOVER);
         // capability.setCapability("disable-popup-blocking", true);
-        capability.setCapability(CapabilityType.HAS_NATIVE_EVENTS, PropHelper.NATIVE_EVENTS);
-        if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null)
-            capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-                    UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
-        configProxyCapbilities(capability);
     }
 
     private void configFirefoxCapbilities(DesiredCapabilities capability) {
         capability.setBrowserName(BrowserType.FIREFOX);
-        if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null)
-            capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-                    UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
-        configProxyCapbilities(capability);
     }
 
     private void configChromeCapbilities(DesiredCapabilities capability) {
         capability.setBrowserName(BrowserType.CHROME);
-        if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null)
-            capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-                    UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
-        configProxyCapbilities(capability);
-    }
-
-    private void configProxyCapbilities(DesiredCapabilities capability) {
-        if (PropHelper.ENABLE_PROXY)
-            capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
     }
 }

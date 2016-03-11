@@ -1,11 +1,11 @@
 package org.yiwan.webcore.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Kenny Wang
@@ -81,6 +81,7 @@ public class PropHelper {
             .parseBoolean(getProperty("browser.ie.requireWindowFocus"));
     public static final Boolean ENABLE_PERSISTENT_HOVER = Boolean
             .parseBoolean(getProperty("browser.ie.enablePersistentHover"));
+    public static final Boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.ie.acceptSSLCerts"));
     public static final Boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.ie.nativeEvents"));
     public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
     public static final String DEFAULT_IE_ARCH = getProperty("browser.ie.arch.default");
