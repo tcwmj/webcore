@@ -59,34 +59,34 @@ public class WebDriverWrapper {
      * @param url
      */
     public void browse(String url) {
-        logger.debug("navigate to url " + url);
-        waitDocumentReady();
+        logger.debug("try to navigate to url {}", url);
         driver.navigate().to(url);
+        waitDocumentReady();
     }
 
     /**
      * navigate forward
      */
     public void forward() {
-        logger.debug("navigate forward");
-        waitDocumentReady();
+        logger.debug("try to navigate forward");
         driver.navigate().forward();
+        waitDocumentReady();
     }
 
     /**
      * navigate back
      */
     public void back() {
-        logger.debug("navigate back");
-        waitDocumentReady();
+        logger.debug("try to navigate back");
         driver.navigate().back();
+        waitDocumentReady();
     }
 
     /**
      * maximize browser window
      */
     public void maximize() {
-        logger.debug("maximizing browser");
+        logger.debug("try to maximize browser");
         driver.manage().window().maximize();
     }
 
@@ -94,11 +94,11 @@ public class WebDriverWrapper {
      * close current browser tab
      */
     public void close() {
-        logger.debug("close browser tab with title " + getTitle());
+        logger.debug("try to close browser tab with title {}", getTitle());
         try {
             driver.close();
         } catch (WebDriverException e) {
-            logger.warn("close browser tab", e);
+            logger.warn(e.getMessage(), e);
         }
     }
 
@@ -106,12 +106,10 @@ public class WebDriverWrapper {
      * close all browser tabs
      */
     public void closeAll() {
-        logger.debug("close all browser tabs");
-        if (driver instanceof WebDriver) {
-            for (String handle : driver.getWindowHandles()) {
-                switchToWindow(handle);
-                close();
-            }
+        logger.debug("try to close all browser tabs");
+        for (String handle : driver.getWindowHandles()) {
+            switchToWindow(handle);
+            close();
         }
     }
 
@@ -119,11 +117,11 @@ public class WebDriverWrapper {
      * quit driver
      */
     public void quit() {
-        logger.debug("quit driver");
+        logger.debug("try to quit driver");
         try {
             driver.quit();
         } catch (WebDriverException e) {
-            logger.warn("quit driver", e);
+            logger.warn(e.getMessage(), e);
         }
     }
 
@@ -131,7 +129,7 @@ public class WebDriverWrapper {
      * delete all cookies
      */
     public void deleteAllCookies() {
-        logger.debug("delete all cookies");
+        logger.debug("try to delete all cookies");
         driver.manage().deleteAllCookies();
     }
 
@@ -159,8 +157,9 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void click(Locator locator) {
-        logger.debug("click " + locator.toString());
+        logger.debug("try to click {}", locator.toString());
         waitClickable(locator).click();
+        waitDocumentReady();
     }
 
     /**
@@ -170,9 +169,9 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void silentClick(Locator locator) {
-        logger.debug("silent click " + locator.toString());
-        waitDocumentReady();
+        logger.debug("try to click {} silently", locator.toString());
         driver.findElement(locator.by()).click();
+        waitDocumentReady();
     }
 
     /**
@@ -221,8 +220,9 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void jsClick(Locator locator) {
-        logger.debug("by javascript click " + locator.toString());
+        logger.debug("try to click {} by executing javascript", locator.toString());
         js.executeScript("arguments[0].click();", findElement(locator));
+        waitDocumentReady();
     }
 
     /**
@@ -234,8 +234,9 @@ public class WebDriverWrapper {
         long now = System.currentTimeMillis();
         while (isDisplayed(locator)) {
             click(locator);
+            forceWait(PropHelper.TIMEOUT_NAVIGATION_INTERVAL);
             if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
-                logger.warn("Time out on loop clicking " + locator.toString());
+                logger.warn("time out occurs on loop clicking {}", locator.toString());
                 return;
             }
         }
@@ -247,9 +248,10 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void doubleClick(Locator locator) {
-        logger.debug("double click " + locator.toString());
+        logger.debug("try to double click {}", locator.toString());
         Actions action = new Actions(driver);
         action.doubleClick(waitClickable(locator)).build().perform();
+        waitDocumentReady();
     }
 
     /**
@@ -259,8 +261,9 @@ public class WebDriverWrapper {
      * @param value
      */
     protected void type(Locator locator, CharSequence... value) {
-        logger.debug("type " + value + " on " + locator.toString());
+        logger.debug("try to type {} on {}", value, locator.toString());
         waitVisible(locator).sendKeys(value);
+        waitDocumentReady();
     }
 
     /**
@@ -270,8 +273,9 @@ public class WebDriverWrapper {
      * @param value
      */
     protected void type(Locator locator, String value) {
-        logger.debug("type " + value + " on " + locator.toString());
+        logger.debug("try to type {} on {}", value, locator.toString());
         waitVisible(locator).sendKeys(value);
+        waitDocumentReady();
     }
 
     /**
@@ -280,8 +284,9 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void clear(Locator locator) {
-        logger.debug("clear " + locator.toString());
+        logger.debug("try to clear value on " + locator.toString());
         waitVisible(locator).clear();
+        waitDocumentReady();
     }
 
     /**
@@ -329,7 +334,7 @@ public class WebDriverWrapper {
      * @param value   true indicate tick on, false indicate tick off
      */
     protected void tick(Locator locator, boolean value) {
-        logger.debug("tick " + value + " on " + locator.toString());
+        logger.debug("try to tick {} on {}", value, locator.toString());
         if (isTicked(locator) != value)
             click(locator);
     }
@@ -355,7 +360,7 @@ public class WebDriverWrapper {
      * @param value   true indicate tick on, false indicate tick off
      */
     protected void alteredTick(Locator locator, Boolean value) {
-        logger.debug("altered tick " + value + " on " + locator.toString());
+        logger.debug("try tick {} on {} alternately", value, locator.toString());
         if (value)
             setAttribute(locator, "checked", "checked");
         else
@@ -372,9 +377,9 @@ public class WebDriverWrapper {
      * @param text    The visible text to match against
      */
     protected void selectByVisibleText(final Locator locator, final String text) {
-        logger.debug("select " + text + " on " + locator.toString());
-        waitDocumentReady();
+        logger.debug("try to select {} on {}", text, locator.toString());
         new Select(waitVisible(locator)).selectByVisibleText(text);
+        waitDocumentReady();
     }
 
     /**
@@ -385,9 +390,9 @@ public class WebDriverWrapper {
      * @throws UnsupportedOperationException If the SELECT does not support multiple selections
      */
     protected void deselectAll(final Locator locator) {
-        logger.debug("deselect all options on " + locator.toString());
-        waitDocumentReady();
+        logger.debug("try to deselect all options on {}", locator.toString());
         new Select(waitVisible(locator)).deselectAll();
+        waitDocumentReady();
     }
 
     /**
@@ -400,12 +405,8 @@ public class WebDriverWrapper {
      * @param texts   The visible text to match against
      */
     protected void selectByVisibleText(final Locator locator, final List<String> texts) {
-        logger.debug("select " + texts.toString() + " on " + locator.toString());
-        waitDocumentReady();
-        Select select = new Select(waitVisible(locator));
         for (String text : texts) {
-            select.selectByVisibleText(text);
-            waitDocumentReady();
+            selectByVisibleText(locator, text);
         }
     }
 
@@ -417,8 +418,9 @@ public class WebDriverWrapper {
      * @param index   The option at this index will be selected
      */
     protected void selectByIndex(final Locator locator, final int index) {
-        logger.debug("select index " + index + " on " + locator.toString());
+        logger.debug("try to select index {} on {}", index, locator.toString());
         new Select(waitVisible(locator)).selectByIndex(index);
+        waitDocumentReady();
     }
 
     /**
@@ -431,8 +433,9 @@ public class WebDriverWrapper {
      * @param value   The value to match against
      */
     protected void selectByValue(final Locator locator, final String value) {
-        logger.debug("select value " + value + " on " + locator.toString());
+        logger.debug("try to select value {} on {}", value, locator.toString());
         new Select(waitVisible(locator)).selectByValue(value);
+        waitDocumentReady();
     }
 
     /**
@@ -440,8 +443,6 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void waitTextSelected(Locator locator, String text) {
-        logger.debug("wait " + text + " to be selected on " + locator.toString());
-        waitDocumentReady();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(locator.by(), text));
     }
 
@@ -452,8 +453,6 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void waitTextTyped(Locator locator, String text) {
-        logger.debug("wait " + text + " to be typed on " + locator.toString());
-        waitDocumentReady();
         wait.until(ExpectedConditions.textToBePresentInElementLocated(locator.by(), text));
     }
 
@@ -478,8 +477,7 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void assertTextSelectable(Locator locator, String text) {
-        String message = "assert " + text + " to be selectable on " + locator.toString();
-        assertThat(isTextSelectable(locator, text)).as(message).isTrue();
+        assertThat(isTextSelectable(locator, text)).as("assert %s to be selectable on %s", text, locator.toString()).isTrue();
     }
 
     /**
@@ -489,7 +487,6 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void assertSelectedValue(Locator locator, String text) {
-        String message = "assert " + text + " to be selected on " + locator.toString();
         List<WebElement> elements = new Select(findElement(locator)).getAllSelectedOptions();
         Boolean selected = false;
         for (WebElement element : elements) {
@@ -498,16 +495,17 @@ public class WebDriverWrapper {
                 break;
             }
         }
-        assertThat(selected).as(message).isTrue();
+        assertThat(selected).as("assert %s to be selected on %s", text, locator.toString()).isTrue();
     }
 
     /**
      * @param locator
      */
     protected void moveTo(Locator locator) {
-        logger.debug("move mouse to " + locator.toString());
+        logger.debug("move mouse to {}", locator.toString());
         Actions action = new Actions(driver);
         action.moveToElement(waitVisible(locator)).build().perform();
+        waitDocumentReady();
     }
 
     /**
@@ -517,7 +515,6 @@ public class WebDriverWrapper {
      * @return whether locator is present or not
      */
     protected boolean isPresent(Locator locator) {
-        waitDocumentReady();
         Boolean ret = false;
         try {
             driver.findElement(locator.by());
@@ -560,7 +557,6 @@ public class WebDriverWrapper {
      * @return boolean
      */
     protected boolean isDisplayed(Locator locator) {
-        waitDocumentReady();
         Boolean ret = false;
         try {
             ret = driver.findElement(locator.by()).isDisplayed();
@@ -587,11 +583,11 @@ public class WebDriverWrapper {
      */
     protected void assertEnabled(Locator locator, Boolean enabled) {
         Boolean actual = isEnabled(locator);
-        String message = "assert enabled of " + locator.toString();
+        String message = "assert %s is enabled";
         if (enabled) {
-            assertThat(actual).as(message).isTrue();
+            assertThat(actual).as(message, locator.toString()).isTrue();
         } else {
-            assertThat(actual).as(message).isFalse();
+            assertThat(actual).as(message, locator.toString()).isFalse();
         }
     }
 
@@ -601,11 +597,11 @@ public class WebDriverWrapper {
      */
     protected void assertDisplayed(Locator locator, Boolean displayed) {
         Boolean actual = isDisplayed(locator);
-        String message = "assert displayed of " + locator.toString();
+        String message = "assert %s is displayed";
         if (displayed) {
-            assertThat(actual).as(message).isTrue();
+            assertThat(actual).as(message, locator.toString()).isTrue();
         } else {
-            assertThat(actual).as(message).isFalse();
+            assertThat(actual).as(message, locator.toString()).isFalse();
         }
     }
 
@@ -615,11 +611,11 @@ public class WebDriverWrapper {
      */
     protected void assertSelected(Locator locator, Boolean selected) {
         Boolean actual = isSelected(locator);
-        String message = "assert selected of " + locator.toString();
+        String message = "assert %s is selected";
         if (selected) {
-            assertThat(actual).as(message).isTrue();
+            assertThat(actual).as(message, locator.toString()).isTrue();
         } else {
-            assertThat(actual).as(message).isFalse();
+            assertThat(actual).as(message, locator.toString()).isFalse();
         }
     }
 
@@ -630,8 +626,7 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void assertText(Locator locator, String text) {
-        String message = "assert text is " + text + " on " + locator.toString();
-        assertThat(findElement(locator).getText()).as(message).isEqualTo(text);
+        assertThat(findElement(locator).getText()).as("assert text displayed on %s", locator.toString()).isEqualTo(text);
     }
 
     /**
@@ -652,8 +647,7 @@ public class WebDriverWrapper {
      */
     protected void assertAttribute(Locator locator, String attribute, String value) {
         String actual = getAttribute(locator, attribute);
-        String message = "assert " + attribute + " is " + value + " on " + locator.toString();
-        assertThat(actual).as(message).isEqualTo(value);
+        assertThat(actual).as("assert attribute %s of %s", attribute, locator.toString()).isEqualTo(value);
     }
 
     /**
@@ -683,8 +677,6 @@ public class WebDriverWrapper {
      * @return WebElement
      */
     protected WebElement waitVisible(Locator locator) {
-        logger.debug("wait visibility of " + locator.toString());
-        waitDocumentReady();
         return wait.until(ExpectedConditions.visibilityOf(findElement(locator)));
     }
 
@@ -694,8 +686,6 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void waitInvisible(Locator locator) {
-        logger.debug("wait invisibility of " + locator.toString());
-        waitDocumentReady();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator.by()));
     }
 
@@ -706,15 +696,13 @@ public class WebDriverWrapper {
      * @param timeout in seconds
      */
     protected void waitPresent(Locator locator, int timeout) {
-        logger.debug("in " + timeout + " seconds. wait present of " + locator.toString());
-        waitDocumentReady();
         long t = System.currentTimeMillis();
         while (System.currentTimeMillis() - t < timeout * 100) {
             if (isPresent(locator)) {
                 return;
             }
         }
-        logger.warn("Timed out");
+        logger.warn("wait presence of {} timed out in {} seconds", timeout, locator.toString());
     }
 
     /**
@@ -724,15 +712,13 @@ public class WebDriverWrapper {
      * @param timeout in seconds
      */
     protected void waitAbsent(Locator locator, int timeout) {
-        logger.debug("in " + timeout + " seconds. wait absent of " + locator.toString());
-        waitDocumentReady();
         long t = System.currentTimeMillis();
         while (System.currentTimeMillis() - t < timeout * 100) {
             if (!isPresent(locator)) {
                 return;
             }
         }
-        logger.warn("Timed out");
+        logger.warn("wait absence of {} timed out in {} seconds", timeout, locator.toString());
     }
 
     /**
@@ -750,8 +736,6 @@ public class WebDriverWrapper {
      * @param title
      */
     protected void waitTitle(String title) {
-        logger.debug("wait page title to be " + title);
-        waitDocumentReady();
         wait.until(ExpectedConditions.titleIs(title));
     }
 
@@ -775,8 +759,7 @@ public class WebDriverWrapper {
      */
     protected void assertCssValue(Locator locator, String attribute, String value) {
         String actual = getCssValue(locator, attribute);
-        String message = "assert css " + attribute + " is " + value + " on " + locator.toString();
-        assertThat(actual).as(message).isEqualTo(value);
+        assertThat(actual).as("assert css attribute %s of %s", attribute, locator.toString()).isEqualTo(value);
     }
 
     /**
@@ -838,8 +821,9 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void setText(Locator locator, String text) {
-        logger.debug("set innertext to " + text + " on " + locator.toString());
-        js.executeScript("arguments[0].innerText = '" + text + "';", findElement(locator));
+        logger.debug("try to set innertext of {} to {}", locator.toString(), text);
+        js.executeScript("arguments[0].innerText=arguments[1]", findElement(locator), text);
+        waitDocumentReady();
     }
 
     /**
@@ -849,8 +833,9 @@ public class WebDriverWrapper {
      * @param value
      */
     protected void setValue(Locator locator, String value) {
-        logger.debug("set value " + value + " on " + locator.toString());
-        js.executeScript("arguments[0].value = '" + value + "';", findElement(locator));
+        logger.debug("try to set text of {} to {}", locator.toString(), value);
+        js.executeScript("arguments[0].value=arguments[1]", findElement(locator), value);
+        waitDocumentReady();
     }
 
     /**
@@ -920,7 +905,6 @@ public class WebDriverWrapper {
      * @return WebElement
      */
     private WebElement findElement(Locator locator) {
-        waitDocumentReady();
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator.by()));
     }
 
@@ -931,7 +915,6 @@ public class WebDriverWrapper {
      * @return List&gt;WebElement&lt;
      */
     private List<WebElement> findElements(Locator locator) {
-        waitDocumentReady();
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator.by()));
     }
 
@@ -939,7 +922,6 @@ public class WebDriverWrapper {
      * wait until page is loaded completely
      */
     private void waitDocumentReady() {
-        logger.debug("wait document to be ready");
         final long t = System.currentTimeMillis();
         wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
@@ -950,9 +932,8 @@ public class WebDriverWrapper {
                 try {
                     ready = js.executeScript("return document.readyState").equals("complete");
                 } catch (WebDriverException e) {
-                    // logger.warn("javascript error while waiting document to
-                    // be ready");
                     ready = true;
+                    logger.warn("javascript error while waiting document to be ready");
                 }
                 return ready;
             }
@@ -967,9 +948,10 @@ public class WebDriverWrapper {
      * @param event   String, such as "mouseover"
      */
     protected void triggerEvent(Locator locator, String event) {
-        logger.debug("trigger " + event + " on " + locator.toString());
+        logger.debug("try to trigger {} on {}", event, locator.toString());
         JavascriptLibrary javascript = new JavascriptLibrary();
         javascript.callEmbeddedSelenium(driver, "triggerEvent", findElement(locator), event);
+        waitDocumentReady();
     }
 
     /**
@@ -979,8 +961,9 @@ public class WebDriverWrapper {
      * @param event   String, such as "onchange"
      */
     protected void fireEvent(Locator locator, String event) {
-        logger.debug("fire " + event + " on " + locator.toString());
-        js.executeScript("arguments[0].fireEvent('" + event + "');", findElement(locator));
+        logger.debug("try to fire {} on {}", event, locator.toString());
+        js.executeScript("arguments[0].fireEvent(arguments[1]);", findElement(locator), event);
+        waitDocumentReady();
     }
 
     /**
@@ -993,6 +976,7 @@ public class WebDriverWrapper {
      */
     protected void scrollIntoView(Locator locator) {
         scrollIntoView(locator, true);
+        waitDocumentReady();
     }
 
     /**
@@ -1006,8 +990,9 @@ public class WebDriverWrapper {
      *                    visible at the bottom of the window.
      */
     protected void scrollIntoView(Locator locator, Boolean bAlignToTop) {
-        logger.debug("align to top is " + bAlignToTop + ", scroll into view on " + locator.toString());
-        js.executeScript("arguments[0].scrollIntoView(" + bAlignToTop.toString() + ");", findElement(locator));
+        logger.debug("try to scroll into view on {}, align to top is {}", locator.toString(), bAlignToTop);
+        js.executeScript("arguments[0].scrollIntoView(arguments[1])", findElement(locator), bAlignToTop.toString());
+        waitDocumentReady();
     }
 
     /**
@@ -1016,9 +1001,10 @@ public class WebDriverWrapper {
      * @param locator
      */
     protected void scrollTo(Locator locator) {
-        logger.debug("scroll to " + locator.toString());
+        logger.debug("try to scroll to {}", locator.toString());
         WebElement element = findElement(locator);
-        js.executeScript("window.scrollTo(" + element.getLocation().x + "," + element.getLocation().y + ")");
+        js.executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
+        waitDocumentReady();
     }
 
     /**
@@ -1027,7 +1013,7 @@ public class WebDriverWrapper {
      * @param nameOrHandle
      */
     protected void switchToWindow(String nameOrHandle) {
-        logger.debug("switch to window with name or handle " + nameOrHandle);
+        logger.debug("try to switch to window {}", nameOrHandle);
         driver.switchTo().window(nameOrHandle);
     }
 
@@ -1035,7 +1021,7 @@ public class WebDriverWrapper {
      * @param locator frame locator
      */
     protected void switchToFrame(Locator locator) {
-        logger.debug("switch to " + locator.toString());
+        logger.debug("try to switch to {}", locator.toString());
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator.by()));
     }
 
@@ -1043,7 +1029,7 @@ public class WebDriverWrapper {
      * Switch to default content from a frame
      */
     protected void switchToDefault() {
-        logger.debug("switch to default content");
+        logger.debug("try to switch to default content");
         driver.switchTo().defaultContent();
     }
 
@@ -1055,8 +1041,9 @@ public class WebDriverWrapper {
      * @param value
      */
     protected void setAttribute(Locator locator, String attribute, String value) {
-        logger.debug("set attribute " + attribute + " to " + value + " on " + locator.toString());
-        js.executeScript("arguments[0].setAttribute('" + attribute + "', arguments[1])", findElement(locator), value);
+        logger.debug("try to set attribute {} on {} to {}", attribute, locator.toString(), value);
+        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", findElement(locator), attribute, value);
+        waitDocumentReady();
     }
 
     /**
@@ -1066,8 +1053,9 @@ public class WebDriverWrapper {
      * @param attribute
      */
     protected void removeAttribute(Locator locator, String attribute) {
-        logger.debug("remove attribute " + attribute + " on " + locator.toString());
-        js.executeScript("arguments[0].removeAttribute('" + attribute + "')", findElement(locator));
+        logger.debug("try to remove attribute {} on {}", attribute, locator.toString());
+        js.executeScript("arguments[0].removeAttribute(arguments[1])", findElement(locator), attribute);
+        waitDocumentReady();
     }
 
     /**
@@ -1111,8 +1099,6 @@ public class WebDriverWrapper {
      * @return web element
      */
     protected WebElement waitClickable(Locator locator) {
-        logger.debug("wait clickable of " + locator.toString());
-        waitDocumentReady();
         return wait.until(ExpectedConditions.elementToBeClickable(locator.by()));
     }
 
@@ -1170,20 +1156,8 @@ public class WebDriverWrapper {
      * @param text
      * @return boolean
      */
-    protected boolean isContain(String text) {
-        waitDocumentReady();
+    protected boolean isPageContains(String text) {
         return driver.getPageSource().contains(text);
-    }
-
-    /**
-     * assert page source contains such text
-     *
-     * @param text
-     * @param displayed
-     */
-    protected void assertTextDisplayed(String text, boolean displayed) {
-        String message = "assert text displayed";
-        assertThat(isContain(text)).as(message).isEqualTo(displayed);
     }
 
     /**
@@ -1199,7 +1173,7 @@ public class WebDriverWrapper {
      * dismiss the alert window
      */
     protected void dismissAlert() {
-        logger.debug("dismiss alert " + getAlertText());
+        logger.debug("try to dismiss alert {}", getAlertText());
         findAlert().dismiss();
     }
 
@@ -1207,7 +1181,7 @@ public class WebDriverWrapper {
      * accept the alert window
      */
     protected void acceptAlert() {
-        logger.debug("accept alert " + getAlertText());
+        logger.debug("try accept alert {}", getAlertText());
         findAlert().accept();
     }
 
@@ -1226,8 +1200,7 @@ public class WebDriverWrapper {
      * @param text
      */
     protected void assertAlertText(String text) {
-        String message = "assert alert text";
-        assertThat(getAlertText()).as(message).isEqualTo(text);
+        assertThat(getAlertText()).as("assert alert text").isEqualTo(text);
     }
 
     /**
@@ -1236,7 +1209,6 @@ public class WebDriverWrapper {
      * @return page source string
      */
     protected String getPageSource() {
-        waitDocumentReady();
         return driver.getPageSource();
     }
 
@@ -1246,7 +1218,6 @@ public class WebDriverWrapper {
      * @return string value of current url
      */
     protected String getCurrentUrl() {
-        waitDocumentReady();
         return driver.getCurrentUrl();
     }
 
@@ -1256,7 +1227,6 @@ public class WebDriverWrapper {
      * @return string value of title
      */
     protected String getTitle() {
-        waitDocumentReady();
         return driver.getTitle();
     }
 
@@ -1266,8 +1236,7 @@ public class WebDriverWrapper {
      * @param text
      * @param contain
      */
-    protected void assertContain(String text, boolean contain) {
-        String message = "assert text " + text + " containing in the page source";
-        assertThat(isContain(text)).as(message).isEqualTo(contain);
+    protected void assertPageContains(String text, boolean contain) {
+        assertThat(isPageContains(text)).as("assert page contains text %s", text).isEqualTo(contain);
     }
 }
