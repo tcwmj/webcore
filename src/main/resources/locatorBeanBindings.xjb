@@ -42,7 +42,7 @@
 	
 	@Override
 	public String toString() {
-		return "page " + name + " [" + id + "] " + description;
+		return "page [" + id + "] " + name;
 	}
 			</ci:code>
 		</jxb:bindings>
@@ -74,8 +74,7 @@
 
 	@Override
 	public String toString() {
-		return type.value() + " " + name + " [" + id + "] by [" + expression_ + "] located by " + by.value() + " "
-				+ description + ", on " + page.toString();
+		return type.value() + " [" + id + "] " + name + " located by " + by.value() + " [" + expression_ + "] on " + page.toString();
 	}
 	
 	private Page page;

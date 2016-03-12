@@ -99,7 +99,7 @@ public class PropHelper {
      * @param file
      */
     private static void load(String file) {
-        logger.debug("load property file in resource " + file);
+//        logger.debug("load property file in resource " + file);
         InputStream is = ClassLoader.getSystemResourceAsStream(file);
         try {
             props.load(is);

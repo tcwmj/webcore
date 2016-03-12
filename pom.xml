@@ -125,4 +125,53 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>jaxb</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jvnet.jaxb2.maven2</groupId>
+                        <artifactId>maven-jaxb2-plugin</artifactId>
+                        <!--<version>0.13.1</version>-->
+                        <executions>
+                            <execution>
+                                <id>generate</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <!--<strict>false</strict>-->
+                                    <extension>true</extension>
+                                    <args>
+                                        <arg>-Xinject-code</arg>
+                                        <!--<arg>-Xsimplify</arg>-->
+                                    </args>
+                                    <plugins>
+                                        <plugin>
+                                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                                            <artifactId>jaxb2-basics</artifactId>
+                                            <version>0.11.0</version>
+                                        </plugin>
+                                    </plugins>
+                                    <!--<schemaDirectory>src/main/resources</schemaDirectory>-->
+                                    <schemaIncludes>
+                                        <include>locatorBean.xsd</include>
+                                    </schemaIncludes>
+                                    <!--<bindingDirectory>src/main/resources</bindingDirectory>-->
+                                    <bindingIncludes>
+                                        <include>locatorBeanBindings.xjb</include>
+                                    </bindingIncludes>
+                                    <generatePackage>org.yiwan.webcore.locator</generatePackage>
+                                    <generateDirectory>${basedir}/src/main/java</generateDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
