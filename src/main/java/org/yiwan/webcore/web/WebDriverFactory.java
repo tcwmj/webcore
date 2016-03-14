@@ -14,7 +14,7 @@ import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.util.ProxyHelper;
+import org.yiwan.webcore.util.ProxyWrapper;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 public class WebDriverFactory {
     private final static Logger logger = LoggerFactory.getLogger(WebDriverFactory.class);
-    private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyHelper.getProxy());
+    private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyWrapper.getProxy());
 
     private final String os = System.getProperty("os");
     private final String os_version = System.getProperty("os.version");

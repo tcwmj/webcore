@@ -1,9 +1,8 @@
 package org.yiwan.webcore.web;
 
-import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.ITestBase;
+import org.yiwan.webcore.test.ITestTemplate;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,10 +10,11 @@ import java.lang.reflect.InvocationTargetException;
 public class PageFactory {
 
     private final static Logger logger = LoggerFactory.getLogger(PageFactory.class);
-    private WebDriver driver;
 
-    public PageFactory(ITestBase testBase) {
-        this.driver = testBase.getDriver();
+    /*private WebDriver driver;
+
+    public PageFactory(ITestTemplate testCase) {
+        this.driver = testCase.getWebDriver();
     }
     
     public PageFactory(WebDriver driver) {
@@ -37,28 +37,28 @@ public class PageFactory {
             logger.error(e.getMessage(), e);
         }
         return null;
+    }*/
+
+    private ITestTemplate testCase;
+
+    public PageFactory(ITestTemplate testCase) {
+        this.testCase = testCase;
     }
 
-   /* private TestBase testcase;
-
-    public PageFactory(TestBase testcase) {
-        this.testcase = testcase;
-    }
-
-    public <T> Object newPage(Class<?> clazz) {
+    public <T extends WebDriverWrapper> T newPage(Class<?> clazz) {
         Constructor<?> c = null;
         try {
-            c = clazz.getDeclaredConstructor(TestBase.class);
+            c = clazz.getDeclaredConstructor(ITestTemplate.class);
         } catch (NoSuchMethodException | SecurityException e) {
             logger.error(e.getMessage(), e);
         }
         c.setAccessible(true);
         try {
-            return c.newInstance(testcase);
+            return (T) c.newInstance(testCase);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
             logger.error(e.getMessage(), e);
         }
         return null;
-    }*/
+    }
 }

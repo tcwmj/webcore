@@ -26,8 +26,8 @@ import java.util.Map.Entry;
  * @author Kenny Wang
  */
 public class Helper {
-    private final static Logger logger = LoggerFactory.getLogger(Helper.class);
     public final static String DISCRIMINATOR_KEY = PropHelper.DISCRIMINATOR_KEY;
+    private final static Logger logger = LoggerFactory.getLogger(Helper.class);
 
     /**
      * convert a string date from a format to a format

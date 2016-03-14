@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.locator.LocatorBean;
+import org.yiwan.webcore.test.ITestTemplate;
 import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
 
@@ -21,29 +22,32 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebDriverWrapper {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    public final static HashMap<String, String> testmap = new HashMap<String, String>();
     protected final static LocatorBean l = JaxbHelper.unmarshal(
             ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),
             ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
-
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private ITestTemplate testCase;
     private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<WebDriver> wait;
     private String baseUrl = PropHelper.getProperty("server.url");
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public final static HashMap<String, String> testmap = new HashMap<String, String>();
-
-    public WebDriverWrapper(WebDriver driver) {
-        this.driver = driver;
+    public WebDriverWrapper(ITestTemplate testCase) {
+        this.testCase = testCase;
+        this.driver = testCase.getWebDriver();
         this.js = (JavascriptExecutor) driver;
         this.wait = new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL)
                 .ignoring(StaleElementReferenceException.class).ignoring(NoSuchElementException.class)
                 .ignoring(UnreachableBrowserException.class);
+    }
+
+    protected ITestTemplate getTestCase() {
+        return testCase;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
     /**
