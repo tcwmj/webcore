@@ -3,7 +3,6 @@ package org.yiwan.webcore.web;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
@@ -135,23 +134,6 @@ public class WebDriverWrapper {
     public void deleteAllCookies() {
         logger.debug("try to delete all cookies");
         driver.manage().deleteAllCookies();
-    }
-
-    /**
-     * capture screenshot for local or remote testing
-     *
-     * @return screenshot byte[]
-     */
-    public byte[] captureScreenShot() {
-        TakesScreenshot ts = null;
-        if (PropHelper.REMOTE)
-            // RemoteWebDriver does not implement the TakesScreenshot class if
-            // the driver does have the Capabilities to take a screenshot then
-            // Augmenter will add the TakesScreenshot methods to the instance
-            ts = (TakesScreenshot) (new Augmenter().augment(driver));
-        else
-            ts = (TakesScreenshot) driver;
-        return ts.getScreenshotAs(OutputType.BYTES);
     }
 
     /**
