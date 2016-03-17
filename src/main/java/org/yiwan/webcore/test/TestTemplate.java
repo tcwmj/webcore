@@ -32,13 +32,15 @@ public class TestTemplate implements ITestTemplate {
         driver = new WebDriverFactory().createWebDriver();
         proxyWrapper = new ProxyWrapper();
         subject = new TransactionSubject(this);
-        if (PropHelper.ENABLE_DOWNLOAD) {
-            subject.attach(new FileDownloadObserver(this));
+        if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
+            subject.attach(new TimestampObserver(proxyWrapper));
         }
         if (PropHelper.ENABLE_HAR) {
             subject.attach(new HttpArchiveObserver(proxyWrapper));
         }
-        subject.attach(new TimestampObserver(proxyWrapper));
+        if (PropHelper.ENABLE_DOWNLOAD) {
+            subject.attach(new FileDownloadObserver(this));
+        }
     }
 
     @Override

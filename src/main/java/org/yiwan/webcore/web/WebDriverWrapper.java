@@ -63,8 +63,10 @@ public class WebDriverWrapper {
      */
     public void browse(String url) {
         logger.debug("try to navigate to url {}", url);
+        testCase.getSubject().nodifyObserversStart();
         driver.navigate().to(url);
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -72,8 +74,10 @@ public class WebDriverWrapper {
      */
     public void forward() {
         logger.debug("try to navigate forward");
+        testCase.getSubject().nodifyObserversStart();
         driver.navigate().forward();
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -81,8 +85,10 @@ public class WebDriverWrapper {
      */
     public void back() {
         logger.debug("try to navigate back");
+        testCase.getSubject().nodifyObserversStart();
         driver.navigate().back();
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -144,8 +150,10 @@ public class WebDriverWrapper {
      */
     protected void click(Locator locator) {
         logger.debug("try to click {}", locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         waitClickable(locator).click();
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -156,8 +164,10 @@ public class WebDriverWrapper {
      */
     protected void silentClick(Locator locator) {
         logger.debug("try to click {} silently", locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         driver.findElement(locator.by()).click();
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -207,8 +217,10 @@ public class WebDriverWrapper {
      */
     protected void jsClick(Locator locator) {
         logger.debug("try to click {} by executing javascript", locator.toString());
-        js.executeScript("arguments[0].click();", findElement(locator));
+        testCase.getSubject().nodifyObserversStart();
+        js.executeScript("arguments[0].click()", findElement(locator));
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -235,9 +247,11 @@ public class WebDriverWrapper {
      */
     protected void doubleClick(Locator locator) {
         logger.debug("try to double click {}", locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         Actions action = new Actions(driver);
         action.doubleClick(waitClickable(locator)).build().perform();
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -364,8 +378,10 @@ public class WebDriverWrapper {
      */
     protected void selectByVisibleText(final Locator locator, final String text) {
         logger.debug("try to select {} on {}", text, locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         new Select(waitVisible(locator)).selectByVisibleText(text);
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -405,8 +421,10 @@ public class WebDriverWrapper {
      */
     protected void selectByIndex(final Locator locator, final int index) {
         logger.debug("try to select index {} on {}", index, locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         new Select(waitVisible(locator)).selectByIndex(index);
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -420,8 +438,10 @@ public class WebDriverWrapper {
      */
     protected void selectByValue(final Locator locator, final String value) {
         logger.debug("try to select value {} on {}", value, locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         new Select(waitVisible(locator)).selectByValue(value);
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -935,9 +955,11 @@ public class WebDriverWrapper {
      */
     protected void triggerEvent(Locator locator, String event) {
         logger.debug("try to trigger {} on {}", event, locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         JavascriptLibrary javascript = new JavascriptLibrary();
         javascript.callEmbeddedSelenium(driver, "triggerEvent", findElement(locator), event);
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -948,8 +970,10 @@ public class WebDriverWrapper {
      */
     protected void fireEvent(Locator locator, String event) {
         logger.debug("try to fire {} on {}", event, locator.toString());
+        testCase.getSubject().nodifyObserversStart();
         js.executeScript("arguments[0].fireEvent(arguments[1]);", findElement(locator), event);
         waitDocumentReady();
+        testCase.getSubject().nodifyObserversStop();
     }
 
     /**

@@ -92,6 +92,7 @@ public class PropHelper {
     public static final Boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));
     public static final Boolean ENABLE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
     public static final Boolean ENABLE_HAR = Boolean.parseBoolean(getProperty("har.enable"));
+    public static final Boolean ENABLE_RECORD_TRANSACTION_TIMESTAMP = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
 
     /**
      * load properties from external file
