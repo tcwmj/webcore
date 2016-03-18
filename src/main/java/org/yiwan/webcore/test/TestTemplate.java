@@ -15,6 +15,9 @@ public class TestTemplate implements ITestTemplate {
     private ProxyWrapper proxyWrapper;
     private WebDriver driver;
     private boolean prepareToDownload = false;
+    private boolean recordTransactionTimestamp = false;
+    private boolean recordHttpArchive = false;
+
     /**
      * last download file name by relative path
      */
@@ -63,6 +66,26 @@ public class TestTemplate implements ITestTemplate {
         this.prepareToDownload = prepareToDownload;
     }
 
+    @Override
+    public boolean isRecordHttpArchive() {
+        return recordHttpArchive;
+    }
+
+    @Override
+    public void setRecordHttpArchive(boolean recordHttpArchive) {
+        this.recordHttpArchive = recordHttpArchive;
+    }
+
+    @Override
+    public boolean isRecordTransactionTimestamp() {
+        return recordTransactionTimestamp;
+    }
+
+    @Override
+    public void setRecordTransactionTimestamp(boolean recordTransactionTimestamp) {
+        this.recordTransactionTimestamp = recordTransactionTimestamp;
+    }
+    
     @Override
     public Subject getSubject() {
         return subject;

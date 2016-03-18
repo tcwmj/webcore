@@ -16,6 +16,14 @@ public interface ITestTemplate {
 
     void setPrepareToDownload(boolean prepareToDownload);
 
+    boolean isRecordTransactionTimestamp();
+
+    void setRecordTransactionTimestamp(boolean recordTransactionTimestamp);
+
+    boolean isRecordHttpArchive();
+
+    void setRecordHttpArchive(boolean recordHttpArchive);
+
     String getDownloadFile();
 
     void setDownloadFile(String downloadFile);

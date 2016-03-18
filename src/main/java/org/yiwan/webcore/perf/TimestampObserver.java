@@ -31,14 +31,19 @@ public class TimestampObserver extends SampleObserver {
     @Override
     public void start(ITestTemplate testCase) {
         super.start(testCase);
-        clearTimestamp();
-        actionTimestamp = System.currentTimeMillis();
+        if (testCase.isRecordTransactionTimestamp()) {
+            clearTimestamp();
+            actionTimestamp = System.currentTimeMillis();
+        }
     }
 
     @Override
     public void stop(ITestTemplate testCase) {
         super.stop(testCase);
-        readyTimestamp = System.currentTimeMillis();
+        if (testCase.isRecordTransactionTimestamp()) {
+            readyTimestamp = System.currentTimeMillis();
+            testCase.setRecordTransactionTimestamp(false);
+        }
     }
 
     private void supprotRecordTimestamp() {

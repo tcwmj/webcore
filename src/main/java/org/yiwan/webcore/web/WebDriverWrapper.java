@@ -935,13 +935,7 @@ public class WebDriverWrapper {
                 if (System.currentTimeMillis() - t > PropHelper.TIMEOUT_DOCUMENT_COMPLETE * 1000)
                     throw new TimeoutException("Timed out after " + PropHelper.TIMEOUT_DOCUMENT_COMPLETE
                             + " seconds while waiting for document to be ready");
-                try {
-                    ready = js.executeScript("return document.readyState").equals("complete");
-                } catch (WebDriverException e) {
-                    ready = true;
-                    logger.warn("javascript error while waiting document to be ready");
-                }
-                return ready;
+                return js.executeScript("return document.readyState").equals("complete");
             }
         });
         // generatePageSource();
@@ -1248,5 +1242,23 @@ public class WebDriverWrapper {
      */
     protected void assertPageContains(String text, boolean contain) {
         assertThat(isPageContains(text)).as("assert page contains text %s", text).isEqualTo(contain);
+    }
+
+    protected void prepareToDownload() {
+        testCase.setPrepareToDownload(true);
+    }
+
+    protected void setTransactionName(String transactionName) {
+        testCase.setInitialPageRef(transactionName);
+        testCase.setRecordTransactionTimestamp(true);
+        testCase.setRecordHttpArchive(true);
+    }
+
+    protected String getDownloadFile() {
+        return testCase.getDownloadFile();
+    }
+
+    protected String getDefaultDownloadFileName() {
+        return testCase.getDefaultDownloadFileName();
     }
 }

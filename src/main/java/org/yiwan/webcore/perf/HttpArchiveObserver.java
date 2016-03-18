@@ -25,14 +25,18 @@ public class HttpArchiveObserver extends SampleObserver {
     @Override
     public void start(ITestTemplate testCase) {
         super.start(testCase);
-        newHar(testCase.getInitialPageRef());
+        if (testCase.isRecordHttpArchive()) {
+            newHar(testCase.getInitialPageRef());
+        }
     }
 
     @Override
     public void stop(ITestTemplate testCase) {
         super.stop(testCase);
-        writeHar(testCase.getInitialPageRef());
-        testCase.setInitialPageRef(null);
+        if (testCase.isRecordHttpArchive()) {
+            writeHar(testCase.getInitialPageRef());
+            testCase.setRecordHttpArchive(false);
+        }
     }
 
     private void newHar() {
