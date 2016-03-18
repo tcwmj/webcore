@@ -935,7 +935,13 @@ public class WebDriverWrapper {
                 if (System.currentTimeMillis() - t > PropHelper.TIMEOUT_DOCUMENT_COMPLETE * 1000)
                     throw new TimeoutException("Timed out after " + PropHelper.TIMEOUT_DOCUMENT_COMPLETE
                             + " seconds while waiting for document to be ready");
-                return js.executeScript("return document.readyState").equals("complete");
+                try {
+                    ready = js.executeScript("return document.readyState").equals("complete");
+                } catch (WebDriverException e) {
+                    ready = true;
+                    logger.warn("javascript error while waiting document to be ready");
+                }
+                return ready;
             }
         });
         // generatePageSource();
