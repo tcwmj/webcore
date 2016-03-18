@@ -18,6 +18,10 @@ public class TimestampObserver extends SampleObserver {
     private final static Logger logger = LoggerFactory.getLogger(TimestampObserver.class);
     private ProxyWrapper proxyWrapper;
 
+    /**
+     * for only recording the 1st request timestamp
+     */
+    private boolean hasLastResponseReceived = true;
     private long actionTimestamp;
     private long readyTimestamp;
     private long requestTimestamp;
@@ -31,17 +35,17 @@ public class TimestampObserver extends SampleObserver {
     @Override
     public void start(ITestTemplate testCase) {
         super.start(testCase);
-        if (testCase.isRecordTransactionTimestamp()) {
-            clearTimestamp();
-            actionTimestamp = System.currentTimeMillis();
-        }
+        clearTimestamp();
+        actionTimestamp = System.currentTimeMillis();
     }
 
     @Override
     public void stop(ITestTemplate testCase) {
         super.stop(testCase);
+        readyTimestamp = System.currentTimeMillis();
         if (testCase.isRecordTransactionTimestamp()) {
-            readyTimestamp = System.currentTimeMillis();
+            //TODO insert transaction log into database
+            hasLastResponseReceived = true;
             testCase.setRecordTransactionTimestamp(false);
         }
     }
@@ -52,7 +56,10 @@ public class TimestampObserver extends SampleObserver {
             @Override
             public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents,
                                               HttpMessageInfo messageInfo) {
-                requestTimestamp = System.currentTimeMillis();
+                if (hasLastResponseReceived) {
+                    requestTimestamp = System.currentTimeMillis();
+                    hasLastResponseReceived = false;
+                }
                 return null;
             }
 
@@ -63,7 +70,6 @@ public class TimestampObserver extends SampleObserver {
             public void filterResponse(HttpResponse response, HttpMessageContents contents,
                                        HttpMessageInfo messageInfo) {
                 responseTimestamp = System.currentTimeMillis();
-
             }
         });
     }
