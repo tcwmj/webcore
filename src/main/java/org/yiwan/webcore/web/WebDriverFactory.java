@@ -121,15 +121,11 @@ public class WebDriverFactory {
      * @return WebDriver
      */
     private WebDriver setupLocalInternetExplorerDriver() {
-        if (PropHelper.DEFAULT_IE_ARCH.equals("x86"))
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
-        else if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64())
+        if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64()) {
             System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
-        else if (isOSX64())
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
-        else
+        } else {
             System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
-
+        }
         DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
         configBrowserCapbilities(capability);
         return new InternetExplorerDriver(capability);
@@ -141,23 +137,30 @@ public class WebDriverFactory {
      * @return WebDriver
      */
     private WebDriver setupLocalFirefoxDriver() {
-        // if (PropHelper.FIREFOX_PATH != null &&
-        // !PropHelper.FIREFOX_PATH.trim().isEmpty())
-        // System.setProperty("webdriver.firefox.bin", PropHelper.FIREFOX_PATH);
+//        if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty())
+//            System.setProperty("webdriver.firefox.bin", PropHelper.FIREFOX_PATH);
 
         FirefoxBinary firefoxBinary;
-        if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty())
+        if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty()) {
             firefoxBinary = new FirefoxBinary(new File(PropHelper.FIREFOX_PATH));
-        else
+        } else {
             firefoxBinary = new FirefoxBinary();
+        }
 
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
-                "application/zip,application/vnd.ms-excel");
+        FirefoxProfile profile = new FirefoxProfile();
+//        profile.setPreference("browser.download.folderList", 2);
+        profile.setPreference("browser.download.manager.showWhenStarting", false);
+//        profile.setPreference("browser.download.dir", "D:\\mydownloads\\");
+        profile.setAcceptUntrustedCertificates(true);
+        profile.setPreference("browser.helperApps.alwaysAsk.force", false);
+//        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream");
+//        profile.setPreference("browser.helperApps.neverAsk.openFile", "text/csv,application/pdf,application/x-msexcel,application/excel,application/x-excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,image/png,image/jpeg,text/html,text/plain,application/msword,application/xml");
+//        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/pdf,application/x-msexcel,application/excel,application/x-excel,application/excel,application/x-excel,application/excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,image/png,image/pjpeg,image/jpeg,text/html,text/plain,application/msword,application/xml,application/excel");
+        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/xml,text/csv,image/jpeg,application/zip,application/vnd.ms-excel,application/pdf,application/xml");
 
         DesiredCapabilities capability = DesiredCapabilities.firefox();
         configBrowserCapbilities(capability);
-        return new FirefoxDriver(firefoxBinary, firefoxProfile, capability);
+        return new FirefoxDriver(firefoxBinary, profile, capability);
     }
 
     /**
