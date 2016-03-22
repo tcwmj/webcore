@@ -65,6 +65,112 @@ public class WebDriverFactory {
         return rwd;
     }
 
+    private void setupSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
+        if (os != null) {
+            capability.setPlatform(Platform.fromString(os));
+            logger.debug("choose platform " + os);
+        } else {
+            capability.setPlatform(Platform.ANY);
+        }
+        configBrowserCapbilities(capability);
+        logger.debug("choose browser " + browser);
+        // set browser version
+        if (browser_version != null) {
+            capability.setVersion(browser_version);
+            logger.debug("choose browser version " + browser_version);
+        }
+        try {
+            url = new URL(PropHelper.REMOTE_ADDRESS);
+        } catch (MalformedURLException e) {
+            logger.error("url " + PropHelper.REMOTE_ADDRESS + " is malformed");
+        }
+    }
+
+    /**
+     * setup local browser
+     *
+     * @return WebDriver
+     */
+    private WebDriver setupLocalBrowser() {
+        logger.debug("choose test browser " + browser);
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                return setupLocalChromeDriver();
+            case "ie":
+                return setupLocalInternetExplorerDriver();
+            default:
+                return setupLocalFirefoxDriver();
+        }
+    }
+
+    /**
+     * setup local chrome browser
+     *
+     * @return WebDriver
+     */
+    private WebDriver setupLocalChromeDriver() {
+        System.setProperty("webdriver.chrome.driver", PropHelper.CHROME_WEBDRIVER);
+        DesiredCapabilities capability = DesiredCapabilities.chrome();
+        configBrowserCapbilities(capability);
+        return new ChromeDriver(capability);
+    }
+
+    /**
+     * setup local Internet explorer driver
+     *
+     * @return WebDriver
+     */
+    private WebDriver setupLocalInternetExplorerDriver() {
+        if (PropHelper.DEFAULT_IE_ARCH.equals("x86"))
+            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
+        else if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64())
+            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
+        else if (isOSX64())
+            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
+        else
+            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
+
+        DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
+        configBrowserCapbilities(capability);
+        return new InternetExplorerDriver(capability);
+    }
+
+    /**
+     * setup local firefox driver
+     *
+     * @return WebDriver
+     */
+    private WebDriver setupLocalFirefoxDriver() {
+        // if (PropHelper.FIREFOX_PATH != null &&
+        // !PropHelper.FIREFOX_PATH.trim().isEmpty())
+        // System.setProperty("webdriver.firefox.bin", PropHelper.FIREFOX_PATH);
+
+        FirefoxBinary firefoxBinary;
+        if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty())
+            firefoxBinary = new FirefoxBinary(new File(PropHelper.FIREFOX_PATH));
+        else
+            firefoxBinary = new FirefoxBinary();
+
+        FirefoxProfile firefoxProfile = new FirefoxProfile();
+        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
+                "application/zip,application/vnd.ms-excel");
+
+        DesiredCapabilities capability = DesiredCapabilities.firefox();
+        configBrowserCapbilities(capability);
+        return new FirefoxDriver(firefoxBinary, firefoxProfile, capability);
+    }
+
+    /**
+     * whether the local environment is arc 64 or not
+     *
+     * @return boolean
+     */
+    private Boolean isOSX64() {
+        Properties props = System.getProperties();
+        String arch = props.getProperty("os.arch");
+        return arch.contains("64");
+    }
+
     private void configBrowserStackCapablities(DesiredCapabilities capability, URL url) {
         if (os != null) {
             capability.setCapability("os", os);
@@ -115,112 +221,6 @@ public class WebDriverFactory {
                     UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
         if (PropHelper.ENABLE_PROXY)
             capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
-    }
-
-    private void setupSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
-        if (os != null) {
-            capability.setPlatform(Platform.fromString(os));
-            logger.debug("choose platform " + os);
-        } else {
-            capability.setPlatform(Platform.ANY);
-        }
-        configBrowserCapbilities(capability);
-        logger.debug("choose browser " + browser);
-        // set browser version
-        if (browser_version != null) {
-            capability.setVersion(browser_version);
-            logger.debug("choose browser version " + browser_version);
-        }
-        try {
-            url = new URL(PropHelper.REMOTE_ADDRESS);
-        } catch (MalformedURLException e) {
-            logger.error("url " + PropHelper.REMOTE_ADDRESS + " is malformed");
-        }
-    }
-
-    /**
-     * setup local browser
-     *
-     * @return WebDriver
-     */
-    private WebDriver setupLocalBrowser() {
-        logger.debug("choose test browser " + browser);
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                return setupLocalChomeDriver();
-            case "ie":
-                return setupLocalInternetExplorerDriver();
-            default:
-                return setupLocalFirefoxDriver();
-        }
-    }
-
-    /**
-     * setup local chrome browser
-     *
-     * @return WebDriver
-     */
-    private WebDriver setupLocalChomeDriver() {
-        System.setProperty("webdriver.chrome.driver", PropHelper.CHROME_WEBDRIVER);
-        DesiredCapabilities capability = new DesiredCapabilities();
-        configChromeCapbilities(capability);
-        return new ChromeDriver(capability);
-    }
-
-    /**
-     * setup local Internet explorer driver
-     *
-     * @return WebDriver
-     */
-    private WebDriver setupLocalInternetExplorerDriver() {
-        if (PropHelper.DEFAULT_IE_ARCH.equals("x86"))
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
-        else if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64())
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
-        else if (isOSX64())
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
-        else
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
-
-        DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-        configInternetExplorerCapbilities(capability);
-        return new InternetExplorerDriver(capability);
-    }
-
-    /**
-     * setup local firefox driver
-     *
-     * @return WebDriver
-     */
-    private WebDriver setupLocalFirefoxDriver() {
-        // if (PropHelper.FIREFOX_PATH != null &&
-        // !PropHelper.FIREFOX_PATH.trim().isEmpty())
-        // System.setProperty("webdriver.firefox.bin", PropHelper.FIREFOX_PATH);
-
-        FirefoxBinary firefoxBinary;
-        if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty())
-            firefoxBinary = new FirefoxBinary(new File(PropHelper.FIREFOX_PATH));
-        else
-            firefoxBinary = new FirefoxBinary();
-
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
-                "application/zip,application/vnd.ms-excel");
-
-        DesiredCapabilities capability = DesiredCapabilities.firefox();
-        configFirefoxCapbilities(capability);
-        return new FirefoxDriver(firefoxBinary, firefoxProfile, capability);
-    }
-
-    /**
-     * whether the local environment is arc 64 or not
-     *
-     * @return boolean
-     */
-    private Boolean isOSX64() {
-        Properties props = System.getProperties();
-        String arch = props.getProperty("os.arch");
-        return arch.contains("64");
     }
 
     private void configInternetExplorerCapbilities(DesiredCapabilities capability) {
