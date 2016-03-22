@@ -1,5 +1,6 @@
 package org.yiwan.webcore.util;
 
+import com.google.common.base.CaseFormat;
 import org.apache.xml.utils.DefaultErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,13 +176,14 @@ public class Helper {
     }
 
     /**
-     * convert a word's first letter to lower case
+     * convert a word with upper camel to lower camel
      *
-     * @param s
-     * @return word with first letter in lower case
+     * @param s word in upper camel
+     * @return word in lower camel
      */
-    public static String firstLetterToLowerCase(String s) {
-        return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0))).append(s.substring(1)).toString();
+    public static String lowerCamel(String s) {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, s);
+//        return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0))).append(s.substring(1)).toString();
     }
 
     /**

@@ -35,6 +35,7 @@ public class PropHelper {
     public final static String DISCRIMINATOR_KEY = getProperty("discriminator.key");
 
     public static final String RESULT_FOLDER = getProperty("path.result.folder");
+    public static final String SCREENSHOT_FOLDER = getProperty("path.screenshot.folder");
     public static final String LOG_FOLDER = getProperty("path.log.folder");
     public static final String HAR_FOLDER = getProperty("path.har.folder");
 

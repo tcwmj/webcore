@@ -83,7 +83,7 @@ public class JaxbHelper {
             marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
             StringWriter writer = new StringWriter();
             //QName helps to marshal object without @XmlRootElement annotation
-            QName q = new QName(Helper.firstLetterToLowerCase(obj.getClass().getSimpleName()));
+            QName q = new QName(Helper.lowerCamel(obj.getClass().getSimpleName()));
             JAXBElement jaxbElement = new JAXBElement(q, obj.getClass(), obj);
             marshaller.marshal(jaxbElement, writer);
             result = writer.toString();
