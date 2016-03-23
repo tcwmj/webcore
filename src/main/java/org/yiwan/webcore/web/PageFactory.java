@@ -2,7 +2,7 @@ package org.yiwan.webcore.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.ITestBase;
+import org.yiwan.webcore.test.TestBase;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -13,7 +13,7 @@ public class PageFactory {
 
     /*private WebDriver driver;
 
-    public PageFactory(ITestBase testCase) {
+    public PageFactory(TestBase testCase) {
         this.driver = testCase.getWebDriver();
     }
     
@@ -39,16 +39,16 @@ public class PageFactory {
         return null;
     }*/
 
-    private ITestBase testCase;
+    private TestBase testCase;
 
-    public PageFactory(ITestBase testCase) {
+    public PageFactory(TestBase testCase) {
         this.testCase = testCase;
     }
 
     public <T extends WebDriverWrapper> T newPage(Class<?> clazz) {
         Constructor<?> c = null;
         try {
-            c = clazz.getDeclaredConstructor(ITestBase.class);
+            c = clazz.getDeclaredConstructor(TestBase.class);
         } catch (NoSuchMethodException | SecurityException e) {
             logger.error(e.getMessage(), e);
         }
