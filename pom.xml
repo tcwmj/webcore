@@ -20,6 +20,10 @@
         <bmp.version>2.1.0-beta-4</bmp.version>
         <selenium.version>2.52.0</selenium.version>
         <assertj.verion>2.2.0</assertj.verion>
+        <testng.version>6.8.8</testng.version>
+        <qdox.version>1.12.1</qdox.version>
+        <poi.version>3.10-FINAL</poi.version>
+        <xml.apis.version>1.4.01</xml.apis.version>
         <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
     </properties>
 
@@ -52,6 +56,41 @@
                     <artifactId>xml-apis</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox.version}</version>
+        </dependency>
+
+        <!-- POI dependencies -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>${xml.apis.version}</version>
         </dependency>
     </dependencies>
 

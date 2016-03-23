@@ -1,6 +1,6 @@
 package org.yiwan.webcore.perf;
 
-import org.yiwan.webcore.test.ITestTemplate;
+import org.yiwan.webcore.test.ITestBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
 public class TransactionSubject implements Subject {
 
     private List<Observer> observers = new ArrayList<Observer>();
-    private ITestTemplate testCase;
+    private ITestBase testCase;
 
-    public TransactionSubject(ITestTemplate testCase) {
+    public TransactionSubject(ITestBase testCase) {
         this.testCase = testCase;
     }
 

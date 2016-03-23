@@ -9,30 +9,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.locator.LocatorBean;
-import org.yiwan.webcore.test.ITestTemplate;
+import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebDriverWrapper {
-    public final static HashMap<String, String> testmap = new HashMap<String, String>();
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected final static LocatorBean l = JaxbHelper.unmarshal(
             ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),
             ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private ITestTemplate testCase;
+    private ITestBase testCase;
     private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<WebDriver> wait;
-    private String baseUrl = PropHelper.getProperty("server.url");
 
-    public WebDriverWrapper(ITestTemplate testCase) {
+    public WebDriverWrapper(ITestBase testCase) {
         this.testCase = testCase;
         this.driver = testCase.getWebDriver();
         this.js = (JavascriptExecutor) driver;
@@ -41,19 +38,15 @@ public class WebDriverWrapper {
                 .ignoring(UnreachableBrowserException.class);
     }
 
-    protected ITestTemplate getTestCase() {
+    protected ITestBase getTestCase() {
         return testCase;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
     }
 
     /**
      * browse base url
      */
     public void browse() {
-        browse(getBaseUrl());
+        browse(testCase.getBaseUrl());
     }
 
     /**

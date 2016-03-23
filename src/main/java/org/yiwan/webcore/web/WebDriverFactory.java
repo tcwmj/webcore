@@ -13,6 +13,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yiwan.webcore.test.TestBase;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.util.ProxyWrapper;
 
@@ -28,11 +29,19 @@ public class WebDriverFactory {
     private final static Logger logger = LoggerFactory.getLogger(WebDriverFactory.class);
     private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyWrapper.getProxy());
 
-    private final String os = System.getProperty("os");
-    private final String os_version = System.getProperty("os.version");
-    private final String browser = System.getProperty("browser", PropHelper.DEFAULT_BROWSER);
-    private final String browser_version = System.getProperty("browser.version");
-    private final String resolution = System.getProperty("resolution");
+    private final String os;
+    private final String os_version;
+    private final String browser;
+    private final String browser_version;
+    private final String resolution;
+
+    public WebDriverFactory(TestBase testCase) {
+        this.os = testCase.getOs() == null ? System.getProperty("os") : testCase.getOs();
+        this.os_version = testCase.getOsVersion() == null ? System.getProperty("os.version") : testCase.getOsVersion();
+        this.browser = testCase.getBrowser() == null ? System.getProperty("browser", PropHelper.DEFAULT_BROWSER) : testCase.getBrowser();
+        this.browser_version = testCase.getBrowserVersion() == null ? System.getProperty("browser.version") : testCase.getBrowserVersion();
+        this.resolution = testCase.getResolution() == null ? System.getProperty("resolution") : testCase.getResolution();
+    }
 
     public WebDriver createWebDriver() {
         WebDriver driver = null;

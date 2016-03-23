@@ -1,12 +1,12 @@
 package org.yiwan.webcore.perf;
 
-import org.yiwan.webcore.test.ITestTemplate;
+import org.yiwan.webcore.test.ITestBase;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
  */
 public interface Observer {
-    public void start(ITestTemplate testCase);
+    public void start(ITestBase testCase);
 
-    public void stop(ITestTemplate testCase);
+    public void stop(ITestBase testCase);
 }

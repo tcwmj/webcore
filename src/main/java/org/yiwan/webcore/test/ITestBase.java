@@ -4,10 +4,13 @@ import org.openqa.selenium.WebDriver;
 import org.yiwan.webcore.perf.Subject;
 import org.yiwan.webcore.util.ProxyWrapper;
 
+import java.util.HashMap;
+
 /**
  * Created by Kenny Wang on 3/2/2016.
  */
-public interface ITestTemplate {
+public interface ITestBase {
+
     WebDriver getWebDriver();
 
     ProxyWrapper getProxyWrapper();
@@ -37,5 +40,9 @@ public interface ITestTemplate {
     void setInitialPageRef(String initialPageRef);
 
     Subject getSubject();
+
+    HashMap<String, String> getTestMap();
+
+    String getBaseUrl();
 
 }

@@ -8,7 +8,7 @@ import net.lightbody.bmp.util.HttpMessageContents;
 import net.lightbody.bmp.util.HttpMessageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.ITestTemplate;
+import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.ProxyWrapper;
 
 /**
@@ -33,14 +33,14 @@ public class TimestampObserver extends SampleObserver {
     }
 
     @Override
-    public void start(ITestTemplate testCase) {
+    public void start(ITestBase testCase) {
         super.start(testCase);
         clearTimestamp();
         actionTimestamp = System.currentTimeMillis();
     }
 
     @Override
-    public void stop(ITestTemplate testCase) {
+    public void stop(ITestBase testCase) {
         super.stop(testCase);
         readyTimestamp = System.currentTimeMillis();
         if (testCase.isRecordTransactionTimestamp()) {

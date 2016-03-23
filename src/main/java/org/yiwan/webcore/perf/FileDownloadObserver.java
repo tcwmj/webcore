@@ -8,7 +8,7 @@ import net.lightbody.bmp.util.HttpMessageInfo;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.ITestTemplate;
+import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.util.ProxyWrapper;
@@ -23,21 +23,21 @@ import java.nio.charset.UnsupportedCharsetException;
 public class FileDownloadObserver extends SampleObserver {
     private final static Logger logger = LoggerFactory.getLogger(FileDownloadObserver.class);
     private ProxyWrapper proxyWrapper;
-    private ITestTemplate testCase;
+    private ITestBase testCase;
 
-    public FileDownloadObserver(ITestTemplate testCase) {
+    public FileDownloadObserver(ITestBase testCase) {
         this.testCase = testCase;
         this.proxyWrapper = testCase.getProxyWrapper();
         supportDownloadFile(testCase);
     }
 
     @Override
-    public void start(ITestTemplate testCase) {
+    public void start(ITestBase testCase) {
         super.start(testCase);
     }
 
     @Override
-    public void stop(ITestTemplate testCase) {
+    public void stop(ITestBase testCase) {
         super.stop(testCase);
         if (testCase.isPrepareToDownload())
             testCase.setPrepareToDownload(false);
@@ -47,7 +47,7 @@ public class FileDownloadObserver extends SampleObserver {
     /**
      * support download file mechanism through the proxy
      */
-    private void supportDownloadFile(final ITestTemplate testCase) {
+    private void supportDownloadFile(final ITestBase testCase) {
         logger.debug("setup proxy to support file download mechianism");
         // set response filter rule for downloading files
         proxyWrapper.addResponseFilter(new ResponseFilter() {
