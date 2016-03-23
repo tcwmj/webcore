@@ -20,6 +20,7 @@
         <bmp.version>2.1.0-beta-4</bmp.version>
         <selenium.version>2.52.0</selenium.version>
         <assertj.verion>2.2.0</assertj.verion>
+        <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
     </properties>
 
     <dependencies>
@@ -66,6 +67,7 @@
                     <target>${java.version}</target>
                     <!-- treat warnings as errors -->
                     <!-- <compilerArgument>-Werror</compilerArgument> -->
+                    <generatedSourcesDirectory>${generatedSourcesDirectory}</generatedSourcesDirectory>
                 </configuration>
             </plugin>
 
@@ -98,55 +100,96 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <!--<version>0.13.1</version>-->
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!--<strict>false</strict>-->
+                            <extension>true</extension>
+                            <args>
+                                <arg>-Xinject-code</arg>
+                                <!--<arg>-Xsimplify</arg>-->
+                            </args>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                                    <artifactId>jaxb2-basics</artifactId>
+                                    <version>0.11.0</version>
+                                </plugin>
+                            </plugins>
+                            <!--<schemaDirectory>src/main/resources</schemaDirectory>-->
+                            <schemaIncludes>
+                                <include>locatorBean.xsd</include>
+                            </schemaIncludes>
+                            <!--<bindingDirectory>src/main/resources</bindingDirectory>-->
+                            <bindingIncludes>
+                                <include>locatorBeanBindings.xjb</include>
+                            </bindingIncludes>
+                            <generatePackage>org.yiwan.webcore.locator</generatePackage>
+                            <generateDirectory>${generatedSourcesDirectory}</generateDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>jaxb</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jvnet.jaxb2.maven2</groupId>
-                        <artifactId>maven-jaxb2-plugin</artifactId>
-                        <!--<version>0.13.1</version>-->
-                        <executions>
-                            <execution>
-                                <id>generate</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                                <configuration>
-                                    <!--<strict>false</strict>-->
-                                    <extension>true</extension>
-                                    <args>
-                                        <arg>-Xinject-code</arg>
-                                        <!--<arg>-Xsimplify</arg>-->
-                                    </args>
-                                    <plugins>
-                                        <plugin>
-                                            <groupId>org.jvnet.jaxb2_commons</groupId>
-                                            <artifactId>jaxb2-basics</artifactId>
-                                            <version>0.11.0</version>
-                                        </plugin>
-                                    </plugins>
-                                    <!--<schemaDirectory>src/main/resources</schemaDirectory>-->
-                                    <schemaIncludes>
-                                        <include>locatorBean.xsd</include>
-                                    </schemaIncludes>
-                                    <!--<bindingDirectory>src/main/resources</bindingDirectory>-->
-                                    <bindingIncludes>
-                                        <include>locatorBeanBindings.xjb</include>
-                                    </bindingIncludes>
-                                    <generatePackage>org.yiwan.webcore.locator</generatePackage>
-                                    <generateDirectory>${basedir}/src/main/java</generateDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <!--mvn clean generate-resources -P jaxb-->
+    <!--<profiles>-->
+        <!--<profile>-->
+            <!--<id>jaxb</id>-->
+            <!--<build>-->
+                <!--<plugins>-->
+                    <!--<plugin>-->
+                        <!--<groupId>org.jvnet.jaxb2.maven2</groupId>-->
+                        <!--<artifactId>maven-jaxb2-plugin</artifactId>-->
+                        <!--&lt;!&ndash;<version>0.13.1</version>&ndash;&gt;-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>generate</id>-->
+                                <!--<phase>generate-sources</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>generate</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--&lt;!&ndash;<strict>false</strict>&ndash;&gt;-->
+                                    <!--<extension>true</extension>-->
+                                    <!--<args>-->
+                                        <!--<arg>-Xinject-code</arg>-->
+                                        <!--&lt;!&ndash;<arg>-Xsimplify</arg>&ndash;&gt;-->
+                                    <!--</args>-->
+                                    <!--<plugins>-->
+                                        <!--<plugin>-->
+                                            <!--<groupId>org.jvnet.jaxb2_commons</groupId>-->
+                                            <!--<artifactId>jaxb2-basics</artifactId>-->
+                                            <!--<version>0.11.0</version>-->
+                                        <!--</plugin>-->
+                                    <!--</plugins>-->
+                                    <!--&lt;!&ndash;<schemaDirectory>src/main/resources</schemaDirectory>&ndash;&gt;-->
+                                    <!--<schemaIncludes>-->
+                                        <!--<include>locatorBean.xsd</include>-->
+                                    <!--</schemaIncludes>-->
+                                    <!--&lt;!&ndash;<bindingDirectory>src/main/resources</bindingDirectory>&ndash;&gt;-->
+                                    <!--<bindingIncludes>-->
+                                        <!--<include>locatorBeanBindings.xjb</include>-->
+                                    <!--</bindingIncludes>-->
+                                    <!--<generatePackage>org.yiwan.webcore.locator</generatePackage>-->
+                                    <!--<generateDirectory>${basedir}/src/main/java</generateDirectory>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
+                <!--</plugins>-->
+            <!--</build>-->
+        <!--</profile>-->
+    <!--</profiles>-->
 </project>
