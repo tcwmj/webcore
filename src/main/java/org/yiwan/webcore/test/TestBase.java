@@ -89,6 +89,10 @@ public abstract class TestBase implements ITestBase {
         return baseUrl;
     }
 
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
     public String getResolution() {
         return resolution;
     }
