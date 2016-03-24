@@ -17,8 +17,12 @@ import org.yiwan.webcore.util.ProxyWrapper;
 import org.yiwan.webcore.web.WebDriverFactory;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
@@ -37,7 +41,7 @@ public abstract class TestBase implements ITestBase {
     private String featureId;
 
     public final HashMap<String, String> testMap = new HashMap<String, String>();
-    private String baseUrl = PropHelper.getProperty("server.url");
+    private String baseUrl = PropHelper.BASE_URL;
 
     private String os;
     private String osVersion;
@@ -87,10 +91,6 @@ public abstract class TestBase implements ITestBase {
     @Override
     public String getBaseUrl() {
         return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
     }
 
     public String getResolution() {
@@ -322,5 +322,30 @@ public abstract class TestBase implements ITestBase {
         this.browserVersion = browser_version;
         this.resolution = resolution;
         setFeatureId(this.getClass().getSimpleName().toLowerCase());
+    }
+
+    private final static BlockingQueue URL_BLOCKING_QUEUE = new LinkedBlockingDeque(new HashSet(Arrays.asList(PropHelper.BASE_URL.split(","))));
+    private boolean shouldUrlBeRecycled = false;
+
+    public void resetBaseUrl() {
+        String url = null;
+        try {
+            url = (String) URL_BLOCKING_QUEUE.take();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
+        }
+        baseUrl = url;
+        shouldUrlBeRecycled = true;
+    }
+
+    public void recyclebaseurl(String url) {
+        if (shouldUrlBeRecycled) {
+            try {
+                URL_BLOCKING_QUEUE.put(url);
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            }
+            shouldUrlBeRecycled = false;
+        }
     }
 }
