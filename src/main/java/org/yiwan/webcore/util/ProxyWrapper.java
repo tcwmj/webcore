@@ -21,8 +21,8 @@ public class ProxyWrapper {
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
-                    logger.debug("gracefully shutting down proxy");
-                    if (proxy.isStarted()) {
+                    while (proxy.isStarted()) {
+                        logger.debug("gracefully shutting down proxy");
                         proxy.stop();
                     }
                 }
