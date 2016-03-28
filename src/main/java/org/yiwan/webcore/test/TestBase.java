@@ -1,35 +1,36 @@
 package org.yiwan.webcore.test;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.yiwan.webcore.perf.*;
+import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.util.ProxyWrapper;
+import org.yiwan.webcore.web.IPageManager;
 import org.yiwan.webcore.web.WebDriverFactory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
  */
 public abstract class TestBase implements ITestBase {
+    public final HashMap<String, String> testMap = new HashMap<String, String>();
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    /**
+     * whether to skip next execution of left test methods
+     */
+    protected Boolean skipTest = false;
     private Subject subject;
     private ProxyWrapper proxyWrapper;
     private WebDriver driver;
@@ -37,18 +38,15 @@ public abstract class TestBase implements ITestBase {
     private boolean recordTransactionTimestamp = false;
     private boolean recordHttpArchive = false;
     private ITestData testData;
+    private IPageManager pageManager;
     private String scenarioId;
     private String featureId;
-
-    public final HashMap<String, String> testMap = new HashMap<String, String>();
     private String baseUrl = PropHelper.BASE_URL;
-
     private String os;
     private String osVersion;
     private String browser;
     private String browserVersion;
     private String resolution;
-
     /**
      * last download file name by relative path
      */
@@ -61,7 +59,6 @@ public abstract class TestBase implements ITestBase {
      * unique http archive file name
      */
     private String initialPageRef;
-
     /**
      * testng test suite name
      */
@@ -70,17 +67,29 @@ public abstract class TestBase implements ITestBase {
      * testng test name
      */
     private String testName;
-    /**
-     * whether to skip next execution of left test methods
-     */
-    protected Boolean skipTest = false;
+
+    public IPageManager getPageManager() {
+        return pageManager;
+    }
+
+    public void setPageManager(IPageManager pageManager) {
+        this.pageManager = pageManager;
+    }
 
     public String getSuiteName() {
         return suiteName;
     }
 
+    public void setSuiteName(String suiteName) {
+        this.suiteName = suiteName;
+    }
+
     public String getTestName() {
         return testName;
+    }
+
+    public void setTestName(String testName) {
+        this.testName = testName;
     }
 
     @Override
@@ -93,24 +102,49 @@ public abstract class TestBase implements ITestBase {
         return baseUrl;
     }
 
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
     public String getResolution() {
         return resolution;
+    }
+
+    public void setResolution(String resolution) {
+
+        this.resolution = resolution;
     }
 
     public String getBrowserVersion() {
         return browserVersion;
     }
 
+    public void setBrowserVersion(String browserVersion) {
+        this.browserVersion = browserVersion;
+    }
+
     public String getBrowser() {
         return browser;
+    }
+
+    public void setBrowser(String browser) {
+        this.browser = browser;
     }
 
     public String getOsVersion() {
         return osVersion;
     }
 
+    public void setOsVersion(String osVersion) {
+        this.osVersion = osVersion;
+    }
+
     public String getOs() {
         return os;
+    }
+
+    public void setOs(String os) {
+        this.os = os;
     }
 
     public Boolean getSkipTest() {
@@ -121,7 +155,7 @@ public abstract class TestBase implements ITestBase {
         this.skipTest = skipTest;
     }
 
-    protected void createWebDriver() {
+    public void createWebDriver() {
         driver = new WebDriverFactory(this).createWebDriver();
         proxyWrapper = new ProxyWrapper();
         subject = new TransactionSubject(this);
@@ -209,20 +243,20 @@ public abstract class TestBase implements ITestBase {
         return testData;
     }
 
-    public String getScenarioId() {
-        return scenarioId;
-    }
-
-    public String getFeatureId() {
-        return featureId;
-    }
-
     public void setTestData(ITestData testData) {
         this.testData = testData;
     }
 
+    public String getScenarioId() {
+        return scenarioId;
+    }
+
     public void setScenarioId(String scenarioId) {
         this.scenarioId = scenarioId;
+    }
+
+    public String getFeatureId() {
+        return featureId;
     }
 
     public void setFeatureId(String featureId) {
@@ -303,49 +337,24 @@ public abstract class TestBase implements ITestBase {
         logger.info(result.getTestClass().getName() + "." + result.getName() + " skipped");
     }
 
-    public abstract void embedScreenshot();
-
-    public abstract void embedLog();
-
-    public abstract void embedHtml(String html);
-
-    public abstract void embedXml(Object object);
-
-    @BeforeClass
-    @Parameters({"os", "os_version", "browser", "browser_version", "resolution"})
-    protected void beforeClass(ITestContext testContext, @Optional String os, @Optional String os_version, @Optional String browser, @Optional String browser_version, @Optional String resolution) {
-        this.suiteName = testContext.getCurrentXmlTest().getSuite().getName();
-        this.testName = testContext.getCurrentXmlTest().getName();
-        this.os = os;
-        this.osVersion = os_version;
-        this.browser = browser;
-        this.browserVersion = browser_version;
-        this.resolution = resolution;
-        setFeatureId(this.getClass().getSimpleName().toLowerCase());
-    }
-
-    private final static BlockingQueue URL_BLOCKING_QUEUE = new LinkedBlockingDeque(new HashSet(Arrays.asList(PropHelper.BASE_URL.split(","))));
-    private boolean shouldUrlBeRecycled = false;
-
-    public void resetBaseUrl() {
-        String url = null;
+    public void embedScreenshot() {
+        String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
+        File screenshot = getTakesScreenshot().getScreenshotAs(OutputType.FILE);
         try {
-            url = (String) URL_BLOCKING_QUEUE.take();
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
+            FileUtils.copyFile(screenshot, new File(saveTo));
+        } catch (Exception e) {
+            logger.error("capture screentshot failed due to " + e.getMessage(), e);
         }
-        baseUrl = url;
-        shouldUrlBeRecycled = true;
+        // Reporter.setCurrentTestResult(result);
+        report(Helper.getTestReportStyle("../../../" + saveTo,
+                "<img src=\"../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
     }
 
-    public void recyclebaseurl(String url) {
-        if (shouldUrlBeRecycled) {
-            try {
-                URL_BLOCKING_QUEUE.put(url);
-            } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
-            }
-            shouldUrlBeRecycled = false;
-        }
+    public void embedLog() {
+
+    }
+
+    public void embedTestData(Object o) {
+
     }
 }

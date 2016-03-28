@@ -45,18 +45,18 @@ public class PageFactory {
         this.testCase = testCase;
     }
 
-    public <T extends WebDriverWrapper> T newPage(Class<?> clazz) {
-        Constructor<?> c = null;
+    public <T extends WebDriverWrapper> T newPage(Class<T> clazz) {
+        Constructor<T> c = null;
         try {
             c = clazz.getDeclaredConstructor(TestBase.class);
         } catch (NoSuchMethodException | SecurityException e) {
             logger.error(e.getMessage(), e);
         }
+        assert c != null;
         c.setAccessible(true);
         try {
             return (T) c.newInstance(testCase);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             logger.error(e.getMessage(), e);
         }
         return null;
