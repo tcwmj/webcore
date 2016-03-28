@@ -9,7 +9,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +54,9 @@ public class WebDriverFactory {
             logger.debug("choose local test mode");
             driver = setupLocalBrowser();
         }
-        if (PropHelper.MAXIMIZE_BROWSER)
+        if (PropHelper.MAXIMIZE_BROWSER) {
             driver.manage().window().maximize();
+        }
         // use explicit wait to replace implicitly wait
         // driver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL,TimeUnit.SECONDS);
         return driver;
@@ -67,21 +70,21 @@ public class WebDriverFactory {
             configBrowserStackCapablities(capability, url);
         } else {
             logger.debug("choose self remote test platform");
-            setupSelfRemoteCapabilities(capability, url);
+            configSelfRemoteCapabilities(capability, url);
         }
         RemoteWebDriver rwd = new RemoteWebDriver(url, capability);
         rwd.setFileDetector(new LocalFileDetector());
         return rwd;
     }
 
-    private void setupSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
+    private void configSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
         if (os != null) {
             capability.setPlatform(Platform.fromString(os));
             logger.debug("choose platform " + os);
         } else {
             capability.setPlatform(Platform.ANY);
         }
-        configBrowserCapbilities(capability);
+        configBrowserCapabilities(capability);
         logger.debug("choose browser " + browser);
         // set browser version
         if (browser_version != null) {
@@ -107,9 +110,34 @@ public class WebDriverFactory {
                 return setupLocalChromeDriver();
             case "ie":
                 return setupLocalInternetExplorerDriver();
+            case "htmlunit":
+                return setupLocalHtmlUnitDriver();
+            case "htmlunitjs":
+                return setupLocalHtmlUnitJSDriver();
+            case "phantomjs":
+                return setupLocalPhantomJSDriver();
             default:
                 return setupLocalFirefoxDriver();
         }
+    }
+
+    private WebDriver setupLocalHtmlUnitDriver() {
+        DesiredCapabilities capability = DesiredCapabilities.htmlUnit();
+        configBrowserCapabilities(capability);
+        return new HtmlUnitDriver(capability);
+    }
+
+    private WebDriver setupLocalHtmlUnitJSDriver() {
+        DesiredCapabilities capability = DesiredCapabilities.htmlUnitWithJs();
+        configBrowserCapabilities(capability);
+        return new HtmlUnitDriver(capability);
+    }
+
+    private WebDriver setupLocalPhantomJSDriver() {
+        System.setProperty("phantomjs.binary.path", PropHelper.PHANTOMJS_PATH);
+        DesiredCapabilities capability = DesiredCapabilities.phantomjs();
+        configBrowserCapabilities(capability);
+        return new PhantomJSDriver(capability);
     }
 
     /**
@@ -120,7 +148,7 @@ public class WebDriverFactory {
     private WebDriver setupLocalChromeDriver() {
         System.setProperty("webdriver.chrome.driver", PropHelper.CHROME_WEBDRIVER);
         DesiredCapabilities capability = DesiredCapabilities.chrome();
-        configBrowserCapbilities(capability);
+        configBrowserCapabilities(capability);
         return new ChromeDriver(capability);
     }
 
@@ -136,7 +164,7 @@ public class WebDriverFactory {
             System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
         }
         DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-        configBrowserCapbilities(capability);
+        configBrowserCapabilities(capability);
         return new InternetExplorerDriver(capability);
     }
 
@@ -168,7 +196,7 @@ public class WebDriverFactory {
         profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/xml,text/csv,image/jpeg,application/zip,application/vnd.ms-excel,application/pdf,application/xml");
 
         DesiredCapabilities capability = DesiredCapabilities.firefox();
-        configBrowserCapbilities(capability);
+        configBrowserCapabilities(capability);
         return new FirefoxDriver(firefoxBinary, profile, capability);
     }
 
@@ -202,7 +230,7 @@ public class WebDriverFactory {
             capability.setCapability("resolution", resolution);
             logger.debug("choose platform resolution " + resolution);
         }
-        configBrowserCapbilities(capability);
+        configBrowserCapabilities(capability);
         capability.setCapability("project", PropHelper.PROJECT);
         capability.setCapability("build", PropHelper.BUILD);
         capability.setCapability("browserstack.local", PropHelper.BROWSERSTACK_LOCAL);
@@ -215,13 +243,19 @@ public class WebDriverFactory {
         }
     }
 
-    private void configBrowserCapbilities(DesiredCapabilities capability) {
+    private void configBrowserCapabilities(DesiredCapabilities capability) {
         switch (browser.toLowerCase()) {
             case "ie":
                 configInternetExplorerCapbilities(capability);
                 break;
             case "chrome":
                 configChromeCapbilities(capability);
+                break;
+            case "htmlunit":
+                break;
+            case "htmlunitjs":
+                break;
+            case "phantomjs":
                 break;
             default:
                 configFirefoxCapbilities(capability);

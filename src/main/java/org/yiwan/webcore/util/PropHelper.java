@@ -67,6 +67,7 @@ public class PropHelper {
 
     public static final String CURRENT_LANG = getProperty("lang.current");
 
+    public static final String PHANTOMJS_PATH = getProperty("path.phantomjs");
     public static final String FIREFOX_PATH = getProperty("path.firefox");
     public static final String CHROME_WEBDRIVER = getProperty("path.webdriver.chrome");
     public static final String IE_WEBDRIVER_X86 = getProperty("path.webdriver.ie.x86");
