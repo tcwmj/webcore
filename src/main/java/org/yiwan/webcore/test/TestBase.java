@@ -30,7 +30,7 @@ public abstract class TestBase implements ITestBase {
     /**
      * whether to skip next execution of left test methods
      */
-    protected Boolean skipTest = false;
+    protected boolean skipTest = false;
     private Subject subject;
     private ProxyWrapper proxyWrapper;
     private WebDriver driver;
@@ -147,11 +147,11 @@ public abstract class TestBase implements ITestBase {
         this.os = os;
     }
 
-    public Boolean getSkipTest() {
+    public boolean getSkipTest() {
         return skipTest;
     }
 
-    public void setSkipTest(Boolean skipTest) {
+    public void setSkipTest(boolean skipTest) {
         this.skipTest = skipTest;
     }
 
