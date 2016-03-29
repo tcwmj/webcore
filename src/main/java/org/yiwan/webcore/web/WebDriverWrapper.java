@@ -921,13 +921,9 @@ public class WebDriverWrapper {
      * wait until page is loaded completely
      */
     private void waitDocumentReady() {
-        final long t = System.currentTimeMillis();
         wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
                 boolean ready = false;
-                if (System.currentTimeMillis() - t > PropHelper.TIMEOUT_DOCUMENT_COMPLETE * 1000)
-                    throw new TimeoutException("Timed out after " + PropHelper.TIMEOUT_DOCUMENT_COMPLETE
-                            + " seconds while waiting for document to be ready");
                 try {
                     ready = js.executeScript("return document.readyState").equals("complete");
                 } catch (WebDriverException e) {
@@ -1259,5 +1255,13 @@ public class WebDriverWrapper {
 
     protected String getDefaultDownloadFileName() {
         return testCase.getDefaultDownloadFileName();
+    }
+
+    protected void waitAttribute(final Locator locator, final String attribute, final String value) {
+        wait.until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver driver) {
+                return getAttribute(locator, attribute).equals(value);
+            }
+        });
     }
 }
