@@ -21,7 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebDriverWrapper {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected final static LocatorBean l = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);    private ITestBase testCase;
+    protected final static LocatorBean l = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
+    private ITestBase testCase;
     private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<WebDriver> wait;
@@ -73,7 +74,7 @@ public class WebDriverWrapper {
     /**
      * navigate back
      */
-    public void back() {
+    public void backward() {
         logger.debug("try to navigate back");
         testCase.getSubject().nodifyObserversStart();
         driver.navigate().back();
