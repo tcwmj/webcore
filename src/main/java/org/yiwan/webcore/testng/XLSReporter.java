@@ -35,37 +35,28 @@ public class XLSReporter extends CustomizedReporter {
     // ~ Instance fields ------------------------------------------------------
     private static final String REPORT_NAME = "customized-report.xls";
 
-    public enum testCaseStatus {
-        Passed(ITestResult.SUCCESS, "Passed"), Failed(ITestResult.FAILURE,
-                "Failed"), NoRun(ITestResult.SKIP, "No Run");
-        public final int index;
-        public final String value;
-
-        private testCaseStatus(int id, String value) {
-            this.index = id;
-            this.value = value;
+    /**
+     * Creates summary of the run
+     */
+    public void generateReport(List<XmlSuite> xml, List<ISuite> suites,
+                               String outdir) {
+        File report = new File(outdir, REPORT_NAME);
+        Workbook workbook = null;
+        try {
+            workbook = openReport(report);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
-
-        public static String getValue(int index) {
-            for (testCaseStatus c : testCaseStatus.values()) {
-                if (c.index == index) {
-                    return c.value;
-                }
-            }
-            return null;
+        Sheet sheet = createReport(workbook, report);
+        updateReport(sheet, report, suites);
+        try {
+            saveReport(workbook, report);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
     // ~ Methods --------------------------------------------------------------
-    /** Creates summary of the run */
-    public void generateReport(List<XmlSuite> xml, List<ISuite> suites,
-                               String outdir) {
-        File report = new File(outdir, REPORT_NAME);
-        Workbook workbook = openReport(report);
-        Sheet sheet = createReport(workbook, report);
-        updateReport(sheet, report, suites);
-        saveReport(workbook, report);
-    }
 
     /**
      * create report style
@@ -95,16 +86,12 @@ public class XLSReporter extends CustomizedReporter {
      * @param file
      * @return Workbook
      */
-    private Workbook openReport(File file) {
+    private Workbook openReport(File file) throws IOException {
         Workbook workbook = null;
-        try {
-            if (!file.exists()) {
-                workbook = new HSSFWorkbook();
-            } else {
-                workbook = new HSSFWorkbook(new FileInputStream(file.getPath()));
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        if (!file.exists()) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new HSSFWorkbook(new FileInputStream(file.getPath()));
         }
         return workbook;
     }
@@ -193,20 +180,29 @@ public class XLSReporter extends CustomizedReporter {
      * @param workbook
      * @param report
      */
-    private void saveReport(Workbook workbook, File report) {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(report.getPath());
-            workbook.write(fos);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            if (fos != null)
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+    private void saveReport(Workbook workbook, File report) throws IOException {
+        FileOutputStream fos = new FileOutputStream(report.getPath());
+        workbook.write(fos);
+    }
+
+    public enum testCaseStatus {
+        Passed(ITestResult.SUCCESS, "Passed"), Failed(ITestResult.FAILURE,
+                "Failed"), NoRun(ITestResult.SKIP, "No Run");
+        public final int index;
+        public final String value;
+
+        private testCaseStatus(int id, String value) {
+            this.index = id;
+            this.value = value;
+        }
+
+        public static String getValue(int index) {
+            for (testCaseStatus c : testCaseStatus.values()) {
+                if (c.index == index) {
+                    return c.value;
                 }
+            }
+            return null;
         }
     }
 }

@@ -85,33 +85,6 @@ public abstract class CustomizedReporter implements IReporter {
     // ~ Inner Classes --------------------------------------------------------
 
     /**
-     * Arranges methods by classname and method name
-     */
-    protected class TestSorter implements Comparator<IInvokedMethod> {
-        // ~ Methods
-        // -------------------------------------------------------------
-
-        /**
-         * Arranges methods by classname and method name
-         */
-        public int compare(IInvokedMethod o1, IInvokedMethod o2) {
-            // System.out.println("Comparing " + o1.getMethodName() + " " +
-            // o1.getDate()
-            // + " and " + o2.getMethodName() + " " + o2.getDate());
-            return (int) (o1.getDate() - o2.getDate());
-            // int r = ((T) o1).getTestClass().getName().compareTo(((T)
-            // o2).getTestClass().getName());
-            // if (r == 0) {
-            // r = ((T) o1).getMethodName().compareTo(((T) o2).getMethodName());
-            // }
-            // return r;
-        }
-    }
-
-    // ~ JavaDoc-specific Methods
-    // --------------------------------------------------------
-
-    /**
      * Get ITestNGMethod author(s) string, or class author(s) if no method
      * author is present. Default return value is "unknown".
      *
@@ -147,6 +120,9 @@ public abstract class CustomizedReporter implements IReporter {
         }
         return allAuthors.trim();
     }
+
+    // ~ JavaDoc-specific Methods
+    // --------------------------------------------------------
 
     /**
      * Get comment string of Java class.
@@ -191,6 +167,30 @@ public abstract class CustomizedReporter implements IReporter {
                 // m_out.println("ALLtestid=" + testId);
                 allRunTestIds.add(testId);
             }
+        }
+    }
+
+    /**
+     * Arranges methods by classname and method name
+     */
+    protected class TestSorter implements Comparator<IInvokedMethod> {
+        // ~ Methods
+        // -------------------------------------------------------------
+
+        /**
+         * Arranges methods by classname and method name
+         */
+        public int compare(IInvokedMethod o1, IInvokedMethod o2) {
+            // System.out.println("Comparing " + o1.getMethodName() + " " +
+            // o1.getDate()
+            // + " and " + o2.getMethodName() + " " + o2.getDate());
+            return (int) (o1.getDate() - o2.getDate());
+            // int r = ((T) o1).getTestClass().getName().compareTo(((T)
+            // o2).getTestClass().getName());
+            // if (r == 0) {
+            // r = ((T) o1).getMethodName().compareTo(((T) o2).getMethodName());
+            // }
+            // return r;
         }
     }
 }

@@ -10,11 +10,11 @@
 			underscoreBinding="asCharInWord" /> -->
 		<jxb:bindings node="//xs:element[@name='locatorBean']/xs:complexType">
 			<ci:code>
-	public Page page(String id) {
+	public Page page(String id) throws Exception {
 		return (Page) org.yiwan.webcore.util.Helper.filterListById(this.getPage(), id);
 	}
 
-	public Locator locator(String id, String... replacements) {
+	public Locator locator(String id, String... replacements) throws Exception {
 		int index = id.indexOf(".");
 		String pageid = id.substring(0, index);
 		return page(pageid).locator(id, replacements);
@@ -23,7 +23,7 @@
 		</jxb:bindings>
 		<jxb:bindings node="//xs:complexType[@name='page']">
 			<ci:code>
-	public Locator locator(String id, String... replacements) {
+	public Locator locator(String id, String... replacements) throws Exception {
 		Locator locator = (Locator) org.yiwan.webcore.util.Helper.filterListById(this.getLocator(), id);
 		if (locator != null) {
 			if (locator.getRef() != null)

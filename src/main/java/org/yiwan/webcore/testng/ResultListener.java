@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 
 /**
  * @author Kenny Wang
- *
  */
 public class ResultListener extends TestListenerAdapter {
     private final static Logger logger = LoggerFactory.getLogger(ResultListener.class);

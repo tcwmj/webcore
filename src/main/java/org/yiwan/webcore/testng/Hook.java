@@ -7,6 +7,7 @@ import org.testng.IHookable;
 import org.testng.ITestResult;
 import org.testng.SkipException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Hook implements IHookable {
@@ -20,21 +21,15 @@ public class Hook implements IHookable {
         // get the skip test value to determine whether to skip next methods on
         // such test case
         Method method;
-        Boolean skipTest = false;
-
+        boolean skipTest = false;
         try {
-            method = testResult.getInstance().getClass()
-                    .getMethod("getSkipTest");
-            skipTest = (Boolean) method.invoke(testResult.getInstance());
-        } catch (Exception e) {
+            method = testResult.getInstance().getClass().getMethod("getSkipTest");
+            skipTest = (boolean) method.invoke(testResult.getInstance());
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             logger.error(e.getMessage(), e);
         }
-
         if (skipTest)
-            throw new SkipException("skip method "
-                    + testResult.getTestClass().getName() + "."
-                    + testResult.getName());
-
+            throw new SkipException("skip method " + testResult.getTestClass().getName() + "." + testResult.getName());
         callBack.runTestMethod(testResult);
     }
 

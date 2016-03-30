@@ -12,7 +12,10 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.*;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
@@ -38,15 +41,10 @@ public class Helper {
      * @param toFormat
      * @return string
      */
-    public static String toDate(String date, String fromFormat, String toFormat) {
+    public static String toDate(String date, String fromFormat, String toFormat) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat(fromFormat);
-        try {
-            Date d = dateFormat.parse(date);
-            return (new SimpleDateFormat(toFormat)).format(d);
-        } catch (ParseException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return date;
+        Date d = dateFormat.parse(date);
+        return (new SimpleDateFormat(toFormat)).format(d);
     }
 
     /**
@@ -140,39 +138,25 @@ public class Helper {
      * @param stream
      * @return Map
      */
-    public static Map<String, Map<String, String>> getFeedMapping(InputStream stream) {
-        Reader r = null;
-        try {
-            r = new InputStreamReader(stream, "utf-8");
-            Properties props = new Properties();
-            props.load(r);
-            Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
-            Set<Entry<Object, Object>> entrySet = props.entrySet();
-            for (Entry<Object, Object> entry : entrySet) {
-                if (!entry.getKey().toString().startsWith("#")) {
-                    Map<String, String> m = new HashMap<String, String>();
-                    String s = ((String) entry.getValue()).trim();
-                    s = s.substring(1, s.length() - 1);
-                    String[] kvs = s.split(",");
-                    for (String kv : kvs) {
-                        m.put(kv.substring(0, kv.indexOf('=')).trim(), kv.substring(kv.indexOf('=') + 1).trim());
-                        map.put(((String) entry.getKey()).trim(), m);
-                    }
-                }
-            }
-            return map;
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+    public static Map<String, Map<String, String>> getFeedMapping(InputStream stream) throws IOException {
+        Reader r = new InputStreamReader(stream, "utf-8");
+        Properties props = new Properties();
+        props.load(r);
+        Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
+        Set<Entry<Object, Object>> entrySet = props.entrySet();
+        for (Entry<Object, Object> entry : entrySet) {
+            if (!entry.getKey().toString().startsWith("#")) {
+                Map<String, String> m = new HashMap<String, String>();
+                String s = ((String) entry.getValue()).trim();
+                s = s.substring(1, s.length() - 1);
+                String[] kvs = s.split(",");
+                for (String kv : kvs) {
+                    m.put(kv.substring(0, kv.indexOf('=')).trim(), kv.substring(kv.indexOf('=') + 1).trim());
+                    map.put(((String) entry.getKey()).trim(), m);
                 }
             }
         }
-        return null;
+        return map;
     }
 
     /**
@@ -225,7 +209,7 @@ public class Helper {
      * @param id
      * @return an generic object
      */
-    public static <T> Object filterListById(List<T> list, String id) {
+    public static <T> Object filterListById(List<T> list, String id) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         return filterListBy(list, "getId", id);
     }
 
@@ -236,7 +220,7 @@ public class Helper {
      * @param name
      * @return an generic object
      */
-    public static <T> Object filterListByName(List<T> list, String name) {
+    public static <T> Object filterListByName(List<T> list, String name) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         return filterListBy(list, "getName", name);
     }
 
@@ -248,17 +232,12 @@ public class Helper {
      * @param value
      * @return an generic object
      */
-    public static <T> Object filterListBy(List<T> list, String by, String value) {
+    public static <T> Object filterListBy(List<T> list, String by, String value) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         if (!list.isEmpty()) {
-            try {
-                Method method = list.get(0).getClass().getDeclaredMethod(by);
-                for (T element : list) {
-                    if (method.invoke(element).equals(value))
-                        return element;
-                }
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                logger.error(e.getMessage(), e);
+            Method method = list.get(0).getClass().getDeclaredMethod(by);
+            for (T element : list) {
+                if (method.invoke(element).equals(value))
+                    return element;
             }
         }
         return null;
@@ -287,24 +266,12 @@ public class Helper {
      * @param tar
      * @return xml string
      */
-    public static String mergeXml(InputStream src, InputStream tar) {
+    public static String mergeXml(InputStream src, InputStream tar) throws TransformerException, ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setIgnoringComments(true);
-        DocumentBuilder builder = null;
-        try {
-            builder = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            logger.error(e.getMessage(), e);
-        }
-        Document d1 = null;
-        Document d2 = null;
-        try {
-            d1 = builder.parse(tar);
-            d2 = builder.parse(src);
-        } catch (SAXException | IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document d1 = builder.parse(tar);
+        Document d2 = builder.parse(src);
         NodeList n1 = d1.getDocumentElement().getChildNodes();
         NodeList n2 = d2.getDocumentElement().getChildNodes();
 
@@ -313,21 +280,12 @@ public class Helper {
             n1.item(i).getParentNode().appendChild(n);
         }
 
-        Transformer transformer = null;
-        try {
-            transformer = TransformerFactory.newInstance().newTransformer();
-        } catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
-            logger.error(e.getMessage(), e);
-        }
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
         StreamResult result = new StreamResult(new StringWriter());
         DOMSource source = new DOMSource(d1);
-        try {
-            transformer.transform(source, result);
-        } catch (TransformerException e) {
-            logger.error(e.getMessage(), e);
-        }
+        transformer.transform(source, result);
         return result.getWriter().toString();
     }
 
@@ -338,26 +296,17 @@ public class Helper {
      * @param tar
      * @return generic object same as parameters
      */
-    public static <T> Object removeListItemById(T src, T tar) {
+    public static <T> Object removeListItemById(T src, T tar) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Method[] methods = src.getClass().getMethods();
         for (Method method : methods) {
             if (method.getParameterTypes().length == 0 && method.getReturnType().equals(List.class)) {
-                try {
-                    List<?> list1 = (List<?>) method.invoke(src);
-                    List<?> list2 = (List<?>) method.invoke(tar);
-                    for (int i = 0; i < list1.size(); i++) {
-                        Object obj = list1.get(i);
-                        Method m = null;
-                        try {
-                            m = obj.getClass().getMethod("getId");
-                        } catch (NoSuchMethodException | SecurityException e) {
-                            logger.error(e.getMessage(), e);
-                        }
-                        String id = (String) m.invoke(obj);
-                        list2.remove(filterListById(list2, id));
-                    }
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    logger.error(e.getMessage(), e);
+                List<?> list1 = (List<?>) method.invoke(src);
+                List<?> list2 = (List<?>) method.invoke(tar);
+                for (int i = 0; i < list1.size(); i++) {
+                    Object obj = list1.get(i);
+                    Method m = obj.getClass().getMethod("getId");
+                    String id = (String) m.invoke(obj);
+                    list2.remove(filterListById(list2, id));
                 }
             }
         }

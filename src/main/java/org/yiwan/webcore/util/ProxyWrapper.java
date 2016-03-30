@@ -45,6 +45,10 @@ public class ProxyWrapper {
         return proxy;
     }
 
+    public static boolean isTimeout(long begin) {
+        return System.currentTimeMillis() - begin > 10000;
+    }
+
     /**
      * Adds a new ResponseFilter that can be used to examine and manipulate the
      * response before sending it to the client.
@@ -66,9 +70,5 @@ public class ProxyWrapper {
     public void addReqeustFilter(RequestFilter filter) {
         logger.debug("add a new request filter to the proxy");
         proxy.addRequestFilter(filter);
-    }
-
-    public static boolean isTimeout(long begin) {
-        return System.currentTimeMillis() - begin > 10000;
     }
 }

@@ -33,18 +33,14 @@ public class PropHelper {
     public static final String REPLACEMENT_SYMBOL = getProperty("symbol.replacement");
     public static final String LOCATOR_SCHEMA = getProperty("path.locator.schema");
     public final static String DISCRIMINATOR_KEY = getProperty("discriminator.key");
-
     public static final String RESULT_FOLDER = getProperty("path.result.folder");
     public static final String SCREENSHOT_FOLDER = getProperty("path.screenshot.folder");
     public static final String LOG_FOLDER = getProperty("path.log.folder");
     public static final String HAR_FOLDER = getProperty("path.har.folder");
-
     // from biz conf
     public static final int TIMEOUT_DIALOG_APPEAR = Integer.parseInt(getProperty("timeout.dialog.appear"));
     public static final int TIMEOUT_DIALOG_DISAPPEAR = Integer.parseInt(getProperty("timeout.dialog.disappear"));
-
     public static final String DEFAULT_LANG = getProperty("lang.default");
-
     public static final String DATA_SCHEMA_FILE = getProperty("path.data.schema");
     public static final String LOCATORS_FILE = getProperty("path.locator");
     public static final String FEATURE_DATA_FOLDER = getProperty("path.source.feature.data.folder");
@@ -52,35 +48,27 @@ public class PropHelper {
     public static final String TARGET_SCENARIO_DATA_FOLDER = getProperty("path.target.scenario.data.folder");
     public static final String DOWNLOAD_FOLDER = getProperty("path.download.folder");
     public static final String MAPS_FOLDER = getProperty("path.maps.folder");
-
     public static final String REMOTE_ADDRESS = getProperty("remote.address");
-
     public static final String BROWSERSTACK_URL = getProperty("browserstackurl");
     public static final String PROJECT = getProperty("project");
     public static final String BUILD = getProperty("build");
     public static final String BROWSERSTACK_LOCAL = getProperty("browserstacklocal");
     public static final String BROWSERSTACK_LOCAL_IDENTIFIER = getProperty("browserstacklocalIdentifier");
     public static final String BROWSERSTACK_DEBUG = getProperty("browserstackdebug");
-
     // from test conf
     public static final String BASE_URL = getProperty("server.url");
-
     public static final String CURRENT_LANG = getProperty("lang.current");
-
     public static final String PHANTOMJS_PATH = getProperty("path.phantomjs");
     public static final String FIREFOX_PATH = getProperty("path.firefox");
     public static final String CHROME_WEBDRIVER = getProperty("path.webdriver.chrome");
     public static final String IE_WEBDRIVER_X86 = getProperty("path.webdriver.ie.x86");
     public static final String IE_WEBDRIVER_X64 = getProperty("path.webdriver.ie.x64");
     public static final String SYSTEM_DATA = getProperty("path.system.data");
-
     public static final String DEFAULT_BROWSER = getProperty("browser.default");
-    public static final Boolean IGNORE_PROTECTED_MODE_SETTINGS = Boolean
-            .parseBoolean(getProperty("browser.ie.ignoreProtectedModeSettings"));
+    public static final Boolean IGNORE_PROTECTED_MODE_SETTINGS = Boolean.parseBoolean(getProperty("browser.ie.ignoreProtectedModeSettings"));
     public static final String INITIAL_BROWSER_URL = getProperty("browser.ie.initialBrowserUrl");
     public static final Boolean IGNORE_ZOOM_SETTING = Boolean.parseBoolean(getProperty("browser.ie.ignoreZoomSetting"));
-    public static final Boolean REQUIRE_WINDOW_FOCUS = Boolean
-            .parseBoolean(getProperty("browser.ie.requireWindowFocus"));
+    public static final Boolean REQUIRE_WINDOW_FOCUS = Boolean.parseBoolean(getProperty("browser.ie.requireWindowFocus"));
     public static final Boolean ENABLE_PERSISTENT_HOVER = Boolean
             .parseBoolean(getProperty("browser.ie.enablePersistentHover"));
     public static final Boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.ie.acceptSSLCerts"));
@@ -88,7 +76,6 @@ public class PropHelper {
     public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
     public static final String DEFAULT_IE_ARCH = getProperty("browser.ie.arch.default");
     public static final Boolean MAXIMIZE_BROWSER = Boolean.parseBoolean(getProperty("browser.maximize"));
-
     public static final Boolean REMOTE = Boolean.parseBoolean(getProperty("remote"));
     public static final Boolean BROWSERSTACK = Boolean.parseBoolean(getProperty("browserstack"));
     public static final Boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));

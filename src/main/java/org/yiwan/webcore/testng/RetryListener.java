@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 
 /**
  * @author Kenny Wang
- *
  */
 public class RetryListener implements IAnnotationTransformer {
 

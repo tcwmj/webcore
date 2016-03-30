@@ -3,10 +3,8 @@ package org.yiwan.webcore.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
@@ -31,7 +29,7 @@ public class I18N {
     /**
      * @param lang
      */
-    public I18N(String lang) {
+    public I18N(String lang) throws IOException {
         this.lang = lang;
         this.map = loadLang(lang);
     }
@@ -40,28 +38,18 @@ public class I18N {
      * @param lang
      * @return string
      */
-    private HashMap<String, String> loadLang(String lang) {
+    private HashMap<String, String> loadLang(String lang) throws IOException {
         Properties props = new Properties();
-        try {
-            InputStream in = new BufferedInputStream(new FileInputStream(
-                    langPath + File.separator + lang + ".properties"));
-            props.load(in);
-            in.close();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+        InputStream in = new BufferedInputStream(new FileInputStream(langPath + File.separator + lang + ".properties"));
+        props.load(in);
+        in.close();
         HashMap<String, String> ret = new HashMap<String, String>();
-        try {
-            Enumeration<?> en = props.propertyNames();
-            while (en.hasMoreElements()) {
-                String key = (String) en.nextElement();
-                String value = props.getProperty(key);
-                value = new String(value.getBytes(ENCODING_ISO_8859_1),
-                        ENCODING_UTF_8);
-                ret.put(key, value);
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        Enumeration<?> en = props.propertyNames();
+        while (en.hasMoreElements()) {
+            String key = (String) en.nextElement();
+            String value = props.getProperty(key);
+            value = new String(value.getBytes(ENCODING_ISO_8859_1), ENCODING_UTF_8);
+            ret.put(key, value);
         }
         return ret;
     }
@@ -70,7 +58,7 @@ public class I18N {
      * @param date
      * @return date
      */
-    public String toDate(String date) {
+    public String toDate(String date) throws ParseException {
         switch (lang) {
             case ZH_CN:
                 return Helper.toDate(date, DATE_PATTERN_EN_US, DATE_PATTERN_ZH_CN);

@@ -17,6 +17,7 @@ import org.yiwan.webcore.web.IPageManager;
 import org.yiwan.webcore.web.WebDriverFactory;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -155,7 +156,7 @@ public abstract class TestBase implements ITestBase {
         this.skipTest = skipTest;
     }
 
-    public void createWebDriver() {
+    public void createWebDriver() throws MalformedURLException {
         driver = new WebDriverFactory(this).createWebDriver();
         proxyWrapper = new ProxyWrapper();
         subject = new TransactionSubject(this);
@@ -321,7 +322,7 @@ public abstract class TestBase implements ITestBase {
      *               test
      * @see ITestResult#FAILURE
      */
-    public void onTestFailure(ITestResult result) {
+    public void onTestFailure(ITestResult result) throws Exception {
         logger.info(result.getTestClass().getName() + "." + result.getName() + " failed");
         embedScreenshot();
     }
@@ -337,24 +338,20 @@ public abstract class TestBase implements ITestBase {
         logger.info(result.getTestClass().getName() + "." + result.getName() + " skipped");
     }
 
-    public void embedScreenshot() {
+    public void embedScreenshot() throws Exception {
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
         File screenshot = getTakesScreenshot().getScreenshotAs(OutputType.FILE);
-        try {
-            FileUtils.copyFile(screenshot, new File(saveTo));
-        } catch (Exception e) {
-            logger.error("capture screentshot failed due to " + e.getMessage(), e);
-        }
+        FileUtils.copyFile(screenshot, new File(saveTo));
         // Reporter.setCurrentTestResult(result);
         report(Helper.getTestReportStyle("../../../" + saveTo,
                 "<img src=\"../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
     }
 
-    public void embedLog() {
+    public void embedLog() throws Exception {
 
     }
 
-    public void embedTestData(Object o) {
+    public void embedTestData(Object o) throws Exception {
 
     }
 }

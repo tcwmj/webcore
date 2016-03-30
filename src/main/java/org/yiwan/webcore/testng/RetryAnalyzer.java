@@ -6,11 +6,11 @@ import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 import org.yiwan.webcore.util.PropHelper;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
  * @author Kenny Wang
- *
  */
 public class RetryAnalyzer implements IRetryAnalyzer {
     private final static Logger logger = LoggerFactory
@@ -27,15 +27,12 @@ public class RetryAnalyzer implements IRetryAnalyzer {
         }
 
         // set the skip test to true on such test case instance
-        Method method;
         try {
-            method = testResult.getInstance().getClass()
-                    .getMethod("setSkipTest", Boolean.class);
+            Method method = testResult.getInstance().getClass().getMethod("setSkipTest", boolean.class);
             method.invoke(testResult.getInstance(), true);
-        } catch (Exception e) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             logger.error(e.getMessage(), e);
         }
-
         return false;
     }
 }

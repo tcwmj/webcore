@@ -17,11 +17,15 @@ import java.util.Iterator;
 public class XLSRuntimeReporter {
     private final static Logger logger = LoggerFactory
             .getLogger(XLSRuntimeReporter.class);
-
-    private String reportName = "runtime-report.xls";
-    private String reportPath = new File("").getAbsolutePath() + "\\target\\";
     private static final String TEST_SHEET = "Test Summary";
     private static final String STEP_SHEET = "Step Summary";
+    private String reportName = "runtime-report.xls";
+    private String reportPath = new File("").getAbsolutePath() + "\\target\\";
+
+    public XLSRuntimeReporter(String reportName) {
+        super();
+        this.reportName = reportName;
+    }
 
     /**
      * get status description from the testng test status id
@@ -46,12 +50,7 @@ public class XLSRuntimeReporter {
         }
     }
 
-    public XLSRuntimeReporter(String reportName) {
-        super();
-        this.reportName = reportName;
-    }
-
-    public void generateReport() {
+    public void generateReport() throws IOException {
         Workbook workbook = openReport(reportPath + reportName);
 
         // cell style
@@ -89,7 +88,6 @@ public class XLSRuntimeReporter {
             stepRow.createCell(4).setCellValue("Comments");
             stepRow.getCell(4).setCellStyle(style);
         }
-
         saveReport(workbook, reportPath + reportName);
     }
 
@@ -98,7 +96,7 @@ public class XLSRuntimeReporter {
      *
      * @param testResult
      */
-    public void updateReport(ITestResult testResult) {
+    public void updateReport(ITestResult testResult) throws IOException {
         Workbook workbook = openReport(reportPath + reportName);
         Integer testRow = updateTestSheet(workbook, testResult);
         Integer stepRow = updateStepSheet(workbook, testResult);
@@ -216,27 +214,14 @@ public class XLSRuntimeReporter {
      * @param filePath
      * @return Workbook
      */
-    private Workbook openReport(String filePath) {
-        FileInputStream ins = null;
+    private Workbook openReport(String filePath) throws IOException {
         Workbook workbook = null;
-        try {
-            File file = new File(filePath);
-            if (!file.exists()) {
-                workbook = new HSSFWorkbook();
-            } else {
-                ins = new FileInputStream(filePath);
-                workbook = new HSSFWorkbook(ins);
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            if (ins != null) {
-                try {
-                    ins.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
+        File file = new File(filePath);
+        if (!file.exists()) {
+            workbook = new HSSFWorkbook();
+        } else {
+            FileInputStream ins = new FileInputStream(filePath);
+            workbook = new HSSFWorkbook(ins);
         }
         return workbook;
     }
@@ -247,20 +232,8 @@ public class XLSRuntimeReporter {
      * @param workbook
      * @param filePath
      */
-    private void saveReport(Workbook workbook, String filePath) {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(filePath);
-            workbook.write(fos);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        } finally {
-            if (fos != null)
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                }
-        }
+    private void saveReport(Workbook workbook, String filePath) throws IOException {
+        FileOutputStream fos = new FileOutputStream(filePath);
+        workbook.write(fos);
     }
 }

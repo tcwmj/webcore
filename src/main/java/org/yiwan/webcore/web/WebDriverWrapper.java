@@ -21,10 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebDriverWrapper {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected final static LocatorBean l = JaxbHelper.unmarshal(
-            ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE),
-            ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
-    private ITestBase testCase;
+    protected final static LocatorBean l = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);    private ITestBase testCase;
     private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<WebDriver> wait;
@@ -97,11 +94,8 @@ public class WebDriverWrapper {
      */
     public void close() {
         logger.debug("try to close browser tab with title {}", getTitle());
-        try {
-            driver.close();
-        } catch (WebDriverException e) {
-            logger.warn(e.getMessage(), e);
-        }
+
+        driver.close();
     }
 
     /**
@@ -120,11 +114,9 @@ public class WebDriverWrapper {
      */
     public void quit() {
         logger.debug("try to quit driver");
-        try {
-            driver.quit();
-        } catch (WebDriverException e) {
-            logger.warn(e.getMessage(), e);
-        }
+
+        driver.quit();
+
     }
 
     /**
@@ -221,7 +213,7 @@ public class WebDriverWrapper {
      *
      * @param locator
      */
-    protected void loopClick(Locator locator) {
+    protected void loopClick(Locator locator) throws InterruptedException {
         long now = System.currentTimeMillis();
         while (isDisplayed(locator)) {
             click(locator);
@@ -514,13 +506,12 @@ public class WebDriverWrapper {
      * @return whether locator is present or not
      */
     protected boolean isPresent(Locator locator) {
-        Boolean ret = false;
         try {
             driver.findElement(locator.by());
-            ret = true;
-        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return true;
+        } catch (WebDriverException e) {
+            return false;
         }
-        return ret;
     }
 
     /**
@@ -544,7 +535,7 @@ public class WebDriverWrapper {
      * @return boolean
      */
     protected boolean isEnabled(Locator locator) {
-        Boolean ret = false;
+        boolean ret = false;
         ret = findElement(locator).isEnabled();
         return ret;
     }
@@ -556,12 +547,11 @@ public class WebDriverWrapper {
      * @return boolean
      */
     protected boolean isDisplayed(Locator locator) {
-        Boolean ret = false;
         try {
-            ret = driver.findElement(locator.by()).isDisplayed();
-        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return driver.findElement(locator.by()).isDisplayed();
+        } catch (WebDriverException e) {
+            return false;
         }
-        return ret;
     }
 
     /**
@@ -571,9 +561,7 @@ public class WebDriverWrapper {
      * @return boolean
      */
     protected boolean isSelected(Locator locator) {
-        Boolean ret = false;
-        ret = findElement(locator).isSelected();
-        return ret;
+        return findElement(locator).isSelected();
     }
 
     /**
@@ -764,15 +752,11 @@ public class WebDriverWrapper {
     /**
      * @param key
      */
-    protected void typeKeyEvent(int key) {
+    protected void typeKeyEvent(int key) throws AWTException {
         logger.debug("type key event " + key);
         Robot robot;
-        try {
-            robot = new Robot();
-            robot.keyPress(key);
-        } catch (AWTException e) {
-            logger.error(e.getMessage(), e);
-        }
+        robot = new Robot();
+        robot.keyPress(key);
     }
 
     /**
@@ -780,13 +764,9 @@ public class WebDriverWrapper {
      *
      * @param millis Milliseconds
      */
-    protected void forceWait(int millis) {
+    protected void forceWait(int millis) throws InterruptedException {
         logger.debug("force to wait in " + millis + " milliseconds");
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
-        }
+        Thread.sleep(millis);
     }
 
     /**
@@ -923,14 +903,12 @@ public class WebDriverWrapper {
     private void waitDocumentReady() {
         wait.until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver driver) {
-                boolean ready = false;
                 try {
-                    ready = js.executeScript("return document.readyState").equals("complete");
+                    return js.executeScript("return document.readyState").equals("complete");
                 } catch (WebDriverException e) {
-                    ready = true;
                     logger.warn("javascript error while waiting document to be ready");
+                    return true;
                 }
-                return ready;
             }
         });
         // generatePageSource();
@@ -1074,15 +1052,11 @@ public class WebDriverWrapper {
     // i++;
     // }
     // if (i < 100) {
-    // try {
     // FileWriter fw = new FileWriter(file);
     // BufferedWriter bw = new BufferedWriter(fw);
     // bw.write(pageSource);
     // bw.close();
     // fw.close();
-    // } catch (IOException e) {
-    // logger.warn(e.getMessage(), e);
-    // }
     // } else {
     // logger.warn("skipped generatePageSource due to counts of same page " +
     // currentUrl + " exceeds 100.");

@@ -24,19 +24,9 @@ public class PageFactory {
     @SuppressWarnings("unchecked")
     public <T extends WebDriverWrapper> T newPage(Class<?> clazz) {
         Constructor<?> c = null;
-        try {
-            c = clazz.getDeclaredConstructor(WebDriver.class);
-        } catch (NoSuchMethodException | SecurityException e) {
-            logger.error(e.getMessage(), e);
-        }
+        c = clazz.getDeclaredConstructor(WebDriver.class);
         c.setAccessible(true);
-        try {
-            return (T) c.newInstance(driver);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return null;
+        return (T) c.newInstance(driver);
     }*/
 
     private TestBase testCase;
@@ -45,20 +35,11 @@ public class PageFactory {
         this.testCase = testCase;
     }
 
-    public <T extends WebDriverWrapper> T newPage(Class<T> clazz) {
+    public <T extends WebDriverWrapper> T newPage(Class<T> clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         Constructor<T> c = null;
-        try {
-            c = clazz.getDeclaredConstructor(TestBase.class);
-        } catch (NoSuchMethodException | SecurityException e) {
-            logger.error(e.getMessage(), e);
-        }
+        c = clazz.getDeclaredConstructor(TestBase.class);
         assert c != null;
         c.setAccessible(true);
-        try {
-            return (T) c.newInstance(testCase);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return null;
+        return (T) c.newInstance(testCase);
     }
 }

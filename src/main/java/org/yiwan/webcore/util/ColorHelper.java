@@ -11,8 +11,7 @@ import java.awt.*;
 public class ColorHelper extends Color {
 
     @SuppressWarnings("unused")
-    private final static Logger logger = LoggerFactory
-            .getLogger(ColorHelper.class);
+    private final static Logger logger = LoggerFactory.getLogger(ColorHelper.class);
     /**
      *
      */
@@ -28,13 +27,11 @@ public class ColorHelper extends Color {
      * blue * @return a browser-friendly HEX value
      */
     public static String toHex(int r, int g, int b) {
-        return "#" + toBrowserHexValue(r) + toBrowserHexValue(g)
-                + toBrowserHexValue(b);
+        return "#" + toBrowserHexValue(r) + toBrowserHexValue(g) + toBrowserHexValue(b);
     }
 
     private static String toBrowserHexValue(int number) {
-        StringBuilder builder = new StringBuilder(
-                Integer.toHexString(number & 0xff));
+        StringBuilder builder = new StringBuilder(Integer.toHexString(number & 0xff));
         while (builder.length() < 2) {
             builder.append("0");
         }
@@ -47,11 +44,8 @@ public class ColorHelper extends Color {
      * @return : example is #B5D9F5
      */
     public static String RGBAtoHex(String rgbaExpression) {
-        String[] rgba = rgbaExpression.toLowerCase().replace("rgba(", "")
-                .replace("rgb(", "").replace(")", "").split(",");
-        return new ColorHelper(Integer.parseInt(rgba[0].trim()),
-                Integer.parseInt(rgba[1].trim()), Integer.parseInt(rgba[2]
-                .trim())).getHex();
+        String[] rgba = rgbaExpression.toLowerCase().replace("rgba(", "").replace("rgb(", "").replace(")", "").split(",");
+        return new ColorHelper(Integer.parseInt(rgba[0].trim()), Integer.parseInt(rgba[1].trim()), Integer.parseInt(rgba[2].trim())).getHex();
     }
 
     /**

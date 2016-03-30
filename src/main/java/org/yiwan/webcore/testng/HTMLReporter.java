@@ -32,8 +32,7 @@ public class HTMLReporter extends CustomizedReporter {
     /**
      * Creates summary of the run
      */
-    public void generateReport(List<XmlSuite> xml, List<ISuite> suites,
-                               String outdir) {
+    public void generateReport(List<XmlSuite> xml, List<ISuite> suites, String outdir) {
         try {
             m_out = createWriter(outdir);
         } catch (IOException e) {

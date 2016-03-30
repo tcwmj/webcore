@@ -28,11 +28,11 @@ public class JaxbHelper {
      * @param obj
      * @return xml string
      */
-    public static String marshal(Object obj) {
+    public static String marshal(Object obj) throws JAXBException {
         return marshal(obj, "UTF-8");
     }
 
-    public static String marshalWithoutXmlRootElement(Object obj) {
+    public static String marshalWithoutXmlRootElement(Object obj) throws JAXBException {
         return marshalWithoutXmlRootElement(obj, "UTF-8");
     }
 
@@ -42,13 +42,9 @@ public class JaxbHelper {
      * @param obj
      * @param file
      */
-    public static void marshal(Object obj, File file) {
+    public static void marshal(Object obj, File file) throws IOException, JAXBException {
         String xml = marshal(obj, "UTF-8");
-        try {
-            FileUtils.write(file, xml);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
+        FileUtils.write(file, xml);
     }
 
     /**
@@ -58,38 +54,30 @@ public class JaxbHelper {
      * @param encoding
      * @return xml string
      */
-    public static String marshal(Object obj, String encoding) {
+    public static String marshal(Object obj, String encoding) throws JAXBException {
         String result = null;
-        try {
-            JAXBContext context = JAXBContext.newInstance(obj.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
-            StringWriter writer = new StringWriter();
-            marshaller.marshal(obj, writer);
-            result = writer.toString();
-        } catch (JAXBException e) {
-            logger.error(e.getMessage(), e);
-        }
+        JAXBContext context = JAXBContext.newInstance(obj.getClass());
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
+        StringWriter writer = new StringWriter();
+        marshaller.marshal(obj, writer);
+        result = writer.toString();
         return result;
     }
 
-    public static String marshalWithoutXmlRootElement(Object obj, String encoding) {
+    public static String marshalWithoutXmlRootElement(Object obj, String encoding) throws JAXBException {
         String result = null;
-        try {
-            JAXBContext context = JAXBContext.newInstance(obj.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
-            StringWriter writer = new StringWriter();
-            //QName helps to marshal object without @XmlRootElement annotation
-            QName q = new QName(Helper.lowerCamel(obj.getClass().getSimpleName()));
-            JAXBElement jaxbElement = new JAXBElement(q, obj.getClass(), obj);
-            marshaller.marshal(jaxbElement, writer);
-            result = writer.toString();
-        } catch (JAXBException e) {
-            logger.error(e.getMessage(), e);
-        }
+        JAXBContext context = JAXBContext.newInstance(obj.getClass());
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
+        StringWriter writer = new StringWriter();
+        //QName helps to marshal object without @XmlRootElement annotation
+        QName q = new QName(Helper.lowerCamel(obj.getClass().getSimpleName()));
+        JAXBElement jaxbElement = new JAXBElement(q, obj.getClass(), obj);
+        marshaller.marshal(jaxbElement, writer);
+        result = writer.toString();
         return result;
     }
 
@@ -135,10 +123,10 @@ public class JaxbHelper {
      * @return object in generic type
      */
     public static <T> T unmarshal(File file, InputStream xsd, Class<T> clazz) {
-        String xml = "";
+        String xml = null;
         try {
             xml = FileUtils.readFileToString(file, "UTF-8");
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
         return unmarshal(xml, xsd, clazz);
@@ -153,10 +141,10 @@ public class JaxbHelper {
      * @return object in generic type
      */
     public static <T> T unmarshal(InputStream in, InputStream xsd, Class<T> clazz) {
-        String xml = "";
+        String xml = null;
         try {
             xml = IOUtils.toString(in, "UTF-8");
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
         return unmarshal(xml, xsd, clazz);
@@ -196,7 +184,6 @@ public class JaxbHelper {
                 }
             }
         }
-
         return t;
     }
 
@@ -233,9 +220,6 @@ public class JaxbHelper {
                 }
             }
         }
-
         return t;
     }
-
-
 }

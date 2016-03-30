@@ -45,7 +45,7 @@ public class WebDriverFactory {
         this.resolution = testCase.getResolution() == null ? System.getProperty("resolution") : testCase.getResolution();
     }
 
-    public WebDriver createWebDriver() {
+    public WebDriver createWebDriver() throws MalformedURLException {
         WebDriver driver = null;
         if (PropHelper.REMOTE) {
             logger.debug("choose remote test mode");
@@ -62,7 +62,7 @@ public class WebDriverFactory {
         return driver;
     }
 
-    private WebDriver setupRemoteBrowser() {
+    private WebDriver setupRemoteBrowser() throws MalformedURLException {
         DesiredCapabilities capability = new DesiredCapabilities();
         URL url = null;
         if (PropHelper.BROWSERSTACK) {
@@ -77,7 +77,7 @@ public class WebDriverFactory {
         return rwd;
     }
 
-    private void configSelfRemoteCapabilities(DesiredCapabilities capability, URL url) {
+    private void configSelfRemoteCapabilities(DesiredCapabilities capability, URL url) throws MalformedURLException {
         if (os != null) {
             capability.setPlatform(Platform.fromString(os));
             logger.debug("choose platform " + os);
@@ -91,11 +91,7 @@ public class WebDriverFactory {
             capability.setVersion(browser_version);
             logger.debug("choose browser version " + browser_version);
         }
-        try {
-            url = new URL(PropHelper.REMOTE_ADDRESS);
-        } catch (MalformedURLException e) {
-            logger.error("url " + PropHelper.REMOTE_ADDRESS + " is malformed");
-        }
+        url = new URL(PropHelper.REMOTE_ADDRESS);
     }
 
     /**
@@ -211,7 +207,7 @@ public class WebDriverFactory {
         return arch.contains("64");
     }
 
-    private void configBrowserStackCapablities(DesiredCapabilities capability, URL url) {
+    private void configBrowserStackCapablities(DesiredCapabilities capability, URL url) throws MalformedURLException {
         if (os != null) {
             capability.setCapability("os", os);
             logger.debug("choose platform " + os);
@@ -236,11 +232,7 @@ public class WebDriverFactory {
         capability.setCapability("browserstack.local", PropHelper.BROWSERSTACK_LOCAL);
         capability.setCapability("browserstack.localIdentifier", PropHelper.BROWSERSTACK_LOCAL_IDENTIFIER);
         capability.setCapability("browserstack.debug", PropHelper.BROWSERSTACK_DEBUG);
-        try {
-            url = new URL(PropHelper.BROWSERSTACK_URL);
-        } catch (MalformedURLException e) {
-            logger.error("url " + PropHelper.BROWSERSTACK_URL + " is malformed");
-        }
+        url = new URL(PropHelper.BROWSERSTACK_URL);
     }
 
     private void configBrowserCapabilities(DesiredCapabilities capability) {
