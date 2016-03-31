@@ -1,10 +1,18 @@
 package org.yiwan.webcore.test;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by Kenny Wang on 3/30/2016.
  */
 public class TestEnvironment {
+    @JsonIgnore
+    private static final Logger logger = LoggerFactory.getLogger(TestEnvironment.class);
     private Application application;
     private Database database;
     private Server applicationServer;
@@ -44,7 +52,12 @@ public class TestEnvironment {
 
     @Override
     public String toString() {
-        return String.format("application info:\n%s\ndatabase info:\n%s\napplication server info:\n%s\ndatabase server info:\n%s", application, database, applicationServer, databaseServer);
+        try {
+            return (new ObjectMapper()).writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public class Application {
@@ -69,7 +82,12 @@ public class TestEnvironment {
 
         @Override
         public String toString() {
-            return String.format("|_url: %s\n|_version: %s", url, version);
+            try {
+                return (new ObjectMapper()).writeValueAsString(this);
+            } catch (JsonProcessingException e) {
+                logger.error(e.getMessage(), e);
+                return null;
+            }
         }
     }
 
@@ -131,7 +149,12 @@ public class TestEnvironment {
 
         @Override
         public String toString() {
-            return String.format("|_driver: %s\n|_url: %s\n|_user: %s\n|_password: %s\n|_version: %s\n|_dump: %s", driver, url, user, password, version, dump);
+            try {
+                return (new ObjectMapper()).writeValueAsString(this);
+            } catch (JsonProcessingException e) {
+                logger.error(e.getMessage(), e);
+                return null;
+            }
         }
     }
 
@@ -175,7 +198,12 @@ public class TestEnvironment {
 
         @Override
         public String toString() {
-            return String.format("|_os: %s\n|_version: %s\n|_cpu: %s\n|_memory: %s", os, version, cpu, memory);
+            try {
+                return (new ObjectMapper()).writeValueAsString(this);
+            } catch (JsonProcessingException e) {
+                logger.error(e.getMessage(), e);
+                return null;
+            }
         }
     }
 }
