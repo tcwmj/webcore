@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.util.PropHelper;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -29,7 +29,7 @@ public class TestCaseManager {
 
     private static BlockingQueue<TestEnvironment> getTestEnvironments(String json) {
         try {
-            List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
+            Set<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<Set<TestEnvironment>>() {
             });
             return new LinkedBlockingDeque<TestEnvironment>(testEnvironments);
         } catch (IOException e) {
@@ -44,5 +44,9 @@ public class TestCaseManager {
 
     public static void putTestEnvironment(TestEnvironment testEnvironment) throws InterruptedException {
         TEST_ENVIRONMENTS.put(testEnvironment);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println(TEST_ENVIRONMENTS.take());
     }
 }

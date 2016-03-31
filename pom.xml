@@ -120,7 +120,7 @@
                     <target>${java.version}</target>
                     <!-- treat warnings as errors -->
                     <!-- <compilerArgument>-Werror</compilerArgument> -->
-                    <generatedSourcesDirectory>${generatedSourcesDirectory}</generatedSourcesDirectory>
+                    <!--<generatedSourcesDirectory>${generatedSourcesDirectory}</generatedSourcesDirectory>-->
                 </configuration>
             </plugin>
 
@@ -194,25 +194,25 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>build-helper-maven-plugin</artifactId>-->
-            <!--<version>1.4</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>test</id>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<goals>-->
-            <!--<goal>add-source</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<sources>-->
-            <!--<source>${generatedSourcesDirectory}</source>-->
-            <!--</sources>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generatedSourcesDirectory}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

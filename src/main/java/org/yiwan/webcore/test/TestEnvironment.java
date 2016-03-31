@@ -44,7 +44,7 @@ public class TestEnvironment {
 
     @Override
     public String toString() {
-        return String.format("application info: %s\ndatabase info: %s\napplication server info: %s\ndatabase server info: %s", application, database, applicationServer, databaseServer);
+        return String.format("application info:\n%s\ndatabase info:\n%s\napplication server info:\n%s\ndatabase server info:\n%s", application, database, applicationServer, databaseServer);
     }
 
     public class Application {
@@ -69,7 +69,7 @@ public class TestEnvironment {
 
         @Override
         public String toString() {
-            return String.format("url: %s\nversion: %s", url, version);
+            return String.format("|_url: %s\n|_version: %s", url, version);
         }
     }
 
@@ -131,7 +131,7 @@ public class TestEnvironment {
 
         @Override
         public String toString() {
-            return String.format("driver: %s\nurl: %s\nuser: %s\npassword: %s\nversion: %s\ndump: %s", driver, url, user, password, version, dump);
+            return String.format("|_driver: %s\n|_url: %s\n|_user: %s\n|_password: %s\n|_version: %s\n|_dump: %s", driver, url, user, password, version, dump);
         }
     }
 
@@ -175,7 +175,7 @@ public class TestEnvironment {
 
         @Override
         public String toString() {
-            return String.format("os: %s\nversion: %s\ncpu: %s\nmemory: %s", os, version, cpu, memory);
+            return String.format("|_os: %s\n|_version: %s\n|_cpu: %s\n|_memory: %s", os, version, cpu, memory);
         }
     }
 }
