@@ -26,6 +26,7 @@
         <xml.apis.version>1.4.01</xml.apis.version>
         <jaxb2.plugin.version>0.13.1</jaxb2.plugin.version>
         <jaxb2.basics.version>0.11.0</jaxb2.basics.version>
+        <build.helper.plugin.version>1.4</build.helper.plugin.version>
         <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
     </properties>
 
@@ -197,7 +198,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.4</version>
+                <version>${build.helper.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>test</id>
