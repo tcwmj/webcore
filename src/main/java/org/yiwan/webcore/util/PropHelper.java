@@ -63,22 +63,22 @@ public class PropHelper {
     public static final String IE_WEBDRIVER_X86 = getProperty("path.webdriver.ie.x86");
     public static final String IE_WEBDRIVER_X64 = getProperty("path.webdriver.ie.x64");
     public static final String DEFAULT_BROWSER = getProperty("browser.default");
-    public static final Boolean IGNORE_PROTECTED_MODE_SETTINGS = Boolean.parseBoolean(getProperty("browser.ie.ignoreProtectedModeSettings"));
+    public static final boolean IGNORE_PROTECTED_MODE_SETTINGS = Boolean.parseBoolean(getProperty("browser.ie.ignoreProtectedModeSettings"));
     public static final String INITIAL_BROWSER_URL = getProperty("browser.ie.initialBrowserUrl");
-    public static final Boolean IGNORE_ZOOM_SETTING = Boolean.parseBoolean(getProperty("browser.ie.ignoreZoomSetting"));
-    public static final Boolean REQUIRE_WINDOW_FOCUS = Boolean.parseBoolean(getProperty("browser.ie.requireWindowFocus"));
-    public static final Boolean ENABLE_PERSISTENT_HOVER = Boolean.parseBoolean(getProperty("browser.ie.enablePersistentHover"));
-    public static final Boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.ie.acceptSSLCerts"));
-    public static final Boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.ie.nativeEvents"));
+    public static final boolean IGNORE_ZOOM_SETTING = Boolean.parseBoolean(getProperty("browser.ie.ignoreZoomSetting"));
+    public static final boolean REQUIRE_WINDOW_FOCUS = Boolean.parseBoolean(getProperty("browser.ie.requireWindowFocus"));
+    public static final boolean ENABLE_PERSISTENT_HOVER = Boolean.parseBoolean(getProperty("browser.ie.enablePersistentHover"));
+    public static final boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.ie.acceptSSLCerts"));
+    public static final boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.ie.nativeEvents"));
     public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
     public static final String DEFAULT_IE_ARCH = getProperty("browser.ie.arch.default");
-    public static final Boolean MAXIMIZE_BROWSER = Boolean.parseBoolean(getProperty("browser.maximize"));
-    public static final Boolean REMOTE = Boolean.parseBoolean(getProperty("remote"));
-    public static final Boolean BROWSERSTACK = Boolean.parseBoolean(getProperty("browserstack"));
-    public static final Boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));
-    public static final Boolean ENABLE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
-    public static final Boolean ENABLE_HAR = Boolean.parseBoolean(getProperty("har.enable"));
-    public static final Boolean ENABLE_RECORD_TRANSACTION_TIMESTAMP = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
+    public static final boolean MAXIMIZE_BROWSER = Boolean.parseBoolean(getProperty("browser.maximize"));
+    public static final boolean REMOTE = Boolean.parseBoolean(getProperty("remote"));
+    public static final boolean BROWSERSTACK = Boolean.parseBoolean(getProperty("browserstack"));
+    public static final boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));
+    public static final boolean ENABLE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
+    public static final boolean ENABLE_HAR = Boolean.parseBoolean(getProperty("har.enable"));
+    public static final boolean ENABLE_RECORD_TRANSACTION_TIMESTAMP = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
 
     /**
      * load properties from external file

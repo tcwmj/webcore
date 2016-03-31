@@ -201,7 +201,7 @@ public class WebDriverFactory {
      *
      * @return boolean
      */
-    private Boolean isOSX64() {
+    private boolean isOSX64() {
         Properties props = System.getProperties();
         String arch = props.getProperty("os.arch");
         return arch.contains("64");

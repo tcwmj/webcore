@@ -345,7 +345,7 @@ public class WebDriverWrapper {
      * @param locator
      * @param value   true indicate tick on, false indicate tick off
      */
-    protected void alteredTick(Locator locator, Boolean value) {
+    protected void alteredTick(Locator locator, boolean value) {
         logger.debug("try tick {} on {} alternately", value, locator.toString());
         if (value)
             setAttribute(locator, "checked", "checked");
@@ -480,7 +480,7 @@ public class WebDriverWrapper {
      */
     protected void assertSelectedValue(Locator locator, String text) {
         List<WebElement> elements = new Select(findElement(locator)).getAllSelectedOptions();
-        Boolean selected = false;
+        boolean selected = false;
         for (WebElement element : elements) {
             if (element.getText().trim().equals(text)) {
                 selected = true;
@@ -569,8 +569,8 @@ public class WebDriverWrapper {
      * @param locator
      * @param enabled
      */
-    protected void assertEnabled(Locator locator, Boolean enabled) {
-        Boolean actual = isEnabled(locator);
+    protected void assertEnabled(Locator locator, boolean enabled) {
+        boolean actual = isEnabled(locator);
         String message = "assert %s is enabled";
         if (enabled) {
             assertThat(actual).as(message, locator.toString()).isTrue();
@@ -583,8 +583,8 @@ public class WebDriverWrapper {
      * @param locator
      * @param displayed
      */
-    protected void assertDisplayed(Locator locator, Boolean displayed) {
-        Boolean actual = isDisplayed(locator);
+    protected void assertDisplayed(Locator locator, boolean displayed) {
+        boolean actual = isDisplayed(locator);
         String message = "assert %s is displayed";
         if (displayed) {
             assertThat(actual).as(message, locator.toString()).isTrue();
@@ -597,8 +597,8 @@ public class WebDriverWrapper {
      * @param locator
      * @param selected
      */
-    protected void assertSelected(Locator locator, Boolean selected) {
-        Boolean actual = isSelected(locator);
+    protected void assertSelected(Locator locator, boolean selected) {
+        boolean actual = isSelected(locator);
         String message = "assert %s is selected";
         if (selected) {
             assertThat(actual).as(message, locator.toString()).isTrue();
@@ -967,9 +967,9 @@ public class WebDriverWrapper {
      *                    false Scrolls the object so that the bottom of the object is
      *                    visible at the bottom of the window.
      */
-    protected void scrollIntoView(Locator locator, Boolean bAlignToTop) {
+    protected void scrollIntoView(Locator locator, boolean bAlignToTop) {
         logger.debug("try to scroll into view on {}, align to top is {}", locator.toString(), bAlignToTop);
-        js.executeScript("arguments[0].scrollIntoView(arguments[1])", findElement(locator), bAlignToTop.toString());
+        js.executeScript("arguments[0].scrollIntoView(arguments[1])", findElement(locator), bAlignToTop);
         waitDocumentReady();
     }
 
