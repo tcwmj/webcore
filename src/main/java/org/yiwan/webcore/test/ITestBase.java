@@ -43,6 +43,15 @@ public interface ITestBase {
 
     HashMap<String, String> getTestMap();
 
-    String getBaseUrl();
+    TestEnvironment getTestEnvironment();
 
+    void setTestEnvironment(TestEnvironment testEnvironment);
+
+    boolean isRecycleTestEnvironment();
+
+    void setRecycleTestEnvironment(boolean recycleTestEnvironment);
+
+    ITestDataManager getTestDataManager();
+
+    void setTestDataManager(ITestDataManager testData);
 }

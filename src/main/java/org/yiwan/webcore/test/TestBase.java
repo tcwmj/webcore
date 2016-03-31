@@ -38,11 +38,12 @@ public abstract class TestBase implements ITestBase {
     private boolean prepareToDownload = false;
     private boolean recordTransactionTimestamp = false;
     private boolean recordHttpArchive = false;
-    private ITestData testData;
+    private ITestDataManager testDataManager;
     private IPageManager pageManager;
     private String scenarioId;
     private String featureId;
-    private String baseUrl = PropHelper.BASE_URL;
+    private TestEnvironment testEnvironment;
+    private boolean recycleTestEnvironment = false;
     private String os;
     private String osVersion;
     private String browser;
@@ -99,12 +100,13 @@ public abstract class TestBase implements ITestBase {
     }
 
     @Override
-    public String getBaseUrl() {
-        return baseUrl;
+    public TestEnvironment getTestEnvironment() {
+        return testEnvironment;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    @Override
+    public void setTestEnvironment(TestEnvironment testEnvironment) {
+        this.testEnvironment = testEnvironment;
     }
 
     public String getResolution() {
@@ -240,12 +242,14 @@ public abstract class TestBase implements ITestBase {
         this.initialPageRef = initialPageRef;
     }
 
-    public ITestData getTestData() {
-        return testData;
+    @Override
+    public ITestDataManager getTestDataManager() {
+        return testDataManager;
     }
 
-    public void setTestData(ITestData testData) {
-        this.testData = testData;
+    @Override
+    public void setTestDataManager(ITestDataManager testDataManager) {
+        this.testDataManager = testDataManager;
     }
 
     public String getScenarioId() {
@@ -353,5 +357,15 @@ public abstract class TestBase implements ITestBase {
 
     public void embedTestData(Object o) throws Exception {
 
+    }
+
+    @Override
+    public boolean isRecycleTestEnvironment() {
+        return recycleTestEnvironment;
+    }
+
+    @Override
+    public void setRecycleTestEnvironment(boolean recycleTestEnvironment) {
+        this.recycleTestEnvironment = recycleTestEnvironment;
     }
 }

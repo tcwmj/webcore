@@ -44,7 +44,7 @@ public class WebDriverWrapper {
      * browse base url
      */
     public void browse() {
-        browse(testCase.getBaseUrl());
+        browse(testCase.getTestEnvironment().getApplication().getUrl());
     }
 
     /**

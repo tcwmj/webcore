@@ -3,7 +3,6 @@ package org.yiwan.webcore.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -56,21 +55,19 @@ public class PropHelper {
     public static final String BROWSERSTACK_LOCAL_IDENTIFIER = getProperty("browserstacklocalIdentifier");
     public static final String BROWSERSTACK_DEBUG = getProperty("browserstackdebug");
     // from test conf
-    public static final String BASE_URL = getProperty("server.url");
+    public static final String SERVER_INFO = getProperty("server.info");
     public static final String CURRENT_LANG = getProperty("lang.current");
     public static final String PHANTOMJS_PATH = getProperty("path.phantomjs");
     public static final String FIREFOX_PATH = getProperty("path.firefox");
     public static final String CHROME_WEBDRIVER = getProperty("path.webdriver.chrome");
     public static final String IE_WEBDRIVER_X86 = getProperty("path.webdriver.ie.x86");
     public static final String IE_WEBDRIVER_X64 = getProperty("path.webdriver.ie.x64");
-    public static final String SYSTEM_DATA = getProperty("path.system.data");
     public static final String DEFAULT_BROWSER = getProperty("browser.default");
     public static final Boolean IGNORE_PROTECTED_MODE_SETTINGS = Boolean.parseBoolean(getProperty("browser.ie.ignoreProtectedModeSettings"));
     public static final String INITIAL_BROWSER_URL = getProperty("browser.ie.initialBrowserUrl");
     public static final Boolean IGNORE_ZOOM_SETTING = Boolean.parseBoolean(getProperty("browser.ie.ignoreZoomSetting"));
     public static final Boolean REQUIRE_WINDOW_FOCUS = Boolean.parseBoolean(getProperty("browser.ie.requireWindowFocus"));
-    public static final Boolean ENABLE_PERSISTENT_HOVER = Boolean
-            .parseBoolean(getProperty("browser.ie.enablePersistentHover"));
+    public static final Boolean ENABLE_PERSISTENT_HOVER = Boolean.parseBoolean(getProperty("browser.ie.enablePersistentHover"));
     public static final Boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.ie.acceptSSLCerts"));
     public static final Boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.ie.nativeEvents"));
     public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
@@ -93,8 +90,8 @@ public class PropHelper {
         InputStream is = ClassLoader.getSystemResourceAsStream(file);
         try {
             props.load(is);
-        } catch (IOException e) {
-            logger.error("file " + file + " was not found", e);
+        } catch (Exception e) {
+            logger.error("file {} was not found", file);
         }
     }
 

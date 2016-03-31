@@ -22,7 +22,7 @@ public class PageFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends WebDriverWrapper> T newPage(Class<?> clazz) {
+    public <T extends WebDriverWrapper> T createPage(Class<?> clazz) {
         Constructor<?> c = null;
         c = clazz.getDeclaredConstructor(WebDriver.class);
         c.setAccessible(true);
@@ -35,7 +35,7 @@ public class PageFactory {
         this.testCase = testCase;
     }
 
-    public <T extends WebDriverWrapper> T newPage(Class<T> clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public <T extends WebDriverWrapper> T createPage(Class<T> clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         Constructor<T> c = null;
         c = clazz.getDeclaredConstructor(TestBase.class);
         assert c != null;
