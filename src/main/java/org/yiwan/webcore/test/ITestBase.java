@@ -54,4 +54,8 @@ public interface ITestBase {
     ITestDataManager getTestDataManager();
 
     void setTestDataManager(ITestDataManager testData);
+
+    void prepareToDownload();
+
+    void setTransactionName(String transactionName);
 }

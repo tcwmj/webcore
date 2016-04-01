@@ -368,4 +368,16 @@ public abstract class TestBase implements ITestBase {
     public void setRecycleTestEnvironment(boolean recycleTestEnvironment) {
         this.recycleTestEnvironment = recycleTestEnvironment;
     }
+
+    @Override
+    public void prepareToDownload() {
+        setPrepareToDownload(true);
+    }
+
+    @Override
+    public void setTransactionName(String transactionName) {
+        setInitialPageRef(transactionName);
+        setRecordTransactionTimestamp(true);
+        setRecordHttpArchive(true);
+    }
 }
