@@ -842,8 +842,8 @@ public class WebDriverWrapper {
             this.locator = locator;
         }
 
-        public AbstractBooleanAssert<?> selectableText(String text) {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).isTextSelectable(text)).as("assert %s selectable text %s", locator, text);
+        public AbstractBooleanAssert<?> hasSelectableText(String text) {
+            return org.assertj.core.api.Assertions.assertThat(element(locator).isTextSelectable(text)).as("assert %s has selectable text %s", locator, text);
         }
 
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> selectedTexts() {
