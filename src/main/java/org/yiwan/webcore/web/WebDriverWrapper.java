@@ -831,7 +831,7 @@ public class WebDriverWrapper {
         }
 
         public AbstractBooleanAssert<?> pageSourceContains(String text) {
-            return org.assertj.core.api.Assertions.assertThat(isPageSourceContains(text)).as("assert page contains text %s", text);
+            return org.assertj.core.api.Assertions.assertThat(isPageSourceContains(text)).as("assert page source contains text %s", text);
         }
     }
 
@@ -881,7 +881,7 @@ public class WebDriverWrapper {
             Thread.sleep(milliseconds);
         }
 
-        public Boolean documentComplete() {
+        Boolean documentComplete() {
             return wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
