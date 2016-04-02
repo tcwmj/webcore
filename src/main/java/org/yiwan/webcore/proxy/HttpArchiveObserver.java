@@ -1,10 +1,9 @@
-package org.yiwan.webcore.perf;
+package org.yiwan.webcore.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.util.ProxyWrapper;
 
 import java.io.File;
 import java.io.FileWriter;

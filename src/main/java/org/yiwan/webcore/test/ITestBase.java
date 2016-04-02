@@ -1,8 +1,8 @@
 package org.yiwan.webcore.test;
 
 import org.openqa.selenium.WebDriver;
-import org.yiwan.webcore.perf.Subject;
-import org.yiwan.webcore.util.ProxyWrapper;
+import org.yiwan.webcore.proxy.Subject;
+import org.yiwan.webcore.proxy.ProxyWrapper;
 
 import java.util.HashMap;
 

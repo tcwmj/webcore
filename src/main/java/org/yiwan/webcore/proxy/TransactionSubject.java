@@ -1,4 +1,4 @@
-package org.yiwan.webcore.perf;
+package org.yiwan.webcore.proxy;
 
 import org.yiwan.webcore.test.ITestBase;
 

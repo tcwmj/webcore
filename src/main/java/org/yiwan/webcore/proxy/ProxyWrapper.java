@@ -1,4 +1,4 @@
-package org.yiwan.webcore.util;
+package org.yiwan.webcore.proxy;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
@@ -7,6 +7,7 @@ import net.lightbody.bmp.filters.ResponseFilter;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yiwan.webcore.util.PropHelper;
 
 public class ProxyWrapper {
     public final static String CONTENT_DISPOSITION = "Content-Disposition";

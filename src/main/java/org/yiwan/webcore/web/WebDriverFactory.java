@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.test.TestBase;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.util.ProxyWrapper;
+import org.yiwan.webcore.proxy.ProxyWrapper;
 
 import java.io.File;
 import java.net.MalformedURLException;

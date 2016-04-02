@@ -24,7 +24,6 @@ public class PropHelper {
     public static final int TIMEOUT_INTERVAL = Integer.parseInt(getProperty("timeout.interval"));
     public static final int TIMEOUT_NAVIGATION_INTERVAL = Integer.parseInt(getProperty("timeout.navigation.interval"));
     public static final int TIMEOUT_POLLING_INTERVAL = Integer.parseInt(getProperty("timeout.polling.interval"));
-    public static final int TIMEOUT_DOCUMENT_COMPLETE = Integer.parseInt(getProperty("timeout.document.complete"));
     public static final Integer TEST_RETRY_COUNT = Integer.valueOf(getProperty("test.retry.count"));
     public static final String RANDOM_RULE = getProperty("random.rule");
     public static final String SOURCE_CODE_PATH = getProperty("sourcecode.path");

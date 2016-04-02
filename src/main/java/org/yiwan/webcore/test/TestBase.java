@@ -9,10 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.Reporter;
-import org.yiwan.webcore.perf.*;
+import org.yiwan.webcore.proxy.*;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.util.ProxyWrapper;
 import org.yiwan.webcore.web.IPageManager;
 import org.yiwan.webcore.web.WebDriverFactory;
 

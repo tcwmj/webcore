@@ -47,7 +47,7 @@ public class WebDriverWrapper {
         logger.debug("try to navigate to url {}", url);
         testCase.getSubject().nodifyObserversStart();
         driver.navigate().to(url);
-        waitThat().documentToBeReady();
+        waitThat().documentComplete();
         testCase.getSubject().nodifyObserversStop();
     }
 
@@ -55,7 +55,7 @@ public class WebDriverWrapper {
         logger.debug("try to navigate forward");
         testCase.getSubject().nodifyObserversStart();
         driver.navigate().forward();
-        waitThat().documentToBeReady();
+        waitThat().documentComplete();
         testCase.getSubject().nodifyObserversStop();
     }
 
@@ -66,7 +66,7 @@ public class WebDriverWrapper {
         logger.debug("try to navigate back");
         testCase.getSubject().nodifyObserversStart();
         driver.navigate().back();
-        waitThat().documentToBeReady();
+        waitThat().documentComplete();
         testCase.getSubject().nodifyObserversStop();
     }
 
@@ -233,7 +233,7 @@ public class WebDriverWrapper {
             logger.debug("try to click {}", locator);
             testCase.getSubject().nodifyObserversStart();
             waitThat(locator).toBeClickable().click();
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -244,7 +244,7 @@ public class WebDriverWrapper {
             logger.debug("try to click {} silently", locator);
             testCase.getSubject().nodifyObserversStart();
             driver.findElement(locator.by()).click();
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -275,7 +275,7 @@ public class WebDriverWrapper {
             logger.debug("try to click {} by executing javascript", locator);
             testCase.getSubject().nodifyObserversStart();
             js.executeScript("arguments[0].click()", waitThat(locator).toBePresent());
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -302,7 +302,7 @@ public class WebDriverWrapper {
             testCase.getSubject().nodifyObserversStart();
             Actions action = new Actions(driver);
             action.doubleClick(waitThat(locator).toBeClickable()).build().perform();
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -314,7 +314,7 @@ public class WebDriverWrapper {
         public void type(CharSequence... value) {
             logger.debug("try to type {} on {}", value, locator);
             waitThat(locator).toBeVisible().sendKeys(value);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -325,7 +325,7 @@ public class WebDriverWrapper {
         public void type(String value) {
             logger.debug("try to type {} on {}", value, locator);
             waitThat(locator).toBeVisible().sendKeys(value);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -334,7 +334,7 @@ public class WebDriverWrapper {
         public void clear() {
             logger.debug("try to clear value on " + locator);
             waitThat(locator).toBeVisible().clear();
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -408,7 +408,7 @@ public class WebDriverWrapper {
             logger.debug("try to select {} on {}", text, locator);
             testCase.getSubject().nodifyObserversStart();
             new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -421,7 +421,7 @@ public class WebDriverWrapper {
         public void deselectAll() {
             logger.debug("try to deselect all options on {}", locator);
             new Select(waitThat(locator).toBeVisible()).deselectAll();
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -448,7 +448,7 @@ public class WebDriverWrapper {
             logger.debug("try to select index {} on {}", index, locator);
             testCase.getSubject().nodifyObserversStart();
             new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -464,7 +464,7 @@ public class WebDriverWrapper {
             logger.debug("try to select value {} on {}", value, locator);
             testCase.getSubject().nodifyObserversStart();
             new Select(waitThat(locator).toBeVisible()).selectByValue(value);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -487,7 +487,7 @@ public class WebDriverWrapper {
             logger.debug("move mouse to {}", locator);
             Actions action = new Actions(driver);
             action.moveToElement(waitThat(locator).toBeVisible()).build().perform();
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -595,7 +595,7 @@ public class WebDriverWrapper {
         public void setText(String text) {
             logger.debug("try to set innertext of {} to {}", locator, text);
             js.executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -606,7 +606,7 @@ public class WebDriverWrapper {
         public void setValue(String value) {
             logger.debug("try to set text of {} to {}", locator, value);
             js.executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -674,7 +674,7 @@ public class WebDriverWrapper {
             testCase.getSubject().nodifyObserversStart();
             JavascriptLibrary javascript = new JavascriptLibrary();
             javascript.callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBePresent(), event);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -687,7 +687,7 @@ public class WebDriverWrapper {
             logger.debug("try to fire {} on {}", event, locator);
             testCase.getSubject().nodifyObserversStart();
             js.executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
             testCase.getSubject().nodifyObserversStop();
         }
 
@@ -698,7 +698,7 @@ public class WebDriverWrapper {
             logger.debug("try to scroll to {}", locator);
             WebElement element = waitThat(locator).toBePresent();
             js.executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -709,7 +709,7 @@ public class WebDriverWrapper {
          */
         public void scrollIntoView() {
             scrollIntoView(true);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -724,7 +724,7 @@ public class WebDriverWrapper {
         public void scrollIntoView(boolean bAlignToTop) {
             logger.debug("try to scroll into view on {}, align to top is {}", locator, bAlignToTop);
             js.executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -736,7 +736,7 @@ public class WebDriverWrapper {
         public void setAttribute(String attribute, String value) {
             logger.debug("try to set attribute {} on {} to {}", attribute, locator, value);
             js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -747,7 +747,7 @@ public class WebDriverWrapper {
         public void removeAttribute(String attribute) {
             logger.debug("try to remove attribute {} on {}", attribute, locator);
             js.executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
-            waitThat().documentToBeReady();
+            waitThat().documentComplete();
         }
 
         /**
@@ -876,26 +876,26 @@ public class WebDriverWrapper {
     }
 
     protected class FluentWait {
-        public void timeout(int millis) throws InterruptedException {
-            logger.debug("force to wait {} milliseconds", millis);
-            Thread.sleep(millis);
+        public void timeout(int milliseconds) throws InterruptedException {
+            logger.debug("force to wait {} milliseconds", milliseconds);
+            Thread.sleep(milliseconds);
         }
 
-        public Boolean documentToBeReady() {
+        public Boolean documentComplete() {
             return wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
                     try {
                         return js.executeScript("return document.readyState").equals("complete");
                     } catch (WebDriverException e) {
-                        logger.warn("javascript error while waiting document to be ready");
+                        logger.warn("javascript error while waiting document complete");
                         return true;
                     }
                 }
 
                 @Override
                 public String toString() {
-                    return String.format("wait document to be ready");
+                    return "wait document complete";
                 }
             });
         }
@@ -967,31 +967,31 @@ public class WebDriverWrapper {
         /**
          * wait the specified locator to be present
          *
-         * @param timeout in seconds
+         * @param milliseconds timeout
          */
-        public void toBePresentIn(int timeout) {
+        public void toBePresentIn(int milliseconds) {
             long t = System.currentTimeMillis();
-            while (System.currentTimeMillis() - t < timeout) {
+            while (System.currentTimeMillis() - t < milliseconds) {
                 if (element(locator).isPresent()) {
                     return;
                 }
             }
-            logger.warn("wait presence of {} timed out in {} seconds", locator, timeout);
+            logger.warn("wait presence of {} timed out in {} milliseconds", locator, milliseconds);
         }
 
         /**
          * wait the specified locator to be absent
          *
-         * @param timeout in seconds
+         * @param milliseconds timeout
          */
-        public void toBeAbsentIn(int timeout) {
+        public void toBeAbsentIn(int milliseconds) {
             long t = System.currentTimeMillis();
-            while (System.currentTimeMillis() - t < timeout) {
+            while (System.currentTimeMillis() - t < milliseconds) {
                 if (!element(locator).isPresent()) {
                     return;
                 }
             }
-            logger.warn("wait absence of {} timed out in {} seconds", locator, timeout);
+            logger.warn("wait absence of {} timed out in {} milliseconds", locator, milliseconds);
         }
 
         public WebElement toBeClickable() {

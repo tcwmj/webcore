@@ -1,4 +1,4 @@
-package org.yiwan.webcore.perf;
+package org.yiwan.webcore.proxy;
 
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.util.ProxyWrapper;
 
 import java.io.File;
 import java.io.IOException;
