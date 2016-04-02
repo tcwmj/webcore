@@ -1,19 +1,19 @@
 package org.yiwan.webcore.web;
 
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractListAssert;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
-import org.yiwan.webcore.locator.LocatorBean;
-import org.yiwan.webcore.test.ITestBase;
-import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
 
 import java.awt.*;
@@ -21,42 +21,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebDriverWrapper {
-    protected final static LocatorBean l = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private ITestBase testCase;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private WebDriver driver;
     private JavascriptExecutor js;
-    private Wait<WebDriver> wait;
+    private Wait<org.openqa.selenium.WebDriver> wait;
 
-    public WebDriverWrapper(ITestBase testCase) {
-        this.testCase = testCase;
-        this.driver = testCase.getWebDriver();
+    public WebDriverWrapper(WebDriver driver) {
+        this.driver = driver;
         this.js = (JavascriptExecutor) driver;
         this.wait = new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL).ignoring(StaleElementReferenceException.class).ignoring(NoSuchElementException.class).ignoring(UnreachableBrowserException.class);
     }
 
-    protected ITestBase getTestCase() {
-        return testCase;
-    }
-
-    public void browse() {
-        browse(testCase.getTestEnvironment().getApplication().getUrl());
-    }
-
     public void browse(String url) {
         logger.debug("try to navigate to url {}", url);
-        testCase.getSubject().nodifyObserversStart();
         driver.navigate().to(url);
         waitThat().documentComplete();
-        testCase.getSubject().nodifyObserversStop();
     }
 
     public void forward() {
         logger.debug("try to navigate forward");
-        testCase.getSubject().nodifyObserversStart();
         driver.navigate().forward();
         waitThat().documentComplete();
-        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -64,10 +49,8 @@ public class WebDriverWrapper {
      */
     public void backward() {
         logger.debug("try to navigate back");
-        testCase.getSubject().nodifyObserversStart();
         driver.navigate().back();
         waitThat().documentComplete();
-        testCase.getSubject().nodifyObserversStop();
     }
 
     /**
@@ -119,7 +102,7 @@ public class WebDriverWrapper {
      * @param text
      * @return boolean
      */
-    protected boolean isPageSourceContains(String text) {
+    public boolean isPageSourceContains(String text) {
         return driver.getPageSource().contains(text);
     }
 
@@ -128,7 +111,7 @@ public class WebDriverWrapper {
      *
      * @return page source string
      */
-    protected String getPageSource() {
+    public String getPageSource() {
         return driver.getPageSource();
     }
 
@@ -137,7 +120,7 @@ public class WebDriverWrapper {
      *
      * @return string value of current url
      */
-    protected String getCurrentUrl() {
+    public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
 
@@ -146,17 +129,17 @@ public class WebDriverWrapper {
      *
      * @param nameOrHandle
      */
-    protected void switchToWindow(String nameOrHandle) {
+    public WebDriver switchToWindow(String nameOrHandle) {
         logger.debug("try to switch to window {}", nameOrHandle);
-        driver.switchTo().window(nameOrHandle);
+        return driver.switchTo().window(nameOrHandle);
     }
 
     /**
      * Switch to default content from a frame
      */
-    protected void switchToDefaultWindow() {
+    public WebDriver switchToDefaultWindow() {
         logger.debug("try to switch to default content");
-        driver.switchTo().defaultContent();
+        return driver.switchTo().defaultContent();
     }
 
     /**
@@ -164,14 +147,14 @@ public class WebDriverWrapper {
      *
      * @return string value of title
      */
-    protected String getPageTitle() {
+    public String getPageTitle() {
         return driver.getTitle();
     }
 
     /**
      * click element if it's displayed, otherwise click the next one
      */
-    protected void smartClick(Locator... locators) {
+    public void smartClick(Locator... locators) {
         for (Locator locator : locators) {
             if (element(locator).isDisplayed()) {
                 element(locator).click();
@@ -187,7 +170,7 @@ public class WebDriverWrapper {
      * @param locator2
      * @param value
      */
-    protected void smartInput(Locator locator1, Locator locator2, String value) {
+    public void smartInput(Locator locator1, Locator locator2, String value) {
         if (element(locator1).isDisplayed()) {
             element(locator1).input(value);
         } else {
@@ -195,31 +178,105 @@ public class WebDriverWrapper {
         }
     }
 
-    protected WebElementWrapper element(Locator locator) {
+    /**
+     * capture screenshot for local or remote testing
+     *
+     * @return screenshot TakesScreenshot
+     */
+    public TakesScreenshot getTakesScreenshot() {
+        if (PropHelper.REMOTE) {
+            // RemoteWebDriver does not implement the TakesScreenshot class if
+            // the driver does have the Capabilities to take a screenshot then
+            // Augmenter will add the TakesScreenshot methods to the instance
+            return (TakesScreenshot) (new Augmenter().augment(driver));
+        } else {
+            return (TakesScreenshot) driver;
+        }
+    }
+
+    /**
+     * @param key
+     */
+    public void typeKeyEvent(int key) throws AWTException {
+        logger.debug("type key event " + key);
+        Robot robot;
+        robot = new Robot();
+        robot.keyPress(key);
+    }
+
+    public ActionsWrapper actions() {
+        return new ActionsWrapper();
+    }
+
+    public Object executeScript(String script, Object... args) {
+        return js.executeScript(script, args);
+    }
+
+    public Object executeAsyncScript(String script, Object... args) {
+        return js.executeAsyncScript(script, args);
+    }
+
+    public WebElementWrapper element(Locator locator) {
         return new WebElementWrapper(locator);
     }
 
-    protected FluentLocatorWait waitThat(Locator locator) {
+    public FluentLocatorWait waitThat(Locator locator) {
         return new FluentLocatorWait(locator);
     }
 
-    protected FluentWait waitThat() {
+    public FluentWait waitThat() {
         return new FluentWait();
     }
 
-    protected FluentLocatorAssert assertThat(Locator locator) {
+    public FluentLocatorAssert assertThat(Locator locator) {
         return new FluentLocatorAssert(locator);
     }
 
-    protected FluentAssert assertThat() {
+    public FluentAssert assertThat() {
         return new FluentAssert();
     }
 
-    protected AlertWrapper alert() {
+    public AlertWrapper alert() {
         return new AlertWrapper();
     }
 
-    protected class WebElementWrapper {
+    public class ActionsWrapper {
+        private Actions actions;
+
+        public ActionsWrapper() {
+            this.actions = new Actions(driver);
+        }
+
+        public ActionsWrapper click() {
+            actions.click();
+            return this;
+        }
+
+        public ActionsWrapper click(Locator locator) {
+            actions.click(waitThat(locator).toBeClickable());
+            return this;
+        }
+
+        public ActionsWrapper sendKeys(Locator locator, CharSequence... keysToSend) {
+            actions.sendKeys(waitThat(locator).toBeVisible(), keysToSend);
+            return this;
+        }
+
+        public ActionsWrapper sendKeys(CharSequence... keysToSend) {
+            actions.sendKeys(keysToSend);
+            return this;
+        }
+
+        public Action build() {
+            return actions.build();
+        }
+
+        public void perform() {
+            actions.perform();
+        }
+    }
+
+    public class WebElementWrapper {
         private Locator locator;
 
         public WebElementWrapper(Locator locator) {
@@ -231,10 +288,8 @@ public class WebDriverWrapper {
          */
         public void click() {
             logger.debug("try to click {}", locator);
-            testCase.getSubject().nodifyObserversStart();
             waitThat(locator).toBeClickable().click();
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -242,10 +297,8 @@ public class WebDriverWrapper {
          */
         public void silentClick() {
             logger.debug("try to click {} silently", locator);
-            testCase.getSubject().nodifyObserversStart();
             driver.findElement(locator.by()).click();
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -273,10 +326,8 @@ public class WebDriverWrapper {
          */
         public void jsClick() {
             logger.debug("try to click {} by executing javascript", locator);
-            testCase.getSubject().nodifyObserversStart();
-            js.executeScript("arguments[0].click()", waitThat(locator).toBePresent());
+            executeScript("arguments[0].click()", waitThat(locator).toBePresent());
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -299,11 +350,9 @@ public class WebDriverWrapper {
          */
         public void doubleClick() {
             logger.debug("try to double click {}", locator);
-            testCase.getSubject().nodifyObserversStart();
             Actions action = new Actions(driver);
             action.doubleClick(waitThat(locator).toBeClickable()).build().perform();
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -312,18 +361,7 @@ public class WebDriverWrapper {
          * @param value
          */
         public void type(CharSequence... value) {
-            logger.debug("try to type {} on {}", value, locator);
-            waitThat(locator).toBeVisible().sendKeys(value);
-            waitThat().documentComplete();
-        }
-
-        /**
-         * Type value into the web edit box if it's visible
-         *
-         * @param value
-         */
-        public void type(String value) {
-            logger.debug("try to type {} on {}", value, locator);
+            logger.debug("try to type {} on {}", StringUtils.join(value), locator);
             waitThat(locator).toBeVisible().sendKeys(value);
             waitThat().documentComplete();
         }
@@ -377,10 +415,11 @@ public class WebDriverWrapper {
          */
         public boolean isTicked() {
             String checked = getAttribute("checked");
-            if (checked == null || !checked.toLowerCase().equals("true"))
+            if (checked == null || !checked.toLowerCase().equals("true")) {
                 return false;
-            else
+            } else {
                 return true;
+            }
         }
 
         /**
@@ -390,26 +429,25 @@ public class WebDriverWrapper {
          */
         public void alteredTick(boolean value) {
             logger.debug("try tick {} on {} alternately", value, locator);
-            if (value)
+            if (value) {
                 setAttribute("checked", "checked");
-            else
+            } else {
                 removeAttribute("checked");
+            }
         }
 
         /**
          * Select all options that display text matching the argument. That is, when
          * given "Bar" this would select an option like:
-         * <p>
+         * <p/>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param text The visible text to match against
          */
         public void selectByVisibleText(String text) {
             logger.debug("try to select {} on {}", text, locator);
-            testCase.getSubject().nodifyObserversStart();
             new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -427,7 +465,7 @@ public class WebDriverWrapper {
         /**
          * Select all options that display text matching the argument. That is, when
          * given "Bar" this would select an option like:
-         * <p>
+         * <p/>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param texts The visible text to match against
@@ -446,26 +484,22 @@ public class WebDriverWrapper {
          */
         public void selectByIndex(int index) {
             logger.debug("try to select index {} on {}", index, locator);
-            testCase.getSubject().nodifyObserversStart();
             new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
          * Select all options that have a value matching the argument. That is, when
          * given "foo" this would select an option like:
-         * <p>
+         * <p/>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param value The value to match against
          */
         public void selectByValue(String value) {
             logger.debug("try to select value {} on {}", value, locator);
-            testCase.getSubject().nodifyObserversStart();
             new Select(waitThat(locator).toBeVisible()).selectByValue(value);
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -556,16 +590,6 @@ public class WebDriverWrapper {
         }
 
         /**
-         * @param key
-         */
-        public void typeKeyEvent(int key) throws AWTException {
-            logger.debug("type key event " + key);
-            Robot robot;
-            robot = new Robot();
-            robot.keyPress(key);
-        }
-
-        /**
          * get text on such web element
          *
          * @return string
@@ -594,7 +618,7 @@ public class WebDriverWrapper {
          */
         public void setText(String text) {
             logger.debug("try to set innertext of {} to {}", locator, text);
-            js.executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
+            executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
             waitThat().documentComplete();
         }
 
@@ -605,7 +629,7 @@ public class WebDriverWrapper {
          */
         public void setValue(String value) {
             logger.debug("try to set text of {} to {}", locator, value);
-            js.executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
+            executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
             waitThat().documentComplete();
         }
 
@@ -671,11 +695,9 @@ public class WebDriverWrapper {
          */
         public void triggerEvent(String event) {
             logger.debug("try to trigger {} on {}", event, locator);
-            testCase.getSubject().nodifyObserversStart();
             JavascriptLibrary javascript = new JavascriptLibrary();
             javascript.callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBePresent(), event);
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -685,10 +707,8 @@ public class WebDriverWrapper {
          */
         public void fireEvent(String event) {
             logger.debug("try to fire {} on {}", event, locator);
-            testCase.getSubject().nodifyObserversStart();
-            js.executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
+            executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
             waitThat().documentComplete();
-            testCase.getSubject().nodifyObserversStop();
         }
 
         /**
@@ -697,7 +717,7 @@ public class WebDriverWrapper {
         public void scrollTo() {
             logger.debug("try to scroll to {}", locator);
             WebElement element = waitThat(locator).toBePresent();
-            js.executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
+            executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
             waitThat().documentComplete();
         }
 
@@ -723,7 +743,7 @@ public class WebDriverWrapper {
          */
         public void scrollIntoView(boolean bAlignToTop) {
             logger.debug("try to scroll into view on {}, align to top is {}", locator, bAlignToTop);
-            js.executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
+            executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
             waitThat().documentComplete();
         }
 
@@ -735,7 +755,7 @@ public class WebDriverWrapper {
          */
         public void setAttribute(String attribute, String value) {
             logger.debug("try to set attribute {} on {} to {}", attribute, locator, value);
-            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
+            executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
             waitThat().documentComplete();
         }
 
@@ -746,7 +766,7 @@ public class WebDriverWrapper {
          */
         public void removeAttribute(String attribute) {
             logger.debug("try to remove attribute {} on {}", attribute, locator);
-            js.executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
+            executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
             waitThat().documentComplete();
         }
 
@@ -755,7 +775,7 @@ public class WebDriverWrapper {
          */
         public long getCellRow() {
             long ret = -1;
-            ret = (long) js.executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
+            ret = (long) executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
             ret++;// row index starts with zero
             return ret;
         }
@@ -765,7 +785,7 @@ public class WebDriverWrapper {
          */
         public long getCellColumn() {
             long ret = -1;
-            ret = (long) js.executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
+            ret = (long) executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
             ret++;// column index starts with zero
             return ret;
         }
@@ -775,7 +795,7 @@ public class WebDriverWrapper {
          */
         public long getRow() {
             long ret = -1;
-            ret = (long) js.executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
+            ret = (long) executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
             ret++;// row index starts with zero
             return ret;
         }
@@ -787,12 +807,12 @@ public class WebDriverWrapper {
          */
         public long getRowCount() {
             long ret = -1;
-            ret = (long) js.executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
+            ret = (long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
             return ret;
         }
     }
 
-    protected class AlertWrapper {
+    public class AlertWrapper {
         public void dismiss() {
             logger.debug("try to dismiss alert {}", getText());
             waitThat().alertIsPresent().dismiss();
@@ -817,7 +837,7 @@ public class WebDriverWrapper {
         }
     }
 
-    protected class FluentAssert {
+    public class FluentAssert {
         public AbstractBooleanAssert<?> alertExists() {
             return org.assertj.core.api.Assertions.assertThat(alert().exists()).as("assert alert exists");
         }
@@ -835,7 +855,7 @@ public class WebDriverWrapper {
         }
     }
 
-    protected class FluentLocatorAssert {
+    public class FluentLocatorAssert {
         private Locator locator;
 
         public FluentLocatorAssert(Locator locator) {
@@ -875,7 +895,7 @@ public class WebDriverWrapper {
         }
     }
 
-    protected class FluentWait {
+    public class FluentWait {
         public void timeout(int milliseconds) throws InterruptedException {
             logger.debug("force to wait {} milliseconds", milliseconds);
             Thread.sleep(milliseconds);
@@ -884,9 +904,9 @@ public class WebDriverWrapper {
         Boolean documentComplete() {
             return wait.until(new ExpectedCondition<Boolean>() {
                 @Override
-                public Boolean apply(WebDriver driver) {
+                public Boolean apply(org.openqa.selenium.WebDriver driver) {
                     try {
-                        return js.executeScript("return document.readyState").equals("complete");
+                        return executeScript("return document.readyState").equals("complete");
                     } catch (WebDriverException e) {
                         logger.warn("javascript error while waiting document complete");
                         return true;
@@ -915,7 +935,7 @@ public class WebDriverWrapper {
         public Boolean pageSourceContains(final String text) {
             return wait.until(new ExpectedCondition<Boolean>() {
                 @Override
-                public Boolean apply(WebDriver driver) {
+                public Boolean apply(org.openqa.selenium.WebDriver driver) {
                     return isPageSourceContains(text);
                 }
 
@@ -927,7 +947,7 @@ public class WebDriverWrapper {
         }
     }
 
-    protected class FluentLocatorWait {
+    public class FluentLocatorWait {
         private Locator locator;
 
         public FluentLocatorWait(Locator locator) {
@@ -953,7 +973,7 @@ public class WebDriverWrapper {
         public Boolean toBeAbsent() {
             return wait.until(new ExpectedCondition<Boolean>() {
                 @Override
-                public Boolean apply(WebDriver driver) {
+                public Boolean apply(org.openqa.selenium.WebDriver driver) {
                     return !element(locator).isPresent();
                 }
 
@@ -1028,7 +1048,7 @@ public class WebDriverWrapper {
             public Boolean valueToBe(final String value) {
                 return wait.until(new ExpectedCondition<Boolean>() {
                     @Override
-                    public Boolean apply(WebDriver driver) {
+                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
                         return element(locator).getAttribute(attribute).equals(value);
                     }
 
@@ -1054,7 +1074,7 @@ public class WebDriverWrapper {
             public Boolean valueToBe(final String value) {
                 return wait.until(new ExpectedCondition<Boolean>() {
                     @Override
-                    public Boolean apply(WebDriver driver) {
+                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
                         return element(locator).getCssValue(cssAttribute).equals(value);
                     }
 

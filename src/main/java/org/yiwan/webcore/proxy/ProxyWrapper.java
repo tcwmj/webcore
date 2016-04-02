@@ -25,17 +25,6 @@ public class ProxyWrapper {
                     if (proxy.isStarted()) {
                         logger.debug("gracefully shutting down proxy");
                         proxy.stop();
-                        long begin = System.currentTimeMillis();
-                        while (proxy.isStarted() && !isTimeout(begin)) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                logger.error(e.getMessage(), e);
-                            }
-                        }
-                        if (isTimeout(begin)) {
-                            logger.warn("timeout on waiting for shutting down proxy");
-                        }
                     }
                 }
             });
@@ -44,10 +33,6 @@ public class ProxyWrapper {
 
     public static BrowserMobProxy getProxy() {
         return proxy;
-    }
-
-    public static boolean isTimeout(long begin) {
-        return System.currentTimeMillis() - begin > 10000;
     }
 
     /**

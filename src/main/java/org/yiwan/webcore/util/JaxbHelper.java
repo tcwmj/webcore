@@ -158,7 +158,6 @@ public class JaxbHelper {
      * @param clazz
      * @return object in generic type
      */
-    @SuppressWarnings("unchecked")
     public static <T> T unmarshal(String xml, InputStream xsd, Class<T> clazz) {
         T t = null;
         ValidationEventCollector validation = new ValidationEventCollector();
@@ -173,16 +172,8 @@ public class JaxbHelper {
             unmarshaller.setEventHandler(validation);
             t = (T) unmarshaller.unmarshal(new StringReader(xml));
         } catch (JAXBException | SAXException e) {
-            logger.error("xml unmarshal exception", e);
-            if (validation != null && validation.hasEvents()) {
-                for (ValidationEvent ve : validation.getEvents()) {
-                    String msg = ve.getMessage();
-                    ValidationEventLocator vel = ve.getLocator();
-                    int line = vel.getLineNumber();
-                    int column = vel.getColumnNumber();
-                    logger.error("at line " + line + ", column " + column + ", " + msg + "\n" + xml);
-                }
-            }
+            logger.error("xml unmarshal exception\n{}", xml, e);
+            printValidation(validation);
         }
         return t;
     }
@@ -210,16 +201,20 @@ public class JaxbHelper {
             t = (T) unmarshaller.unmarshal(xml);
         } catch (JAXBException | SAXException e) {
             logger.error("xml unmarshal exception", e);
-            if (validation != null && validation.hasEvents()) {
-                for (ValidationEvent ve : validation.getEvents()) {
-                    String msg = ve.getMessage();
-                    ValidationEventLocator vel = ve.getLocator();
-                    int line = vel.getLineNumber();
-                    int column = vel.getColumnNumber();
-                    logger.error("at line " + line + ", column " + column + ", " + msg + "\n" + xml);
-                }
-            }
+            printValidation(validation);
         }
         return t;
+    }
+
+    private static void printValidation(ValidationEventCollector validation) {
+        if (validation != null && validation.hasEvents()) {
+            for (ValidationEvent ve : validation.getEvents()) {
+                String msg = ve.getMessage();
+                ValidationEventLocator vel = ve.getLocator();
+                int line = vel.getLineNumber();
+                int column = vel.getColumnNumber();
+                logger.error("at line {} column {}, {}", line, column, msg);
+            }
+        }
     }
 }

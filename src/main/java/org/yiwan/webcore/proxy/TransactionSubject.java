@@ -1,6 +1,6 @@
 package org.yiwan.webcore.proxy;
 
-import org.yiwan.webcore.test.ITestBase;
+import org.yiwan.webcore.test.TestBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
 public class TransactionSubject implements Subject {
 
     private List<Observer> observers = new ArrayList<Observer>();
-    private ITestBase testCase;
+    private TestBase testCase;
 
-    public TransactionSubject(ITestBase testCase) {
+    public TransactionSubject(TestBase testCase) {
         this.testCase = testCase;
     }
 

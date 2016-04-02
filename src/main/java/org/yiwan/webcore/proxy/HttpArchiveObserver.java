@@ -2,7 +2,7 @@ package org.yiwan.webcore.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.ITestBase;
+import org.yiwan.webcore.test.TestBase;
 import org.yiwan.webcore.util.PropHelper;
 
 import java.io.File;
@@ -22,20 +22,15 @@ public class HttpArchiveObserver extends SampleObserver {
     }
 
     @Override
-    public void start(ITestBase testCase) {
+    public void start(TestBase testCase) {
         super.start(testCase);
-        if (testCase.isRecordHttpArchive()) {
-            newHar(testCase.getInitialPageRef());
-        }
+        newHar(testCase.getTransactionName());
     }
 
     @Override
-    public void stop(ITestBase testCase) {
+    public void stop(TestBase testCase) {
         super.stop(testCase);
-        if (testCase.isRecordHttpArchive()) {
-            writeHar(testCase.getInitialPageRef());
-            testCase.setRecordHttpArchive(false);
-        }
+        writeHar(testCase.getTransactionName());
     }
 
     private void newHar() {

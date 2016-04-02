@@ -15,9 +15,9 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.TestBase;
-import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.proxy.ProxyWrapper;
+import org.yiwan.webcore.test.TestCapability;
+import org.yiwan.webcore.util.PropHelper;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -27,8 +27,8 @@ import java.util.Properties;
 /**
  * @author Kenny Wang
  */
-public class WebDriverFactory {
-    private final static Logger logger = LoggerFactory.getLogger(WebDriverFactory.class);
+public class WebDriverWrapperFactory {
+    private final static Logger logger = LoggerFactory.getLogger(WebDriverWrapperFactory.class);
     private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyWrapper.getProxy());
 
     private final String os;
@@ -37,15 +37,15 @@ public class WebDriverFactory {
     private final String browser_version;
     private final String resolution;
 
-    public WebDriverFactory(TestBase testCase) {
-        this.os = testCase.getOs() == null ? System.getProperty("os") : testCase.getOs();
-        this.os_version = testCase.getOsVersion() == null ? System.getProperty("os.version") : testCase.getOsVersion();
-        this.browser = testCase.getBrowser() == null ? System.getProperty("browser", PropHelper.DEFAULT_BROWSER) : testCase.getBrowser();
-        this.browser_version = testCase.getBrowserVersion() == null ? System.getProperty("browser.version") : testCase.getBrowserVersion();
-        this.resolution = testCase.getResolution() == null ? System.getProperty("resolution") : testCase.getResolution();
+    public WebDriverWrapperFactory(TestCapability testCapability) {
+        this.os = testCapability.getOs() == null ? System.getProperty("os") : testCapability.getOs();
+        this.os_version = testCapability.getOsVersion() == null ? System.getProperty("os.version") : testCapability.getOsVersion();
+        this.browser = testCapability.getBrowser() == null ? System.getProperty("browser", PropHelper.DEFAULT_BROWSER) : testCapability.getBrowser();
+        this.browser_version = testCapability.getBrowserVersion() == null ? System.getProperty("browser.version") : testCapability.getBrowserVersion();
+        this.resolution = testCapability.getResolution() == null ? System.getProperty("resolution") : testCapability.getResolution();
     }
 
-    public WebDriver createWebDriver() throws MalformedURLException {
+    public WebDriverWrapper create() throws MalformedURLException {
         WebDriver driver = null;
         if (PropHelper.REMOTE) {
             logger.debug("choose remote test mode");
@@ -57,9 +57,9 @@ public class WebDriverFactory {
         if (PropHelper.MAXIMIZE_BROWSER) {
             driver.manage().window().maximize();
         }
-        // use explicit wait to replace implicitly wait
-        // driver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL,TimeUnit.SECONDS);
-        return driver;
+//        use explicit wait to replace implicitly wait
+//        driver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
+        return new WebDriverWrapper(driver);
     }
 
     private WebDriver setupRemoteBrowser() throws MalformedURLException {

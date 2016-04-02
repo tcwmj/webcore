@@ -12,7 +12,7 @@ import org.yiwan.webcore.pojo.HttpRequestDetail;
 import org.yiwan.webcore.pojo.HttpResponseDetail;
 import org.yiwan.webcore.pojo.TransactionDetail;
 import org.yiwan.webcore.pojo.UserTransactionDetail;
-import org.yiwan.webcore.test.ITestBase;
+import org.yiwan.webcore.test.TestBase;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class TimestampObserver extends SampleObserver {
     }
 
     @Override
-    public void start(ITestBase testCase) {
+    public void start(TestBase testCase) {
         super.start(testCase);
         userTransactionDetail = new UserTransactionDetail();
         userTransactionDetail.setUserActionTimestamp(System.currentTimeMillis());
@@ -39,18 +39,15 @@ public class TimestampObserver extends SampleObserver {
     }
 
     @Override
-    public void stop(ITestBase testCase) {
+    public void stop(TestBase testCase) {
         super.stop(testCase);
         userTransactionDetail.setDocumentReadyTimestamp(System.currentTimeMillis());
-        if (testCase.isRecordTransactionTimestamp()) {
-            testCase.setRecordTransactionTimestamp(false);
-            //TODO write userTransactionDetail into database
-//            try {
-//                Class.forName("").newInstance();
-//            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-//                logger.error(e.getMessage(), e);
-//            }
-        }
+        //TODO write userTransactionDetail into database
+//        try {
+//            Class.forName("").newInstance();
+//        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+//            logger.error(e.getMessage(), e);
+//        }
     }
 
     private void supprotRecordTimestamp() {

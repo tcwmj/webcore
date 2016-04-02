@@ -2,9 +2,6 @@ package org.yiwan.webcore.test;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.Augmenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
@@ -13,7 +10,8 @@ import org.yiwan.webcore.proxy.*;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.IPageManager;
-import org.yiwan.webcore.web.WebDriverFactory;
+import org.yiwan.webcore.web.WebDriverWrapper;
+import org.yiwan.webcore.web.WebDriverWrapperFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -24,50 +22,34 @@ import java.util.HashMap;
 /**
  * Created by Kenny Wang on 3/14/2016.
  */
-public abstract class TestBase implements ITestBase {
+public class TestBase {
     public final HashMap<String, String> testMap = new HashMap<String, String>();
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    /**
-     * whether to skip next execution of left test methods
-     */
-    protected boolean skipTest = false;
+    protected boolean skipTest = false;//whether to skip next execution of left test methods
     private Subject subject;
-    private ProxyWrapper proxyWrapper;
-    private WebDriver driver;
-    private boolean prepareToDownload = false;
-    private boolean recordTransactionTimestamp = false;
-    private boolean recordHttpArchive = false;
+    private WebDriverWrapper webDriverWrapper;
     private ITestDataManager testDataManager;
     private IPageManager pageManager;
+    private ProxyWrapper proxyWrapper;
+    private TestCapability testCapability = new TestCapability();
+    private boolean prepareToDownload = false;
     private String scenarioId;
     private String featureId;
     private TestEnvironment testEnvironment;
     private boolean recycleTestEnvironment = false;
-    private String os;
-    private String osVersion;
-    private String browser;
-    private String browserVersion;
-    private String resolution;
-    /**
-     * last download file name by relative path
-     */
-    private String downloadFile;
-    /**
-     * default name of download file
-     */
-    private String defaultDownloadFileName;
-    /**
-     * unique http archive file name
-     */
-    private String initialPageRef;
-    /**
-     * testng test suite name
-     */
-    private String suiteName;
-    /**
-     * testng test name
-     */
-    private String testName;
+    private String downloadFile;//last download file name by relative path
+    private String defaultDownloadFileName;//default name of download file
+    private String transactionName;//unique http archive file name
+    private String suiteName;//testng test suite name
+    private String testName;//testng test name
+
+    public TestCapability getTestCapability() {
+        return testCapability;
+    }
+
+    public WebDriverWrapper getWebDriverWrapper() {
+        return webDriverWrapper;
+    }
 
     public IPageManager getPageManager() {
         return pageManager;
@@ -93,60 +75,16 @@ public abstract class TestBase implements ITestBase {
         this.testName = testName;
     }
 
-    @Override
     public HashMap<String, String> getTestMap() {
         return testMap;
     }
 
-    @Override
     public TestEnvironment getTestEnvironment() {
         return testEnvironment;
     }
 
-    @Override
     public void setTestEnvironment(TestEnvironment testEnvironment) {
         this.testEnvironment = testEnvironment;
-    }
-
-    public String getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(String resolution) {
-
-        this.resolution = resolution;
-    }
-
-    public String getBrowserVersion() {
-        return browserVersion;
-    }
-
-    public void setBrowserVersion(String browserVersion) {
-        this.browserVersion = browserVersion;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public String getOsVersion() {
-        return osVersion;
-    }
-
-    public void setOsVersion(String osVersion) {
-        this.osVersion = osVersion;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
     }
 
     public boolean getSkipTest() {
@@ -157,8 +95,8 @@ public abstract class TestBase implements ITestBase {
         this.skipTest = skipTest;
     }
 
-    public void createWebDriver() throws MalformedURLException {
-        driver = new WebDriverFactory(this).createWebDriver();
+    public void createWebDriverWrapper() throws MalformedURLException {
+        webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
         proxyWrapper = new ProxyWrapper();
         subject = new TransactionSubject(this);
         if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
@@ -172,51 +110,18 @@ public abstract class TestBase implements ITestBase {
         }
     }
 
-    @Override
-    public WebDriver getWebDriver() {
-        return driver;
-    }
-
-    @Override
     public ProxyWrapper getProxyWrapper() {
         return proxyWrapper;
     }
 
-    @Override
     public boolean isPrepareToDownload() {
         return prepareToDownload;
     }
 
-    @Override
     public void setPrepareToDownload(boolean prepareToDownload) {
         this.prepareToDownload = prepareToDownload;
     }
-
-    @Override
-    public boolean isRecordHttpArchive() {
-        return recordHttpArchive;
-    }
-
-    @Override
-    public void setRecordHttpArchive(boolean recordHttpArchive) {
-        this.recordHttpArchive = recordHttpArchive;
-    }
-
-    @Override
-    public boolean isRecordTransactionTimestamp() {
-        return recordTransactionTimestamp;
-    }
-
-    @Override
-    public void setRecordTransactionTimestamp(boolean recordTransactionTimestamp) {
-        this.recordTransactionTimestamp = recordTransactionTimestamp;
-    }
-
-    @Override
-    public Subject getSubject() {
-        return subject;
-    }
-
+    
     public String getDownloadFile() {
         return downloadFile;
     }
@@ -233,20 +138,18 @@ public abstract class TestBase implements ITestBase {
         this.defaultDownloadFileName = defaultDownloadFileName;
     }
 
-    public String getInitialPageRef() {
-        return initialPageRef;
+    public String getTransactionName() {
+        return transactionName;
     }
 
-    public void setInitialPageRef(String initialPageRef) {
-        this.initialPageRef = initialPageRef;
+    public void setTransactionName(String transactionName) {
+        this.transactionName = transactionName;
     }
 
-    @Override
     public ITestDataManager getTestDataManager() {
         return testDataManager;
     }
 
-    @Override
     public void setTestDataManager(ITestDataManager testDataManager) {
         this.testDataManager = testDataManager;
     }
@@ -265,23 +168,6 @@ public abstract class TestBase implements ITestBase {
 
     public void setFeatureId(String featureId) {
         this.featureId = featureId;
-    }
-
-    /**
-     * capture screenshot for local or remote testing
-     *
-     * @return screenshot TakesScreenshot
-     */
-    protected TakesScreenshot getTakesScreenshot() {
-        TakesScreenshot ts = null;
-        if (PropHelper.REMOTE)
-            // RemoteWebDriver does not implement the TakesScreenshot class if
-            // the driver does have the Capabilities to take a screenshot then
-            // Augmenter will add the TakesScreenshot methods to the instance
-            ts = (TakesScreenshot) (new Augmenter().augment(getWebDriver()));
-        else
-            ts = (TakesScreenshot) getWebDriver();
-        return ts;
     }
 
     /**
@@ -343,7 +229,7 @@ public abstract class TestBase implements ITestBase {
 
     public void embedScreenshot() throws Exception {
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
-        File screenshot = getTakesScreenshot().getScreenshotAs(OutputType.FILE);
+        File screenshot = webDriverWrapper.getTakesScreenshot().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
         // Reporter.setCurrentTestResult(result);
         report(Helper.getTestReportStyle("../../../" + saveTo,
@@ -351,32 +237,25 @@ public abstract class TestBase implements ITestBase {
     }
 
     public void embedLog() throws Exception {
-
     }
 
     public void embedTestData(Object o) throws Exception {
-
     }
 
-    @Override
     public boolean isRecycleTestEnvironment() {
         return recycleTestEnvironment;
     }
 
-    @Override
     public void setRecycleTestEnvironment(boolean recycleTestEnvironment) {
         this.recycleTestEnvironment = recycleTestEnvironment;
     }
 
-    @Override
-    public void prepareToDownload() {
-        setPrepareToDownload(true);
+    public void startTransaction(String transactionName) {
+        this.transactionName = transactionName;
+        subject.nodifyObserversStart();
     }
 
-    @Override
-    public void setTransactionName(String transactionName) {
-        setInitialPageRef(transactionName);
-        setRecordTransactionTimestamp(true);
-        setRecordHttpArchive(true);
+    public void stopTransaction() {
+        subject.nodifyObserversStop();
     }
 }
