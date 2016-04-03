@@ -25,7 +25,6 @@
         <qdox.version>1.12.1</qdox.version>
         <poi.version>3.10-FINAL</poi.version>
         <xml.apis.version>1.4.01</xml.apis.version>
-        <jaxb2.plugin.version>0.13.1</jaxb2.plugin.version>
         <jaxb2.basics.version>0.11.0</jaxb2.basics.version>
         <build.helper.plugin.version>1.4</build.helper.plugin.version>
         <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
@@ -156,8 +155,7 @@
 
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>${jaxb2.plugin.version}</version>
+                <artifactId>maven-jaxb21-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>generate</id>
