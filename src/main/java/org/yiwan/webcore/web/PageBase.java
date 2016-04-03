@@ -12,7 +12,7 @@ import org.yiwan.webcore.util.PropHelper;
  */
 public class PageBase {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected final static LocatorBean l = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
+    private final static LocatorBean LOCATOR_BEAN = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
     private WebDriverWrapper webDriverWrapper;
 
     public PageBase(WebDriverWrapper webDriverWrapper) {
@@ -121,8 +121,20 @@ public class PageBase {
         return webDriverWrapper.actions();
     }
 
+    protected Locator locator(String id, String... replacements) throws Exception {
+        return LOCATOR_BEAN.locator(id, replacements);
+    }
+
+    protected WebDriverWrapper.WebElementWrapper element(String id, String... replacements) throws Exception {
+        return element(LOCATOR_BEAN.locator(id, replacements));
+    }
+
     protected WebDriverWrapper.WebElementWrapper element(Locator locator) {
         return webDriverWrapper.element(locator);
+    }
+
+    protected WebDriverWrapper.FluentLocatorWait waitThat(String id, String... replacements) throws Exception {
+        return waitThat(LOCATOR_BEAN.locator(id, replacements));
     }
 
     protected WebDriverWrapper.FluentLocatorWait waitThat(Locator locator) {
@@ -131,6 +143,10 @@ public class PageBase {
 
     protected WebDriverWrapper.FluentWait waitThat() {
         return webDriverWrapper.waitThat();
+    }
+
+    protected WebDriverWrapper.FluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
+        return webDriverWrapper.assertThat(LOCATOR_BEAN.locator(id, replacements));
     }
 
     protected WebDriverWrapper.FluentLocatorAssert assertThat(Locator locator) {
