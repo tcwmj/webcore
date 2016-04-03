@@ -99,14 +99,13 @@ public class PageBase {
     }
 
     /**
-     * input value in the first locator if it exists, or the second locator if the first doesn't exist
+     * input value in the first locator if it exists, otherwise input the next one
      *
-     * @param locator1
-     * @param locator2
      * @param value
+     * @param locators
      */
-    protected void smartInput(Locator locator1, Locator locator2, String value) {
-        webDriverWrapper.smartInput(locator1, locator2, value);
+    public void smartInput(String value, Locator... locators) {
+        webDriverWrapper.smartInput(value, locators);
     }
 
     protected Object executeScript(String script, Object... args) {

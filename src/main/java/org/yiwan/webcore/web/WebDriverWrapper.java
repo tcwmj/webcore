@@ -156,25 +156,23 @@ public class WebDriverWrapper {
      */
     public void smartClick(Locator... locators) {
         for (Locator locator : locators) {
-            if (element(locator).isDisplayed()) {
-                element(locator).click();
+            if (element(locator).smartClick()) {
                 break;
             }
         }
     }
 
     /**
-     * input value in the first locator if it exists, or the second locator if the first doesn't exist
+     * input value in the first locator if it exists, otherwise input the next one
      *
-     * @param locator1
-     * @param locator2
      * @param value
+     * @param locators
      */
-    public void smartInput(Locator locator1, Locator locator2, String value) {
-        if (element(locator1).isDisplayed()) {
-            element(locator1).input(value);
-        } else {
-            element(locator2).input(value);
+    public void smartInput(String value, Locator... locators) {
+        for (Locator locator : locators) {
+            if (element(locator).smartInput(value)) {
+                break;
+            }
         }
     }
 
@@ -314,11 +312,15 @@ public class WebDriverWrapper {
 
         /**
          * click an element if it's displayed, otherwise skip this action
+         *
+         * @return boolean
          */
-        public void smartClick() {
+        public boolean smartClick() {
             if (isDisplayed()) {
                 click();
+                return true;
             }
+            return false;
         }
 
         /**
@@ -383,6 +385,20 @@ public class WebDriverWrapper {
         public void input(String value) {
             clear();
             type(value);
+        }
+
+        /**
+         * input an element if it's displayed, otherwise skip this action
+         *
+         * @param value
+         * @return boolean
+         */
+        public boolean smartInput(String value) {
+            if (isDisplayed()) {
+                input(value);
+                return true;
+            }
+            return false;
         }
 
         /**
