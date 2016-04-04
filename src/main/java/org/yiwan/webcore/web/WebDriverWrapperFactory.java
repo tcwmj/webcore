@@ -18,6 +18,12 @@ import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.proxy.ProxyWrapper;
 import org.yiwan.webcore.test.TestCapability;
 import org.yiwan.webcore.util.PropHelper;
+import org.yiwan.webcore.web.chrome.ChromeDriverWrapper;
+import org.yiwan.webcore.web.dummy.DummyDriverWrapper;
+import org.yiwan.webcore.web.firefox.FirefoxDriverWrapper;
+import org.yiwan.webcore.web.htmlunit.HtmlUnitDriverWrapper;
+import org.yiwan.webcore.web.ie.InternetExplorerDriverWrapper;
+import org.yiwan.webcore.web.phantomjs.PhantomJSDriverWrapper;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -45,21 +51,42 @@ public class WebDriverWrapperFactory {
         this.resolution = testCapability.getResolution() == null ? System.getProperty("resolution") : testCapability.getResolution();
     }
 
-    public WebDriverWrapper create() throws MalformedURLException {
-        WebDriver driver = null;
-        if (PropHelper.REMOTE) {
-            logger.debug("choose remote test mode");
-            driver = setupRemoteBrowser();
+    public IWebDriverWrapper create() throws MalformedURLException {
+        if (browser != null && browser.toLowerCase().equals("dummy")) {
+            return new DummyDriverWrapper();
         } else {
-            logger.debug("choose local test mode");
-            driver = setupLocalBrowser();
-        }
-        if (PropHelper.MAXIMIZE_BROWSER) {
-            driver.manage().window().maximize();
-        }
+            WebDriver webDriver = null;
+            if (PropHelper.REMOTE) {
+                logger.debug("choose remote test mode");
+                webDriver = setupRemoteBrowser();
+            } else {
+                logger.debug("choose local test mode");
+                webDriver = setupLocalBrowser();
+            }
+            if (PropHelper.MAXIMIZE_BROWSER) {
+                webDriver.manage().window().maximize();
+            }
 //        use explicit wait to replace implicitly wait
 //        driver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
-        return new WebDriverWrapper(driver);
+            return wrapWebDriver(webDriver);
+        }
+    }
+
+    private IWebDriverWrapper wrapWebDriver(WebDriver webDriver) {
+        switch (browser.toLowerCase()) {
+            case "chrome":
+                return new ChromeDriverWrapper(webDriver);
+            case "ie":
+                return new InternetExplorerDriverWrapper(webDriver);
+            case "htmlunit":
+                return new HtmlUnitDriverWrapper(webDriver);
+            case "htmlunitjs":
+                return new HtmlUnitDriverWrapper(webDriver);
+            case "phantomjs":
+                return new PhantomJSDriverWrapper(webDriver);
+            default:
+                return new FirefoxDriverWrapper(webDriver);
+        }
     }
 
     private WebDriver setupRemoteBrowser() throws MalformedURLException {

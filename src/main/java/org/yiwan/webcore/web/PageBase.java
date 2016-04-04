@@ -11,31 +11,31 @@ import org.yiwan.webcore.util.PropHelper;
  * Created by Kenny Wang on 4/2/2016.
  */
 public class PageBase {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final static LocatorBean LOCATOR_BEAN = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
-    private WebDriverWrapper webDriverWrapper;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private IWebDriverWrapper webDriverWrapper;
 
-    public PageBase(WebDriverWrapper webDriverWrapper) {
+    public PageBase(IWebDriverWrapper webDriverWrapper) {
         this.webDriverWrapper = webDriverWrapper;
     }
 
-    public WebDriverWrapper getWebDriverWrapper() {
+    public IWebDriverWrapper getWebDriverWrapper() {
         return webDriverWrapper;
     }
 
-    public void browse(String url) {
-        webDriverWrapper.browse(url);
+    public IWebDriverWrapper browse(String url) {
+        return webDriverWrapper.browse(url);
     }
 
-    public void forward() {
-        webDriverWrapper.forward();
+    public IWebDriverWrapper forward() {
+        return webDriverWrapper.forward();
     }
 
     /**
      * navigate back
      */
-    public void backward() {
-        webDriverWrapper.backward();
+    public IWebDriverWrapper backward() {
+        return webDriverWrapper.backward();
     }
 
     /**
@@ -71,15 +71,24 @@ public class PageBase {
      *
      * @param nameOrHandle
      */
-    protected void switchToWindow(String nameOrHandle) {
-        webDriverWrapper.switchToWindow(nameOrHandle);
+    protected IWebDriverWrapper switchToWindow(String nameOrHandle) {
+        return webDriverWrapper.switchToWindow(nameOrHandle);
     }
 
     /**
      * Switch to default content from a frame
      */
-    protected void switchToDefaultWindow() {
-        webDriverWrapper.switchToDefaultWindow();
+    protected IWebDriverWrapper switchToDefaultWindow() {
+        return webDriverWrapper.switchToDefaultWindow();
+    }
+
+
+    protected IWebDriverWrapper switchToFrame(int index) {
+        return webDriverWrapper.switchToFrame(index);
+    }
+
+    protected IWebDriverWrapper switchToFrame(String nameOrId) {
+        return webDriverWrapper.switchToFrame(nameOrId);
     }
 
     /**
@@ -94,8 +103,8 @@ public class PageBase {
     /**
      * click element if it's displayed, otherwise click the next one
      */
-    protected void smartClick(Locator... locators) {
-        webDriverWrapper.smartClick(locators);
+    protected IWebDriverWrapper smartClick(Locator... locators) {
+        return webDriverWrapper.smartClick(locators);
     }
 
     /**
@@ -104,8 +113,8 @@ public class PageBase {
      * @param value
      * @param locators
      */
-    public void smartInput(String value, Locator... locators) {
-        webDriverWrapper.smartInput(value, locators);
+    public IWebDriverWrapper smartInput(String value, Locator... locators) {
+        return webDriverWrapper.smartInput(value, locators);
     }
 
     protected Object executeScript(String script, Object... args) {
@@ -116,7 +125,7 @@ public class PageBase {
         return webDriverWrapper.executeAsyncScript(script, args);
     }
 
-    protected WebDriverWrapper.ActionsWrapper actions() {
+    protected IActionsWrapper actions() {
         return webDriverWrapper.actions();
     }
 
@@ -124,39 +133,39 @@ public class PageBase {
         return LOCATOR_BEAN.locator(id, replacements);
     }
 
-    protected WebDriverWrapper.WebElementWrapper element(String id, String... replacements) throws Exception {
+    protected IWebElementWrapper element(String id, String... replacements) throws Exception {
         return element(LOCATOR_BEAN.locator(id, replacements));
     }
 
-    protected WebDriverWrapper.WebElementWrapper element(Locator locator) {
+    protected IWebElementWrapper element(Locator locator) {
         return webDriverWrapper.element(locator);
     }
 
-    protected WebDriverWrapper.FluentLocatorWait waitThat(String id, String... replacements) throws Exception {
+    protected IFluentLocatorWait waitThat(String id, String... replacements) throws Exception {
         return waitThat(LOCATOR_BEAN.locator(id, replacements));
     }
 
-    protected WebDriverWrapper.FluentLocatorWait waitThat(Locator locator) {
+    protected IFluentLocatorWait waitThat(Locator locator) {
         return webDriverWrapper.waitThat(locator);
     }
 
-    protected WebDriverWrapper.FluentWait waitThat() {
+    protected IFluentWait waitThat() {
         return webDriverWrapper.waitThat();
     }
 
-    protected WebDriverWrapper.FluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
+    protected IFluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
         return webDriverWrapper.assertThat(LOCATOR_BEAN.locator(id, replacements));
     }
 
-    protected WebDriverWrapper.FluentLocatorAssert assertThat(Locator locator) {
+    protected IFluentLocatorAssert assertThat(Locator locator) {
         return webDriverWrapper.assertThat(locator);
     }
 
-    protected WebDriverWrapper.FluentAssert assertThat() {
+    protected IFluentAssert assertThat() {
         return webDriverWrapper.assertThat();
     }
 
-    protected WebDriverWrapper.AlertWrapper alert() {
+    protected IAlertWrapper alert() {
         return webDriverWrapper.alert();
     }
 }

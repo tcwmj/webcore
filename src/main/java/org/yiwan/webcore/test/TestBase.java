@@ -10,7 +10,7 @@ import org.yiwan.webcore.proxy.*;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.IPageManager;
-import org.yiwan.webcore.web.WebDriverWrapper;
+import org.yiwan.webcore.web.IWebDriverWrapper;
 import org.yiwan.webcore.web.WebDriverWrapperFactory;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class TestBase {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected boolean skipTest = false;//whether to skip next execution of left test methods
     private Subject subject;
-    private WebDriverWrapper webDriverWrapper;
+    private IWebDriverWrapper webDriverWrapper;
     private ITestDataManager testDataManager;
     private IPageManager pageManager;
     private ProxyWrapper proxyWrapper;
@@ -47,7 +47,7 @@ public class TestBase {
         return testCapability;
     }
 
-    public WebDriverWrapper getWebDriverWrapper() {
+    public IWebDriverWrapper getWebDriverWrapper() {
         return webDriverWrapper;
     }
 
