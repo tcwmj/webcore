@@ -229,7 +229,7 @@ public class TestBase {
 
     public void embedScreenshot() throws Exception {
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
-        File screenshot = webDriverWrapper.getTakesScreenshot().getScreenshotAs(OutputType.FILE);
+        File screenshot = webDriverWrapper.getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
         // Reporter.setCurrentTestResult(result);
         report(Helper.getTestReportStyle("../../../" + saveTo,

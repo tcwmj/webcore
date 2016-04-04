@@ -3,7 +3,7 @@ package org.yiwan.webcore.web.dummy;
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractListAssert;
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.yiwan.webcore.locator.Locator;
@@ -107,7 +107,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public TakesScreenshot getTakesScreenshot() {
+    public <X> X getScreenshotAs(OutputType<X> target) {
         return null;
     }
 

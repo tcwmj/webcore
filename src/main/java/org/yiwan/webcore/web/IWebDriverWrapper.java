@@ -1,6 +1,6 @@
 package org.yiwan.webcore.web;
 
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.OutputType;
 import org.yiwan.webcore.locator.Locator;
 
 import java.awt.*;
@@ -45,7 +45,7 @@ public interface IWebDriverWrapper {
 
     IWebDriverWrapper smartInput(String value, Locator... locators);
 
-    TakesScreenshot getTakesScreenshot();
+    <X> X getScreenshotAs(OutputType<X> target);
 
     IWebDriverWrapper typeKeyEvent(int key) throws AWTException;
 
