@@ -81,7 +81,7 @@ public interface IWebElementWrapper {
 
     String getSelectedText();
 
-    List<String> getAllSelectedText();
+    List<String> getAllSelectedTexts();
 
     IWebElementWrapper triggerEvent(String event);
 

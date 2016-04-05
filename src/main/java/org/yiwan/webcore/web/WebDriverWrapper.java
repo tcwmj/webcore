@@ -827,7 +827,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
          * @return List&gt;String&lt;
          */
         @Override
-        public List<String> getAllSelectedText() {
+        public List<String> getAllSelectedTexts() {
             List<String> list = new ArrayList<String>();
             List<WebElement> options = getAllSelectedOptions();
             for (WebElement option : options) {
@@ -1068,8 +1068,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedText() {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedText()).as("assert %s has selected texts", locator);
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
+            return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s has selected texts", locator);
         }
 
         @Override

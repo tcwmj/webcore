@@ -12,7 +12,7 @@ import java.util.List;
 public interface IFluentLocatorAssert {
     AbstractBooleanAssert<?> hasSelectableText(String text);
 
-    AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedText();
+    AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts();
 
     AbstractBooleanAssert<?> isEnabled();
 

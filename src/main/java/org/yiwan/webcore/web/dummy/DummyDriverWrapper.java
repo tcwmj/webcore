@@ -169,7 +169,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedText() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
             return null;
         }
 
@@ -483,7 +483,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public List<String> getAllSelectedText() {
+        public List<String> getAllSelectedTexts() {
             return null;
         }
 
