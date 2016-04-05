@@ -240,7 +240,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     public class FluentLocatorWait implements IFluentLocatorWait {
 
         @Override
-        public Boolean hasInnertext(String text) {
+        public Boolean hasInnerText(String text) {
             return null;
         }
 

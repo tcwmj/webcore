@@ -1169,7 +1169,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public Boolean hasInnertext(String text) {
+        public Boolean hasInnerText(String text) {
             return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator.by(), text));
         }
 
