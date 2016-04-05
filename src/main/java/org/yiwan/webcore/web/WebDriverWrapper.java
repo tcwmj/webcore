@@ -1068,7 +1068,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> selectedTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedText() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedText()).as("assert %s has selected texts", locator);
         }
 
@@ -1169,7 +1169,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public Boolean hasInnerText(String text) {
+        public Boolean hasInnertext(String text) {
             return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator.by(), text));
         }
 

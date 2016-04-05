@@ -169,7 +169,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> selectedTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedText() {
             return null;
         }
 
@@ -240,7 +240,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     public class FluentLocatorWait implements IFluentLocatorWait {
 
         @Override
-        public Boolean hasInnerText(String text) {
+        public Boolean hasInnertext(String text) {
             return null;
         }
 
