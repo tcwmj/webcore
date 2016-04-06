@@ -52,7 +52,7 @@ public class WebDriverWrapperFactory {
     }
 
     public IWebDriverWrapper create() throws MalformedURLException {
-        if (browser != null && browser.toLowerCase().equals("dummy")) {
+        if (PropHelper.DUMMY_TEST) {
             return new DummyDriverWrapper();
         } else {
             WebDriver webDriver = null;

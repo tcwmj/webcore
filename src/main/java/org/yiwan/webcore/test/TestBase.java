@@ -102,6 +102,9 @@ public class TestBase {
         if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
             subject.attach(new TimestampObserver(proxyWrapper));
         }
+        if (PropHelper.ENABLE_CAPTURE_TRANSACTION_SCREENSHOT) {
+            subject.attach(new ScreenshotObserver(proxyWrapper));
+        }
         if (PropHelper.ENABLE_HAR) {
             subject.attach(new HttpArchiveObserver(proxyWrapper));
         }
@@ -121,7 +124,7 @@ public class TestBase {
     public void setPrepareToDownload(boolean prepareToDownload) {
         this.prepareToDownload = prepareToDownload;
     }
-    
+
     public String getDownloadFile() {
         return downloadFile;
     }

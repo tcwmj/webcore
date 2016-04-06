@@ -35,6 +35,7 @@ public class PropHelper {
     public static final String SCREENSHOT_FOLDER = getProperty("path.screenshot.folder");
     public static final String LOG_FOLDER = getProperty("path.log.folder");
     public static final String HAR_FOLDER = getProperty("path.har.folder");
+    public static final boolean DUMMY_TEST = Boolean.parseBoolean(getProperty("dummy.test"));
     // from biz conf
     public static final int TIMEOUT_DIALOG_APPEAR = Integer.parseInt(getProperty("timeout.dialog.appear"));
     public static final int TIMEOUT_DIALOG_DISAPPEAR = Integer.parseInt(getProperty("timeout.dialog.disappear"));
@@ -78,6 +79,7 @@ public class PropHelper {
     public static final boolean ENABLE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
     public static final boolean ENABLE_HAR = Boolean.parseBoolean(getProperty("har.enable"));
     public static final boolean ENABLE_RECORD_TRANSACTION_TIMESTAMP = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
+    public static final boolean ENABLE_CAPTURE_TRANSACTION_SCREENSHOT = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
 
     /**
      * load properties from external file
