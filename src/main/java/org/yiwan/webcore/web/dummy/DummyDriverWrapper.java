@@ -17,18 +17,23 @@ import java.util.List;
  */
 public class DummyDriverWrapper implements IWebDriverWrapper {
     @Override
-    public IWebDriverWrapper browse(String url) {
-        return this;
-    }
+    public IBrowseNavigation navigate() {
+        return new IBrowseNavigation() {
+            @Override
+            public IBrowseNavigation to(String url) {
+                return null;
+            }
 
-    @Override
-    public IWebDriverWrapper forward() {
-        return this;
-    }
+            @Override
+            public IBrowseNavigation forward() {
+                return null;
+            }
 
-    @Override
-    public IWebDriverWrapper backward() {
-        return this;
+            @Override
+            public IBrowseNavigation backward() {
+                return null;
+            }
+        };
     }
 
     @Override

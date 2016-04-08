@@ -33,30 +33,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IWebDriverWrapper browse(String url) {
-        logger.debug("try to navigate to url {}", url);
-        driver.navigate().to(url);
-        waitThat().documentComplete();
-        return this;
-    }
-
-    @Override
-    public IWebDriverWrapper forward() {
-        logger.debug("try to navigate forward");
-        driver.navigate().forward();
-        waitThat().documentComplete();
-        return this;
-    }
-
-    /**
-     * navigate back
-     */
-    @Override
-    public IWebDriverWrapper backward() {
-        logger.debug("try to navigate back");
-        driver.navigate().back();
-        waitThat().documentComplete();
-        return this;
+    public IBrowseNavigation navigate() {
+        return new BrowseNavigation();
     }
 
     /**
@@ -292,6 +270,32 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public IAlertWrapper alert() {
         return new AlertWrapper();
+    }
+
+    public class BrowseNavigation implements IBrowseNavigation {
+        @Override
+        public IBrowseNavigation to(String url) {
+            logger.debug("try to navigate to url {}", url);
+            driver.navigate().to(url);
+            waitThat().documentComplete();
+            return this;
+        }
+
+        @Override
+        public IBrowseNavigation forward() {
+            logger.debug("try to navigate forward");
+            driver.navigate().forward();
+            waitThat().documentComplete();
+            return this;
+        }
+
+        @Override
+        public IBrowseNavigation backward() {
+            logger.debug("try to navigate back");
+            driver.navigate().back();
+            waitThat().documentComplete();
+            return this;
+        }
     }
 
     public class ActionsWrapper implements IActionsWrapper {

@@ -9,11 +9,7 @@ import java.awt.*;
  * Created by Kenny Wang on 4/4/2016.
  */
 public interface IWebDriverWrapper {
-    IWebDriverWrapper browse(String url);
-
-    IWebDriverWrapper forward();
-
-    IWebDriverWrapper backward();
+    IBrowseNavigation navigate();
 
     IWebDriverWrapper maximize();
 

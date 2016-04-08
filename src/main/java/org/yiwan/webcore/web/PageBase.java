@@ -23,19 +23,8 @@ public class PageBase {
         return webDriverWrapper;
     }
 
-    public IWebDriverWrapper browse(String url) {
-        return webDriverWrapper.browse(url);
-    }
-
-    public IWebDriverWrapper forward() {
-        return webDriverWrapper.forward();
-    }
-
-    /**
-     * navigate back
-     */
-    public IWebDriverWrapper backward() {
-        return webDriverWrapper.backward();
+    public IBrowseNavigation navigate() {
+        return webDriverWrapper.navigate();
     }
 
     /**
