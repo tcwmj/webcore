@@ -20,14 +20,12 @@ public class ProxyWrapper {
             proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
             proxy.start(0);
 
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                public void run() {
-                    if (proxy.isStarted()) {
-                        logger.debug("gracefully shutting down proxy");
-                        proxy.stop();
-                    }
-                }
-            });
+//            shutdown hook was added inside the proxy
+//            Runtime.getRuntime().addShutdownHook(new Thread() {
+//                public void run() {
+//                    proxy.stop();
+//                }
+//            });
         }
     }
 
