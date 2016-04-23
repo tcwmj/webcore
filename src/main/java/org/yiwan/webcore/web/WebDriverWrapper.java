@@ -477,43 +477,44 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             /**
-             * tick web check box if it's visible
+             * check web check box on or off if it's visible
              *
-             * @param value true indicate tick on, false indicate tick off
+             * @param checked on or off
              */
             @Override
-            public IWebElementWrapper tick(boolean value) {
-                logger.debug("try to tick {} on {}", value, locator);
-                if (isTicked() != value) {
+            public IWebElementWrapper check(boolean checked) {
+                logger.debug("try to check {} {}", checked ? "on" : "off", locator);
+                if (isChecked() != checked) {
                     click();
                 }
                 return this;
             }
 
             /**
-             * web check box ticked or not
+             * web check box checked or not
              *
-             * @return ticked or not
+             * @return checked or not
              */
             @Override
-            public boolean isTicked() {
-                String checked = getAttribute("checked");
-                if (checked == null || !checked.toLowerCase().equals("true")) {
-                    return false;
-                } else {
-                    return true;
-                }
+            public boolean isChecked() {
+//                String checked = getAttribute("checked");
+//                if (checked == null || !checked.toLowerCase().equals("true")) {
+//                    return false;
+//                } else {
+//                    return true;
+//                }
+                return isSelected();
             }
 
             /**
-             * using java script to tick web check box
+             * using java script to check web check box on or off
              *
-             * @param value true indicate tick on, false indicate tick off
+             * @param checked on or off
              */
             @Override
-            public IWebElementWrapper alteredTick(boolean value) {
-                logger.debug("try tick {} on {} alternately", value, locator);
-                if (value) {
+            public IWebElementWrapper jsCheck(boolean checked) {
+                logger.debug("try to check {} {} by javascript", checked ? "on" : "off", locator);
+                if (checked) {
                     setAttribute("checked", "checked");
                 } else {
                     removeAttribute("checked");

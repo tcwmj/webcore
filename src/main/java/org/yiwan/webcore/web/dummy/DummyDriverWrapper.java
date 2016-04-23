@@ -248,17 +248,18 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper tick(boolean value) {
+            public IWebElementWrapper check(boolean checked) {
                 return null;
             }
 
+
             @Override
-            public boolean isTicked() {
+            public boolean isChecked() {
                 return false;
             }
 
             @Override
-            public IWebElementWrapper alteredTick(boolean value) {
+            public IWebElementWrapper jsCheck(boolean checked) {
                 return null;
             }
 

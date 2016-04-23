@@ -33,11 +33,11 @@ public interface IWebElementWrapper {
 
     IWebElementWrapper ajaxInput(String value, Locator ajaxLocator);
 
-    IWebElementWrapper tick(boolean value);
+    IWebElementWrapper check(boolean checked);
 
-    boolean isTicked();
+    IWebElementWrapper jsCheck(boolean checked);
 
-    IWebElementWrapper alteredTick(boolean value);
+    boolean isChecked();
 
     IWebElementWrapper selectByVisibleText(String text);
 
