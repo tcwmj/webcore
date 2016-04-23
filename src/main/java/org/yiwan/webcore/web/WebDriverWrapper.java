@@ -4,6 +4,7 @@ import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
@@ -962,7 +963,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                     @Override
                     public Boolean toBeEmpty() {
-                        return null;
+                        return toBe("");
                     }
 
                     @Override
@@ -992,7 +993,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                     @Override
                     public Boolean matches(Pattern pattern) {
-                        return null;
+                        return wait.until(ExpectedConditions.textMatches(locator.by(), pattern));
                     }
                 };
             }
@@ -1000,6 +1001,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public Boolean toBeInvisible() {
                 return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator.by()));
+            }
+
+            @Override
+            public Boolean toBeAllInvisible() {
+                return null;
             }
 
             @Override
@@ -1028,8 +1034,18 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public Boolean toBeAllAbsent() {
+                return null;
+            }
+
+            @Override
             public Boolean toBeSelected() {
                 return wait.until(ExpectedConditions.elementToBeSelected(locator.by()));
+            }
+
+            @Override
+            public Boolean toBeNotSelected() {
+                return null;
             }
 
             /**
@@ -1074,6 +1090,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public WebElement toBeVisible() {
                 return wait.until(ExpectedConditions.visibilityOfElementLocated(locator.by()));
+            }
+
+            @Override
+            public List<WebElement> toBeAllVisible() {
+                return null;
             }
 
             @Override
@@ -1192,6 +1213,16 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
                 };
             }
+
+            @Override
+            public IFluentNumberWait numberOfElements() {
+                return null;
+            }
+
+            @Override
+            public IFluentLocatorWait nestedElements(Locator locator) {
+                return null;
+            }
         };
     }
 
@@ -1225,33 +1256,156 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IFluentStringWait pageTitle() {
+                return new IFluentStringWait() {
+
+                    @Override
+                    public Boolean toBe(String text) {
+                        return wait.until(ExpectedConditions.titleIs(text));
+                    }
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return wait.until(ExpectedConditions.titleContains(text));
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean startWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean endWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return null;
+                    }
+                };
+            }
+
+            @Override
+            public IFluentStringWait pageSource() {
+                return new IFluentStringWait() {
+
+                    @Override
+                    public Boolean toBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean contains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                                return isPageSourceContains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source contains %s", text);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean startWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean endWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return null;
+                    }
+                };
+            }
+
+            @Override
+            public IFluentStringWait url() {
+                return new IFluentStringWait() {
+
+                    @Override
+                    public Boolean toBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean startWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean endWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return null;
+                    }
+                };
+            }
+
+            @Override
             public IAlertWrapper alertIsPresent() {
                 return new AlertWrapper(wait.until(ExpectedConditions.alertIsPresent()));
-            }
-
-            @Override
-            public Boolean pageTitleIs(String title) {
-                return wait.until(ExpectedConditions.titleIs(title));
-            }
-
-            @Override
-            public Boolean pageTitleContains(String title) {
-                return wait.until(ExpectedConditions.titleContains(title));
-            }
-
-            @Override
-            public Boolean pageSourceContains(final String text) {
-                return wait.until(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                        return isPageSourceContains(text);
-                    }
-
-                    @Override
-                    public String toString() {
-                        return String.format("wait page source contains %s", text);
-                    }
-                });
             }
         };
     }
@@ -1270,17 +1424,27 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public AbstractBooleanAssert<?> isEnabled() {
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
+                return null;
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> present() {
+                return null;
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> enabled() {
                 return org.assertj.core.api.Assertions.assertThat(element(locator).isEnabled()).as("assert %s is enabled", locator);
             }
 
             @Override
-            public AbstractBooleanAssert<?> isDisplayed() {
+            public AbstractBooleanAssert<?> displayed() {
                 return org.assertj.core.api.Assertions.assertThat(element(locator).isDisplayed()).as("assert %s is displayed", locator);
             }
 
             @Override
-            public AbstractBooleanAssert<?> isSelected() {
+            public AbstractBooleanAssert<?> selected() {
                 return org.assertj.core.api.Assertions.assertThat(element(locator).isSelected()).as("assert %s is selected", locator);
             }
 
@@ -1298,6 +1462,16 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
                 return org.assertj.core.api.Assertions.assertThat(element(locator).getCssValue(cssAttribute)).as("assert %s css %s", locator, cssAttribute);
             }
+
+            @Override
+            public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
+                return null;
+            }
+
+            @Override
+            public IFluentLocatorAssert nestedElements(Locator locator) {
+                return null;
+            }
         };
     }
 
@@ -1305,7 +1479,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public IFluentAssert assertThat() {
         return new IFluentAssert() {
             @Override
-            public AbstractBooleanAssert<?> alertExists() {
+            public AbstractBooleanAssert<?> alertIsPresent() {
                 return org.assertj.core.api.Assertions.assertThat(alert().exists()).as("assert alert exists");
             }
 
@@ -1322,6 +1496,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public AbstractCharSequenceAssert<?, String> pageSource() {
                 return org.assertj.core.api.Assertions.assertThat(getPageSource()).as("assert page source");
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> url() {
+                return org.assertj.core.api.Assertions.assertThat(getCurrentUrl()).as("assert current url");
             }
         };
     }

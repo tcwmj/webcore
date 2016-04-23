@@ -1,6 +1,7 @@
 package org.yiwan.webcore.web;
 
 import org.openqa.selenium.WebElement;
+import org.yiwan.webcore.locator.Locator;
 
 import java.util.List;
 
@@ -20,11 +21,19 @@ public interface IFluentLocatorWait {
 
     WebElement toBeVisible();
 
+    List<WebElement> toBeAllVisible();
+
     Boolean toBeAbsent();
+
+    Boolean toBeAllAbsent();
 
     Boolean toBeInvisible();
 
+    Boolean toBeAllInvisible();
+
     Boolean toBeSelected();
+
+    Boolean toBeNotSelected();
 
     IWebDriverWrapper frameToBeAvailableAndSwitchToIt();
 
@@ -33,4 +42,8 @@ public interface IFluentLocatorWait {
     IFluentStringWait attributeValueOf(String attribute);
 
     IFluentStringWait cssValueOf(String cssAttribute);
+
+    IFluentNumberWait numberOfElements();
+
+    IFluentLocatorWait nestedElements(Locator locator);
 }

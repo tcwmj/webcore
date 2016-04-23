@@ -2,6 +2,7 @@ package org.yiwan.webcore.web.dummy;
 
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
@@ -448,7 +449,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public Boolean toBeAllInvisible() {
+                return null;
+            }
+
+            @Override
             public Boolean toBeSelected() {
+                return null;
+            }
+
+            @Override
+            public Boolean toBeNotSelected() {
                 return null;
             }
 
@@ -464,6 +475,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public Boolean toBeAbsent() {
+                return null;
+            }
+
+            @Override
+            public Boolean toBeAllAbsent() {
                 return null;
             }
 
@@ -488,6 +504,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public List<WebElement> toBeAllVisible() {
+                return null;
+            }
+
+            @Override
             public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
                 return null;
             }
@@ -499,6 +520,16 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IFluentStringWait cssValueOf(String cssAttribute) {
+                return null;
+            }
+
+            @Override
+            public IFluentNumberWait numberOfElements() {
+                return null;
+            }
+
+            @Override
+            public IFluentLocatorWait nestedElements(Locator locator) {
                 return null;
             }
         };
@@ -524,17 +555,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public Boolean pageTitleIs(String title) {
+            public IFluentStringWait pageTitle() {
                 return null;
             }
 
             @Override
-            public Boolean pageTitleContains(String title) {
+            public IFluentStringWait pageSource() {
                 return null;
             }
 
             @Override
-            public Boolean pageSourceContains(String text) {
+            public IFluentStringWait url() {
                 return null;
             }
         };
@@ -555,17 +586,27 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public AbstractBooleanAssert<?> isEnabled() {
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
                 return null;
             }
 
             @Override
-            public AbstractBooleanAssert<?> isDisplayed() {
+            public AbstractBooleanAssert<?> present() {
                 return null;
             }
 
             @Override
-            public AbstractBooleanAssert<?> isSelected() {
+            public AbstractBooleanAssert<?> enabled() {
+                return null;
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> displayed() {
+                return null;
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> selected() {
                 return null;
             }
 
@@ -583,6 +624,16 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
                 return null;
             }
+
+            @Override
+            public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
+                return null;
+            }
+
+            @Override
+            public IFluentLocatorAssert nestedElements(Locator locator) {
+                return null;
+            }
         };
     }
 
@@ -591,7 +642,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         return new IFluentAssert() {
 
             @Override
-            public AbstractBooleanAssert<?> alertExists() {
+            public AbstractBooleanAssert<?> alertIsPresent() {
                 return null;
             }
 
@@ -607,6 +658,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public AbstractCharSequenceAssert<?, String> pageSource() {
+                return null;
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> url() {
                 return null;
             }
 

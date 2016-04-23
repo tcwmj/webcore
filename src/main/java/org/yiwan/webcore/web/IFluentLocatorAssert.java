@@ -2,7 +2,9 @@ package org.yiwan.webcore.web;
 
 import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
+import org.yiwan.webcore.locator.Locator;
 
 import java.util.List;
 
@@ -14,15 +16,23 @@ public interface IFluentLocatorAssert {
 
     AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts();
 
-    AbstractBooleanAssert<?> isEnabled();
+    AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts();
 
-    AbstractBooleanAssert<?> isDisplayed();
+    AbstractBooleanAssert<?> present();
 
-    AbstractBooleanAssert<?> isSelected();
+    AbstractBooleanAssert<?> enabled();
+
+    AbstractBooleanAssert<?> displayed();
+
+    AbstractBooleanAssert<?> selected();
 
     AbstractCharSequenceAssert<?, String> innerText();
 
     AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute);
 
     AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute);
+
+    AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements();
+
+    IFluentLocatorAssert nestedElements(Locator locator);
 }
