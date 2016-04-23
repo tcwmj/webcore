@@ -19,6 +19,7 @@ import org.yiwan.webcore.util.PropHelper;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class WebDriverWrapper implements IWebDriverWrapper {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,7 +35,31 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IBrowseNavigation navigate() {
-        return new BrowseNavigation();
+        return new IBrowseNavigation() {
+            @Override
+            public IBrowseNavigation to(String url) {
+                logger.debug("try to navigate to url {}", url);
+                driver.navigate().to(url);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            @Override
+            public IBrowseNavigation forward() {
+                logger.debug("try to navigate forward");
+                driver.navigate().forward();
+                waitThat().documentComplete();
+                return this;
+            }
+
+            @Override
+            public IBrowseNavigation backward() {
+                logger.debug("try to navigate back");
+                driver.navigate().back();
+                waitThat().documentComplete();
+                return this;
+            }
+        };
     }
 
     /**
@@ -229,7 +254,63 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IActionsWrapper actions() {
-        return new ActionsWrapper();
+        return new IActionsWrapper() {
+            private Actions actions = new Actions(driver);
+
+            @Override
+            public IActionsWrapper click() {
+                actions.click();
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper click(Locator locator) {
+                actions.click(waitThat(locator).toBeClickable());
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper doubleClick(Locator locator) {
+                actions.doubleClick(waitThat(locator).toBeClickable());
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper sendKeys(Locator locator, CharSequence... keysToSend) {
+                actions.sendKeys(waitThat(locator).toBeVisible(), keysToSend);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper sendKeys(CharSequence... keysToSend) {
+                actions.sendKeys(keysToSend);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper moveToElement(Locator locator) {
+                actions.moveToElement(waitThat(locator).toBeVisible());
+                return this;
+            }
+
+            @Override
+            public Action build() {
+                final Action action = actions.build();
+                return new Action() {
+                    @Override
+                    public void perform() {
+                        action.perform();
+                        waitThat().documentComplete();
+                    }
+                };
+            }
+
+            @Override
+            public void perform() {
+                actions.perform();
+                waitThat().documentComplete();
+            }
+        };
     }
 
     @Override
@@ -243,28 +324,1006 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IWebElementWrapper element(Locator locator) {
-        return new WebElementWrapper(locator);
+    public IWebElementWrapper element(final Locator locator) {
+        return new IWebElementWrapper() {
+            /**
+             * click web element if it's clickable, please use this click method as default
+             */
+            @Override
+            public IWebElementWrapper click() {
+                logger.debug("try to click {}", locator);
+                waitThat(locator).toBeClickable().click();
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * click element without considering anything, it may raise unexpected exception
+             */
+            @Override
+            public IWebElementWrapper silentClick() {
+                logger.debug("try to click {} silently", locator);
+                driver.findElement(locator.by()).click();
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * forced to click element even if it's not clickable, it may raise unexpected exception, please use method click as default
+             */
+            @Override
+            public IWebElementWrapper forcedClick() {
+                try {
+                    return click();
+                } catch (WebDriverException e) {
+                    return silentClick();
+                }
+            }
+
+            /**
+             * click an element if it's displayed, otherwise skip this action
+             *
+             * @return boolean
+             */
+            @Override
+            public boolean smartClick() {
+                if (isDisplayed()) {
+                    click();
+                    return true;
+                }
+                return false;
+            }
+
+            /**
+             * click a locator by javascript
+             */
+            @Override
+            public IWebElementWrapper jsClick() {
+                logger.debug("try to click {} by executing javascript", locator);
+                executeScript("arguments[0].click()", waitThat(locator).toBePresent());
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * click the first element in a loop while it's displayed
+             */
+            @Override
+            public IWebElementWrapper loopClick() throws InterruptedException {
+                long now = System.currentTimeMillis();
+                while (isDisplayed()) {
+                    click();
+                    waitThat().timeout(PropHelper.TIMEOUT_NAVIGATION_INTERVAL);
+                    if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
+                        logger.warn("time out occurs on loop clicking {}", locator);
+                        break;
+                    }
+                }
+                return this;
+            }
+
+            /**
+             * double click web element if it's clickable
+             */
+            @Override
+            public IWebElementWrapper doubleClick() {
+                logger.debug("try to double click {}", locator);
+                actions().doubleClick(locator).build().perform();
+                return this;
+            }
+
+            /**
+             * Type value into the web edit box if it's visible
+             *
+             * @param value
+             */
+            @Override
+            public IWebElementWrapper type(CharSequence... value) {
+                logger.debug("try to type {} on {}", StringUtils.join(value), locator);
+                waitThat(locator).toBeVisible().sendKeys(value);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * Clear the content of the web edit box if it's visible
+             */
+            @Override
+            public IWebElementWrapper clear() {
+                logger.debug("try to clear value on " + locator);
+                waitThat(locator).toBeVisible().clear();
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * clear the web edit box and input the value
+             *
+             * @param value
+             */
+            @Override
+            public IWebElementWrapper input(String value) {
+                return clear().type(value);
+            }
+
+            /**
+             * input an element if it's displayed, otherwise skip this action
+             *
+             * @param value
+             * @return boolean
+             */
+            @Override
+            public boolean smartInput(String value) {
+                if (isDisplayed()) {
+                    input(value);
+                    return true;
+                }
+                return false;
+            }
+
+            /**
+             * clear the web edit box and input the value, then click the ajax locator
+             *
+             * @param value
+             * @param ajaxLocator
+             */
+            @Override
+            public IWebElementWrapper ajaxInput(String value, Locator ajaxLocator) {
+                input(value);
+                element(ajaxLocator).click();
+                return this;
+            }
+
+            /**
+             * tick web check box if it's visible
+             *
+             * @param value true indicate tick on, false indicate tick off
+             */
+            @Override
+            public IWebElementWrapper tick(boolean value) {
+                logger.debug("try to tick {} on {}", value, locator);
+                if (isTicked() != value) {
+                    click();
+                }
+                return this;
+            }
+
+            /**
+             * web check box ticked or not
+             *
+             * @return ticked or not
+             */
+            @Override
+            public boolean isTicked() {
+                String checked = getAttribute("checked");
+                if (checked == null || !checked.toLowerCase().equals("true")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            /**
+             * using java script to tick web check box
+             *
+             * @param value true indicate tick on, false indicate tick off
+             */
+            @Override
+            public IWebElementWrapper alteredTick(boolean value) {
+                logger.debug("try tick {} on {} alternately", value, locator);
+                if (value) {
+                    setAttribute("checked", "checked");
+                } else {
+                    removeAttribute("checked");
+                }
+                return this;
+            }
+
+            /**
+             * Select all options that display text matching the argument. That is, when
+             * given "Bar" this would select an option like:
+             * <p/>
+             * &lt;option value="foo"&gt;Bar&lt;/option&gt;
+             *
+             * @param text The visible text to match against
+             */
+            @Override
+            public IWebElementWrapper selectByVisibleText(String text) {
+                logger.debug("try to select {} on {}", text, locator);
+                new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * Clear all selected entries. This is only valid when the SELECT supports
+             * multiple selections.
+             *
+             * @throws UnsupportedOperationException If the SELECT does not support multiple selections
+             */
+            @Override
+            public IWebElementWrapper deselectAll() {
+                logger.debug("try to deselect all options on {}", locator);
+                new Select(waitThat(locator).toBeVisible()).deselectAll();
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * Select all options that display text matching the argument. That is, when
+             * given "Bar" this would select an option like:
+             * <p/>
+             * &lt;option value="foo"&gt;Bar&lt;/option&gt;
+             *
+             * @param texts The visible text to match against
+             */
+            @Override
+            public IWebElementWrapper selectByVisibleText(List<String> texts) {
+                for (String text : texts) {
+                    selectByVisibleText(text);
+                }
+                return this;
+            }
+
+            /**
+             * Select the option at the given index. This is done locator examing the
+             * "index" attributeValueOf of an element, and not merely locator counting.
+             *
+             * @param index The option at this index will be selected
+             */
+            @Override
+            public IWebElementWrapper selectByIndex(int index) {
+                logger.debug("try to select index {} on {}", index, locator);
+                new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * Select all options that have a value matching the argument. That is, when
+             * given "foo" this would select an option like:
+             * <p/>
+             * &lt;option value="foo"&gt;Bar&lt;/option&gt;
+             *
+             * @param value The value to match against
+             */
+            @Override
+            public IWebElementWrapper selectByValue(String value) {
+                logger.debug("try to select value {} on {}", value, locator);
+                new Select(waitThat(locator).toBeVisible()).selectByValue(value);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * @param text
+             * @return whether text is selectable or not
+             */
+            @Override
+            public boolean isTextSelectable(String text) {
+                for (WebElement e : getAllSelectedOptions()) {
+                    if (text.equals(e.getText())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /**
+             */
+            @Override
+            public IWebElementWrapper moveTo() {
+                logger.debug("move mouse to {}", locator);
+                actions().moveToElement(locator).build().perform();
+                return this;
+            }
+
+            /**
+             * whether locator is present or not
+             *
+             * @return whether locator is present or not
+             */
+            @Override
+            public boolean isPresent() {
+                try {
+                    driver.findElement(locator.by());
+                    return true;
+                } catch (WebDriverException e) {
+                    return false;
+                }
+            }
+
+            /**
+             * whether locator is enabled or not
+             *
+             * @return boolean
+             */
+            @Override
+            public boolean isEnabled() {
+                return waitThat(locator).toBePresent().isEnabled();
+            }
+
+            /**
+             * whether locator is displayed or not
+             *
+             * @return boolean
+             */
+            @Override
+            public boolean isDisplayed() {
+                try {
+                    return driver.findElement(locator.by()).isDisplayed();
+                } catch (WebDriverException e) {
+                    return false;
+                }
+            }
+
+            /**
+             * whether locator is selected or not
+             *
+             * @return boolean
+             */
+            @Override
+            public boolean isSelected() {
+                return waitThat(locator).toBePresent().isSelected();
+            }
+
+            /**
+             * get value of specified attributeValueOf
+             *
+             * @param attribute
+             * @return attributeValueOf value
+             */
+            @Override
+            public String getAttribute(String attribute) {
+                return waitThat(locator).toBePresent().getAttribute(attribute);
+            }
+
+            /**
+             * get css attributeValueOf value
+             *
+             * @param attribute
+             * @return string
+             */
+            @Override
+            public String getCssValue(String attribute) {
+                return waitThat(locator).toBePresent().getCssValue(attribute);
+            }
+
+            /**
+             * get text on such web element
+             *
+             * @return string
+             */
+            @Override
+            public String getInnerText() {
+                return waitThat(locator).toBeVisible().getText();
+            }
+
+            /**
+             * get all text on found locators
+             *
+             * @return text list
+             */
+            @Override
+            public List<String> getAllTexts() {
+                List<String> Texts = new ArrayList<String>();
+                for (WebElement element : waitThat(locator).toBeAllPresent()) {
+                    Texts.add(element.getText());
+                }
+                return Texts;
+            }
+
+            /**
+             * set innert text on such web element
+             *
+             * @param text
+             */
+            @Override
+            public IWebElementWrapper setText(String text) {
+                logger.debug("try to set innertext of {} to {}", locator, text);
+                executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * set value on such web element, an alternative approach for method input
+             *
+             * @param value
+             */
+            @Override
+            public IWebElementWrapper setValue(String value) {
+                logger.debug("try to set text of {} to {}", locator, value);
+                executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * get all selected options in web list element
+             *
+             * @return List&gt;WebElement&lt;
+             */
+            @Override
+            public List<WebElement> getAllSelectedOptions() {
+                return new Select(waitThat(locator).toBeVisible()).getAllSelectedOptions();
+            }
+
+            /**
+             * get all options in web list element
+             *
+             * @return List&gt;WebElement&lt;
+             */
+            @Override
+            public List<WebElement> getAllOptions() {
+                return new Select(waitThat(locator).toBeVisible()).getOptions();
+            }
+
+            /**
+             * get all options text in web list element
+             *
+             * @return List&gt;String&lt;
+             */
+            @Override
+            public List<String> getAllOptionsText() {
+                List<String> list = new ArrayList<String>();
+                List<WebElement> options = getAllOptions();
+                for (WebElement option : options) {
+                    list.add(option.getText());
+                }
+                return list;
+            }
+
+            /**
+             * get first selected text in web list element
+             *
+             * @return string
+             */
+            @Override
+            public String getSelectedText() {
+                return getAllSelectedOptions().get(0).getText();
+            }
+
+            /**
+             * get all selected texts in web list element
+             *
+             * @return List&gt;String&lt;
+             */
+            @Override
+            public List<String> getAllSelectedTexts() {
+                List<String> list = new ArrayList<String>();
+                List<WebElement> options = getAllSelectedOptions();
+                for (WebElement option : options) {
+                    list.add(option.getText());
+                }
+                return list;
+            }
+
+            /**
+             * trigger an event on such element
+             *
+             * @param event String, such as "mouseover"
+             */
+            @Override
+            public IWebElementWrapper triggerEvent(String event) {
+                logger.debug("try to trigger {} on {}", event, locator);
+                JavascriptLibrary javascript = new JavascriptLibrary();
+                javascript.callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBePresent(), event);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * fire an event on such element
+             *
+             * @param event String, such as "onchange"
+             */
+            @Override
+            public IWebElementWrapper fireEvent(String event) {
+                logger.debug("try to fire {} on {}", event, locator);
+                executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * Scroll page or scrollable element to a specific target element.
+             */
+            @Override
+            public IWebElementWrapper scrollTo() {
+                logger.debug("try to scroll to {}", locator);
+                WebElement element = waitThat(locator).toBePresent();
+                executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * immediately showing the user the result of some action without requiring
+             * the user to manually scroll through the document to find the result
+             * Scrolls the object so that top of the object is visible at the top of the
+             * window.
+             */
+            @Override
+            public IWebElementWrapper scrollIntoView() {
+                scrollIntoView(true);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * immediately showing the user the result of some action without requiring
+             * the user to manually scroll through the document to find the result
+             *
+             * @param bAlignToTop true Default. Scrolls the object so that top of the object is
+             *                    visible at the top of the window. <br/>
+             *                    false Scrolls the object so that the bottom of the object is
+             *                    visible at the bottom of the window.
+             */
+            @Override
+            public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
+                logger.debug("try to scroll into view on {}, align to top is {}", locator, bAlignToTop);
+                executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * using java script to set element attributeValueOf
+             *
+             * @param attribute
+             * @param value
+             */
+            @Override
+            public IWebElementWrapper setAttribute(String attribute, String value) {
+                logger.debug("try to set attributeValueOf {} on {} to {}", attribute, locator, value);
+                executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * using java script to remove element attributeValueOf
+             *
+             * @param attribute
+             */
+            @Override
+            public IWebElementWrapper removeAttribute(String attribute) {
+                logger.debug("try to remove attributeValueOf {} on {}", attribute, locator);
+                executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            /**
+             * using java script to get row number of cell element in web table
+             */
+            @Override
+            public long getCellRow() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
+                ret++;// row index starts with zero
+                return ret;
+            }
+
+            /**
+             * using java script to get column number of cell element in web table
+             */
+            @Override
+            public long getCellColumn() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
+                ret++;// column index starts with zero
+                return ret;
+            }
+
+            /**
+             * using java script to get row number of row element in web table
+             */
+            @Override
+            public long getRow() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
+                ret++;// row index starts with zero
+                return ret;
+            }
+
+            /**
+             * using java script to get row count of web table
+             *
+             * @return long
+             */
+            @Override
+            public long getRowCount() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
+                return ret;
+            }
+
+            @Override
+            public IWebDriverWrapper switchTo() {
+                return waitThat(locator).frameToBeAvailableAndSwitchToIt();
+            }
+        };
     }
 
     @Override
-    public IFluentLocatorWait waitThat(Locator locator) {
-        return new FluentLocatorWait(locator);
+    public IFluentLocatorWait waitThat(final Locator locator) {
+        return new IFluentLocatorWait() {
+
+            @Override
+            public IFluentStringWait innerText() {
+                return new IFluentStringWait() {
+
+                    @Override
+                    public Boolean toBe(String text) {
+                        return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator.by(), text));
+                    }
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean startWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean endWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return null;
+                    }
+                };
+            }
+
+            @Override
+            public Boolean toBeInvisible() {
+                return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator.by()));
+            }
+
+            @Override
+            public WebElement toBePresent() {
+                return wait.until(ExpectedConditions.presenceOfElementLocated(locator.by()));
+            }
+
+            @Override
+            public List<WebElement> toBeAllPresent() {
+                return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator.by()));
+            }
+
+            @Override
+            public Boolean toBeAbsent() {
+                return wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                        return !element(locator).isPresent();
+                    }
+
+                    @Override
+                    public String toString() {
+                        return String.format("wait absence of element located by %s", locator);
+                    }
+                });
+            }
+
+            @Override
+            public Boolean toBeSelected() {
+                return wait.until(ExpectedConditions.elementToBeSelected(locator.by()));
+            }
+
+            /**
+             * wait the specified locator to be present
+             *
+             * @param milliseconds timeout
+             */
+            @Override
+            public IFluentLocatorWait toBePresentIn(int milliseconds) {
+                long t = System.currentTimeMillis();
+                while (System.currentTimeMillis() - t < milliseconds) {
+                    if (element(locator).isPresent()) {
+                        return this;
+                    }
+                }
+                logger.warn("wait presence of {} timed out in {} milliseconds", locator, milliseconds);
+                return this;
+            }
+
+            /**
+             * wait the specified locator to be absent
+             *
+             * @param milliseconds timeout
+             */
+            @Override
+            public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
+                long t = System.currentTimeMillis();
+                while (System.currentTimeMillis() - t < milliseconds) {
+                    if (!element(locator).isPresent()) {
+                        return this;
+                    }
+                }
+                logger.warn("wait absence of {} timed out in {} milliseconds", locator, milliseconds);
+                return this;
+            }
+
+            @Override
+            public WebElement toBeClickable() {
+                return wait.until(ExpectedConditions.elementToBeClickable(locator.by()));
+            }
+
+            @Override
+            public WebElement toBeVisible() {
+                return wait.until(ExpectedConditions.visibilityOfElementLocated(locator.by()));
+            }
+
+            @Override
+            public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
+                return new WebDriverWrapper(wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator.by())));
+            }
+
+            @Override
+            public IFluentStringWait attributeValueOf(final String attribute) {
+                return new IFluentStringWait() {
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return toBe("");
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean startWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean endWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                                return element(locator).getAttribute(attribute).equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attributeValueOf value of %s to be %s", attribute, locator, text);
+                            }
+                        });
+                    }
+                };
+            }
+
+            @Override
+            public IFluentStringWait cssValueOf(final String cssAttribute) {
+                return new IFluentStringWait() {
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return toBe("");
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean startWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean endWith(String text) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                                return element(locator).getCssValue(cssAttribute).equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s to be %s", cssAttribute, locator, text);
+                            }
+                        });
+                    }
+                };
+            }
+        };
     }
 
     @Override
     public IFluentWait waitThat() {
-        return new FluentWait();
+        return new IFluentWait() {
+            @Override
+            public void timeout(int milliseconds) throws InterruptedException {
+                logger.debug("force to wait {} milliseconds", milliseconds);
+                Thread.sleep(milliseconds);
+            }
+
+            @Override
+            public Boolean documentComplete() {
+                return wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                        try {
+                            return executeScript("return document.readyState").equals("complete");
+                        } catch (WebDriverException e) {
+                            logger.warn("javascript error while waiting document complete");
+                            return true;
+                        }
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "wait document complete";
+                    }
+                });
+            }
+
+            @Override
+            public IAlertWrapper alertIsPresent() {
+                return new AlertWrapper(wait.until(ExpectedConditions.alertIsPresent()));
+            }
+
+            @Override
+            public Boolean pageTitleIs(String title) {
+                return wait.until(ExpectedConditions.titleIs(title));
+            }
+
+            @Override
+            public Boolean pageTitleContains(String title) {
+                return wait.until(ExpectedConditions.titleContains(title));
+            }
+
+            @Override
+            public Boolean pageSourceContains(final String text) {
+                return wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                        return isPageSourceContains(text);
+                    }
+
+                    @Override
+                    public String toString() {
+                        return String.format("wait page source contains %s", text);
+                    }
+                });
+            }
+        };
     }
 
     @Override
-    public IFluentLocatorAssert assertThat(Locator locator) {
-        return new FluentLocatorAssert(locator);
+    public IFluentLocatorAssert assertThat(final Locator locator) {
+        return new IFluentLocatorAssert() {
+            @Override
+            public AbstractBooleanAssert<?> hasSelectableText(String text) {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isTextSelectable(text)).as("assert %s has selectable text %s", locator, text);
+            }
+
+            @Override
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s has selected texts", locator);
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> isEnabled() {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isEnabled()).as("assert %s is enabled", locator);
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> isDisplayed() {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isDisplayed()).as("assert %s is displayed", locator);
+            }
+
+            @Override
+            public AbstractBooleanAssert<?> isSelected() {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isSelected()).as("assert %s is selected", locator);
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> innerText() {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getInnerText()).as("assert %s text", locator);
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getAttribute(attribute)).as("assert %s attributeValueOf %s", locator, attribute);
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getCssValue(cssAttribute)).as("assert %s css %s", locator, cssAttribute);
+            }
+        };
     }
 
     @Override
     public IFluentAssert assertThat() {
-        return new FluentAssert();
+        return new IFluentAssert() {
+            @Override
+            public AbstractBooleanAssert<?> alertExists() {
+                return org.assertj.core.api.Assertions.assertThat(alert().exists()).as("assert alert exists");
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> alertText() {
+                return org.assertj.core.api.Assertions.assertThat(alert().getText()).as("assert alert text");
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> pageTitle() {
+                return org.assertj.core.api.Assertions.assertThat(getPageTitle()).as("assert page title");
+            }
+
+            @Override
+            public AbstractCharSequenceAssert<?, String> pageSource() {
+                return org.assertj.core.api.Assertions.assertThat(getPageSource()).as("assert page source");
+            }
+        };
     }
 
     @Override
@@ -272,722 +1331,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return new AlertWrapper();
     }
 
-    public class BrowseNavigation implements IBrowseNavigation {
-        @Override
-        public IBrowseNavigation to(String url) {
-            logger.debug("try to navigate to url {}", url);
-            driver.navigate().to(url);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        @Override
-        public IBrowseNavigation forward() {
-            logger.debug("try to navigate forward");
-            driver.navigate().forward();
-            waitThat().documentComplete();
-            return this;
-        }
-
-        @Override
-        public IBrowseNavigation backward() {
-            logger.debug("try to navigate back");
-            driver.navigate().back();
-            waitThat().documentComplete();
-            return this;
-        }
-    }
-
-    public class ActionsWrapper implements IActionsWrapper {
-        private Actions actions;
-
-        public ActionsWrapper() {
-            this.actions = new Actions(driver);
-        }
-
-        @Override
-        public IActionsWrapper click() {
-            actions.click();
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper click(Locator locator) {
-            actions.click(waitThat(locator).toBeClickable());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper doubleClick(Locator locator) {
-            actions.doubleClick(waitThat(locator).toBeClickable());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper sendKeys(Locator locator, CharSequence... keysToSend) {
-            actions.sendKeys(waitThat(locator).toBeVisible(), keysToSend);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper sendKeys(CharSequence... keysToSend) {
-            actions.sendKeys(keysToSend);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper moveToElement(Locator locator) {
-            actions.moveToElement(waitThat(locator).toBeVisible());
-            return this;
-        }
-
-        @Override
-        public Action build() {
-            final Action action = actions.build();
-            return new Action() {
-                @Override
-                public void perform() {
-                    action.perform();
-                    waitThat().documentComplete();
-                }
-            };
-        }
-
-        @Override
-        public void perform() {
-            actions.perform();
-            waitThat().documentComplete();
-        }
-    }
-
-    public class WebElementWrapper implements IWebElementWrapper {
-        private Locator locator;
-
-        public WebElementWrapper(Locator locator) {
-            this.locator = locator;
-        }
-
-        /**
-         * click web element if it's clickable, please use this click method as default
-         */
-        @Override
-        public IWebElementWrapper click() {
-            logger.debug("try to click {}", locator);
-            waitThat(locator).toBeClickable().click();
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * click element without considering anything, it may raise unexpected exception
-         */
-        @Override
-        public IWebElementWrapper silentClick() {
-            logger.debug("try to click {} silently", locator);
-            driver.findElement(locator.by()).click();
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * forced to click element even if it's not clickable, it may raise unexpected exception, please use method click as default
-         */
-        @Override
-        public IWebElementWrapper forcedClick() {
-            try {
-                return click();
-            } catch (WebDriverException e) {
-                return silentClick();
-            }
-        }
-
-        /**
-         * click an element if it's displayed, otherwise skip this action
-         *
-         * @return boolean
-         */
-        @Override
-        public boolean smartClick() {
-            if (isDisplayed()) {
-                click();
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * click a locator by javascript
-         */
-        @Override
-        public IWebElementWrapper jsClick() {
-            logger.debug("try to click {} by executing javascript", locator);
-            executeScript("arguments[0].click()", waitThat(locator).toBePresent());
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * click the first element in a loop while it's displayed
-         */
-        @Override
-        public IWebElementWrapper loopClick() throws InterruptedException {
-            long now = System.currentTimeMillis();
-            while (isDisplayed()) {
-                click();
-                waitThat().timeout(PropHelper.TIMEOUT_NAVIGATION_INTERVAL);
-                if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
-                    logger.warn("time out occurs on loop clicking {}", locator);
-                    break;
-                }
-            }
-            return this;
-        }
-
-        /**
-         * double click web element if it's clickable
-         */
-        @Override
-        public IWebElementWrapper doubleClick() {
-            logger.debug("try to double click {}", locator);
-            actions().doubleClick(locator).build().perform();
-            return this;
-        }
-
-        /**
-         * Type value into the web edit box if it's visible
-         *
-         * @param value
-         */
-        @Override
-        public IWebElementWrapper type(CharSequence... value) {
-            logger.debug("try to type {} on {}", StringUtils.join(value), locator);
-            waitThat(locator).toBeVisible().sendKeys(value);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * Clear the content of the web edit box if it's visible
-         */
-        @Override
-        public IWebElementWrapper clear() {
-            logger.debug("try to clear value on " + locator);
-            waitThat(locator).toBeVisible().clear();
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * clear the web edit box and input the value
-         *
-         * @param value
-         */
-        @Override
-        public IWebElementWrapper input(String value) {
-            return clear().type(value);
-        }
-
-        /**
-         * input an element if it's displayed, otherwise skip this action
-         *
-         * @param value
-         * @return boolean
-         */
-        @Override
-        public boolean smartInput(String value) {
-            if (isDisplayed()) {
-                input(value);
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * clear the web edit box and input the value, then click the ajax locator
-         *
-         * @param value
-         * @param ajaxLocator
-         */
-        @Override
-        public IWebElementWrapper ajaxInput(String value, Locator ajaxLocator) {
-            input(value);
-            element(ajaxLocator).click();
-            return this;
-        }
-
-        /**
-         * tick web check box if it's visible
-         *
-         * @param value true indicate tick on, false indicate tick off
-         */
-        @Override
-        public IWebElementWrapper tick(boolean value) {
-            logger.debug("try to tick {} on {}", value, locator);
-            if (isTicked() != value) {
-                click();
-            }
-            return this;
-        }
-
-        /**
-         * web check box ticked or not
-         *
-         * @return ticked or not
-         */
-        @Override
-        public boolean isTicked() {
-            String checked = getAttribute("checked");
-            if (checked == null || !checked.toLowerCase().equals("true")) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        /**
-         * using java script to tick web check box
-         *
-         * @param value true indicate tick on, false indicate tick off
-         */
-        @Override
-        public IWebElementWrapper alteredTick(boolean value) {
-            logger.debug("try tick {} on {} alternately", value, locator);
-            if (value) {
-                setAttribute("checked", "checked");
-            } else {
-                removeAttribute("checked");
-            }
-            return this;
-        }
-
-        /**
-         * Select all options that display text matching the argument. That is, when
-         * given "Bar" this would select an option like:
-         * <p/>
-         * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-         *
-         * @param text The visible text to match against
-         */
-        @Override
-        public IWebElementWrapper selectByVisibleText(String text) {
-            logger.debug("try to select {} on {}", text, locator);
-            new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * Clear all selected entries. This is only valid when the SELECT supports
-         * multiple selections.
-         *
-         * @throws UnsupportedOperationException If the SELECT does not support multiple selections
-         */
-        @Override
-        public IWebElementWrapper deselectAll() {
-            logger.debug("try to deselect all options on {}", locator);
-            new Select(waitThat(locator).toBeVisible()).deselectAll();
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * Select all options that display text matching the argument. That is, when
-         * given "Bar" this would select an option like:
-         * <p/>
-         * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-         *
-         * @param texts The visible text to match against
-         */
-        @Override
-        public IWebElementWrapper selectByVisibleText(List<String> texts) {
-            for (String text : texts) {
-                selectByVisibleText(text);
-            }
-            return this;
-        }
-
-        /**
-         * Select the option at the given index. This is done locator examing the
-         * "index" attribute of an element, and not merely locator counting.
-         *
-         * @param index The option at this index will be selected
-         */
-        @Override
-        public IWebElementWrapper selectByIndex(int index) {
-            logger.debug("try to select index {} on {}", index, locator);
-            new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * Select all options that have a value matching the argument. That is, when
-         * given "foo" this would select an option like:
-         * <p/>
-         * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-         *
-         * @param value The value to match against
-         */
-        @Override
-        public IWebElementWrapper selectByValue(String value) {
-            logger.debug("try to select value {} on {}", value, locator);
-            new Select(waitThat(locator).toBeVisible()).selectByValue(value);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * @param text
-         * @return whether text is selectable or not
-         */
-        @Override
-        public boolean isTextSelectable(String text) {
-            for (WebElement e : getAllSelectedOptions()) {
-                if (text.equals(e.getText())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         */
-        @Override
-        public IWebElementWrapper moveTo() {
-            logger.debug("move mouse to {}", locator);
-            actions().moveToElement(locator).build().perform();
-            return this;
-        }
-
-        /**
-         * whether locator is present or not
-         *
-         * @return whether locator is present or not
-         */
-        @Override
-        public boolean isPresent() {
-            try {
-                driver.findElement(locator.by());
-                return true;
-            } catch (WebDriverException e) {
-                return false;
-            }
-        }
-
-        /**
-         * whether locator is enabled or not
-         *
-         * @return boolean
-         */
-        @Override
-        public boolean isEnabled() {
-            return waitThat(locator).toBePresent().isEnabled();
-        }
-
-        /**
-         * whether locator is displayed or not
-         *
-         * @return boolean
-         */
-        @Override
-        public boolean isDisplayed() {
-            try {
-                return driver.findElement(locator.by()).isDisplayed();
-            } catch (WebDriverException e) {
-                return false;
-            }
-        }
-
-        /**
-         * whether locator is selected or not
-         *
-         * @return boolean
-         */
-        @Override
-        public boolean isSelected() {
-            return waitThat(locator).toBePresent().isSelected();
-        }
-
-        /**
-         * get value of specified attribute
-         *
-         * @param attribute
-         * @return attribute value
-         */
-        @Override
-        public String getAttribute(String attribute) {
-            return waitThat(locator).toBePresent().getAttribute(attribute);
-        }
-
-        /**
-         * get css attribute value
-         *
-         * @param attribute
-         * @return string
-         */
-        @Override
-        public String getCssValue(String attribute) {
-            return waitThat(locator).toBePresent().getCssValue(attribute);
-        }
-
-        /**
-         * get text on such web element
-         *
-         * @return string
-         */
-        @Override
-        public String getInnerText() {
-            return waitThat(locator).toBeVisible().getText();
-        }
-
-        /**
-         * get all text on found locators
-         *
-         * @return text list
-         */
-        @Override
-        public List<String> getAllTexts() {
-            List<String> Texts = new ArrayList<String>();
-            for (WebElement element : waitThat(locator).toBeAllPresent()) {
-                Texts.add(element.getText());
-            }
-            return Texts;
-        }
-
-        /**
-         * set innert text on such web element
-         *
-         * @param text
-         */
-        @Override
-        public IWebElementWrapper setText(String text) {
-            logger.debug("try to set innertext of {} to {}", locator, text);
-            executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * set value on such web element, an alternative approach for method input
-         *
-         * @param value
-         */
-        @Override
-        public IWebElementWrapper setValue(String value) {
-            logger.debug("try to set text of {} to {}", locator, value);
-            executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * get all selected options in web list element
-         *
-         * @return List&gt;WebElement&lt;
-         */
-        @Override
-        public List<WebElement> getAllSelectedOptions() {
-            return new Select(waitThat(locator).toBeVisible()).getAllSelectedOptions();
-        }
-
-        /**
-         * get all options in web list element
-         *
-         * @return List&gt;WebElement&lt;
-         */
-        @Override
-        public List<WebElement> getAllOptions() {
-            return new Select(waitThat(locator).toBeVisible()).getOptions();
-        }
-
-        /**
-         * get all options text in web list element
-         *
-         * @return List&gt;String&lt;
-         */
-        @Override
-        public List<String> getAllOptionsText() {
-            List<String> list = new ArrayList<String>();
-            List<WebElement> options = getAllOptions();
-            for (WebElement option : options) {
-                list.add(option.getText());
-            }
-            return list;
-        }
-
-        /**
-         * get first selected text in web list element
-         *
-         * @return string
-         */
-        @Override
-        public String getSelectedText() {
-            return getAllSelectedOptions().get(0).getText();
-        }
-
-        /**
-         * get all selected texts in web list element
-         *
-         * @return List&gt;String&lt;
-         */
-        @Override
-        public List<String> getAllSelectedTexts() {
-            List<String> list = new ArrayList<String>();
-            List<WebElement> options = getAllSelectedOptions();
-            for (WebElement option : options) {
-                list.add(option.getText());
-            }
-            return list;
-        }
-
-        /**
-         * trigger an event on such element
-         *
-         * @param event String, such as "mouseover"
-         */
-        @Override
-        public IWebElementWrapper triggerEvent(String event) {
-            logger.debug("try to trigger {} on {}", event, locator);
-            JavascriptLibrary javascript = new JavascriptLibrary();
-            javascript.callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBePresent(), event);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * fire an event on such element
-         *
-         * @param event String, such as "onchange"
-         */
-        @Override
-        public IWebElementWrapper fireEvent(String event) {
-            logger.debug("try to fire {} on {}", event, locator);
-            executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * Scroll page or scrollable element to a specific target element.
-         */
-        @Override
-        public IWebElementWrapper scrollTo() {
-            logger.debug("try to scroll to {}", locator);
-            WebElement element = waitThat(locator).toBePresent();
-            executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * immediately showing the user the result of some action without requiring
-         * the user to manually scroll through the document to find the result
-         * Scrolls the object so that top of the object is visible at the top of the
-         * window.
-         */
-        @Override
-        public IWebElementWrapper scrollIntoView() {
-            scrollIntoView(true);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * immediately showing the user the result of some action without requiring
-         * the user to manually scroll through the document to find the result
-         *
-         * @param bAlignToTop true Default. Scrolls the object so that top of the object is
-         *                    visible at the top of the window. <br/>
-         *                    false Scrolls the object so that the bottom of the object is
-         *                    visible at the bottom of the window.
-         */
-        @Override
-        public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
-            logger.debug("try to scroll into view on {}, align to top is {}", locator, bAlignToTop);
-            executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * using java script to set element attribute
-         *
-         * @param attribute
-         * @param value
-         */
-        @Override
-        public IWebElementWrapper setAttribute(String attribute, String value) {
-            logger.debug("try to set attribute {} on {} to {}", attribute, locator, value);
-            executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * using java script to remove element attribute
-         *
-         * @param attribute
-         */
-        @Override
-        public IWebElementWrapper removeAttribute(String attribute) {
-            logger.debug("try to remove attribute {} on {}", attribute, locator);
-            executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
-            waitThat().documentComplete();
-            return this;
-        }
-
-        /**
-         * using java script to get row number of cell element in web table
-         */
-        @Override
-        public long getCellRow() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
-            ret++;// row index starts with zero
-            return ret;
-        }
-
-        /**
-         * using java script to get column number of cell element in web table
-         */
-        @Override
-        public long getCellColumn() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
-            ret++;// column index starts with zero
-            return ret;
-        }
-
-        /**
-         * using java script to get row number of row element in web table
-         */
-        @Override
-        public long getRow() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
-            ret++;// row index starts with zero
-            return ret;
-        }
-
-        /**
-         * using java script to get row count of web table
-         *
-         * @return long
-         */
-        @Override
-        public long getRowCount() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
-            return ret;
-        }
-
-        @Override
-        public IWebDriverWrapper switchTo() {
-            return waitThat(locator).frameToBeAvailableAndSwitchToIt();
-        }
-    }
-
-    public class AlertWrapper implements IAlertWrapper {
+    private class AlertWrapper implements IAlertWrapper {
         private Alert alert;
 
         public AlertWrapper() {
@@ -1033,292 +1377,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return true;
             } catch (WebDriverException e) {
                 return false;
-            }
-        }
-    }
-
-    public class FluentAssert implements IFluentAssert {
-        @Override
-        public AbstractBooleanAssert<?> alertExists() {
-            return org.assertj.core.api.Assertions.assertThat(alert().exists()).as("assert alert exists");
-        }
-
-        @Override
-        public AbstractCharSequenceAssert<?, String> alertText() {
-            return org.assertj.core.api.Assertions.assertThat(alert().getText()).as("assert alert text");
-        }
-
-        @Override
-        public AbstractCharSequenceAssert<?, String> pageTitle() {
-            return org.assertj.core.api.Assertions.assertThat(getPageTitle()).as("assert page title");
-        }
-
-        @Override
-        public AbstractBooleanAssert<?> pageSourceContains(String text) {
-            return org.assertj.core.api.Assertions.assertThat(isPageSourceContains(text)).as("assert page source contains text %s", text);
-        }
-    }
-
-    public class FluentLocatorAssert implements IFluentLocatorAssert {
-        private Locator locator;
-
-        public FluentLocatorAssert(Locator locator) {
-            this.locator = locator;
-        }
-
-        @Override
-        public AbstractBooleanAssert<?> hasSelectableText(String text) {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).isTextSelectable(text)).as("assert %s has selectable text %s", locator, text);
-        }
-
-        @Override
-        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s has selected texts", locator);
-        }
-
-        @Override
-        public AbstractBooleanAssert<?> isEnabled() {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).isEnabled()).as("assert %s is enabled", locator);
-        }
-
-        @Override
-        public AbstractBooleanAssert<?> isDisplayed() {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).isDisplayed()).as("assert %s is displayed", locator);
-        }
-
-        @Override
-        public AbstractBooleanAssert<?> isSelected() {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).isSelected()).as("assert %s is selected", locator);
-        }
-
-        @Override
-        public AbstractCharSequenceAssert<?, String> innerText() {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).getInnerText()).as("assert %s text", locator);
-        }
-
-        @Override
-        public AbstractCharSequenceAssert<?, String> attribute(String attribute) {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).getAttribute(attribute)).as("assert %s attribute %s", locator, attribute);
-        }
-
-        @Override
-        public AbstractCharSequenceAssert<?, String> cssValue(String css) {
-            return org.assertj.core.api.Assertions.assertThat(element(locator).getCssValue(css)).as("assert %s css %s", locator, css);
-        }
-    }
-
-    public class FluentWait implements IFluentWait {
-        @Override
-        public void timeout(int milliseconds) throws InterruptedException {
-            logger.debug("force to wait {} milliseconds", milliseconds);
-            Thread.sleep(milliseconds);
-        }
-
-        @Override
-        public Boolean documentComplete() {
-            return wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                    try {
-                        return executeScript("return document.readyState").equals("complete");
-                    } catch (WebDriverException e) {
-                        logger.warn("javascript error while waiting document complete");
-                        return true;
-                    }
-                }
-
-                @Override
-                public String toString() {
-                    return "wait document complete";
-                }
-            });
-        }
-
-        @Override
-        public IAlertWrapper alertIsPresent() {
-            return new AlertWrapper(wait.until(ExpectedConditions.alertIsPresent()));
-        }
-
-        @Override
-        public Boolean pageTitleIs(String title) {
-            return wait.until(ExpectedConditions.titleIs(title));
-        }
-
-        @Override
-        public Boolean pageTitleContains(String title) {
-            return wait.until(ExpectedConditions.titleContains(title));
-        }
-
-        @Override
-        public Boolean pageSourceContains(final String text) {
-            return wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                    return isPageSourceContains(text);
-                }
-
-                @Override
-                public String toString() {
-                    return String.format("wait page source contains %s", text);
-                }
-            });
-        }
-    }
-
-    public class FluentLocatorWait implements IFluentLocatorWait {
-        private Locator locator;
-
-        public FluentLocatorWait(Locator locator) {
-            this.locator = locator;
-        }
-
-        @Override
-        public Boolean hasInnerText(String text) {
-            return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator.by(), text));
-        }
-
-        @Override
-        public Boolean toBeInvisible() {
-            return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator.by()));
-        }
-
-        @Override
-        public WebElement toBePresent() {
-            return wait.until(ExpectedConditions.presenceOfElementLocated(locator.by()));
-        }
-
-        @Override
-        public List<WebElement> toBeAllPresent() {
-            return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator.by()));
-        }
-
-        @Override
-        public Boolean toBeAbsent() {
-            return wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                    return !element(locator).isPresent();
-                }
-
-                @Override
-                public String toString() {
-                    return String.format("wait absence of element located by %s", locator);
-                }
-            });
-        }
-
-        /**
-         * wait the specified locator to be present
-         *
-         * @param milliseconds timeout
-         */
-        @Override
-        public IFluentLocatorWait toBePresentIn(int milliseconds) {
-            long t = System.currentTimeMillis();
-            while (System.currentTimeMillis() - t < milliseconds) {
-                if (element(locator).isPresent()) {
-                    return this;
-                }
-            }
-            logger.warn("wait presence of {} timed out in {} milliseconds", locator, milliseconds);
-            return this;
-        }
-
-        /**
-         * wait the specified locator to be absent
-         *
-         * @param milliseconds timeout
-         */
-        @Override
-        public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
-            long t = System.currentTimeMillis();
-            while (System.currentTimeMillis() - t < milliseconds) {
-                if (!element(locator).isPresent()) {
-                    return this;
-                }
-            }
-            logger.warn("wait absence of {} timed out in {} milliseconds", locator, milliseconds);
-            return this;
-        }
-
-        @Override
-        public WebElement toBeClickable() {
-            return wait.until(ExpectedConditions.elementToBeClickable(locator.by()));
-        }
-
-        @Override
-        public WebElement toBeVisible() {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator.by()));
-        }
-
-        @Override
-        public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
-            return new WebDriverWrapper(wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator.by())));
-        }
-
-        @Override
-        public IFluentLocatorAttributeWait attribute(String attribute) {
-            return new FluentLocatorAttributeWait(attribute);
-        }
-
-        @Override
-        public IFluentLocatorCssAttributeWait cssAttribute(String cssAttribute) {
-            return new FluentLocatorCssAttributeWait(cssAttribute);
-        }
-
-        public class FluentLocatorAttributeWait implements IFluentLocatorAttributeWait {
-            private String attribute;
-
-            public FluentLocatorAttributeWait(String attribute) {
-                this.attribute = attribute;
-            }
-
-            @Override
-            public Boolean valueToBeEmpty() {
-                return valueToBe("");
-            }
-
-            @Override
-            public Boolean valueToBe(final String value) {
-                return wait.until(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                        return element(locator).getAttribute(attribute).equals(value);
-                    }
-
-                    @Override
-                    public String toString() {
-                        return String.format("wait %s attribute value of %s to be %s", attribute, locator, value);
-                    }
-                });
-            }
-        }
-
-        public class FluentLocatorCssAttributeWait implements IFluentLocatorCssAttributeWait {
-            private String cssAttribute;
-
-            public FluentLocatorCssAttributeWait(String cssAttribute) {
-                this.cssAttribute = cssAttribute;
-            }
-
-            @Override
-            public Boolean valueToBeEmpty() {
-                return valueToBe("");
-            }
-
-            @Override
-            public Boolean valueToBe(final String value) {
-                return wait.until(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                        return element(locator).getCssValue(cssAttribute).equals(value);
-                    }
-
-                    @Override
-                    public String toString() {
-                        return String.format("wait %s css value of %s to be %s", cssAttribute, locator, value);
-                    }
-                });
             }
         }
     }

@@ -13,5 +13,5 @@ public interface IFluentAssert {
 
     AbstractCharSequenceAssert<?, String> pageTitle();
 
-    AbstractBooleanAssert<?> pageSourceContains(String text);
+    AbstractCharSequenceAssert<?, String> pageSource();
 }

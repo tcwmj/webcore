@@ -22,7 +22,7 @@ public interface IFluentLocatorAssert {
 
     AbstractCharSequenceAssert<?, String> innerText();
 
-    AbstractCharSequenceAssert<?, String> attribute(String attribute);
+    AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute);
 
-    AbstractCharSequenceAssert<?, String> cssValue(String css);
+    AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute);
 }
