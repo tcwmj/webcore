@@ -388,19 +388,27 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             /**
-             * click the first element in a loop while it's displayed
+             * click the first element in a loop until it isn't displayed
              */
             @Override
             public IWebElementWrapper clickCircularly() throws InterruptedException {
-                long now = System.currentTimeMillis();
-                while (isDisplayed()) {
-                    click();
-                    waitThat().timeout(PropHelper.TIMEOUT_NAVIGATION_INTERVAL);
-                    if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
-                        logger.warn("time out occurs on loop clicking {}", locator);
-                        break;
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Nullable
+                    @Override
+                    public Boolean apply(@Nullable WebDriver input) {
+                        click();
+                        return !isDisplayed();
                     }
-                }
+                });
+//                long now = System.currentTimeMillis();
+//                while (isDisplayed()) {
+//                    click();
+//                    waitThat().timeout(PropHelper.TIMEOUT_NAVIGATION_INTERVAL);
+//                    if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
+//                        logger.warn("time out occurs on loop clicking {}", locator);
+//                        break;
+//                    }
+//                }
                 return this;
             }
 
