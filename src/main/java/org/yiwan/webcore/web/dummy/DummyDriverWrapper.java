@@ -103,12 +103,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IWebDriverWrapper smartClick(Locator... locators) {
+    public IWebDriverWrapper clickSmartly(Locator... locators) {
         return this;
     }
 
     @Override
-    public IWebDriverWrapper smartInput(String value, Locator... locators) {
+    public IWebDriverWrapper inputSmartly(String value, Locator... locators) {
         return this;
     }
 
@@ -193,27 +193,27 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper silentClick() {
+            public IWebElementWrapper clickSilently() {
                 return null;
             }
 
             @Override
-            public IWebElementWrapper forcedClick() {
+            public IWebElementWrapper clickForcedly() {
                 return null;
             }
 
             @Override
-            public boolean smartClick() {
+            public boolean clickSmartly() {
                 return false;
             }
 
             @Override
-            public IWebElementWrapper jsClick() {
+            public IWebElementWrapper clickByJavaScript() {
                 return null;
             }
 
             @Override
-            public IWebElementWrapper loopClick() throws InterruptedException {
+            public IWebElementWrapper clickCircularly() throws InterruptedException {
                 return null;
             }
 
@@ -238,13 +238,8 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public boolean smartInput(String value) {
+            public boolean inputSmartly(String value) {
                 return false;
-            }
-
-            @Override
-            public IWebElementWrapper ajaxInput(String value, Locator ajaxLocator) {
-                return null;
             }
 
             @Override
@@ -259,7 +254,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper jsCheck(boolean checked) {
+            public IWebElementWrapper checkByJavaScript(boolean checked) {
                 return null;
             }
 
@@ -279,7 +274,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper deselectByVisibleText(List<String> texts) {
+            public IWebElementWrapper deselectByVisibleText(String... texts) {
                 return null;
             }
 
@@ -294,7 +289,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper selectByVisibleText(List<String> texts) {
+            public IWebElementWrapper selectByVisibleText(String... texts) {
                 return null;
             }
 
@@ -309,7 +304,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public boolean isTextSelectable(String text) {
+            public boolean isSelectable(String text) {
                 return false;
             }
 
@@ -359,7 +354,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper setText(String text) {
+            public IWebElementWrapper setInnerText(String text) {
                 return null;
             }
 

@@ -93,7 +93,7 @@ public class PageBase {
      * click element if it's displayed, otherwise click the next one
      */
     protected IWebDriverWrapper smartClick(Locator... locators) {
-        return webDriverWrapper.smartClick(locators);
+        return webDriverWrapper.clickSmartly(locators);
     }
 
     /**
@@ -103,7 +103,7 @@ public class PageBase {
      * @param locators
      */
     public IWebDriverWrapper smartInput(String value, Locator... locators) {
-        return webDriverWrapper.smartInput(value, locators);
+        return webDriverWrapper.inputSmartly(value, locators);
     }
 
     protected Object executeScript(String script, Object... args) {

@@ -198,9 +198,9 @@ public class WebDriverWrapper implements IWebDriverWrapper {
      * click element if it's displayed, otherwise click the next one
      */
     @Override
-    public IWebDriverWrapper smartClick(Locator... locators) {
+    public IWebDriverWrapper clickSmartly(Locator... locators) {
         for (Locator locator : locators) {
-            if (element(locator).smartClick()) {
+            if (element(locator).clickSmartly()) {
                 break;
             }
         }
@@ -214,9 +214,9 @@ public class WebDriverWrapper implements IWebDriverWrapper {
      * @param locators
      */
     @Override
-    public IWebDriverWrapper smartInput(String value, Locator... locators) {
+    public IWebDriverWrapper inputSmartly(String value, Locator... locators) {
         for (Locator locator : locators) {
-            if (element(locator).smartInput(value)) {
+            if (element(locator).inputSmartly(value)) {
                 break;
             }
         }
@@ -343,7 +343,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * click element without considering anything, it may raise unexpected exception
              */
             @Override
-            public IWebElementWrapper silentClick() {
+            public IWebElementWrapper clickSilently() {
                 logger.debug("try to click {} silently", locator);
                 driver.findElement(locator.by()).click();
                 waitThat().documentComplete();
@@ -354,11 +354,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * forced to click element even if it's not clickable, it may raise unexpected exception, please use method click as default
              */
             @Override
-            public IWebElementWrapper forcedClick() {
+            public IWebElementWrapper clickForcedly() {
                 try {
                     return click();
                 } catch (WebDriverException e) {
-                    return silentClick();
+                    return clickSilently();
                 }
             }
 
@@ -368,7 +368,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @return boolean
              */
             @Override
-            public boolean smartClick() {
+            public boolean clickSmartly() {
                 if (isDisplayed()) {
                     click();
                     return true;
@@ -380,7 +380,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * click a locator by javascript
              */
             @Override
-            public IWebElementWrapper jsClick() {
+            public IWebElementWrapper clickByJavaScript() {
                 logger.debug("try to click {} by executing javascript", locator);
                 executeScript("arguments[0].click()", waitThat(locator).toBePresent());
                 waitThat().documentComplete();
@@ -391,7 +391,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * click the first element in a loop while it's displayed
              */
             @Override
-            public IWebElementWrapper loopClick() throws InterruptedException {
+            public IWebElementWrapper clickCircularly() throws InterruptedException {
                 long now = System.currentTimeMillis();
                 while (isDisplayed()) {
                     click();
@@ -455,25 +455,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @return boolean
              */
             @Override
-            public boolean smartInput(String value) {
+            public boolean inputSmartly(String value) {
                 if (isDisplayed()) {
                     input(value);
                     return true;
                 }
                 return false;
-            }
-
-            /**
-             * clear the web edit box and input the value, then click the ajax locator
-             *
-             * @param value
-             * @param ajaxLocator
-             */
-            @Override
-            public IWebElementWrapper ajaxInput(String value, Locator ajaxLocator) {
-                input(value);
-                element(ajaxLocator).click();
-                return this;
             }
 
             /**
@@ -512,7 +499,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @param checked on or off
              */
             @Override
-            public IWebElementWrapper jsCheck(boolean checked) {
+            public IWebElementWrapper checkByJavaScript(boolean checked) {
                 logger.debug("try to check {} {} by javascript", checked ? "on" : "off", locator);
                 if (checked) {
                     setAttribute("checked", "checked");
@@ -558,7 +545,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper deselectByVisibleText(List<String> texts) {
+            public IWebElementWrapper deselectByVisibleText(String... texts) {
                 return null;
             }
 
@@ -581,7 +568,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @param texts The visible text to match against
              */
             @Override
-            public IWebElementWrapper selectByVisibleText(List<String> texts) {
+            public IWebElementWrapper selectByVisibleText(String... texts) {
                 for (String text : texts) {
                     selectByVisibleText(text);
                 }
@@ -623,7 +610,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @return whether text is selectable or not
              */
             @Override
-            public boolean isTextSelectable(String text) {
+            public boolean isSelectable(String text) {
                 for (WebElement e : getAllSelectedOptions()) {
                     if (text.equals(e.getText())) {
                         return true;
@@ -742,7 +729,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @param text
              */
             @Override
-            public IWebElementWrapper setText(String text) {
+            public IWebElementWrapper setInnerText(String text) {
                 logger.debug("try to set innertext of {} to {}", locator, text);
                 executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
                 waitThat().documentComplete();

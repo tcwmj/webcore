@@ -37,9 +37,9 @@ public interface IWebDriverWrapper {
 
     String getPageTitle();
 
-    IWebDriverWrapper smartClick(Locator... locators);
+    IWebDriverWrapper clickSmartly(Locator... locators);
 
-    IWebDriverWrapper smartInput(String value, Locator... locators);
+    IWebDriverWrapper inputSmartly(String value, Locator... locators);
 
     <X> X getScreenshotAs(OutputType<X> target);
 

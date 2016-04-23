@@ -1,7 +1,6 @@
 package org.yiwan.webcore.web;
 
 import org.openqa.selenium.WebElement;
-import org.yiwan.webcore.locator.Locator;
 
 import java.util.List;
 
@@ -11,15 +10,15 @@ import java.util.List;
 public interface IWebElementWrapper {
     IWebElementWrapper click();
 
-    IWebElementWrapper silentClick();
+    IWebElementWrapper clickSilently();
 
-    IWebElementWrapper forcedClick();
+    IWebElementWrapper clickForcedly();
 
-    boolean smartClick();
+    boolean clickSmartly();
 
-    IWebElementWrapper jsClick();
+    IWebElementWrapper clickByJavaScript();
 
-    IWebElementWrapper loopClick() throws InterruptedException;
+    IWebElementWrapper clickCircularly() throws InterruptedException;
 
     IWebElementWrapper doubleClick();
 
@@ -29,13 +28,11 @@ public interface IWebElementWrapper {
 
     IWebElementWrapper input(String value);
 
-    boolean smartInput(String value);
-
-    IWebElementWrapper ajaxInput(String value, Locator ajaxLocator);
+    boolean inputSmartly(String value);
 
     IWebElementWrapper check(boolean checked);
 
-    IWebElementWrapper jsCheck(boolean checked);
+    IWebElementWrapper checkByJavaScript(boolean checked);
 
     boolean isChecked();
 
@@ -45,19 +42,19 @@ public interface IWebElementWrapper {
 
     IWebElementWrapper deselectByVisibleText(String text);
 
-    IWebElementWrapper deselectByVisibleText(List<String> texts);
+    IWebElementWrapper deselectByVisibleText(String... texts);
 
     IWebElementWrapper deselectByIndex(int index);
 
     IWebElementWrapper deselectByValue(String value);
 
-    IWebElementWrapper selectByVisibleText(List<String> texts);
+    IWebElementWrapper selectByVisibleText(String... texts);
 
     IWebElementWrapper selectByIndex(int index);
 
     IWebElementWrapper selectByValue(String value);
 
-    boolean isTextSelectable(String text);
+    boolean isSelectable(String text);
 
     IWebElementWrapper moveTo();
 
@@ -77,7 +74,7 @@ public interface IWebElementWrapper {
 
     List<String> getAllInnerTexts();
 
-    IWebElementWrapper setText(String text);
+    IWebElementWrapper setInnerText(String text);
 
     IWebElementWrapper setValue(String value);
 
