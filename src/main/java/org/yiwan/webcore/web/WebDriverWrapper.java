@@ -551,6 +551,26 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
+            @Override
+            public IWebElementWrapper deselectByVisibleText(String text) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByVisibleText(List<String> texts) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByIndex(int index) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByValue(String value) {
+                return null;
+            }
+
             /**
              * Select all options that display text matching the argument. That is, when
              * given "Bar" this would select an option like:

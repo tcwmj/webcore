@@ -43,6 +43,14 @@ public interface IWebElementWrapper {
 
     IWebElementWrapper deselectAll();
 
+    IWebElementWrapper deselectByVisibleText(String text);
+
+    IWebElementWrapper deselectByVisibleText(List<String> texts);
+
+    IWebElementWrapper deselectByIndex(int index);
+
+    IWebElementWrapper deselectByValue(String value);
+
     IWebElementWrapper selectByVisibleText(List<String> texts);
 
     IWebElementWrapper selectByIndex(int index);

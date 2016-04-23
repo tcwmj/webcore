@@ -273,6 +273,26 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IWebElementWrapper deselectByVisibleText(String text) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByVisibleText(List<String> texts) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByIndex(int index) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByValue(String value) {
+                return null;
+            }
+
+            @Override
             public IWebElementWrapper selectByVisibleText(List<String> texts) {
                 return null;
             }
