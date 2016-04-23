@@ -707,7 +707,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @return text list
              */
             @Override
-            public List<String> getAllTexts() {
+            public List<String> getAllInnerTexts() {
                 List<String> Texts = new ArrayList<String>();
                 for (WebElement element : waitThat(locator).toBeAllPresent()) {
                     Texts.add(element.getText());
@@ -1518,6 +1518,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public AbstractCharSequenceAssert<?, String> innerText() {
                 return org.assertj.core.api.Assertions.assertThat(element(locator).getInnerText()).as("assert %s innertText", locator);
+            }
+
+            @Override
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getAllInnerTexts()).as("assert %s all innerTexts", locator);
             }
 
             @Override

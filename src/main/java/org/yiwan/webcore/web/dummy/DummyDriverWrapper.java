@@ -333,7 +333,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public List<String> getAllTexts() {
+            public List<String> getAllInnerTexts() {
                 return null;
             }
 
@@ -611,6 +611,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public AbstractCharSequenceAssert<?, String> innerText() {
+                return null;
+            }
+
+            @Override
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
                 return null;
             }
 

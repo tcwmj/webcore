@@ -26,6 +26,8 @@ public interface IFluentLocatorAssert {
 
     AbstractCharSequenceAssert<?, String> innerText();
 
+    AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts();
+
     AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute);
 
     AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute);
