@@ -358,7 +358,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public List<String> getAllOptionsText() {
+            public List<String> getAllOptionTexts() {
                 return null;
             }
 
@@ -431,6 +431,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IWebDriverWrapper switchTo() {
                 return null;
             }
+
+            @Override
+            public int getNumberOfMatches() {
+                return 0;
+            }
         };
     }
 
@@ -459,7 +464,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public Boolean toBeNotSelected() {
+            public Boolean toBeDeselected() {
                 return null;
             }
 
@@ -574,12 +579,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     @Override
     public IFluentLocatorAssert assertThat(final Locator locator) {
         return new IFluentLocatorAssert() {
-
-            @Override
-            public AbstractBooleanAssert<?> hasSelectableText(String text) {
-                return null;
-            }
-
             @Override
             public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
                 return null;

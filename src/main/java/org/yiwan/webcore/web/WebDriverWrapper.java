@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.util.PropHelper;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -766,7 +767,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              * @return List&gt;String&lt;
              */
             @Override
-            public List<String> getAllOptionsText() {
+            public List<String> getAllOptionTexts() {
                 List<String> list = new ArrayList<String>();
                 List<WebElement> options = getAllOptions();
                 for (WebElement option : options) {
@@ -945,6 +946,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebDriverWrapper switchTo() {
                 return waitThat(locator).frameToBeAvailableAndSwitchToIt();
             }
+
+            @Override
+            public int getNumberOfMatches() {
+                return waitThat(locator).toBeAllPresent().size();
+            }
         };
     }
 
@@ -1044,7 +1050,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public Boolean toBeNotSelected() {
+            public Boolean toBeDeselected() {
                 return null;
             }
 
@@ -1216,7 +1222,73 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IFluentNumberWait numberOfElements() {
-                return null;
+                return new IFluentNumberWait() {
+                    @Override
+                    public Boolean equalTo(final int number) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return driver.findElements(locator.by()).size() == number;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public Boolean notEqualTo(final int number) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return driver.findElements(locator.by()).size() != number;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public Boolean lessThan(final int number) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return driver.findElements(locator.by()).size() < number;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public Boolean greaterThan(final int number) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return driver.findElements(locator.by()).size() > number;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public Boolean equalToOrLessThan(final int number) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return driver.findElements(locator.by()).size() <= number;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public Boolean equalToOrGreaterThan(final int number) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return driver.findElements(locator.by()).size() >= number;
+                            }
+                        });
+                    }
+                };
             }
 
             @Override
@@ -1414,58 +1486,53 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public IFluentLocatorAssert assertThat(final Locator locator) {
         return new IFluentLocatorAssert() {
             @Override
-            public AbstractBooleanAssert<?> hasSelectableText(String text) {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).isTextSelectable(text)).as("assert %s has selectable text %s", locator, text);
-            }
-
-            @Override
             public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s has selected texts", locator);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s all selected texts", locator);
             }
 
             @Override
             public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
-                return null;
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getAllOptionTexts()).as("assert %s all option texts", locator);
             }
 
             @Override
             public AbstractBooleanAssert<?> present() {
-                return null;
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isPresent()).as("assert %s present", locator);
             }
 
             @Override
             public AbstractBooleanAssert<?> enabled() {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).isEnabled()).as("assert %s is enabled", locator);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isEnabled()).as("assert %s enabled", locator);
             }
 
             @Override
             public AbstractBooleanAssert<?> displayed() {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).isDisplayed()).as("assert %s is displayed", locator);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isDisplayed()).as("assert %s displayed", locator);
             }
 
             @Override
             public AbstractBooleanAssert<?> selected() {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).isSelected()).as("assert %s is selected", locator);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).isSelected()).as("assert %s selected", locator);
             }
 
             @Override
             public AbstractCharSequenceAssert<?, String> innerText() {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).getInnerText()).as("assert %s text", locator);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getInnerText()).as("assert %s innertText", locator);
             }
 
             @Override
             public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).getAttribute(attribute)).as("assert %s attributeValueOf %s", locator, attribute);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getAttribute(attribute)).as("assert %s attribute value of %s", locator, attribute);
             }
 
             @Override
             public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
-                return org.assertj.core.api.Assertions.assertThat(element(locator).getCssValue(cssAttribute)).as("assert %s css %s", locator, cssAttribute);
+                return org.assertj.core.api.Assertions.assertThat(element(locator).getCssValue(cssAttribute)).as("assert %s css value of %s", locator, cssAttribute);
             }
 
             @Override
             public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
-                return null;
+                return org.assertj.core.api.Assertions.assertThat(driver.findElements(locator.by()).size()).as("assert number of elements %s", locator);
             }
 
             @Override

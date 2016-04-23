@@ -33,7 +33,7 @@ public interface IFluentLocatorWait {
 
     Boolean toBeSelected();
 
-    Boolean toBeNotSelected();
+    Boolean toBeDeselected();
 
     IWebDriverWrapper frameToBeAvailableAndSwitchToIt();
 

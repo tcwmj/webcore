@@ -12,8 +12,6 @@ import java.util.List;
  * Created by Kenny Wang on 4/4/2016.
  */
 public interface IFluentLocatorAssert {
-    AbstractBooleanAssert<?> hasSelectableText(String text);
-
     AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts();
 
     AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts();

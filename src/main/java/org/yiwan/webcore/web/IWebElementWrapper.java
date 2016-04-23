@@ -77,7 +77,7 @@ public interface IWebElementWrapper {
 
     List<WebElement> getAllOptions();
 
-    List<String> getAllOptionsText();
+    List<String> getAllOptionTexts();
 
     String getSelectedText();
 
@@ -106,4 +106,6 @@ public interface IWebElementWrapper {
     long getRowCount();
 
     IWebDriverWrapper switchTo();
+
+    int getNumberOfMatches();
 }
