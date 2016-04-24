@@ -14,7 +14,6 @@ import org.yiwan.webcore.web.IWebDriverWrapper;
 import org.yiwan.webcore.web.WebDriverWrapperFactory;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,9 +22,9 @@ import java.util.HashMap;
  * Created by Kenny Wang on 3/14/2016.
  */
 public abstract class TestBase implements ITestBase {
-    public final HashMap<String, String> testMap = new HashMap<String, String>();
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected boolean skipTest = false;//whether to skip next execution of left test methods
+    private final HashMap<String, String> testMap = new HashMap<String, String>();
+    private boolean skipTest = false;//whether to skip next execution of left test methods    
     private Subject subject;
     private IWebDriverWrapper webDriverWrapper;
     private ITestDataManager testDataManager;
@@ -151,7 +150,7 @@ public abstract class TestBase implements ITestBase {
 	 * @see org.yiwan.webcore.test.ITestBase#createWebDriverWrapper()
 	 */
     @Override
-    public void createWebDriverWrapper() throws MalformedURLException {
+    public void createWebDriverWrapper() throws Exception {
         webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
         proxyWrapper = new ProxyWrapper();
         subject = new TransactionSubject(this);

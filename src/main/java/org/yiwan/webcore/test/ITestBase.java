@@ -5,7 +5,6 @@ import org.yiwan.webcore.proxy.ProxyWrapper;
 import org.yiwan.webcore.web.IPageManager;
 import org.yiwan.webcore.web.IWebDriverWrapper;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 
 public interface ITestBase {
@@ -36,7 +35,7 @@ public interface ITestBase {
 
     void setSkipTest(boolean skipTest);
 
-    void createWebDriverWrapper() throws MalformedURLException;
+    void createWebDriverWrapper() throws Exception;
 
     ProxyWrapper getProxyWrapper();
 
