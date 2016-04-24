@@ -2,6 +2,8 @@ package org.yiwan.webcore.test;
 
 import org.testng.ITestResult;
 import org.yiwan.webcore.proxy.ProxyWrapper;
+import org.yiwan.webcore.test.pojo.TestCapability;
+import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.web.IPageManager;
 import org.yiwan.webcore.web.IWebDriverWrapper;
 

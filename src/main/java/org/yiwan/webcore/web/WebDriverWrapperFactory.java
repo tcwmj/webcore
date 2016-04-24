@@ -16,7 +16,7 @@ import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.proxy.ProxyWrapper;
-import org.yiwan.webcore.test.TestCapability;
+import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.chrome.ChromeDriverWrapper;
 import org.yiwan.webcore.web.dummy.DummyDriverWrapper;

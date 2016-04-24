@@ -1,4 +1,4 @@
-package org.yiwan.webcore.test;
+package org.yiwan.webcore.test.pojo;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

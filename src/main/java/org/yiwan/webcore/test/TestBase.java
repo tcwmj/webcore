@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.yiwan.webcore.proxy.*;
+import org.yiwan.webcore.test.pojo.TestCapability;
+import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.IPageManager;
@@ -51,7 +53,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getWebDriverWrapper()
+     * @see org.yiwan.webcore.test.ITestBase#getWebDriverWrapper()
 	 */
     @Override
     public IWebDriverWrapper getWebDriverWrapper() {

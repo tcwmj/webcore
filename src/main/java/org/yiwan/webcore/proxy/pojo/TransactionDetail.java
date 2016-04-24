@@ -1,4 +1,4 @@
-package org.yiwan.webcore.pojo;
+package org.yiwan.webcore.proxy.pojo;
 
 /**
  * Created by Kenny Wang on 4/2/2016.

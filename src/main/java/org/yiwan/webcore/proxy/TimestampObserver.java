@@ -8,10 +8,10 @@ import net.lightbody.bmp.util.HttpMessageContents;
 import net.lightbody.bmp.util.HttpMessageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.pojo.HttpRequestDetail;
-import org.yiwan.webcore.pojo.HttpResponseDetail;
-import org.yiwan.webcore.pojo.TransactionDetail;
-import org.yiwan.webcore.pojo.UserTransactionDetail;
+import org.yiwan.webcore.proxy.pojo.HttpRequestDetail;
+import org.yiwan.webcore.proxy.pojo.HttpResponseDetail;
+import org.yiwan.webcore.proxy.pojo.TransactionDetail;
+import org.yiwan.webcore.proxy.pojo.UserTransactionDetail;
 import org.yiwan.webcore.test.ITestBase;
 
 import java.util.ArrayList;

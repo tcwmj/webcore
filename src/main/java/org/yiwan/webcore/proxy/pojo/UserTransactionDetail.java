@@ -1,4 +1,4 @@
-package org.yiwan.webcore.pojo;
+package org.yiwan.webcore.proxy.pojo;
 
 import java.util.List;
 

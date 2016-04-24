@@ -1,4 +1,4 @@
-package org.yiwan.webcore.test;
+package org.yiwan.webcore.test.pojo;
 
 /**
  * Created by Kenny Wang on 4/2/2016.

@@ -72,9 +72,9 @@ public interface IWebElementWrapper {
 
     String getInnerText();
 
-    List<String> getAllInnerTexts();
-
     IWebElementWrapper setInnerText(String text);
+
+    List<String> getAllInnerTexts();
 
     IWebElementWrapper setValue(String value);
 

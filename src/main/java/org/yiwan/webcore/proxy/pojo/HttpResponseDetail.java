@@ -1,4 +1,4 @@
-package org.yiwan.webcore.pojo;
+package org.yiwan.webcore.proxy.pojo;
 
 import io.netty.handler.codec.http.HttpResponse;
 import net.lightbody.bmp.util.HttpMessageContents;
