@@ -19,7 +19,7 @@ public class TestCaseManager {
     private static final BlockingQueue<TestEnvironment> TEST_ENVIRONMENTS = getTestEnvironments(PropHelper.SERVER_INFO);
     private static ThreadLocal<TestBase> testCase = new ThreadLocal<TestBase>();
 
-    public static TestBase getTestCase() {
+    public static ITestBase getTestCase() {
         return testCase.get();
     }
 

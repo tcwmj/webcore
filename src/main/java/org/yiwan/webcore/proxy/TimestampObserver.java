@@ -12,7 +12,7 @@ import org.yiwan.webcore.pojo.HttpRequestDetail;
 import org.yiwan.webcore.pojo.HttpResponseDetail;
 import org.yiwan.webcore.pojo.TransactionDetail;
 import org.yiwan.webcore.pojo.UserTransactionDetail;
-import org.yiwan.webcore.test.TestBase;
+import org.yiwan.webcore.test.ITestBase;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class TimestampObserver extends SampleObserver {
     }
 
     @Override
-    public void start(TestBase testCase) {
+    public void start(ITestBase testCase) {
         super.start(testCase);
         userTransactionDetail = new UserTransactionDetail();
         userTransactionDetail.setUserActionTimestamp(System.currentTimeMillis());
@@ -39,7 +39,7 @@ public class TimestampObserver extends SampleObserver {
     }
 
     @Override
-    public void stop(TestBase testCase) {
+    public void stop(ITestBase testCase) {
         super.stop(testCase);
         userTransactionDetail.setDocumentReadyTimestamp(System.currentTimeMillis());
         //TODO write userTransactionDetail into database

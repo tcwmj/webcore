@@ -2,7 +2,7 @@ package org.yiwan.webcore.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.test.TestBase;
+import org.yiwan.webcore.test.ITestBase;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
@@ -13,12 +13,12 @@ public class SampleObserver implements Observer {
     private boolean started = false;
 
     @Override
-    public void start(TestBase testCase) {
+    public void start(ITestBase testCase) {
         started = true;
     }
 
     @Override
-    public void stop(TestBase testCase) {
+    public void stop(ITestBase testCase) {
         if (!started) {
             throw new RuntimeException(this.getClass() + " must be started");
         }
