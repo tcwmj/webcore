@@ -1173,7 +1173,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                             @Override
                             public String toString() {
-                                return String.format("wait %s attributeValueOf value of %s to be %s", attribute, locator, text);
+                                return String.format("wait %s attribute value of %s to be %s", locator, attribute, text.isEmpty() ? "empty" : text);
                             }
                         });
                     }
@@ -1229,7 +1229,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                             @Override
                             public String toString() {
-                                return String.format("wait %s css value of %s to be %s", cssAttribute, locator, text);
+                                return String.format("wait %s css value of %s to be %s", locator, cssAttribute, text.isEmpty() ? "empty" : text);
                             }
                         });
                     }
