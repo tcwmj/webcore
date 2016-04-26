@@ -1567,28 +1567,38 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public IFluentAssert assertThat() {
         return new IFluentAssert() {
             @Override
-            public AbstractBooleanAssert<?> alertIsPresent() {
-                return org.assertj.core.api.Assertions.assertThat(alert().exists()).as("assert alert exists");
+            public IFluentAlertAssert alert() {
+                return new IFluentAlertAssert() {
+                    @Override
+                    public AbstractBooleanAssert<?> present() {
+                        return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().exists()).as("assert alert present");
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> text() {
+                        return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().getText()).as("assert alert text");
+                    }
+                };
             }
 
             @Override
-            public AbstractCharSequenceAssert<?, String> alertText() {
-                return org.assertj.core.api.Assertions.assertThat(alert().getText()).as("assert alert text");
-            }
+            public IFluentPageAssert page() {
+                return new IFluentPageAssert() {
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> title() {
+                        return org.assertj.core.api.Assertions.assertThat(getPageTitle()).as("assert page title");
+                    }
 
-            @Override
-            public AbstractCharSequenceAssert<?, String> pageTitle() {
-                return org.assertj.core.api.Assertions.assertThat(getPageTitle()).as("assert page title");
-            }
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> source() {
+                        return org.assertj.core.api.Assertions.assertThat(getPageSource()).as("assert page source");
+                    }
 
-            @Override
-            public AbstractCharSequenceAssert<?, String> pageSource() {
-                return org.assertj.core.api.Assertions.assertThat(getPageSource()).as("assert page source");
-            }
-
-            @Override
-            public AbstractCharSequenceAssert<?, String> url() {
-                return org.assertj.core.api.Assertions.assertThat(getCurrentUrl()).as("assert current url");
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> url() {
+                        return org.assertj.core.api.Assertions.assertThat(getCurrentUrl()).as("assert current url");
+                    }
+                };
             }
         };
     }

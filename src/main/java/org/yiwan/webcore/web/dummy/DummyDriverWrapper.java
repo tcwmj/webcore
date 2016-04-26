@@ -662,30 +662,14 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         return new IFluentAssert() {
 
             @Override
-            public AbstractBooleanAssert<?> alertIsPresent() {
+            public IFluentAlertAssert alert() {
                 return null;
             }
 
             @Override
-            public AbstractCharSequenceAssert<?, String> alertText() {
+            public IFluentPageAssert page() {
                 return null;
             }
-
-            @Override
-            public AbstractCharSequenceAssert<?, String> pageTitle() {
-                return null;
-            }
-
-            @Override
-            public AbstractCharSequenceAssert<?, String> pageSource() {
-                return null;
-            }
-
-            @Override
-            public AbstractCharSequenceAssert<?, String> url() {
-                return null;
-            }
-
         };
     }
 
