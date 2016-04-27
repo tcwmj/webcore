@@ -10,5 +10,5 @@ public interface IAlertWrapper {
 
     String getText();
 
-    boolean exists();
+    boolean present();
 }

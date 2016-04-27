@@ -1120,28 +1120,63 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean notToBe(String text) {
-                        return null;
+                    public Boolean notToBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return !element(locator).getInnerText().equals(text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean contains(String text) {
-                        return null;
+                    public Boolean contains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return element(locator).getInnerText().contains(text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean notContains(String text) {
-                        return null;
+                    public Boolean notContains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return !element(locator).getInnerText().contains(text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean startWith(String text) {
-                        return null;
+                    public Boolean startsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return element(locator).getInnerText().startsWith(text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean endWith(String text) {
-                        return null;
+                    public Boolean endsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+
+                            @Nullable
+                            @Override
+                            public Boolean apply(@Nullable WebDriver input) {
+                                return element(locator).getInnerText().endsWith(text);
+                            }
+                        });
                     }
 
                     @Override
@@ -1154,11 +1189,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public Boolean toBeInvisible() {
                 return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator.by()));
-            }
-
-            @Override
-            public Boolean toBeAllInvisible() {
-                return null;
             }
 
             @Override
@@ -1203,18 +1233,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public Boolean toBeAllAbsent() {
-                return null;
-            }
-
-            @Override
             public Boolean toBeSelected() {
                 return wait.until(ExpectedConditions.elementToBeSelected(locator.by()));
             }
 
             @Override
             public Boolean toBeDeselected() {
-                return null;
+                return wait.until(ExpectedConditions.elementSelectionStateToBe(locator.by(), false));
             }
 
             /**
@@ -1263,7 +1288,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public List<WebElement> toBeAllVisible() {
-                return null;
+                return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator.by()));
             }
 
             @Override
@@ -1281,33 +1306,100 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean notToBe(String text) {
-                        return null;
+                    public Boolean notToBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !element(locator).getAttribute(attribute).equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attribute value of %s not to be %s", locator, attribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean contains(String text) {
-                        return null;
+                    public Boolean contains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return element(locator).getAttribute(attribute).contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attribute value of %s contains %s", locator, attribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean notContains(String text) {
-                        return null;
+                    public Boolean notContains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !element(locator).getAttribute(attribute).contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attribute value of %s not contains %s", locator, attribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean startWith(String text) {
-                        return null;
+                    public Boolean startsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return element(locator).getAttribute(attribute).startsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attribute value of %s starts with %s", locator, attribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean endWith(String text) {
-                        return null;
+                    public Boolean endsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return element(locator).getAttribute(attribute).endsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attribute value of %s ends with %s", locator, attribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean matches(Pattern pattern) {
-                        return null;
+                    public Boolean matches(final Pattern pattern) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            private String currentValue = null;
+
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                try {
+                                    currentValue = element(locator).getAttribute(attribute);
+                                    return pattern.matcher(currentValue).find();
+                                } catch (Exception e) {
+                                    return false;
+                                }
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s attribute value of %s %s to match pattern %s", locator, attribute, currentValue, pattern.pattern());
+                            }
+                        });
                     }
 
                     @Override
@@ -1337,33 +1429,100 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean notToBe(String text) {
-                        return null;
+                    public Boolean notToBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !element(locator).getCssValue(cssAttribute).equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s not to be %s", locator, cssAttribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean contains(String text) {
-                        return null;
+                    public Boolean contains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return element(locator).getCssValue(cssAttribute).contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s contains %s", locator, cssAttribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean notContains(String text) {
-                        return null;
+                    public Boolean notContains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !element(locator).getCssValue(cssAttribute).contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s not contains %s", locator, cssAttribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean startWith(String text) {
-                        return null;
+                    public Boolean startsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return element(locator).getCssValue(cssAttribute).startsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s starts with %s", locator, cssAttribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean endWith(String text) {
-                        return null;
+                    public Boolean endsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return element(locator).getCssValue(cssAttribute).endsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s ends with %s", locator, cssAttribute, text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean matches(Pattern pattern) {
-                        return null;
+                    public Boolean matches(final Pattern pattern) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            private String currentValue = null;
+
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                try {
+                                    currentValue = element(locator).getCssValue(cssAttribute);
+                                    return pattern.matcher(currentValue).find();
+                                } catch (Exception e) {
+                                    return false;
+                                }
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait %s css value of %s %s to match pattern %s", locator, cssAttribute, currentValue, pattern.pattern());
+                            }
+                        });
                     }
 
                     @Override
@@ -1501,12 +1660,22 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                     @Override
                     public Boolean toBeEmpty() {
-                        return null;
+                        return toBe("");
                     }
 
                     @Override
-                    public Boolean notToBe(String text) {
-                        return null;
+                    public Boolean notToBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getPageTitle().equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page title not to be %s", text);
+                            }
+                        });
                     }
 
                     @Override
@@ -1515,25 +1684,74 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean notContains(String text) {
-                        return null;
+                    public Boolean notContains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getPageTitle().contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page title not contains %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean startWith(String text) {
-                        return null;
+                    public Boolean startsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getPageTitle().startsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page title starts with %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean endWith(String text) {
-                        return null;
+                    public Boolean endsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getPageTitle().endsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page title ends with %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean matches(Pattern pattern) {
-                        return null;
+                    public Boolean matches(final Pattern pattern) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            private String currentValue = null;
+
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                try {
+                                    currentValue = getPageTitle();
+                                    return pattern.matcher(currentValue).find();
+                                } catch (Exception e) {
+                                    return false;
+                                }
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page titie %s to match pattern %s", currentValue, pattern.pattern());
+                            }
+                        });
                     }
-                };
+                }
+
+                        ;
             }
 
             @Override
@@ -1606,11 +1824,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean startWith(final String text) {
+                    public Boolean startsWith(final String text) {
                         return wait.until(new ExpectedCondition<Boolean>() {
                             @Override
                             public Boolean apply(WebDriver driver) {
-                                return !getPageSource().startsWith(text);
+                                return getPageSource().startsWith(text);
                             }
 
                             @Override
@@ -1621,11 +1839,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean endWith(final String text) {
+                    public Boolean endsWith(final String text) {
                         return wait.until(new ExpectedCondition<Boolean>() {
                             @Override
                             public Boolean apply(WebDriver driver) {
-                                return !getPageSource().endsWith(text);
+                                return getPageSource().endsWith(text);
                             }
 
                             @Override
@@ -1636,8 +1854,25 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean matches(Pattern pattern) {
-                        return null;
+                    public Boolean matches(final Pattern pattern) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            private String currentValue = null;
+
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                try {
+                                    currentValue = getPageSource();
+                                    return pattern.matcher(currentValue).find();
+                                } catch (Exception e) {
+                                    return false;
+                                }
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source %s to match pattern %s", currentValue, pattern.pattern());
+                            }
+                        });
                     }
                 };
             }
@@ -1647,43 +1882,120 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return new IFluentStringWait() {
 
                     @Override
-                    public Boolean toBe(String text) {
-                        return null;
+                    public Boolean toBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getCurrentUrl().equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url to be %s", text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
                     public Boolean toBeEmpty() {
-                        return null;
+                        return toBe("");
                     }
 
                     @Override
-                    public Boolean notToBe(String text) {
-                        return null;
+                    public Boolean notToBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getCurrentUrl().equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url not to be %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean contains(String text) {
-                        return null;
+                    public Boolean contains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getCurrentUrl().contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url contains %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean notContains(String text) {
-                        return null;
+                    public Boolean notContains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getCurrentUrl().contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url not contains %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean startWith(String text) {
-                        return null;
+                    public Boolean startsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getCurrentUrl().startsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url starts with %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean endWith(String text) {
-                        return null;
+                    public Boolean endsWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getCurrentUrl().endsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url ends with %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean matches(Pattern pattern) {
-                        return null;
+                    public Boolean matches(final Pattern pattern) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            private String currentValue = null;
+
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                try {
+                                    currentValue = getCurrentUrl();
+                                    return pattern.matcher(currentValue).find();
+                                } catch (Exception e) {
+                                    return false;
+                                }
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait current url %s to match pattern %s", currentValue, pattern.pattern());
+                            }
+                        });
                     }
                 };
             }
@@ -1692,7 +2004,9 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IAlertWrapper alertIsPresent() {
                 return new AlertWrapper(wait.until(ExpectedConditions.alertIsPresent()));
             }
-        };
+        }
+
+                ;
     }
 
     @Override
@@ -1768,7 +2082,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return new IFluentAlertAssert() {
                     @Override
                     public AbstractBooleanAssert<?> present() {
-                        return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().exists()).as("assert alert present");
+                        return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().present()).as("assert alert present");
                     }
 
                     @Override
@@ -1845,7 +2159,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public boolean exists() {
+        public boolean present() {
             try {
                 driver.switchTo().alert();
                 return true;

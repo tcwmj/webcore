@@ -556,11 +556,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public Boolean toBeAllInvisible() {
-                return null;
-            }
-
-            @Override
             public Boolean toBeSelected() {
                 return null;
             }
@@ -587,11 +582,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public Boolean toBeAbsent() {
-                return null;
-            }
-
-            @Override
-            public Boolean toBeAllAbsent() {
                 return null;
             }
 
@@ -783,7 +773,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public boolean exists() {
+            public boolean present() {
                 return false;
             }
         };

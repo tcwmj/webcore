@@ -17,9 +17,9 @@ public interface IFluentStringWait {
 
     Boolean notContains(String text);
 
-    Boolean startWith(String text);
+    Boolean startsWith(String text);
 
-    Boolean endWith(String text);
+    Boolean endsWith(String text);
 
     Boolean matches(Pattern pattern);
 }

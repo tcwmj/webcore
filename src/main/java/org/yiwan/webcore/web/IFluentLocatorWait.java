@@ -27,11 +27,7 @@ public interface IFluentLocatorWait {
 
     Boolean toBeAbsent();
 
-    Boolean toBeAllAbsent();
-
     Boolean toBeInvisible();
-
-    Boolean toBeAllInvisible();
 
     Boolean toBeSelected();
 
