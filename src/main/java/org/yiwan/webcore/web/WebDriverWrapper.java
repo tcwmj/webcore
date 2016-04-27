@@ -118,17 +118,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     /**
-     * is page source contains such text
-     *
-     * @param text
-     * @return boolean
-     */
-    @Override
-    public boolean isPageSourceContains(String text) {
-        return driver.getPageSource().contains(text);
-    }
-
-    /**
      * get page source of current page
      *
      * @return page source string
@@ -258,49 +247,163 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public IActionsWrapper actions() {
         return new IActionsWrapper() {
             private Actions actions = new Actions(driver);
+            private StringBuffer trace = new StringBuffer("try to perform following actions:");
 
             @Override
             public IActionsWrapper click() {
+                trace.append("click anywhere;");
                 actions.click();
                 return this;
             }
 
             @Override
             public IActionsWrapper click(Locator locator) {
+                trace.append(String.format("click %s;", locator));
                 actions.click(waitThat(locator).toBeClickable());
                 return this;
             }
 
             @Override
+            public IActionsWrapper clickAndHold() {
+                trace.append("click and hold anywhere;");
+                actions.clickAndHold();
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper clickAndHold(Locator locator) {
+                trace.append(String.format("click and hold %s;", locator));
+                actions.clickAndHold(waitThat(locator).toBeClickable());
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper contextClick() {
+                trace.append("context click anywhere;");
+                actions.contextClick();
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper contextClick(Locator locator) {
+                trace.append(String.format("context click %s;", locator));
+                actions.contextClick(waitThat(locator).toBeClickable());
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper release() {
+                trace.append("release on anywhere;");
+                actions.release();
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper release(Locator locator) {
+                trace.append(String.format("release on %s;", locator));
+                actions.release(waitThat(locator).toBeVisible());
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper doubleClick() {
+                trace.append("double click anywhere;");
+                actions.doubleClick();
+                return this;
+            }
+
+            @Override
             public IActionsWrapper doubleClick(Locator locator) {
+                trace.append(String.format("double click %s;", locator));
                 actions.doubleClick(waitThat(locator).toBeClickable());
                 return this;
             }
 
             @Override
+            public IActionsWrapper dragAndDrop(Locator source, Locator target) {
+                trace.append(String.format("drag %s and drop on %s;", source, target));
+                actions.dragAndDrop(waitThat(source).toBeClickable(), waitThat(target).toBeVisible());
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper dragAndDrop(Locator source, int xOffset, int yOffset) {
+                trace.append(String.format("drag %s and drop on (%d, %d);", source, xOffset, yOffset));
+                actions.dragAndDropBy(waitThat(source).toBeClickable(), xOffset, yOffset);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper keyDown(Keys theKey) {
+                trace.append(String.format("type key %s down on anywhere;", theKey));
+                actions.keyDown(theKey);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper keyDown(Locator locator, Keys theKey) {
+                trace.append(String.format("type key %s down on %s;", theKey, locator));
+                actions.keyDown(waitThat(locator).toBeVisible(), theKey);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper keyUp(Keys theKey) {
+                trace.append(String.format("type key %s up on anywhere;", theKey));
+                actions.keyUp(theKey);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper keyUp(Locator locator, Keys theKey) {
+                trace.append(String.format("type key %s up on %s;", theKey, locator));
+                actions.keyUp(waitThat(locator).toBeVisible(), theKey);
+                return this;
+            }
+
+            @Override
             public IActionsWrapper sendKeys(Locator locator, CharSequence... keysToSend) {
+                trace.append(String.format("send keys %s on %s;", StringUtils.join(keysToSend), locator));
                 actions.sendKeys(waitThat(locator).toBeVisible(), keysToSend);
                 return this;
             }
 
             @Override
             public IActionsWrapper sendKeys(CharSequence... keysToSend) {
+                trace.append(String.format("send keys %s on anywhere;", StringUtils.join(keysToSend)));
                 actions.sendKeys(keysToSend);
                 return this;
             }
 
             @Override
-            public IActionsWrapper moveToElement(Locator locator) {
+            public IActionsWrapper moveTo(Locator locator) {
+                trace.append(String.format("move to %s;", locator));
                 actions.moveToElement(waitThat(locator).toBeVisible());
                 return this;
             }
 
             @Override
+            public IActionsWrapper moveTo(Locator locator, int xOffset, int yOffset) {
+                trace.append(String.format("move to %s offset (%d, %d);", locator, xOffset, yOffset));
+                actions.moveToElement(waitThat(locator).toBeVisible(), xOffset, yOffset);
+                return this;
+            }
+
+            @Override
+            public IActionsWrapper moveTo(int xOffset, int yOffset) {
+                trace.append(String.format("move to (%d, %d);", xOffset, yOffset));
+                actions.moveByOffset(xOffset, yOffset);
+                return this;
+            }
+
+            @Override
             public Action build() {
+                trace.append("build all actions");
                 final Action action = actions.build();
                 return new Action() {
                     @Override
                     public void perform() {
+                        logger.debug(trace.toString());
                         action.perform();
                         waitThat().documentComplete();
                     }
@@ -309,6 +412,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public void perform() {
+                logger.debug(trace.toString());
                 actions.perform();
                 waitThat().documentComplete();
             }
@@ -417,8 +521,25 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              */
             @Override
             public IWebElementWrapper doubleClick() {
-                logger.debug("try to double click {}", locator);
-                actions().doubleClick(locator).build().perform();
+                actions().doubleClick(locator).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper contextClick() {
+                actions().contextClick(locator).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper dragAndDrop(Locator target) {
+                actions().dragAndDrop(locator, target).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper dragAndDrop(int xOffset, int yOffset) {
+                actions().dragAndDrop(locator, xOffset, yOffset).perform();
                 return this;
             }
 
@@ -501,6 +622,19 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return isSelected();
             }
 
+            @Override
+            public IWebElementWrapper selectAll() {
+                Select select = new Select(waitThat(locator).toBeVisible());
+                if (!select.isMultiple()) {
+                    throw new UnsupportedOperationException(String.format("You may only select all options of a multi-select {}", locator));
+                }
+
+                for (String text : getAllOptionTexts()) {
+                    selectByVisibleText(text);
+                }
+                return this;
+            }
+
             /**
              * using java script to check web check box on or off
              *
@@ -527,44 +661,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              */
             @Override
             public IWebElementWrapper selectByVisibleText(String text) {
-                logger.debug("try to select {} on {}", text, locator);
+                logger.debug("try to select by visible text {} on {}", text, locator);
                 new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
                 waitThat().documentComplete();
                 return this;
-            }
-
-            /**
-             * Clear all selected entries. This is only valid when the SELECT supports
-             * multiple selections.
-             *
-             * @throws UnsupportedOperationException If the SELECT does not support multiple selections
-             */
-            @Override
-            public IWebElementWrapper deselectAll() {
-                logger.debug("try to deselect all options on {}", locator);
-                new Select(waitThat(locator).toBeVisible()).deselectAll();
-                waitThat().documentComplete();
-                return this;
-            }
-
-            @Override
-            public IWebElementWrapper deselectByVisibleText(String text) {
-                return null;
-            }
-
-            @Override
-            public IWebElementWrapper deselectByVisibleText(String... texts) {
-                return null;
-            }
-
-            @Override
-            public IWebElementWrapper deselectByIndex(int index) {
-                return null;
-            }
-
-            @Override
-            public IWebElementWrapper deselectByValue(String value) {
-                return null;
             }
 
             /**
@@ -591,7 +691,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              */
             @Override
             public IWebElementWrapper selectByIndex(int index) {
-                logger.debug("try to select index {} on {}", index, locator);
+                logger.debug("try to select by index {} on {}", index, locator);
                 new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
                 waitThat().documentComplete();
                 return this;
@@ -607,32 +707,63 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              */
             @Override
             public IWebElementWrapper selectByValue(String value) {
-                logger.debug("try to select value {} on {}", value, locator);
+                logger.debug("try to select by value {} on {}", value, locator);
                 new Select(waitThat(locator).toBeVisible()).selectByValue(value);
                 waitThat().documentComplete();
                 return this;
             }
 
             /**
-             * @param text
-             * @return whether text is selectable or not
+             * Clear all selected entries. This is only valid when the SELECT supports
+             * multiple selections.
+             *
+             * @throws UnsupportedOperationException If the SELECT does not support multiple selections
              */
             @Override
-            public boolean isSelectable(String text) {
-                for (WebElement e : getAllSelectedOptions()) {
-                    if (text.equals(e.getText())) {
-                        return true;
-                    }
+            public IWebElementWrapper deselectAll() {
+                logger.debug("try to deselect all options on {}", locator);
+                new Select(waitThat(locator).toBeVisible()).deselectAll();
+                waitThat().documentComplete();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByVisibleText(String text) {
+                logger.debug("try to deselect by visible text {} on {}", text, locator);
+                new Select(waitThat(locator).toBeVisible()).deselectByVisibleText(text);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByVisibleText(String... texts) {
+                for (String text : texts) {
+                    deselectByVisibleText(text);
                 }
-                return false;
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByIndex(int index) {
+                logger.debug("try to deselect by index {} on {}", index, locator);
+                new Select(waitThat(locator).toBeVisible()).deselectByIndex(index);
+                waitThat().documentComplete();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByValue(String value) {
+                logger.debug("try to deselect by value {} on {}", value, locator);
+                new Select(waitThat(locator).toBeVisible()).deselectByValue(value);
+                waitThat().documentComplete();
+                return this;
             }
 
             /**
              */
             @Override
             public IWebElementWrapper moveTo() {
-                logger.debug("move mouse to {}", locator);
-                actions().moveToElement(locator).build().perform();
+                actions().moveTo(locator).perform();
                 return this;
             }
 
@@ -658,7 +789,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
              */
             @Override
             public boolean isEnabled() {
-                return waitThat(locator).toBePresent().isEnabled();
+                return driver.findElement(locator.by()).isEnabled();
             }
 
             /**
@@ -1036,6 +1167,22 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public WebElement toBeEnable() {
+                return wait.until(new ExpectedCondition<WebElement>() {
+                    @Nullable
+                    @Override
+                    public WebElement apply(@Nullable WebDriver input) {
+                        try {
+                            WebElement element = driver.findElement(locator.by());
+                            return element.isEnabled() ? element : null;
+                        } catch (StaleElementReferenceException e) {
+                            return null;
+                        }
+                    }
+                });
+            }
+
+            @Override
             public List<WebElement> toBeAllPresent() {
                 return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator.by()));
             }
@@ -1044,7 +1191,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public Boolean toBeAbsent() {
                 return wait.until(new ExpectedCondition<Boolean>() {
                     @Override
-                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                    public Boolean apply(WebDriver driver) {
                         return !element(locator).isPresent();
                     }
 
@@ -1167,7 +1314,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     public Boolean toBe(final String text) {
                         return wait.until(new ExpectedCondition<Boolean>() {
                             @Override
-                            public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                            public Boolean apply(WebDriver driver) {
                                 return element(locator).getAttribute(attribute).equals(text);
                             }
 
@@ -1223,7 +1370,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     public Boolean toBe(final String text) {
                         return wait.until(new ExpectedCondition<Boolean>() {
                             @Override
-                            public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                            public Boolean apply(WebDriver driver) {
                                 return element(locator).getCssValue(cssAttribute).equals(text);
                             }
 
@@ -1327,7 +1474,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public Boolean documentComplete() {
                 return wait.until(new ExpectedCondition<Boolean>() {
                     @Override
-                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                    public Boolean apply(WebDriver driver) {
                         try {
                             return executeScript("return document.readyState").equals("complete");
                         } catch (WebDriverException e) {
@@ -1394,26 +1541,46 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return new IFluentStringWait() {
 
                     @Override
-                    public Boolean toBe(String text) {
-                        return null;
+                    public Boolean toBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return getPageSource().equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source to be %s", text.isEmpty() ? "empty" : text);
+                            }
+                        });
                     }
 
                     @Override
                     public Boolean toBeEmpty() {
-                        return null;
+                        return toBe("");
                     }
 
                     @Override
-                    public Boolean notToBe(String text) {
-                        return null;
+                    public Boolean notToBe(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getPageSource().equals(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source not to be %s", text);
+                            }
+                        });
                     }
 
                     @Override
                     public Boolean contains(final String text) {
                         return wait.until(new ExpectedCondition<Boolean>() {
                             @Override
-                            public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                                return isPageSourceContains(text);
+                            public Boolean apply(WebDriver driver) {
+                                return getPageSource().contains(text);
                             }
 
                             @Override
@@ -1424,18 +1591,48 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean notContains(String text) {
-                        return null;
+                    public Boolean notContains(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getPageSource().contains(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source not contains %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean startWith(String text) {
-                        return null;
+                    public Boolean startWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getPageSource().startsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source starts with %s", text);
+                            }
+                        });
                     }
 
                     @Override
-                    public Boolean endWith(String text) {
-                        return null;
+                    public Boolean endWith(final String text) {
+                        return wait.until(new ExpectedCondition<Boolean>() {
+                            @Override
+                            public Boolean apply(WebDriver driver) {
+                                return !getPageSource().endsWith(text);
+                            }
+
+                            @Override
+                            public String toString() {
+                                return String.format("wait page source ends with %s", text);
+                            }
+                        });
                     }
 
                     @Override

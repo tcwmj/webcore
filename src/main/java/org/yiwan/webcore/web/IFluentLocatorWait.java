@@ -17,6 +17,8 @@ public interface IFluentLocatorWait {
 
     WebElement toBePresent();
 
+    WebElement toBeEnable();
+
     WebElement toBeClickable();
 
     WebElement toBeVisible();

@@ -21,8 +21,6 @@ public interface IWebDriverWrapper {
 
     IWebDriverWrapper deleteAllCookies();
 
-    boolean isPageSourceContains(String text);
-
     String getPageSource();
 
     String getCurrentUrl();

@@ -1,6 +1,7 @@
 package org.yiwan.webcore.web;
 
 import org.openqa.selenium.WebElement;
+import org.yiwan.webcore.locator.Locator;
 
 import java.util.List;
 
@@ -22,6 +23,12 @@ public interface IWebElementWrapper {
 
     IWebElementWrapper doubleClick();
 
+    IWebElementWrapper contextClick();
+
+    IWebElementWrapper dragAndDrop(Locator target);
+
+    IWebElementWrapper dragAndDrop(int xOffset, int yOffset);
+
     IWebElementWrapper type(CharSequence... value);
 
     IWebElementWrapper clear();
@@ -36,7 +43,15 @@ public interface IWebElementWrapper {
 
     boolean isChecked();
 
+    IWebElementWrapper selectAll();
+
     IWebElementWrapper selectByVisibleText(String text);
+
+    IWebElementWrapper selectByVisibleText(String... texts);
+
+    IWebElementWrapper selectByIndex(int index);
+
+    IWebElementWrapper selectByValue(String value);
 
     IWebElementWrapper deselectAll();
 
@@ -47,14 +62,6 @@ public interface IWebElementWrapper {
     IWebElementWrapper deselectByIndex(int index);
 
     IWebElementWrapper deselectByValue(String value);
-
-    IWebElementWrapper selectByVisibleText(String... texts);
-
-    IWebElementWrapper selectByIndex(int index);
-
-    IWebElementWrapper selectByValue(String value);
-
-    boolean isSelectable(String text);
 
     IWebElementWrapper moveTo();
 

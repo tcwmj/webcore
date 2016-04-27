@@ -28,16 +28,6 @@ public class PageBase {
     }
 
     /**
-     * is page source contains such text
-     *
-     * @param text
-     * @return boolean
-     */
-    protected boolean isPageSourceContains(String text) {
-        return webDriverWrapper.isPageSourceContains(text);
-    }
-
-    /**
      * get page source of current page
      *
      * @return page source string

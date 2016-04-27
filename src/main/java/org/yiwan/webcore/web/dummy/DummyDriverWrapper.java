@@ -4,6 +4,7 @@ import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
@@ -60,11 +61,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     @Override
     public IWebDriverWrapper deleteAllCookies() {
         return this;
-    }
-
-    @Override
-    public boolean isPageSourceContains(String text) {
-        return false;
     }
 
     @Override
@@ -136,8 +132,73 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IActionsWrapper clickAndHold() {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper clickAndHold(Locator locator) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper contextClick() {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper contextClick(Locator locator) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper release() {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper release(Locator locator) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper doubleClick() {
+                return null;
+            }
+
+            @Override
             public IActionsWrapper doubleClick(Locator locator) {
                 return this;
+            }
+
+            @Override
+            public IActionsWrapper dragAndDrop(Locator source, Locator target) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper dragAndDrop(Locator source, int xOffset, int yOffset) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper keyDown(Keys theKey) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper keyDown(Locator locator, Keys theKey) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper keyUp(Keys theKey) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper keyUp(Locator locator, Keys theKey) {
+                return null;
             }
 
             @Override
@@ -151,8 +212,18 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IActionsWrapper moveToElement(Locator locator) {
+            public IActionsWrapper moveTo(Locator locator) {
                 return this;
+            }
+
+            @Override
+            public IActionsWrapper moveTo(Locator locator, int xOffset, int yOffset) {
+                return null;
+            }
+
+            @Override
+            public IActionsWrapper moveTo(int xOffset, int yOffset) {
+                return null;
             }
 
             @Override
@@ -223,6 +294,21 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IWebElementWrapper contextClick() {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper dragAndDrop(Locator target) {
+                return null;
+            }
+
+            @Override
+            public IWebElementWrapper dragAndDrop(int xOffset, int yOffset) {
+                return null;
+            }
+
+            @Override
             public IWebElementWrapper type(CharSequence... value) {
                 return null;
             }
@@ -251,6 +337,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             @Override
             public boolean isChecked() {
                 return false;
+            }
+
+            @Override
+            public IWebElementWrapper selectAll() {
+                return null;
             }
 
             @Override
@@ -301,11 +392,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             @Override
             public IWebElementWrapper selectByValue(String value) {
                 return null;
-            }
-
-            @Override
-            public boolean isSelectable(String text) {
-                return false;
             }
 
             @Override
@@ -486,6 +572,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public WebElement toBePresent() {
+                return null;
+            }
+
+            @Override
+            public WebElement toBeEnable() {
                 return null;
             }
 
