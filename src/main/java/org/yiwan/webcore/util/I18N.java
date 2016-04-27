@@ -1,8 +1,5 @@
 package org.yiwan.webcore.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.text.ParseException;
 import java.util.Enumeration;
@@ -17,7 +14,6 @@ public class I18N {
     public static final String EN_US = "en_US";
     public static final String EN = "en";
     public static final String ZH_CN = "zh_CN";
-    private final static Logger logger = LoggerFactory.getLogger(I18N.class);
     private static final String DATE_PATTERN_EN = "dd/MM/yyyy";
     private static final String DATE_PATTERN_ZH_CN = "yyyy-MM-dd";
     private static final String ENCODING_UTF_8 = "UTF-8";

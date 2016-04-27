@@ -6,8 +6,6 @@ import net.lightbody.bmp.filters.RequestFilter;
 import net.lightbody.bmp.filters.ResponseFilter;
 import net.lightbody.bmp.util.HttpMessageContents;
 import net.lightbody.bmp.util.HttpMessageInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.proxy.pojo.HttpRequestDetail;
 import org.yiwan.webcore.proxy.pojo.HttpResponseDetail;
 import org.yiwan.webcore.proxy.pojo.TransactionDetail;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
  * Created by Kenny Wang on 3/14/2016.
  */
 public class TimestampObserver extends SampleObserver {
-    private final static Logger logger = LoggerFactory.getLogger(TimestampObserver.class);
     private ProxyWrapper proxyWrapper;
     private UserTransactionDetail userTransactionDetail;
     private TransactionDetail transactionDetail;

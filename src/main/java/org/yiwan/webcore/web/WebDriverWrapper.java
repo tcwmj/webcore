@@ -428,8 +428,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public IWebElementWrapper clickCircularly() throws InterruptedException {
                 wait.until(new ExpectedCondition<Boolean>() {
-                    private String currentValue = null;
-
                     @Nullable
                     @Override
                     public Boolean apply(@Nullable WebDriver input) {

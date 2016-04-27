@@ -2,8 +2,6 @@ package org.yiwan.webcore.util;
 
 import com.google.common.base.CaseFormat;
 import org.apache.xml.utils.DefaultErrorHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,7 +29,6 @@ import java.util.Map.Entry;
  */
 public class Helper {
     public final static String DISCRIMINATOR_KEY = PropHelper.DISCRIMINATOR_KEY;
-    private final static Logger logger = LoggerFactory.getLogger(Helper.class);
 
     /**
      * convert a string date from a format to a format

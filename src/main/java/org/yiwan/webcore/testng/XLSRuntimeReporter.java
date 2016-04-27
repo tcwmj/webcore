@@ -3,8 +3,6 @@ package org.yiwan.webcore.testng;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.internal.Utils;
 
@@ -15,8 +13,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class XLSRuntimeReporter {
-    private final static Logger logger = LoggerFactory
-            .getLogger(XLSRuntimeReporter.class);
     private static final String TEST_SHEET = "Test Summary";
     private static final String STEP_SHEET = "Step Summary";
     private String reportName = "runtime-report.xls";
