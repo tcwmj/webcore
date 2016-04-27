@@ -6,13 +6,9 @@ package org.yiwan.webcore.web;
 public interface IFluentWait {
     void timeout(int milliseconds) throws InterruptedException;
 
-    Boolean documentComplete();
+    IFluentDocumentWait document();
 
-    IAlertWrapper alertIsPresent();
+    IFluentAlertWait alert();
 
-    IFluentStringWait pageTitle();
-
-    IFluentStringWait pageSource();
-
-    IFluentStringWait url();
+    IFluentPageWait page();
 }

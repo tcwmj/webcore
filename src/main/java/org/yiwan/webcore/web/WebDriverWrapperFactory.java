@@ -18,12 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.proxy.ProxyWrapper;
 import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.util.PropHelper;
-import org.yiwan.webcore.web.chrome.ChromeDriverWrapper;
-import org.yiwan.webcore.web.dummy.DummyDriverWrapper;
-import org.yiwan.webcore.web.firefox.FirefoxDriverWrapper;
-import org.yiwan.webcore.web.htmlunit.HtmlUnitDriverWrapper;
-import org.yiwan.webcore.web.ie.InternetExplorerDriverWrapper;
-import org.yiwan.webcore.web.phantomjs.PhantomJSDriverWrapper;
 
 import java.io.File;
 import java.net.MalformedURLException;
