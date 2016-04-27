@@ -4,6 +4,7 @@ import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
@@ -13,6 +14,7 @@ import org.yiwan.webcore.web.*;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Kenny Wang on 4/4/2016.
@@ -70,6 +72,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public String getCurrentUrl() {
+        return null;
+    }
+
+    @Override
+    public Set<Cookie> getCookies() {
         return null;
     }
 

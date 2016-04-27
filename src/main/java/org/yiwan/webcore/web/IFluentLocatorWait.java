@@ -9,8 +9,18 @@ import java.util.List;
  * Created by Kenny Wang on 4/4/2016.
  */
 public interface IFluentLocatorWait {
+    /**
+     * wait the specified locator to be present
+     *
+     * @param milliseconds timeout
+     */
     IFluentLocatorWait toBePresentIn(int milliseconds);
 
+    /**
+     * wait the specified locator to be absent
+     *
+     * @param milliseconds timeout
+     */
     IFluentLocatorWait toBeAbsentIn(int milliseconds);
 
     List<WebElement> toBeAllPresent();

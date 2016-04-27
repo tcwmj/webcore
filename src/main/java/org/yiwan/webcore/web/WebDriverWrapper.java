@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class WebDriverWrapper implements IWebDriverWrapper {
@@ -64,9 +65,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         };
     }
 
-    /**
-     * maximize browser window
-     */
     @Override
     public IWebDriverWrapper maximize() {
         logger.debug("try to maximize browser");
@@ -74,9 +72,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * close current browser tab
-     */
     @Override
     public IWebDriverWrapper close() {
         logger.debug("try to close browser tab with title {}", getPageTitle());
@@ -84,9 +79,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * close all browser tabs
-     */
     @Override
     public IWebDriverWrapper closeAll() {
         logger.debug("try to close all browser tabs");
@@ -97,9 +89,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * quit driver
-     */
     @Override
     public IWebDriverWrapper quit() {
         logger.debug("try to quit driver");
@@ -107,9 +96,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * delete all cookies
-     */
     @Override
     public IWebDriverWrapper deleteAllCookies() {
         logger.debug("try to delete all cookies");
@@ -117,31 +103,21 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * get page source of current page
-     *
-     * @return page source string
-     */
     @Override
     public String getPageSource() {
         return driver.getPageSource();
     }
 
-    /**
-     * get current url address
-     *
-     * @return string value of current url
-     */
     @Override
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
 
-    /**
-     * switch to a window with a specified name or handle
-     *
-     * @param nameOrHandle
-     */
+    @Override
+    public Set<Cookie> getCookies() {
+        return driver.manage().getCookies();
+    }
+
     @Override
     public IWebDriverWrapper switchToWindow(String nameOrHandle) {
         logger.debug("try to switch to window {}", nameOrHandle);
@@ -149,9 +125,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * Switch to default content from a frame
-     */
     @Override
     public IWebDriverWrapper switchToDefaultWindow() {
         logger.debug("try to switch to default content");
@@ -173,19 +146,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * get current page title
-     *
-     * @return string value of title
-     */
     @Override
     public String getPageTitle() {
         return driver.getTitle();
     }
 
-    /**
-     * click element if it's displayed, otherwise click the next one
-     */
     @Override
     public IWebDriverWrapper clickSmartly(Locator... locators) {
         for (Locator locator : locators) {
@@ -196,12 +161,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * input value in the first locator if it exists, otherwise input the next one
-     *
-     * @param value
-     * @param locators
-     */
     @Override
     public IWebDriverWrapper inputSmartly(String value, Locator... locators) {
         for (Locator locator : locators) {
@@ -212,11 +171,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
-    /**
-     * capture screenshot for local or remote testing
-     *
-     * @return screenshot TakesScreenshot
-     */
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) {
         TakesScreenshot takesScreenshot = null;
@@ -231,9 +185,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return takesScreenshot.getScreenshotAs(target);
     }
 
-    /**
-     * @param key
-     */
     @Override
     public IWebDriverWrapper typeKeyEvent(int key) throws AWTException {
         logger.debug("type key event " + key);
@@ -432,9 +383,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public IWebElementWrapper element(final Locator locator) {
         return new IWebElementWrapper() {
-            /**
-             * click web element if it's clickable, please use this click method as default
-             */
             @Override
             public IWebElementWrapper click() {
                 logger.debug("try to click {}", locator);
@@ -443,9 +391,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * click element without considering anything, it may raise unexpected exception
-             */
             @Override
             public IWebElementWrapper clickSilently() {
                 logger.debug("try to click {} silently", locator);
@@ -454,9 +399,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * forced to click element even if it's not clickable, it may raise unexpected exception, please use method click as default
-             */
             @Override
             public IWebElementWrapper clickForcedly() {
                 try {
@@ -466,11 +408,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 }
             }
 
-            /**
-             * click an element if it's displayed, otherwise skip this action
-             *
-             * @return boolean
-             */
             @Override
             public boolean clickSmartly() {
                 if (isDisplayed()) {
@@ -480,9 +417,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return false;
             }
 
-            /**
-             * click a locator by javascript
-             */
             @Override
             public IWebElementWrapper clickByJavaScript() {
                 logger.debug("try to click {} by executing javascript", locator);
@@ -491,9 +425,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * click the first element in a loop until it isn't displayed
-             */
             @Override
             public IWebElementWrapper clickCircularly() throws InterruptedException {
                 wait.until(new ExpectedCondition<Boolean>() {
@@ -516,9 +447,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * double click web element if it's clickable
-             */
             @Override
             public IWebElementWrapper doubleClick() {
                 actions().doubleClick(locator).perform();
@@ -543,11 +471,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Type value into the web edit box if it's visible
-             *
-             * @param value
-             */
             @Override
             public IWebElementWrapper type(CharSequence... value) {
                 logger.debug("try to type {} on {}", StringUtils.join(value), locator);
@@ -556,9 +479,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Clear the content of the web edit box if it's visible
-             */
             @Override
             public IWebElementWrapper clear() {
                 logger.debug("try to clear value on " + locator);
@@ -567,22 +487,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * clear the web edit box and input the value
-             *
-             * @param value
-             */
             @Override
             public IWebElementWrapper input(String value) {
                 return clear().type(value);
             }
 
-            /**
-             * input an element if it's displayed, otherwise skip this action
-             *
-             * @param value
-             * @return boolean
-             */
             @Override
             public boolean inputSmartly(String value) {
                 if (isDisplayed()) {
@@ -592,11 +501,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return false;
             }
 
-            /**
-             * check web check box on or off if it's visible
-             *
-             * @param checked on or off
-             */
             @Override
             public IWebElementWrapper check(boolean checked) {
                 logger.debug("try to check {} {}", checked ? "on" : "off", locator);
@@ -606,11 +510,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * web check box checked or not
-             *
-             * @return checked or not
-             */
             @Override
             public boolean isChecked() {
 //                String checked = getAttribute("checked");
@@ -635,11 +534,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * using java script to check web check box on or off
-             *
-             * @param checked on or off
-             */
             @Override
             public IWebElementWrapper checkByJavaScript(boolean checked) {
                 logger.debug("try to check {} {} by javascript", checked ? "on" : "off", locator);
@@ -651,14 +545,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Select all options that display text matching the argument. That is, when
-             * given "Bar" this would select an option like:
-             * <p/>
-             * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-             *
-             * @param text The visible text to match against
-             */
             @Override
             public IWebElementWrapper selectByVisibleText(String text) {
                 logger.debug("try to select by visible text {} on {}", text, locator);
@@ -667,14 +553,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Select all options that display text matching the argument. That is, when
-             * given "Bar" this would select an option like:
-             * <p/>
-             * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-             *
-             * @param texts The visible text to match against
-             */
             @Override
             public IWebElementWrapper selectByVisibleText(String... texts) {
                 for (String text : texts) {
@@ -683,12 +561,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Select the option at the given index. This is done locator examing the
-             * "index" attributeValueOf of an element, and not merely locator counting.
-             *
-             * @param index The option at this index will be selected
-             */
             @Override
             public IWebElementWrapper selectByIndex(int index) {
                 logger.debug("try to select by index {} on {}", index, locator);
@@ -697,14 +569,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Select all options that have a value matching the argument. That is, when
-             * given "foo" this would select an option like:
-             * <p/>
-             * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-             *
-             * @param value The value to match against
-             */
             @Override
             public IWebElementWrapper selectByValue(String value) {
                 logger.debug("try to select by value {} on {}", value, locator);
@@ -713,12 +577,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Clear all selected entries. This is only valid when the SELECT supports
-             * multiple selections.
-             *
-             * @throws UnsupportedOperationException If the SELECT does not support multiple selections
-             */
             @Override
             public IWebElementWrapper deselectAll() {
                 logger.debug("try to deselect all options on {}", locator);
@@ -759,19 +617,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             */
             @Override
             public IWebElementWrapper moveTo() {
                 actions().moveTo(locator).perform();
                 return this;
             }
 
-            /**
-             * whether locator is present or not
-             *
-             * @return whether locator is present or not
-             */
             @Override
             public boolean isPresent() {
                 try {
@@ -782,21 +633,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 }
             }
 
-            /**
-             * whether locator is enabled or not
-             *
-             * @return boolean
-             */
             @Override
             public boolean isEnabled() {
                 return driver.findElement(locator.by()).isEnabled();
             }
 
-            /**
-             * whether locator is displayed or not
-             *
-             * @return boolean
-             */
             @Override
             public boolean isDisplayed() {
                 try {
@@ -806,53 +647,26 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 }
             }
 
-            /**
-             * whether locator is selected or not
-             *
-             * @return boolean
-             */
             @Override
             public boolean isSelected() {
                 return waitThat(locator).toBePresent().isSelected();
             }
 
-            /**
-             * get value of specified attributeValueOf
-             *
-             * @param attribute
-             * @return attributeValueOf value
-             */
             @Override
             public String getAttribute(String attribute) {
                 return waitThat(locator).toBePresent().getAttribute(attribute);
             }
 
-            /**
-             * get css attributeValueOf value
-             *
-             * @param attribute
-             * @return string
-             */
             @Override
             public String getCssValue(String attribute) {
                 return waitThat(locator).toBePresent().getCssValue(attribute);
             }
 
-            /**
-             * get text on such web element
-             *
-             * @return string
-             */
             @Override
             public String getInnerText() {
                 return waitThat(locator).toBeVisible().getText();
             }
 
-            /**
-             * get all text on found locators
-             *
-             * @return text list
-             */
             @Override
             public List<String> getAllInnerTexts() {
                 List<String> Texts = new ArrayList<String>();
@@ -862,11 +676,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return Texts;
             }
 
-            /**
-             * set innert text on such web element
-             *
-             * @param text
-             */
             @Override
             public IWebElementWrapper setInnerText(String text) {
                 logger.debug("try to set innertext of {} to {}", locator, text);
@@ -875,11 +684,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * set value on such web element, an alternative approach for method input
-             *
-             * @param value
-             */
             @Override
             public IWebElementWrapper setValue(String value) {
                 logger.debug("try to set text of {} to {}", locator, value);
@@ -888,31 +692,16 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * get all selected options in web list element
-             *
-             * @return List&gt;WebElement&lt;
-             */
             @Override
             public List<WebElement> getAllSelectedOptions() {
                 return new Select(waitThat(locator).toBeVisible()).getAllSelectedOptions();
             }
 
-            /**
-             * get all options in web list element
-             *
-             * @return List&gt;WebElement&lt;
-             */
             @Override
             public List<WebElement> getAllOptions() {
                 return new Select(waitThat(locator).toBeVisible()).getOptions();
             }
 
-            /**
-             * get all options text in web list element
-             *
-             * @return List&gt;String&lt;
-             */
             @Override
             public List<String> getAllOptionTexts() {
                 List<String> list = new ArrayList<String>();
@@ -923,21 +712,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return list;
             }
 
-            /**
-             * get first selected text in web list element
-             *
-             * @return string
-             */
             @Override
             public String getSelectedText() {
                 return getAllSelectedOptions().get(0).getText();
             }
 
-            /**
-             * get all selected texts in web list element
-             *
-             * @return List&gt;String&lt;
-             */
             @Override
             public List<String> getAllSelectedTexts() {
                 List<String> list = new ArrayList<String>();
@@ -948,11 +727,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return list;
             }
 
-            /**
-             * trigger an event on such element
-             *
-             * @param event String, such as "mouseover"
-             */
             @Override
             public IWebElementWrapper triggerEvent(String event) {
                 logger.debug("try to trigger {} on {}", event, locator);
@@ -962,11 +736,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * fire an event on such element
-             *
-             * @param event String, such as "onchange"
-             */
             @Override
             public IWebElementWrapper fireEvent(String event) {
                 logger.debug("try to fire {} on {}", event, locator);
@@ -975,9 +744,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * Scroll page or scrollable element to a specific target element.
-             */
             @Override
             public IWebElementWrapper scrollTo() {
                 logger.debug("try to scroll to {}", locator);
@@ -987,12 +753,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * immediately showing the user the result of some action without requiring
-             * the user to manually scroll through the document to find the result
-             * Scrolls the object so that top of the object is visible at the top of the
-             * window.
-             */
             @Override
             public IWebElementWrapper scrollIntoView() {
                 scrollIntoView(true);
@@ -1000,15 +760,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * immediately showing the user the result of some action without requiring
-             * the user to manually scroll through the document to find the result
-             *
-             * @param bAlignToTop true Default. Scrolls the object so that top of the object is
-             *                    visible at the top of the window. <br/>
-             *                    false Scrolls the object so that the bottom of the object is
-             *                    visible at the bottom of the window.
-             */
             @Override
             public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
                 logger.debug("try to scroll into view on {}, align to top is {}", locator, bAlignToTop);
@@ -1017,12 +768,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * using java script to set element attributeValueOf
-             *
-             * @param attribute
-             * @param value
-             */
             @Override
             public IWebElementWrapper setAttribute(String attribute, String value) {
                 logger.debug("try to set attributeValueOf {} on {} to {}", attribute, locator, value);
@@ -1031,11 +776,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * using java script to remove element attributeValueOf
-             *
-             * @param attribute
-             */
             @Override
             public IWebElementWrapper removeAttribute(String attribute) {
                 logger.debug("try to remove attributeValueOf {} on {}", attribute, locator);
@@ -1044,9 +784,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * using java script to get row number of cell element in web table
-             */
             @Override
             public long getCellRow() {
                 long ret = -1;
@@ -1055,9 +792,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return ret;
             }
 
-            /**
-             * using java script to get column number of cell element in web table
-             */
             @Override
             public long getCellColumn() {
                 long ret = -1;
@@ -1066,9 +800,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return ret;
             }
 
-            /**
-             * using java script to get row number of row element in web table
-             */
             @Override
             public long getRow() {
                 long ret = -1;
@@ -1077,11 +808,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return ret;
             }
 
-            /**
-             * using java script to get row count of web table
-             *
-             * @return long
-             */
             @Override
             public long getRowCount() {
                 long ret = -1;
@@ -1242,11 +968,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return wait.until(ExpectedConditions.elementSelectionStateToBe(locator.by(), false));
             }
 
-            /**
-             * wait the specified locator to be present
-             *
-             * @param milliseconds timeout
-             */
             @Override
             public IFluentLocatorWait toBePresentIn(int milliseconds) {
                 long t = System.currentTimeMillis();
@@ -1259,11 +980,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return this;
             }
 
-            /**
-             * wait the specified locator to be absent
-             *
-             * @param milliseconds timeout
-             */
             @Override
             public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
                 long t = System.currentTimeMillis();
