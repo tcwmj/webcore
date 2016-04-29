@@ -38,8 +38,9 @@ public class FileDownloadObserver extends SampleObserver {
     @Override
     public void stop(ITestBase testCase) {
         super.stop(testCase);
-        if (testCase.isPrepareToDownload())
+        if (testCase.isPrepareToDownload()) {
             testCase.setPrepareToDownload(false);
+        }
     }
 
 
@@ -133,6 +134,9 @@ public class FileDownloadObserver extends SampleObserver {
 
     private void completeDownload(HttpResponse response) {
         response.setStatus(HttpResponseStatus.NO_CONTENT);
+        if (testCase.isPrepareToDownload()) {
+            testCase.setPrepareToDownload(false);
+        }
     }
 
 }
