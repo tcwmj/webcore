@@ -63,6 +63,10 @@ public class FileDownloadObserver extends SampleObserver {
                         setDownloadFile(response, filename, "xml");
                         downloadTextFile(contents.getTextContents());
                         completeDownload(response);
+                    } else if (contents.getContentType().contains("application/xml")) {
+                        setDownloadFile(response, filename, "xml");
+                        downloadBinaryFile(contents.getBinaryContents());
+                        completeDownload(response);
                     } else if (contents.getContentType().contains("application/vnd.ms-excel")) {
                         setDownloadFile(response, filename, "xls");
                         downloadBinaryFile(contents.getBinaryContents());
