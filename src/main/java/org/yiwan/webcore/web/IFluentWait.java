@@ -8,6 +8,8 @@ public interface IFluentWait {
 
     IFluentDocumentWait document();
 
+    IFluentJQueryWait jQuery();
+
     IFluentAlertWait alert();
 
     IFluentPageWait page();

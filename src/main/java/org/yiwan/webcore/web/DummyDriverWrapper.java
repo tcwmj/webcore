@@ -658,6 +658,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IFluentJQueryWait jQuery() {
+                return null;
+            }
+
+            @Override
             public IFluentAlertWait alert() {
                 return null;
             }
