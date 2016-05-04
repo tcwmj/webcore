@@ -2,7 +2,6 @@ package org.yiwan.webcore.web;
 
 import net.lightbody.bmp.client.ClientUtil;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -29,7 +28,6 @@ import java.util.Properties;
  */
 public class WebDriverWrapperFactory {
     private final static Logger logger = LoggerFactory.getLogger(WebDriverWrapperFactory.class);
-    private final static Proxy SELENIUM_PROXY = ClientUtil.createSeleniumProxy(ProxyWrapper.getProxy());
 
     private final String os;
     private final String os_version;
@@ -212,6 +210,10 @@ public class WebDriverWrapperFactory {
 //        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/pdf,application/x-msexcel,application/excel,application/x-excel,application/excel,application/x-excel,application/excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,image/png,image/pjpeg,image/jpeg,text/html,text/plain,application/msword,application/xml,application/excel");
         profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/xml,text/csv,image/jpeg,application/zip,application/vnd.ms-excel,application/pdf,application/xml");
 
+        //Then add the proxy setting to the Firefox profile we created
+//        profile.setPreference("network.proxy.http", "localhost");
+//        profile.setPreference("network.proxy.http_port", "8888");
+
         DesiredCapabilities capability = DesiredCapabilities.firefox();
         configBrowserCapabilities(capability);
         return new FirefoxDriver(firefoxBinary, profile, capability);
@@ -275,19 +277,20 @@ public class WebDriverWrapperFactory {
         }
         capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, PropHelper.ACCEPT_SSL_CERTS);
         capability.setCapability(CapabilityType.HAS_NATIVE_EVENTS, PropHelper.NATIVE_EVENTS);
-        if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null)
-            capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR,
-                    UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
-        if (PropHelper.ENABLE_PROXY)
-            capability.setCapability(CapabilityType.PROXY, SELENIUM_PROXY);
+        if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null) {
+            capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
+        }
+        if (PropHelper.ENABLE_PROXY) {
+            capability.setCapability(CapabilityType.PROXY, ClientUtil.createSeleniumProxy(ProxyWrapper.getProxy()));
+        }
     }
 
     private void configInternetExplorerCapbilities(DesiredCapabilities capability) {
         capability.setBrowserName(BrowserType.IE);
-        capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
-                PropHelper.IGNORE_PROTECTED_MODE_SETTINGS);
-        if (PropHelper.INITIAL_BROWSER_URL != null)
+        capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, PropHelper.IGNORE_PROTECTED_MODE_SETTINGS);
+        if (PropHelper.INITIAL_BROWSER_URL != null) {
             capability.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, PropHelper.INITIAL_BROWSER_URL);
+        }
         capability.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, PropHelper.IGNORE_ZOOM_SETTING);
         capability.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, PropHelper.REQUIRE_WINDOW_FOCUS);
         capability.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, PropHelper.ENABLE_PERSISTENT_HOVER);

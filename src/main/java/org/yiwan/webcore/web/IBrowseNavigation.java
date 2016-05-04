@@ -9,4 +9,6 @@ public interface IBrowseNavigation {
     IBrowseNavigation forward();
 
     IBrowseNavigation backward();
+
+    IBrowseNavigation refresh();
 }

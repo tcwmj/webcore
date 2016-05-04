@@ -36,6 +36,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IBrowseNavigation backward() {
                 return null;
             }
+
+            @Override
+            public IBrowseNavigation refresh() {
+                return null;
+            }
         };
     }
 

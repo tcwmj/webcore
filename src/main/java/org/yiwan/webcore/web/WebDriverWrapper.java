@@ -65,6 +65,15 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 waitThat().jQuery().toBeInactive();
                 return this;
             }
+
+            @Override
+            public IBrowseNavigation refresh() {
+                logger.debug("try to refresh page");
+                driver.navigate().refresh();
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
         };
     }
 
