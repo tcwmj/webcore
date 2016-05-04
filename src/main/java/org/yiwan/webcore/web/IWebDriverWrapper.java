@@ -32,7 +32,8 @@ public interface IWebDriverWrapper {
     IWebDriverWrapper close();
 
     /**
-     * close all browser tabs
+     * close all browser tabs<br/>
+     * this method will cause network connection can't be reset after closing
      */
     IWebDriverWrapper closeAll();
 

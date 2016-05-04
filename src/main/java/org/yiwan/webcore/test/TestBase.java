@@ -406,7 +406,7 @@ public abstract class TestBase implements ITestBase {
 
     @Override
     public void tearDownTest() throws Exception {
-        webDriverWrapper.closeAll();
+//        webDriverWrapper.closeAll();
         webDriverWrapper.quit();
     }
 }
