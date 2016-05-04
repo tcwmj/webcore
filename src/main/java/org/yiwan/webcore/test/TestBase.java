@@ -409,7 +409,7 @@ public abstract class TestBase implements ITestBase {
 
     @BeforeClass
     @Parameters({"os", "os_version", "browser", "browser_version", "resolution"})
-    protected void setUpClass(ITestContext testContext, @Optional String os, @Optional String os_version, @Optional String browser, @Optional String browser_version, @Optional String resolution) {
+    protected void beforeClass(ITestContext testContext, @Optional String os, @Optional String os_version, @Optional String browser, @Optional String browser_version, @Optional String resolution) {
         TestCaseManager.setTestCase(this);
         setSuiteName(testContext.getCurrentXmlTest().getSuite().getName());
         setTestName(testContext.getCurrentXmlTest().getName());
