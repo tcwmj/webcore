@@ -37,6 +37,8 @@ public interface ITestBase {
 
     void setSkipTest(boolean skipTest);
 
+    void createProxyWrapper() throws Exception;
+
     void createWebDriverWrapper() throws Exception;
 
     ProxyWrapper getProxyWrapper();

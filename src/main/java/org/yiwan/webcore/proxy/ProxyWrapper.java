@@ -37,6 +37,12 @@ public class ProxyWrapper {
 //        });
     }
 
+    public void stop() {
+        if (proxy.isStarted()) {
+            proxy.stop();
+        }
+    }
+
     /**
      * Adds a new ResponseFilter that can be used to examine and manipulate the
      * response before sending it to the client.

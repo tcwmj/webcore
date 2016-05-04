@@ -5,8 +5,13 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.yiwan.webcore.proxy.*;
 import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.test.pojo.TestEnvironment;
@@ -86,7 +91,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setSuiteName(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setSuiteName(java.lang.String)
 	 */
     @Override
     public void setSuiteName(String suiteName) {
@@ -94,7 +99,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getTestName()
+     * @see org.yiwan.webcore.test.ITestBase#getTestName()
 	 */
     @Override
     public String getTestName() {
@@ -102,7 +107,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setTestName(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setTestName(java.lang.String)
 	 */
     @Override
     public void setTestName(String testName) {
@@ -110,7 +115,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getTestMap()
+     * @see org.yiwan.webcore.test.ITestBase#getTestMap()
 	 */
     @Override
     public HashMap<String, String> getTestMap() {
@@ -118,7 +123,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getTestEnvironment()
+     * @see org.yiwan.webcore.test.ITestBase#getTestEnvironment()
 	 */
     @Override
     public TestEnvironment getTestEnvironment() {
@@ -126,7 +131,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setTestEnvironment(org.yiwan.webcore.test.TestEnvironment)
+     * @see org.yiwan.webcore.test.ITestBase#setTestEnvironment(org.yiwan.webcore.test.TestEnvironment)
 	 */
     @Override
     public void setTestEnvironment(TestEnvironment testEnvironment) {
@@ -134,7 +139,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getSkipTest()
+     * @see org.yiwan.webcore.test.ITestBase#getSkipTest()
 	 */
     @Override
     public boolean getSkipTest() {
@@ -142,42 +147,45 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setSkipTest(boolean)
+     * @see org.yiwan.webcore.test.ITestBase#setSkipTest(boolean)
 	 */
     @Override
     public void setSkipTest(boolean skipTest) {
         this.skipTest = skipTest;
     }
 
+    @Override
+    public void createProxyWrapper() throws Exception {
+        proxyWrapper = new ProxyWrapper();
+        subject = new TransactionSubject(this);
+        if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
+            subject.attach(new TimestampObserver(getProxyWrapper()));
+        }
+        if (PropHelper.ENABLE_CAPTURE_TRANSACTION_SCREENSHOT) {
+            subject.attach(new ScreenshotObserver(getProxyWrapper()));
+        }
+        if (PropHelper.ENABLE_HAR) {
+            subject.attach(new HttpArchiveObserver(getProxyWrapper()));
+        }
+        if (PropHelper.ENABLE_DOWNLOAD) {
+            subject.attach(new FileDownloadObserver(this));
+        }
+    }
+
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#createWebDriverWrapper()
+     * @see org.yiwan.webcore.test.ITestBase#createWebDriverWrapper()
 	 */
     @Override
     public void createWebDriverWrapper() throws Exception {
-        if (PropHelper.ENABLE_PROXY) {
-            proxyWrapper = new ProxyWrapper();
-            subject = new TransactionSubject(this);
-            if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
-                subject.attach(new TimestampObserver(proxyWrapper));
-            }
-            if (PropHelper.ENABLE_CAPTURE_TRANSACTION_SCREENSHOT) {
-                subject.attach(new ScreenshotObserver(proxyWrapper));
-            }
-            if (PropHelper.ENABLE_HAR) {
-                subject.attach(new HttpArchiveObserver(proxyWrapper));
-            }
-            if (PropHelper.ENABLE_DOWNLOAD) {
-                subject.attach(new FileDownloadObserver(this));
-            }
-            proxyWrapper.start();
-            webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(proxyWrapper.getProxy())).create();
+        if (getProxyWrapper() != null) {
+            webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy())).create();
         } else {
             webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
         }
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getProxyWrapper()
+     * @see org.yiwan.webcore.test.ITestBase#getProxyWrapper()
 	 */
     @Override
     public ProxyWrapper getProxyWrapper() {
@@ -345,7 +353,7 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void embedScreenshot() throws Exception {
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
-        File screenshot = webDriverWrapper.getScreenshotAs(OutputType.FILE);
+        File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
         // Reporter.setCurrentTestResult(result);
         report(Helper.getTestReportStyle("../../../" + saveTo,
@@ -399,14 +407,44 @@ public abstract class TestBase implements ITestBase {
         subject.nodifyObserversStop();
     }
 
+    @BeforeClass
+    @Parameters({"os", "os_version", "browser", "browser_version", "resolution"})
+    protected void setUpClass(ITestContext testContext, @Optional String os, @Optional String os_version, @Optional String browser, @Optional String browser_version, @Optional String resolution) {
+        TestCaseManager.setTestCase(this);
+        setSuiteName(testContext.getCurrentXmlTest().getSuite().getName());
+        setTestName(testContext.getCurrentXmlTest().getName());
+        getTestCapability().setOs(os);
+        getTestCapability().setOsVersion(os_version);
+        getTestCapability().setBrowser(browser);
+        getTestCapability().setBrowserVersion(browser_version);
+        getTestCapability().setResolution(resolution);
+    }
+
     @Override
     public void setUpTest() throws Exception {
-        webDriverWrapper.deleteAllCookies();
+        MDC.put(Helper.DISCRIMINATOR_KEY, getScenarioId());
+        (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
+        setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
+        setRecycleTestEnvironment(true);//must be after method setTestEnvironment
+        if (PropHelper.ENABLE_PROXY) {//create proxyWrapper must before creating webdriverWrapper
+            createProxyWrapper();
+            getProxyWrapper().start();
+        }
+        createWebDriverWrapper();//create webdriverWrapper
+        getWebDriverWrapper().deleteAllCookies();
+        getWebDriverWrapper().navigate().to(getTestEnvironment().getApplication().getUrl());
     }
 
     @Override
     public void tearDownTest() throws Exception {
-//        webDriverWrapper.closeAll();
-        webDriverWrapper.quit();
+        if (isRecycleTestEnvironment()) {
+            TestCaseManager.putTestEnvironment(getTestEnvironment());
+            setRecycleTestEnvironment(false);
+        }
+        getWebDriverWrapper().close();
+        getWebDriverWrapper().quit();
+        if (getProxyWrapper() != null) {
+            getProxyWrapper().stop();
+        }
     }
 }
