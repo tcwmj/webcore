@@ -266,10 +266,10 @@ public class WebDriverWrapperFactory {
     private void configBrowserCapabilities(DesiredCapabilities capability) {
         switch (browser.toLowerCase()) {
             case "ie":
-                configInternetExplorerCapbilities(capability);
+                configInternetExplorerCapabilities(capability);
                 break;
             case "chrome":
-                configChromeCapbilities(capability);
+                configChromeCapabilities(capability);
                 break;
             case "htmlunit":
                 break;
@@ -278,7 +278,7 @@ public class WebDriverWrapperFactory {
             case "phantomjs":
                 break;
             default:
-                configFirefoxCapbilities(capability);
+                configFirefoxCapabilities(capability);
         }
         capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, PropHelper.ACCEPT_SSL_CERTS);
         capability.setCapability(CapabilityType.HAS_NATIVE_EVENTS, PropHelper.NATIVE_EVENTS);
@@ -290,7 +290,7 @@ public class WebDriverWrapperFactory {
         }
     }
 
-    private void configInternetExplorerCapbilities(DesiredCapabilities capability) {
+    private void configInternetExplorerCapabilities(DesiredCapabilities capability) {
         capability.setBrowserName(BrowserType.IE);
         capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, PropHelper.IGNORE_PROTECTED_MODE_SETTINGS);
         if (PropHelper.INITIAL_BROWSER_URL != null) {
@@ -302,11 +302,12 @@ public class WebDriverWrapperFactory {
         // capability.setCapability("disable-popup-blocking", true);
     }
 
-    private void configFirefoxCapbilities(DesiredCapabilities capability) {
+    private void configFirefoxCapabilities(DesiredCapabilities capability) {
         capability.setBrowserName(BrowserType.FIREFOX);
     }
 
-    private void configChromeCapbilities(DesiredCapabilities capability) {
+    private void configChromeCapabilities(DesiredCapabilities capability) {
         capability.setBrowserName(BrowserType.CHROME);
     }
+
 }

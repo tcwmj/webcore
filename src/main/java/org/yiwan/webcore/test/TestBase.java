@@ -401,7 +401,6 @@ public abstract class TestBase implements ITestBase {
 
     @Override
     public void setUpTest() throws Exception {
-        (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         webDriverWrapper.deleteAllCookies();
     }
 
