@@ -6,6 +6,7 @@ import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.locator.LocatorBean;
 import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
+import org.yiwan.webcore.web.IWebDriverWrapper.*;
 
 /**
  * Created by Kenny Wang on 4/2/2016.
