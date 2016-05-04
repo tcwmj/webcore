@@ -34,15 +34,15 @@ public class HttpArchiveObserver extends SampleObserver {
     }
 
     private void newHar() {
-        ProxyWrapper.getProxy().newHar();
+        proxyWrapper.getProxy().newHar();
     }
 
     private void newHar(String initialPageRef) {
-        ProxyWrapper.getProxy().newHar(initialPageRef);
+        proxyWrapper.getProxy().newHar(initialPageRef);
     }
 
     private void newHar(String initialPageRef, String initialPageTitle) {
-        ProxyWrapper.getProxy().newHar(initialPageRef, initialPageTitle);
+        proxyWrapper.getProxy().newHar(initialPageRef, initialPageTitle);
     }
 
     /**
@@ -60,7 +60,7 @@ public class HttpArchiveObserver extends SampleObserver {
         String filePath = PropHelper.HAR_FOLDER + filename + "_" + (files == null ? 0 : files.length) + ".har";
         new File(PropHelper.HAR_FOLDER).mkdirs();
         try {
-            ProxyWrapper.getProxy().getHar().writeTo(new FileWriter(filePath));
+            proxyWrapper.getProxy().getHar().writeTo(new FileWriter(filePath));
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }

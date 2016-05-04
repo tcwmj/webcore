@@ -103,7 +103,7 @@ public interface IWebElementWrapper {
     /**
      * select all options
      *
-     * @return
+     * @return the web element
      */
     IWebElementWrapper selectAll();
 

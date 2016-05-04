@@ -7,30 +7,34 @@ import net.lightbody.bmp.filters.ResponseFilter;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.util.PropHelper;
 
 public class ProxyWrapper {
     public final static String CONTENT_DISPOSITION = "Content-Disposition";
     private final static Logger logger = LoggerFactory.getLogger(ProxyWrapper.class);
-    private final static BrowserMobProxy proxy = new BrowserMobProxyServer();
+    private BrowserMobProxy proxy;
 
-    static {
-        if (PropHelper.ENABLE_PROXY) {
-            logger.debug("start proxy");
-            proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
-            proxy.start(0);
-
-//            shutdown hook was added inside the proxy
-//            Runtime.getRuntime().addShutdownHook(new Thread() {
-//                public void run() {
-//                    proxy.stop();
-//                }
-//            });
-        }
+    public ProxyWrapper() {
+        this(new BrowserMobProxyServer());
     }
 
-    public static BrowserMobProxy getProxy() {
+    public ProxyWrapper(BrowserMobProxy proxy) {
+        this.proxy = proxy;
+    }
+
+    public BrowserMobProxy getProxy() {
         return proxy;
+    }
+
+    public void start() {
+        proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
+        proxy.start();
+
+//        shutdown hook was added inside the proxy
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//            public void run() {
+//                proxy.stop();
+//            }
+//        });
     }
 
     /**

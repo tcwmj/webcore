@@ -1,7 +1,7 @@
 package org.yiwan.webcore.web;
 
-import net.lightbody.bmp.client.ClientUtil;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,7 +14,6 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.webcore.proxy.ProxyWrapper;
 import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.util.PropHelper;
 
@@ -34,13 +33,19 @@ public class WebDriverWrapperFactory {
     private final String browser;
     private final String browser_version;
     private final String resolution;
+    private final Proxy seleniumProxy;
 
     public WebDriverWrapperFactory(TestCapability testCapability) {
+        this(testCapability, null);
+    }
+
+    public WebDriverWrapperFactory(TestCapability testCapability, Proxy seleniumProxy) {
         this.os = testCapability.getOs() == null ? System.getProperty("os") : testCapability.getOs();
         this.os_version = testCapability.getOsVersion() == null ? System.getProperty("os.version") : testCapability.getOsVersion();
         this.browser = testCapability.getBrowser() == null ? System.getProperty("browser", PropHelper.DEFAULT_BROWSER) : testCapability.getBrowser();
         this.browser_version = testCapability.getBrowserVersion() == null ? System.getProperty("browser.version") : testCapability.getBrowserVersion();
         this.resolution = testCapability.getResolution() == null ? System.getProperty("resolution") : testCapability.getResolution();
+        this.seleniumProxy = seleniumProxy;
     }
 
     public IWebDriverWrapper create() throws MalformedURLException {
@@ -280,8 +285,8 @@ public class WebDriverWrapperFactory {
         if (PropHelper.UNEXPECTED_ALERT_BEHAVIOUR != null) {
             capability.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.fromString(PropHelper.UNEXPECTED_ALERT_BEHAVIOUR));
         }
-        if (PropHelper.ENABLE_PROXY) {
-            capability.setCapability(CapabilityType.PROXY, ClientUtil.createSeleniumProxy(ProxyWrapper.getProxy()));
+        if (seleniumProxy != null) {
+            capability.setCapability(CapabilityType.PROXY, seleniumProxy);
         }
     }
 

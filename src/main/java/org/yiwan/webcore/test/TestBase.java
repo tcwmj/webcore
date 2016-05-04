@@ -1,5 +1,6 @@
 package org.yiwan.webcore.test;
 
+import net.lightbody.bmp.client.ClientUtil;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getPageManager()
+     * @see org.yiwan.webcore.test.ITestBase#getPageManager()
 	 */
     @Override
     public IPageManager getPageManager() {
@@ -69,7 +70,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setPageManager(org.yiwan.webcore.web.IPageManager)
+     * @see org.yiwan.webcore.test.ITestBase#setPageManager(org.yiwan.webcore.web.IPageManager)
 	 */
     @Override
     public void setPageManager(IPageManager pageManager) {
@@ -77,7 +78,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getSuiteName()
+     * @see org.yiwan.webcore.test.ITestBase#getSuiteName()
 	 */
     @Override
     public String getSuiteName() {
@@ -153,20 +154,25 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void createWebDriverWrapper() throws Exception {
-        webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
-        proxyWrapper = new ProxyWrapper();
-        subject = new TransactionSubject(this);
-        if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
-            subject.attach(new TimestampObserver(proxyWrapper));
-        }
-        if (PropHelper.ENABLE_CAPTURE_TRANSACTION_SCREENSHOT) {
-            subject.attach(new ScreenshotObserver(proxyWrapper));
-        }
-        if (PropHelper.ENABLE_HAR) {
-            subject.attach(new HttpArchiveObserver(proxyWrapper));
-        }
-        if (PropHelper.ENABLE_DOWNLOAD) {
-            subject.attach(new FileDownloadObserver(this));
+        if (PropHelper.ENABLE_PROXY) {
+            proxyWrapper = new ProxyWrapper();
+            subject = new TransactionSubject(this);
+            if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
+                subject.attach(new TimestampObserver(proxyWrapper));
+            }
+            if (PropHelper.ENABLE_CAPTURE_TRANSACTION_SCREENSHOT) {
+                subject.attach(new ScreenshotObserver(proxyWrapper));
+            }
+            if (PropHelper.ENABLE_HAR) {
+                subject.attach(new HttpArchiveObserver(proxyWrapper));
+            }
+            if (PropHelper.ENABLE_DOWNLOAD) {
+                subject.attach(new FileDownloadObserver(this));
+            }
+            proxyWrapper.start();
+            webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(proxyWrapper.getProxy())).create();
+        } else {
+            webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
         }
     }
 
