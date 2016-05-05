@@ -117,7 +117,7 @@ public interface ITestBase {
 
     void embedScreenshot() throws Exception;
 
-    void embedLog() throws Exception;
+    void embedTestLog() throws Exception;
 
     void embedTestData(Object o) throws Exception;
 

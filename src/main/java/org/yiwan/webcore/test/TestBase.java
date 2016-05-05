@@ -360,10 +360,10 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#embedLog()
+	 * @see org.yiwan.webcore.test.ITestBase#embedTestLog()
 	 */
     @Override
-    public void embedLog() throws Exception {
+    public void embedTestLog() throws Exception {
     }
 
     /* (non-Javadoc)
