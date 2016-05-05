@@ -5,12 +5,15 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +157,7 @@ public class WebDriverWrapperFactory {
     }
 
     private WebDriver setupLocalPhantomJSDriver() {
-        System.setProperty("phantomjs.binary.path", PropHelper.PHANTOMJS_PATH);
+        System.setProperty(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, PropHelper.PHANTOMJS_PATH);
         DesiredCapabilities capability = DesiredCapabilities.phantomjs();
         configBrowserCapabilities(capability);
         return new PhantomJSDriver(capability);
@@ -166,7 +169,7 @@ public class WebDriverWrapperFactory {
      * @return WebDriver
      */
     private WebDriver setupLocalChromeDriver() {
-        System.setProperty("webdriver.chrome.driver", PropHelper.CHROME_WEBDRIVER);
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, PropHelper.CHROME_WEBDRIVER);
         DesiredCapabilities capability = DesiredCapabilities.chrome();
         configBrowserCapabilities(capability);
         return new ChromeDriver(capability);
@@ -179,9 +182,9 @@ public class WebDriverWrapperFactory {
      */
     private WebDriver setupLocalInternetExplorerDriver() {
         if (PropHelper.DEFAULT_IE_ARCH.equals("x64") && isOSX64()) {
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X64);
+            System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY, PropHelper.IE_WEBDRIVER_X64);
         } else {
-            System.setProperty("webdriver.ie.driver", PropHelper.IE_WEBDRIVER_X86);
+            System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY, PropHelper.IE_WEBDRIVER_X86);
         }
         DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
         configBrowserCapabilities(capability);
