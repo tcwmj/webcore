@@ -23,6 +23,7 @@ import org.yiwan.webcore.util.PropHelper;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Properties;
 
 /**
@@ -279,6 +280,7 @@ public class WebDriverWrapperFactory {
             case "htmlunitjs":
                 break;
             case "phantomjs":
+                configPhantomJSCapabilities(capability);
                 break;
             default:
                 configFirefoxCapabilities(capability);
@@ -291,6 +293,16 @@ public class WebDriverWrapperFactory {
         if (seleniumProxy != null) {
             capability.setCapability(CapabilityType.PROXY, seleniumProxy);
         }
+    }
+
+    private void configPhantomJSCapabilities(DesiredCapabilities capability) {
+        ArrayList<String> cliArgsCap = new ArrayList<String>();
+        cliArgsCap.add("--web-security=false");
+        cliArgsCap.add("--ssl-protocol=any");
+        cliArgsCap.add("--ignore-ssl-errors=true");
+        capability.setCapability("takesScreenshot", true);
+        capability.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
+        capability.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--logLevel=2"});
     }
 
     private void configInternetExplorerCapabilities(DesiredCapabilities capability) {
