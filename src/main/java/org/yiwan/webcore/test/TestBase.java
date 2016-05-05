@@ -193,7 +193,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#isPrepareToDownload()
+     * @see org.yiwan.webcore.test.ITestBase#isPrepareToDownload()
 	 */
     @Override
     public boolean isPrepareToDownload() {
@@ -201,7 +201,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setPrepareToDownload(boolean)
+     * @see org.yiwan.webcore.test.ITestBase#setPrepareToDownload(boolean)
 	 */
     @Override
     public void setPrepareToDownload(boolean prepareToDownload) {
@@ -356,8 +356,7 @@ public abstract class TestBase implements ITestBase {
         File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
         // Reporter.setCurrentTestResult(result);
-        report(Helper.getTestReportStyle("../../../" + saveTo,
-                "<img src=\"../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
+        report(Helper.getTestReportStyle("../../../" + saveTo, "<img src=\"../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
     }
 
     /* (non-Javadoc)
@@ -433,6 +432,8 @@ public abstract class TestBase implements ITestBase {
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
         getWebDriverWrapper().navigate().to(getTestEnvironment().getApplication().getUrl());
+        report(Helper.getTestReportStyle("../../../" + PropHelper.LOG_FOLDER + getScenarioId() + ".html", "open test execution log"));
+        report(Helper.getTestReportStyle(getTestEnvironment().getApplication().getUrl(), "open test server url"));
     }
 
     @Override
