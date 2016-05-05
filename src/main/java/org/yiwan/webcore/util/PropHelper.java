@@ -80,7 +80,8 @@ public class PropHelper {
     public static final boolean ENABLE_HAR = Boolean.parseBoolean(getProperty("har.enable"));
     public static final boolean ENABLE_RECORD_TRANSACTION_TIMESTAMP = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
     public static final boolean ENABLE_CAPTURE_TRANSACTION_SCREENSHOT = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
-
+    public static final String PHANTOMJS_CLI_ARGS = getProperty("browser.phantomjs.cli.args");
+    public static final String PHANTOMJS_GHOSTDRIVER_CLI_ARGS = getProperty("browser.phantomjs.ghostdriver.cli.args");
     /**
      * load properties from external file
      *

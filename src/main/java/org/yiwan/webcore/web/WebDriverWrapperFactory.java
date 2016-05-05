@@ -1,5 +1,6 @@
 package org.yiwan.webcore.web;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
@@ -23,7 +24,7 @@ import org.yiwan.webcore.util.PropHelper;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -296,13 +297,15 @@ public class WebDriverWrapperFactory {
     }
 
     private void configPhantomJSCapabilities(DesiredCapabilities capability) {
-        ArrayList<String> cliArgsCap = new ArrayList<String>();
-        cliArgsCap.add("--web-security=false");
-        cliArgsCap.add("--ssl-protocol=any");
-        cliArgsCap.add("--ignore-ssl-errors=true");
         capability.setCapability("takesScreenshot", true);
-        capability.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
-        capability.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--logLevel=2"});
+        String[] phantomjsCliArgs;
+        if (PropHelper.PHANTOMJS_CLI_ARGS != null && (phantomjsCliArgs = StringUtils.split(PropHelper.PHANTOMJS_CLI_ARGS.trim())).length > 0) {
+            capability.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, Arrays.asList(phantomjsCliArgs));
+        }
+        String[] phantomjsGhostdriverCliArgs;
+        if (PropHelper.PHANTOMJS_GHOSTDRIVER_CLI_ARGS != null && (phantomjsGhostdriverCliArgs = StringUtils.split(PropHelper.PHANTOMJS_GHOSTDRIVER_CLI_ARGS.trim())).length > 0) {
+            capability.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, Arrays.asList(phantomjsGhostdriverCliArgs));
+        }
     }
 
     private void configInternetExplorerCapabilities(DesiredCapabilities capability) {
