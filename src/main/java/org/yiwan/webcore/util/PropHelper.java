@@ -68,8 +68,8 @@ public class PropHelper {
     public static final boolean IGNORE_ZOOM_SETTING = Boolean.parseBoolean(getProperty("browser.ie.ignoreZoomSetting"));
     public static final boolean REQUIRE_WINDOW_FOCUS = Boolean.parseBoolean(getProperty("browser.ie.requireWindowFocus"));
     public static final boolean ENABLE_PERSISTENT_HOVER = Boolean.parseBoolean(getProperty("browser.ie.enablePersistentHover"));
-    public static final boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.ie.acceptSSLCerts"));
-    public static final boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.ie.nativeEvents"));
+    public static final boolean ACCEPT_SSL_CERTS = Boolean.parseBoolean(getProperty("browser.acceptSSLCerts"));
+    public static final boolean NATIVE_EVENTS = Boolean.parseBoolean(getProperty("browser.nativeEvents"));
     public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
     public static final String DEFAULT_IE_ARCH = getProperty("browser.ie.arch.default");
     public static final boolean MAXIMIZE_BROWSER = Boolean.parseBoolean(getProperty("browser.maximize"));
