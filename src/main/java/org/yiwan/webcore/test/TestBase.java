@@ -209,7 +209,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getDownloadFile()
+     * @see org.yiwan.webcore.test.ITestBase#getDownloadFile()
 	 */
     @Override
     public String getDownloadFile() {
@@ -356,7 +356,7 @@ public abstract class TestBase implements ITestBase {
         File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
         // Reporter.setCurrentTestResult(result);
-        report(Helper.getTestReportStyle("../../../" + saveTo, "<img src=\"../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
+        report(Helper.getTestReportStyle("../../../../" + saveTo, "<img src=\"../../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
     }
 
     /* (non-Javadoc)
