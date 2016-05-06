@@ -10,15 +10,9 @@ import java.util.Properties;
  * @author Kenny Wang
  */
 public class PropHelper {
-
     private final static Logger logger = LoggerFactory.getLogger(PropHelper.class);
     private final static Properties props = new Properties();
-
-    static {
-        load(System.getProperty("base.prop", "base.properties"));
-        load(System.getProperty("biz.prop", "biz.properties"));
-        load(System.getProperty("test.prop", "test.properties"));
-    }
+    private static boolean hasloaded = false;
 
     // from base conf
     public static final int TIMEOUT_INTERVAL = Integer.parseInt(getProperty("timeout.interval"));
@@ -76,12 +70,13 @@ public class PropHelper {
     public static final boolean REMOTE = Boolean.parseBoolean(getProperty("remote"));
     public static final boolean BROWSERSTACK = Boolean.parseBoolean(getProperty("browserstack"));
     public static final boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));
-    public static final boolean ENABLE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
-    public static final boolean ENABLE_HAR = Boolean.parseBoolean(getProperty("har.enable"));
-    public static final boolean ENABLE_RECORD_TRANSACTION_TIMESTAMP = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
-    public static final boolean ENABLE_CAPTURE_TRANSACTION_SCREENSHOT = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
+    public static final boolean ENABLE_FILE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
+    public static final boolean ENABLE_HTTP_ARCHIVE = Boolean.parseBoolean(getProperty("har.enable"));
+    public static final boolean ENABLE_TRANSACTION_TIMESTAMP_RECORD = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
+    public static final boolean ENABLE_TRANSACTION_SCREENSHOT_CAPTURE = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
     public static final String PHANTOMJS_CLI_ARGS = getProperty("browser.phantomjs.cli.args");
     public static final String PHANTOMJS_GHOSTDRIVER_CLI_ARGS = getProperty("browser.phantomjs.ghostdriver.cli.args");
+
     /**
      * load properties from external file
      *
@@ -97,6 +92,13 @@ public class PropHelper {
         }
     }
 
+    private static boolean load() {
+        load(System.getProperty("base.prop", "base.properties"));
+        load(System.getProperty("biz.prop", "biz.properties"));
+        load(System.getProperty("test.prop", "test.properties"));
+        return true;
+    }
+
     /**
      * get property from system first, if null then get from properties file
      *
@@ -104,8 +106,10 @@ public class PropHelper {
      * @return property value
      */
     public static String getProperty(String key) {
-        // return System.getProperty(key) == null ? props.getProperty(key) :
-        // System.getProperty(key);
+        if (!hasloaded) {
+            hasloaded = load();
+        }
+//        return System.getProperty(key) == null ? props.getProperty(key) : System.getProperty(key);
         return System.getProperty(key, props.getProperty(key));
     }
 

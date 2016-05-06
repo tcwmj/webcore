@@ -52,8 +52,7 @@ public class FileDownloadObserver extends SampleObserver {
         // set response filter rule for downloading files
         proxyWrapper.addResponseFilter(new ResponseFilter() {
             @Override
-            public void filterResponse(HttpResponse response, HttpMessageContents contents,
-                                       HttpMessageInfo messageInfo) {
+            public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
                 if (testCase.isPrepareToDownload() && contents.getContentType() != null) {
                     String filename = PropHelper.DOWNLOAD_FOLDER + Helper.randomize() + ".";
                     if (contents.getContentType().contains("text/csv")) {
@@ -80,9 +79,7 @@ public class FileDownloadObserver extends SampleObserver {
                         setDownloadFile(response, filename, "zip");
                         downloadBinaryFile(contents.getBinaryContents());
                         completeDownload(response);
-                    } else if (contents.getContentType().contains("application/octet-stream")
-                            && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null
-                            && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
+                    } else if (contents.getContentType().contains("application/octet-stream") && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
                         setDownloadFile(response, filename, "unknown");
                         downloadBinaryFile(contents.getBinaryContents());
                         completeDownload(response);
@@ -98,10 +95,9 @@ public class FileDownloadObserver extends SampleObserver {
      * @return string or null
      */
     private String getAttachmentFileName(HttpResponse response) {
-        if (response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null
-                && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename="))
-            return response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "")
-                    .replace("\"", "").replace("'", "").trim();
+        if (response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
+            return response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "").replace("\"", "").replace("'", "").trim();
+        }
         return null;
     }
 

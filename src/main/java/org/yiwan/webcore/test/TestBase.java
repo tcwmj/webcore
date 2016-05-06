@@ -158,16 +158,16 @@ public abstract class TestBase implements ITestBase {
     public void createProxyWrapper() throws Exception {
         proxyWrapper = new ProxyWrapper();
         subject = new TransactionSubject(this);
-        if (PropHelper.ENABLE_RECORD_TRANSACTION_TIMESTAMP) {
+        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
             subject.attach(new TimestampObserver(getProxyWrapper()));
         }
-        if (PropHelper.ENABLE_CAPTURE_TRANSACTION_SCREENSHOT) {
+        if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
             subject.attach(new ScreenshotObserver(getProxyWrapper()));
         }
-        if (PropHelper.ENABLE_HAR) {
+        if (PropHelper.ENABLE_HTTP_ARCHIVE) {
             subject.attach(new HttpArchiveObserver(getProxyWrapper()));
         }
-        if (PropHelper.ENABLE_DOWNLOAD) {
+        if (PropHelper.ENABLE_FILE_DOWNLOAD) {
             subject.attach(new FileDownloadObserver(this));
         }
     }
