@@ -129,7 +129,8 @@ public class FileDownloadObserver extends SampleObserver {
     }
 
     private void completeDownload(HttpResponse response) {
-        response.setStatus(HttpResponseStatus.NO_CONTENT);
+//        prevent to get download prompt
+//        response.setStatus(HttpResponseStatus.NO_CONTENT);
         if (testCase.isPrepareToDownload()) {
             testCase.setPrepareToDownload(false);
         }
