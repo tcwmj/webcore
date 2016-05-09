@@ -85,16 +85,12 @@ public class PropHelper {
      */
     private static void load(String file) {
 //        logger.debug("load property file in resource " + file);
-        InputStream is = ClassLoader.getSystemResourceAsStream(file);
         try {
+            InputStream is = ClassLoader.getSystemResourceAsStream(file);
             props.load(is);
-        } catch (Exception e) {
-            logger.error("file {} was not found", file);
-        }
-        try {
             is.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            logger.error(file, e);
         }
     }
 
