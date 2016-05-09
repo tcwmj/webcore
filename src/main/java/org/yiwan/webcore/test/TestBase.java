@@ -50,6 +50,14 @@ public abstract class TestBase implements ITestBase {
     private String suiteName;//testng test suite name
     private String testName;//testng test name
 
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
     /* (non-Javadoc)
      * @see org.yiwan.webcore.test.ITestBase#getTestCapability()
 	 */
@@ -157,18 +165,18 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void createProxyWrapper() throws Exception {
         proxyWrapper = new ProxyWrapper();
-        subject = new TransactionSubject(this);
+        setSubject(new TransactionSubject(this));
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            subject.attach(new TimestampObserver(getProxyWrapper()));
+            getSubject().attach(new TimestampObserver(getProxyWrapper()));
         }
         if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
-            subject.attach(new ScreenshotObserver(getProxyWrapper()));
+            getSubject().attach(new ScreenshotObserver(getProxyWrapper()));
         }
         if (PropHelper.ENABLE_HTTP_ARCHIVE) {
-            subject.attach(new HttpArchiveObserver(getProxyWrapper()));
+            getSubject().attach(new HttpArchiveObserver(getProxyWrapper()));
         }
         if (PropHelper.ENABLE_FILE_DOWNLOAD) {
-            subject.attach(new FileDownloadObserver(this));
+            getSubject().attach(new FileDownloadObserver(this));
         }
     }
 
@@ -217,7 +225,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setDownloadFile(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setDownloadFile(java.lang.String)
 	 */
     @Override
     public void setDownloadFile(String downloadFile) {
@@ -225,7 +233,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getDefaultDownloadFileName()
+     * @see org.yiwan.webcore.test.ITestBase#getDefaultDownloadFileName()
 	 */
     @Override
     public String getDefaultDownloadFileName() {
@@ -233,7 +241,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setDefaultDownloadFileName(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setDefaultDownloadFileName(java.lang.String)
 	 */
     @Override
     public void setDefaultDownloadFileName(String defaultDownloadFileName) {
@@ -241,7 +249,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getTransactionName()
+     * @see org.yiwan.webcore.test.ITestBase#getTransactionName()
 	 */
     @Override
     public String getTransactionName() {
@@ -249,7 +257,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setTransactionName(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setTransactionName(java.lang.String)
 	 */
     @Override
     public void setTransactionName(String transactionName) {
@@ -257,7 +265,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getTestDataManager()
+     * @see org.yiwan.webcore.test.ITestBase#getTestDataManager()
 	 */
     @Override
     public ITestDataManager getTestDataManager() {
@@ -265,7 +273,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setTestDataManager(org.yiwan.webcore.test.ITestDataManager)
+     * @see org.yiwan.webcore.test.ITestBase#setTestDataManager(org.yiwan.webcore.test.ITestDataManager)
 	 */
     @Override
     public void setTestDataManager(ITestDataManager testDataManager) {
@@ -273,7 +281,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getScenarioId()
+     * @see org.yiwan.webcore.test.ITestBase#getScenarioId()
 	 */
     @Override
     public String getScenarioId() {
@@ -281,7 +289,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setScenarioId(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setScenarioId(java.lang.String)
 	 */
     @Override
     public void setScenarioId(String scenarioId) {
@@ -394,8 +402,10 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void startTransaction(String transactionName) {
-        this.transactionName = transactionName;
-        subject.nodifyObserversStart();
+        setTransactionName(transactionName);
+        if (getSubject() != null) {
+            getSubject().nodifyObserversStart();
+        }
     }
 
     /* (non-Javadoc)
@@ -403,7 +413,9 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void stopTransaction() {
-        subject.nodifyObserversStop();
+        if (getSubject() != null) {
+            getSubject().nodifyObserversStop();
+        }
     }
 
     @BeforeClass
