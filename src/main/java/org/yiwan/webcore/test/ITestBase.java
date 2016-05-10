@@ -129,6 +129,8 @@ public interface ITestBase {
 
     void stopTransaction();
 
+    String getSuiteTestSeparator();
+    
     void setUpTest() throws Exception;
 
     void tearDownTest() throws Exception;

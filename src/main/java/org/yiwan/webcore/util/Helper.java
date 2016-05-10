@@ -28,8 +28,6 @@ import java.util.Map.Entry;
  * @author Kenny Wang
  */
 public class Helper {
-    public final static String DISCRIMINATOR_KEY = PropHelper.DISCRIMINATOR_KEY;
-
     /**
      * convert a string date from a format to a format
      *

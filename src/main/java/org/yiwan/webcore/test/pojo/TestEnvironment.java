@@ -56,7 +56,7 @@ public class TestEnvironment {
             return (new ObjectMapper()).writeValueAsString(this);
         } catch (JsonProcessingException e) {
             logger.error(e.getMessage(), e);
-            return null;
+            return "";
         }
     }
 
@@ -86,7 +86,7 @@ public class TestEnvironment {
                 return (new ObjectMapper()).writeValueAsString(this);
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
-                return null;
+                return "";
             }
         }
     }
@@ -153,7 +153,7 @@ public class TestEnvironment {
                 return (new ObjectMapper()).writeValueAsString(this);
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
-                return null;
+                return "";
             }
         }
     }
@@ -202,7 +202,7 @@ public class TestEnvironment {
                 return (new ObjectMapper()).writeValueAsString(this);
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
-                return null;
+                return "";
             }
         }
     }

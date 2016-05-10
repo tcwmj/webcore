@@ -297,7 +297,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setFeatureId(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#setFeatureId(java.lang.String)
 	 */
     @Override
     public void setFeatureId(String featureId) {
@@ -305,7 +305,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#report(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#report(java.lang.String)
 	 */
     @Override
     public void report(String s) {
@@ -315,7 +315,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#onTestStart(org.testng.ITestResult)
+     * @see org.yiwan.webcore.test.ITestBase#onTestStart(org.testng.ITestResult)
 	 */
     @Override
     public void onTestStart(ITestResult result) {
@@ -323,7 +323,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#onTestSuccess(org.testng.ITestResult)
+     * @see org.yiwan.webcore.test.ITestBase#onTestSuccess(org.testng.ITestResult)
 	 */
     @Override
     public void onTestSuccess(ITestResult result) {
@@ -331,7 +331,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#onTestFailure(org.testng.ITestResult)
+     * @see org.yiwan.webcore.test.ITestBase#onTestFailure(org.testng.ITestResult)
 	 */
     @Override
     public void onTestFailure(ITestResult result) throws Exception {
@@ -340,7 +340,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#onTestSkipped(org.testng.ITestResult)
+     * @see org.yiwan.webcore.test.ITestBase#onTestSkipped(org.testng.ITestResult)
 	 */
     @Override
     public void onTestSkipped(ITestResult result) {
@@ -348,7 +348,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#embedScreenshot()
+     * @see org.yiwan.webcore.test.ITestBase#embedScreenshot()
 	 */
     @Override
     public void embedScreenshot() throws Exception {
@@ -360,21 +360,21 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#embedTestLog()
+     * @see org.yiwan.webcore.test.ITestBase#embedTestLog()
 	 */
     @Override
     public void embedTestLog() throws Exception {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#embedTestData(java.lang.Object)
+     * @see org.yiwan.webcore.test.ITestBase#embedTestData(java.lang.Object)
 	 */
     @Override
     public void embedTestData(Object o) throws Exception {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#isRecycleTestEnvironment()
+     * @see org.yiwan.webcore.test.ITestBase#isRecycleTestEnvironment()
 	 */
     @Override
     public boolean isRecycleTestEnvironment() {
@@ -424,8 +424,16 @@ public abstract class TestBase implements ITestBase {
     }
 
     @Override
+    public String getSuiteTestSeparator() {
+        if (getSuiteName() != null && getTestName() != null) {
+            return getSuiteName() + "/" + getTestName() + "/";
+        }
+        return "";
+    }
+
+    @Override
     public void setUpTest() throws Exception {
-        MDC.put(Helper.DISCRIMINATOR_KEY, getScenarioId());
+        MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".html");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
@@ -436,7 +444,7 @@ public abstract class TestBase implements ITestBase {
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
         getWebDriverWrapper().navigate().to(getTestEnvironment().getApplication().getUrl());
-        report(Helper.getTestReportStyle("../../../../" + PropHelper.LOG_FOLDER + getScenarioId() + ".html", "open test execution log"));
+        report(Helper.getTestReportStyle("../../../../" + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
         report(Helper.getTestReportStyle(getTestEnvironment().getApplication().getUrl(), "open test server url"));
     }
 
