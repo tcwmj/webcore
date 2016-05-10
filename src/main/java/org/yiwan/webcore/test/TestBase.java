@@ -50,14 +50,6 @@ public abstract class TestBase implements ITestBase {
     private String suiteName;//testng test suite name
     private String testName;//testng test name
 
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
     /* (non-Javadoc)
      * @see org.yiwan.webcore.test.ITestBase#getTestCapability()
 	 */
@@ -165,18 +157,18 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void createProxyWrapper() throws Exception {
         proxyWrapper = new ProxyWrapper();
-        setSubject(new TransactionSubject(this));
+        this.subject = new TransactionSubject(this);
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            getSubject().attach(new TimestampObserver(getProxyWrapper()));
+            subject.attach(new TimestampObserver(getProxyWrapper()));
         }
         if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
-            getSubject().attach(new ScreenshotObserver(getProxyWrapper()));
+            subject.attach(new ScreenshotObserver(getProxyWrapper()));
         }
         if (PropHelper.ENABLE_HTTP_ARCHIVE) {
-            getSubject().attach(new HttpArchiveObserver(getProxyWrapper()));
+            subject.attach(new HttpArchiveObserver(getProxyWrapper()));
         }
         if (PropHelper.ENABLE_FILE_DOWNLOAD) {
-            getSubject().attach(new FileDownloadObserver(this));
+            subject.attach(new FileDownloadObserver(this));
         }
     }
 
@@ -297,7 +289,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#getFeatureId()
+     * @see org.yiwan.webcore.test.ITestBase#getFeatureId()
 	 */
     @Override
     public String getFeatureId() {
@@ -403,8 +395,8 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void startTransaction(String transactionName) {
         setTransactionName(transactionName);
-        if (getSubject() != null) {
-            getSubject().nodifyObserversStart();
+        if (subject != null) {
+            subject.nodifyObserversStart();
         }
     }
 
@@ -413,8 +405,8 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void stopTransaction() {
-        if (getSubject() != null) {
-            getSubject().nodifyObserversStop();
+        if (subject != null) {
+            subject.nodifyObserversStop();
         }
     }
 
