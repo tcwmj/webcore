@@ -75,6 +75,10 @@
             <version>${phantomjs.version}</version>
             <exclusions>
                 <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-java</artifactId>
+                </exclusion>
+                <exclusion>
                     <artifactId>selenium-remote-driver</artifactId>
                     <groupId>org.seleniumhq.selenium</groupId>
                 </exclusion>
