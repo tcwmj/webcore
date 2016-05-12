@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public abstract class TestBase implements ITestBase {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final HashMap<String, String> testMap = new HashMap<String, String>();
+    private final Map<String, String> testMap = new HashMap<>();
     private boolean skipTest = false;//whether to skip next execution of left test methods    
     private Subject subject;
     private IWebDriverWrapper webDriverWrapper;
@@ -358,7 +358,6 @@ public abstract class TestBase implements ITestBase {
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
         File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
-        // Reporter.setCurrentTestResult(result);
         report(Helper.getTestReportStyle("../../../../" + saveTo, "<img src=\"../../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
     }
 
@@ -415,14 +414,14 @@ public abstract class TestBase implements ITestBase {
 
     @BeforeClass
     @Parameters({"os", "os_version", "browser", "browser_version", "resolution"})
-    protected void beforeClass(ITestContext testContext, @Optional String os, @Optional String os_version, @Optional String browser, @Optional String browser_version, @Optional String resolution) {
+    protected void beforeClass(ITestContext testContext, @Optional String os, @Optional String osVersion, @Optional String browser, @Optional String browserVersion, @Optional String resolution) {
         TestCaseManager.setTestCase(this);
         setSuiteName(testContext.getCurrentXmlTest().getSuite().getName());
         setTestName(testContext.getCurrentXmlTest().getName());
         getTestCapability().setOs(os);
-        getTestCapability().setOsVersion(os_version);
+        getTestCapability().setOsVersion(osVersion);
         getTestCapability().setBrowser(browser);
-        getTestCapability().setBrowserVersion(browser_version);
+        getTestCapability().setBrowserVersion(browserVersion);
         getTestCapability().setResolution(resolution);
         report(String.format("test capability<br/>%s", getTestCapability()));
     }
