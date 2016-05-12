@@ -1,0 +1,46 @@
+[
+  {
+    "applicationServers": [
+      {
+        "name": "default",
+        "url": "http://172.20.31.240:8080/"
+      },
+      {
+        "name": "another",
+        "url": "http://172.20.31.241:8080/"
+      }
+    ],
+    "databaseServers": [
+      {
+        "name": "default",
+        "dump": "data/system/default.xml"
+      },
+      {
+        "name": "another",
+        "dump": "data/system/default.xml"
+      }
+    ]
+  },
+  {
+    "applicationServers": [
+      {
+        "name": "default",
+        "url": "http://172.20.31.242:8080/"
+      },
+      {
+        "name": "another",
+        "url": "http://172.20.31.243:8080/"
+      }
+    ],
+    "databaseServers": [
+      {
+        "name": "default",
+        "dump": "data/system/default.xml"
+      },
+      {
+        "name": "another",
+        "dump": "data/system/default.xml"
+      }
+    ]
+  }
+]

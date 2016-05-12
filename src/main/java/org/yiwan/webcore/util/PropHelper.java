@@ -1,8 +1,11 @@
 package org.yiwan.webcore.util;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -50,7 +53,7 @@ public class PropHelper {
     public static final String BROWSERSTACK_LOCAL_IDENTIFIER = getProperty("browserstacklocalIdentifier");
     public static final String BROWSERSTACK_DEBUG = getProperty("browserstackdebug");
     // from test conf
-    public static final String SERVER_INFO = getProperty("server.info");
+    public static final String SERVER_INFO = getServerInfo();
     public static final String CURRENT_LANG = getProperty("lang.current");
     public static final String PHANTOMJS_PATH = getProperty("path.phantomjs");
     public static final String FIREFOX_PATH = getProperty("path.firefox");
@@ -113,6 +116,22 @@ public class PropHelper {
         }
 //        return System.getProperty(key) == null ? props.getProperty(key) : System.getProperty(key);
         return System.getProperty(key, props.getProperty(key));
+    }
+
+    public static String getServerInfo() {
+        String url = getProperty("server.info");
+        String serverInfo = "";
+        try (InputStream is = ClassLoader.getSystemResourceAsStream(url)) {
+            if (null != is) {
+                serverInfo = IOUtils.toString(is, "UTF-8");
+                is.close();
+            } else {
+                serverInfo = FileUtils.readFileToString(new File(url), "UTF-8");
+            }
+        } catch (IOException e) {
+            logger.error(url, e);
+        }
+        return serverInfo;
     }
 
 }
