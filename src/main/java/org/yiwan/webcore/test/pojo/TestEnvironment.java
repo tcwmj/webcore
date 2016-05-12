@@ -54,22 +54,4 @@ public class TestEnvironment {
             return "";
         }
     }
-
-
-    public static void main(String[] args) throws Exception {
-        String json = "[{\"applicationServers\":[{\"name\":\"default\",\"url\":\"http://localhost:8080/\"}],\"databaseServers\":[{\"name\":\"default\",\"dump\":\"data/system/default.xml\"}]}]";
-        List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
-        });
-        logger.info(testEnvironments.get(0).getApplicationServer("default").getUrl());
-
-        TestEnvironment a = new TestEnvironment();
-        ApplicationServer b = new ApplicationServer();
-        Server c = new Server();
-        DatabaseServer d = new DatabaseServer();
-        b.setConfiguration(c);
-        d.setConfiguration(c);
-        a.setApplicationServers(Arrays.asList(b));
-        a.setDatabaseServers(Arrays.asList(d));
-        logger.info(a.toString());
-    }
 }
