@@ -22,9 +22,12 @@ import org.yiwan.webcore.web.IWebDriverWrapper;
 import org.yiwan.webcore.web.WebDriverWrapperFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
@@ -118,7 +121,7 @@ public abstract class TestBase implements ITestBase {
      * @see org.yiwan.webcore.test.ITestBase#getTestMap()
 	 */
     @Override
-    public HashMap<String, String> getTestMap() {
+    public Map<String, String> getTestMap() {
         return testMap;
     }
 
@@ -155,7 +158,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     @Override
-    public void createProxyWrapper() throws Exception {
+    public void createProxyWrapper() {
         proxyWrapper = new ProxyWrapper();
         this.subject = new TransactionSubject(this);
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
@@ -176,7 +179,7 @@ public abstract class TestBase implements ITestBase {
      * @see org.yiwan.webcore.test.ITestBase#createWebDriverWrapper()
 	 */
     @Override
-    public void createWebDriverWrapper() throws Exception {
+    public void createWebDriverWrapper() throws MalformedURLException {
         if (getProxyWrapper() != null) {
             webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy())).create();
         } else {
@@ -334,7 +337,7 @@ public abstract class TestBase implements ITestBase {
      * @see org.yiwan.webcore.test.ITestBase#onTestFailure(org.testng.ITestResult)
 	 */
     @Override
-    public void onTestFailure(ITestResult result) throws Exception {
+    public void onTestFailure(ITestResult result) throws IOException {
         logger.info(result.getTestClass().getName() + "." + result.getName() + " failed");
         embedScreenshot();
     }
@@ -351,7 +354,7 @@ public abstract class TestBase implements ITestBase {
      * @see org.yiwan.webcore.test.ITestBase#embedScreenshot()
 	 */
     @Override
-    public void embedScreenshot() throws Exception {
+    public void embedScreenshot() throws IOException {
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
         File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));
@@ -363,7 +366,7 @@ public abstract class TestBase implements ITestBase {
      * @see org.yiwan.webcore.test.ITestBase#embedTestLog()
 	 */
     @Override
-    public void embedTestLog() throws Exception {
+    public void embedTestLog() throws IOException {
     }
 
     /* (non-Javadoc)
@@ -382,7 +385,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#setRecycleTestEnvironment(boolean)
+     * @see org.yiwan.webcore.test.ITestBase#setRecycleTestEnvironment(boolean)
 	 */
     @Override
     public void setRecycleTestEnvironment(boolean recycleTestEnvironment) {
@@ -390,7 +393,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#startTransaction(java.lang.String)
+     * @see org.yiwan.webcore.test.ITestBase#startTransaction(java.lang.String)
 	 */
     @Override
     public void startTransaction(String transactionName) {
@@ -401,7 +404,7 @@ public abstract class TestBase implements ITestBase {
     }
 
     /* (non-Javadoc)
-	 * @see org.yiwan.webcore.test.ITestBase#stopTransaction()
+     * @see org.yiwan.webcore.test.ITestBase#stopTransaction()
 	 */
     @Override
     public void stopTransaction() {
@@ -421,6 +424,7 @@ public abstract class TestBase implements ITestBase {
         getTestCapability().setBrowser(browser);
         getTestCapability().setBrowserVersion(browser_version);
         getTestCapability().setResolution(resolution);
+        report(String.format("test capability<br/>%s", getTestCapability()));
     }
 
     @Override
@@ -436,6 +440,7 @@ public abstract class TestBase implements ITestBase {
         MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".html");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
+        report(String.format("test environment<br/>%s", getTestEnvironment()));
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
         if (PropHelper.ENABLE_PROXY) {//create proxyWrapper must before creating webdriverWrapper
             createProxyWrapper();

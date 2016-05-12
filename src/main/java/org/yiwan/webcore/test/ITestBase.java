@@ -7,7 +7,9 @@ import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.web.IPageManager;
 import org.yiwan.webcore.web.IWebDriverWrapper;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Map;
 
 public interface ITestBase {
 
@@ -27,7 +29,7 @@ public interface ITestBase {
 
     void setTestName(String testName);
 
-    HashMap<String, String> getTestMap();
+    Map<String, String> getTestMap();
 
     TestEnvironment getTestEnvironment();
 
@@ -37,9 +39,9 @@ public interface ITestBase {
 
     void setSkipTest(boolean skipTest);
 
-    void createProxyWrapper() throws Exception;
+    void createProxyWrapper();
 
-    void createWebDriverWrapper() throws Exception;
+    void createWebDriverWrapper() throws MalformedURLException;
 
     ProxyWrapper getProxyWrapper();
 
@@ -104,7 +106,7 @@ public interface ITestBase {
      *               test
      * @see ITestResult#FAILURE
      */
-    void onTestFailure(ITestResult result) throws Exception;
+    void onTestFailure(ITestResult result) throws IOException;
 
     /**
      * Invoked each time a test is skipped.
@@ -115,9 +117,9 @@ public interface ITestBase {
      */
     void onTestSkipped(ITestResult result);
 
-    void embedScreenshot() throws Exception;
+    void embedScreenshot() throws IOException;
 
-    void embedTestLog() throws Exception;
+    void embedTestLog() throws IOException;
 
     void embedTestData(Object o) throws Exception;
 
@@ -130,7 +132,7 @@ public interface ITestBase {
     void stopTransaction();
 
     String getSuiteTestSeparator();
-    
+
     void setUpTest() throws Exception;
 
     void tearDownTest() throws Exception;
