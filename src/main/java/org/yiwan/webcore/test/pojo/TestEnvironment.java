@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.util.Helper;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,5 +61,15 @@ public class TestEnvironment {
         List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
         });
         logger.info(testEnvironments.get(0).getApplicationServer("default").getUrl());
+
+        TestEnvironment a = new TestEnvironment();
+        ApplicationServer b = new ApplicationServer();
+        Server c = new Server();
+        DatabaseServer d = new DatabaseServer();
+        b.setConfiguration(c);
+        d.setConfiguration(c);
+        a.setApplicationServers(Arrays.asList(b));
+        a.setDatabaseServers(Arrays.asList(d));
+        logger.info(a.toString());
     }
 }
