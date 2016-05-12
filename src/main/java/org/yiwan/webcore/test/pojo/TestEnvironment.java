@@ -3,9 +3,13 @@ package org.yiwan.webcore.test.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yiwan.webcore.util.Helper;
+
+import java.util.List;
 
 /**
  * Created by Kenny Wang on 3/30/2016.
@@ -13,41 +17,31 @@ import org.slf4j.LoggerFactory;
 public class TestEnvironment {
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(TestEnvironment.class);
-    private Application application;
-    private Database database;
-    private Server applicationServer;
-    private Server databaseServer;
+    private List<ApplicationServer> applicationServers;
+    private List<DatabaseServer> databaseServers;
 
-    public Server getDatabaseServer() {
-        return databaseServer;
+    public List<DatabaseServer> getDatabaseServers() {
+        return databaseServers;
     }
 
-    public void setDatabaseServer(Server databaseServer) {
-        this.databaseServer = databaseServer;
+    public void setDatabaseServers(List<DatabaseServer> databaseServers) {
+        this.databaseServers = databaseServers;
     }
 
-    public Server getApplicationServer() {
-        return applicationServer;
+    public List<ApplicationServer> getApplicationServers() {
+        return applicationServers;
     }
 
-    public void setApplicationServer(Server applicationServer) {
-        this.applicationServer = applicationServer;
+    public void setApplicationServers(List<ApplicationServer> applicationServers) {
+        this.applicationServers = applicationServers;
     }
 
-    public Database getDatabase() {
-        return database;
+    public DatabaseServer getDatabaseServer(String name) throws Exception {
+        return (DatabaseServer) Helper.filterListByName(databaseServers, name);
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
+    public ApplicationServer getApplicationServer(String name) throws Exception {
+        return (ApplicationServer) Helper.filterListByName(applicationServers, name);
     }
 
     @Override
@@ -60,150 +54,11 @@ public class TestEnvironment {
         }
     }
 
-    public class Application {
-        private String url;
-        private String version;
 
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        @Override
-        public String toString() {
-            try {
-                return (new ObjectMapper()).writeValueAsString(this);
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage(), e);
-                return "";
-            }
-        }
-    }
-
-    public class Database {
-        private String driver;
-        private String url;
-        private String user;
-        private String password;
-        private String version;
-        private String dump;
-
-        public String getDump() {
-            return dump;
-        }
-
-        public void setDump(String dump) {
-            this.dump = dump;
-        }
-
-        public String getDriver() {
-            return driver;
-        }
-
-        public void setDriver(String driver) {
-            this.driver = driver;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getUser() {
-            return user;
-        }
-
-        public void setUser(String user) {
-            this.user = user;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-
-        @Override
-        public String toString() {
-            try {
-                return (new ObjectMapper()).writeValueAsString(this);
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage(), e);
-                return "";
-            }
-        }
-    }
-
-    public class Server {
-        private String os;
-        private String version;
-        private String cpu;
-        private String memory;
-
-        public String getMemory() {
-            return memory;
-        }
-
-        public void setMemory(String memory) {
-            this.memory = memory;
-        }
-
-        public String getCpu() {
-            return cpu;
-        }
-
-        public void setCpu(String cpu) {
-            this.cpu = cpu;
-        }
-
-        public String getOs() {
-            return os;
-        }
-
-        public void setOs(String os) {
-            this.os = os;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-
-        @Override
-        public String toString() {
-            try {
-                return (new ObjectMapper()).writeValueAsString(this);
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage(), e);
-                return "";
-            }
-        }
+    public static void main(String[] args) throws Exception {
+        String json = "[{\"applicationServers\":[{\"name\":\"default\",\"url\":\"http://localhost:8080/\"}],\"databaseServers\":[{\"name\":\"default\",\"dump\":\"data/system/default.xml\"}]}]";
+        List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
+        });
+        logger.info(testEnvironments.get(0).getApplicationServer("default").getUrl());
     }
 }

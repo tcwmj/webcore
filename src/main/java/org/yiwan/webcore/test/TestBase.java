@@ -447,9 +447,7 @@ public abstract class TestBase implements ITestBase {
         }
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
-        getWebDriverWrapper().navigate().to(getTestEnvironment().getApplication().getUrl());
         report(Helper.getTestReportStyle("../../../../" + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
-        report(Helper.getTestReportStyle(getTestEnvironment().getApplication().getUrl(), "open test server url"));
     }
 
     @Override

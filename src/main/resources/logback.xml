@@ -7,7 +7,7 @@
         <!--<discriminator class="org.yiwan.webcore.util.ScenarioBasedDiscriminator"/>-->
         <discriminator>
             <key>scenario</key>
-            <defaultValue>$output_folder}default.html</defaultValue>
+            <defaultValue>${output_folder}default.html</defaultValue>
         </discriminator>
         <sift>
             <appender name="${scenario}" class="ch.qos.logback.core.FileAppender">
