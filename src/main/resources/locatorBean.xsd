@@ -11,19 +11,20 @@
 		<xs:sequence>
 			<xs:element name="locator" type="locator" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:ID" use="required"/>
-		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="description" type="xs:string" use="required"/>
+		<xs:attributeGroup ref="attributeGroup"/>
 	</xs:complexType>
 	<xs:complexType name="locator">
+		<xs:attributeGroup ref="attributeGroup"/>
+	</xs:complexType>
+	<xs:attributeGroup name="attributeGroup">
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="ref" type="xs:IDREF"/>
 		<xs:attribute name="type" type="locatorType"/>
 		<xs:attribute name="by" type="byType"/>
 		<xs:attribute name="expression" type="xs:string"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="description" type="xs:string" use="required"/>
-	</xs:complexType>
+		<xs:attribute name="description" type="xs:string" use="required"/>	
+	</xs:attributeGroup>
 	<xs:simpleType name="locatorType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="WebElement"/>

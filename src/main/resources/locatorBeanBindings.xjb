@@ -27,7 +27,7 @@
 		Locator locator = (Locator) org.yiwan.webcore.util.Helper.filterListById(this.getLocator(), id);
 		if (locator != null) {
 			if (locator.getRef() != null)
-				locator = locator.getRef();
+				locator = (Locator) locator.getRef();
 			if (locator.getPage() == null)
 				locator.setPage(this);
 			String expression = locator.getExpression();
@@ -97,11 +97,6 @@
 		this.expression_ = expression_;
 	}
 			</ci:code>
-		</jxb:bindings>		
-		<jxb:bindings node="//xs:complexType[@name='locator']//xs:attribute[@name='ref']">
-			<jxb:property>
-				<jxb:baseType name="Locator" />
-			</jxb:property>
-		</jxb:bindings>		
+		</jxb:bindings>
 	</jxb:bindings>
 </jxb:bindings>
