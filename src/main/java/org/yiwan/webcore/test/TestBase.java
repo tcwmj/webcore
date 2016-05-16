@@ -12,7 +12,13 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
-import org.yiwan.webcore.proxy.*;
+import org.yiwan.webcore.proxy.ProxyWrapper;
+import org.yiwan.webcore.proxy.observer.FileDownloadObserver;
+import org.yiwan.webcore.proxy.observer.HttpArchiveObserver;
+import org.yiwan.webcore.proxy.observer.ScreenshotObserver;
+import org.yiwan.webcore.proxy.observer.TimestampObserver;
+import org.yiwan.webcore.proxy.subject.Subject;
+import org.yiwan.webcore.proxy.subject.TransactionSubject;
 import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.util.Helper;
@@ -160,15 +166,15 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void createProxyWrapper() {
         proxyWrapper = new ProxyWrapper();
-        this.subject = new TransactionSubject(this);
+        this.subject = new TransactionSubject();
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            subject.attach(new TimestampObserver(getProxyWrapper()));
+            subject.attach(new TimestampObserver(this));
         }
         if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
-            subject.attach(new ScreenshotObserver(getProxyWrapper()));
+            subject.attach(new ScreenshotObserver(this));
         }
         if (PropHelper.ENABLE_HTTP_ARCHIVE) {
-            subject.attach(new HttpArchiveObserver(getProxyWrapper()));
+            subject.attach(new HttpArchiveObserver(this));
         }
         if (PropHelper.ENABLE_FILE_DOWNLOAD) {
             subject.attach(new FileDownloadObserver(this));
