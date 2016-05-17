@@ -80,6 +80,7 @@ public class PropHelper {
     public static final boolean ENABLE_TRANSACTION_SCREENSHOT_CAPTURE = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
     public static final String PHANTOMJS_CLI_ARGS = getProperty("browser.phantomjs.cli.args");
     public static final String PHANTOMJS_GHOSTDRIVER_CLI_ARGS = getProperty("browser.phantomjs.ghostdriver.cli.args");
+    public static final String TRANSACTION_TIMESTAMPS_FILE = getProperty("trasaction.timestamps.file");
 
     /**
      * load properties from external file
