@@ -46,8 +46,4 @@ public class TestCaseManager {
     public static void putTestEnvironment(TestEnvironment testEnvironment) throws InterruptedException {
         TEST_ENVIRONMENTS.put(testEnvironment);
     }
-
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println(TEST_ENVIRONMENTS.take());
-    }
 }
