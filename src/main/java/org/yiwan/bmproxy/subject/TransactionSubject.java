@@ -1,6 +1,6 @@
-package org.yiwan.webcore.proxy.subject;
+package org.yiwan.bmproxy.subject;
 
-import org.yiwan.webcore.proxy.observer.Observer;
+import org.yiwan.bmproxy.observer.Observer;
 
 import java.util.ArrayList;
 import java.util.List;

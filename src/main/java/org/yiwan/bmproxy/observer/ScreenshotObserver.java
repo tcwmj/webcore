@@ -1,4 +1,4 @@
-package org.yiwan.webcore.proxy.observer;
+package org.yiwan.bmproxy.observer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

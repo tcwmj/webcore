@@ -30,7 +30,7 @@
         <xml.apis.version>1.4.01</xml.apis.version>
         <jaxb2.basics.version>0.11.0</jaxb2.basics.version>
         <build.helper.plugin.version>1.4</build.helper.plugin.version>
-        <zaproxy.clientapi.wrapper.version>1.0.0-SNAPSHOT</zaproxy.clientapi.wrapper.version>
+        <zaproxy.clientapi.version>2.4.3</zaproxy.clientapi.version>
         <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
     </properties>
 
@@ -41,9 +41,14 @@
         <!--<version>${slf4j.version}</version>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>org.yiwan</groupId>
-            <artifactId>zaproxy-clientapi-wrapper</artifactId>
-            <version>${zaproxy.clientapi.wrapper.version}</version>
+            <groupId>org.zaproxy</groupId>
+            <artifactId>clientapi</artifactId>
+            <version>${zaproxy.clientapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.umass.cs.benchlab</groupId>
+            <artifactId>harlib</artifactId>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
