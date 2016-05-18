@@ -15,7 +15,7 @@ public class DatabaseServer {
     private String name;
     private String driver;
     private String url;
-    private String address;
+    private String host;
     private String port;
     private String version;
     private String instance;
@@ -57,12 +57,12 @@ public class DatabaseServer {
         this.url = url;
     }
 
-    public String getAddress() {
-        return address;
+    public String getHost() {
+        return host;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getPort() {

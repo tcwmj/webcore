@@ -14,6 +14,6 @@ public class TestCaseManagerTest {
     @Test
     public void takeTakeTestEnvironment() throws Exception {
     	logger.info(PropHelper.SERVER_INFO);
-        assertThat(TestCaseManager.takeTestEnvironment()).isEqualTo("http://localhost:8080/");
+        assertThat(TestCaseManager.takeTestEnvironment().getApplicationServers().get(0).getUrl()).isNull();
     }
 }

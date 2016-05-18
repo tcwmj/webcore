@@ -1,38 +1,42 @@
 [
   {
-    "applicationServers": {
-      "name": null,
-      "url": null,
-      "address": null,
-      "port": null,
-      "version": null,
-      "username": null,
-      "password": null,
-      "configuration": {
-        "os": null,
-        "osVersion": null,
-        "cpu": null,
-        "memory": null
+    "applicationServers": [
+      {
+        "name": null,
+        "url": null,
+        "host": null,
+        "port": null,
+        "version": null,
+        "username": null,
+        "password": null,
+        "configuration": {
+          "os": null,
+          "osVersion": null,
+          "cpu": null,
+          "memory": null
+        }
       }
-    },
-    "databaseServers": {
-      "name": null,
-      "driver": null,
-      "url": null,
-      "address": null,
-      "port": null,
-      "version": null,
-      "instance": null,
-      "schema": null,
-      "dump": null,
-      "username": null,
-      "password": null,
-      "configuration": {
-        "os": null,
-        "osVersion": null,
-        "cpu": null,
-        "memory": null
+    ],
+    "databaseServers": [
+      {
+        "name": null,
+        "driver": null,
+        "url": null,
+        "host": null,
+        "port": null,
+        "version": null,
+        "instance": null,
+        "schema": null,
+        "dump": null,
+        "username": null,
+        "password": null,
+        "configuration": {
+          "os": null,
+          "osVersion": null,
+          "cpu": null,
+          "memory": null
+        }
       }
-    }
+    ]
   }
 ]

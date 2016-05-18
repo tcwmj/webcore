@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static java.lang.String.format;
+
 /**
  * @author Kenny Wang
  */
@@ -93,10 +95,13 @@ public class PropHelper {
      */
     private static void load(String file) {
 //        logger.debug("load property file in resource " + file);
-        try {
-            InputStream is = ClassLoader.getSystemResourceAsStream(file);
-            props.load(is);
-            is.close();
+        try (InputStream is = ClassLoader.getSystemResourceAsStream(file)) {
+            if (is != null) {
+                props.load(is);
+                is.close();
+            } else {
+                logger.warn(format("%s was not provided", file));
+            }
         } catch (IOException e) {
             logger.error(file, e);
         }
