@@ -84,6 +84,7 @@ public class PropHelper {
     public static final boolean ENABLE_ZAP = Boolean.parseBoolean(getProperty("zap.enable"));
     public static final String ZAP_SERVER_HOST = getProperty("zap.server.host");
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
+    public static final String ZAP_API_KEY = getProperty("zap.api.key");
 
     /**
      * load properties from external file
