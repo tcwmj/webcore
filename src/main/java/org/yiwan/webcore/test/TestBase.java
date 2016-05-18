@@ -14,10 +14,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
-import org.yiwan.webcore.bmproxy.observer.FileDownloadObserver;
-import org.yiwan.webcore.bmproxy.observer.HttpArchiveObserver;
-import org.yiwan.webcore.bmproxy.observer.ScreenshotObserver;
-import org.yiwan.webcore.bmproxy.observer.TimestampObserver;
+import org.yiwan.webcore.bmproxy.observer.*;
 import org.yiwan.webcore.bmproxy.subject.Subject;
 import org.yiwan.webcore.bmproxy.subject.TransactionSubject;
 import org.yiwan.webcore.test.pojo.TestCapability;
@@ -180,6 +177,9 @@ public abstract class TestBase implements ITestBase {
         if (PropHelper.ENABLE_FILE_DOWNLOAD) {
             subject.attach(new FileDownloadObserver(this));
         }
+        if (PropHelper.ENABLE_PENETRATION_TEST) {
+            subject.attach(new WebSpiderObserver(this));
+        }
     }
 
     /* (non-Javadoc)
@@ -188,12 +188,12 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void createWebDriverWrapper() throws MalformedURLException {
         if (getProxyWrapper() != null) {
-            if (PropHelper.ENABLE_ZAP) {
+            if (PropHelper.ENABLE_PENETRATION_TEST) {
                 getProxyWrapper().setChainedProxy(PropHelper.ZAP_SERVER_HOST, PropHelper.ZAP_SERVER_PORT);
             }
             webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy())).create();
         } else {
-            if (PropHelper.ENABLE_ZAP) {
+            if (PropHelper.ENABLE_PENETRATION_TEST) {
                 Proxy zaproxy = new Proxy();
                 zaproxy.setProxyType(Proxy.ProxyType.MANUAL);
                 String proxyStr = String.format("%s:%d", PropHelper.ZAP_SERVER_HOST, PropHelper.ZAP_SERVER_PORT);
