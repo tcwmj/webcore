@@ -82,7 +82,7 @@ public class PropHelper {
     public static final String PHANTOMJS_GHOSTDRIVER_CLI_ARGS = getProperty("browser.phantomjs.ghostdriver.cli.args");
     public static final String TRANSACTION_TIMESTAMPS_FILE = getProperty("trasaction.timestamps.file");
     public static final boolean ENABLE_ZAP = Boolean.parseBoolean(getProperty("zap.enable"));
-    public static final String ZAP_SERVER_ADDRESS = getProperty("zap.server.address");
+    public static final String ZAP_SERVER_HOST = getProperty("zap.server.host");
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
 
     /**

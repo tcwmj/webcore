@@ -189,14 +189,14 @@ public abstract class TestBase implements ITestBase {
     public void createWebDriverWrapper() throws MalformedURLException {
         if (getProxyWrapper() != null) {
             if (PropHelper.ENABLE_ZAP) {
-                getProxyWrapper().setChainedProxy(PropHelper.ZAP_SERVER_ADDRESS, PropHelper.ZAP_SERVER_PORT);
+                getProxyWrapper().setChainedProxy(PropHelper.ZAP_SERVER_HOST, PropHelper.ZAP_SERVER_PORT);
             }
             webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy())).create();
         } else {
             if (PropHelper.ENABLE_ZAP) {
                 Proxy zaproxy = new Proxy();
                 zaproxy.setProxyType(Proxy.ProxyType.MANUAL);
-                String proxyStr = String.format("%s:%d", PropHelper.ZAP_SERVER_ADDRESS, PropHelper.ZAP_SERVER_PORT);
+                String proxyStr = String.format("%s:%d", PropHelper.ZAP_SERVER_HOST, PropHelper.ZAP_SERVER_PORT);
                 zaproxy.setHttpProxy(proxyStr);
                 zaproxy.setSslProxy(proxyStr);
                 webDriverWrapper = new WebDriverWrapperFactory(testCapability, zaproxy).create();
