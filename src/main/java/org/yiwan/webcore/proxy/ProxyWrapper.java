@@ -8,6 +8,8 @@ import net.lightbody.bmp.proxy.CaptureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
+
 public class ProxyWrapper {
     public final static String CONTENT_DISPOSITION = "Content-Disposition";
     private final static Logger logger = LoggerFactory.getLogger(ProxyWrapper.class);
@@ -64,5 +66,10 @@ public class ProxyWrapper {
     public void addReqeustFilter(RequestFilter filter) {
         logger.debug("add a new request filter to the proxy");
         proxy.addRequestFilter(filter);
+    }
+
+    public void setChainedProxy(String hostname, int port) {
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(hostname, port);
+        proxy.setChainedProxy(inetSocketAddress);
     }
 }

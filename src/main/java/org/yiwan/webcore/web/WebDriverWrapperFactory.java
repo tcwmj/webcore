@@ -57,7 +57,7 @@ public class WebDriverWrapperFactory {
         if (PropHelper.DUMMY_TEST) {
             return new DummyDriverWrapper();
         } else {
-            WebDriver webDriver = null;
+            WebDriver webDriver;
             if (PropHelper.REMOTE) {
                 logger.debug("choose remote test mode");
                 webDriver = setupRemoteBrowser();
@@ -93,20 +93,22 @@ public class WebDriverWrapperFactory {
 
     private WebDriver setupRemoteBrowser() throws MalformedURLException {
         DesiredCapabilities capability = new DesiredCapabilities();
-        URL url = null;
+        URL url;
         if (PropHelper.BROWSERSTACK) {
             logger.debug("choose browserstack cloud test platform");
-            configBrowserStackCapablities(capability, url);
+            configBrowserStackCapabilities(capability);
+            url = new URL(PropHelper.BROWSERSTACK_URL);
         } else {
             logger.debug("choose self remote test platform");
-            configSelfRemoteCapabilities(capability, url);
+            configSelfRemoteCapabilities(capability);
+            url = new URL(PropHelper.REMOTE_ADDRESS);
         }
         RemoteWebDriver rwd = new RemoteWebDriver(url, capability);
         rwd.setFileDetector(new LocalFileDetector());
         return rwd;
     }
 
-    private void configSelfRemoteCapabilities(DesiredCapabilities capability, URL url) throws MalformedURLException {
+    private void configSelfRemoteCapabilities(DesiredCapabilities capability) {
         if (os != null) {
             capability.setPlatform(Platform.fromString(os));
             logger.debug("choose platform " + os);
@@ -120,7 +122,6 @@ public class WebDriverWrapperFactory {
             capability.setVersion(browser_version);
             logger.debug("choose browser version " + browser_version);
         }
-        url = new URL(PropHelper.REMOTE_ADDRESS);
     }
 
     /**
@@ -129,7 +130,7 @@ public class WebDriverWrapperFactory {
      * @return WebDriver
      */
     private WebDriver setupLocalBrowser() {
-        logger.debug("choose test browser " + browser);
+        logger.debug("choose browser " + browser);
         switch (browser.toLowerCase()) {
             case "chrome":
                 return setupLocalChromeDriver();
@@ -240,7 +241,7 @@ public class WebDriverWrapperFactory {
         return arch.contains("64");
     }
 
-    private void configBrowserStackCapablities(DesiredCapabilities capability, URL url) throws MalformedURLException {
+    private void configBrowserStackCapabilities(DesiredCapabilities capability) {
         if (os != null) {
             capability.setCapability("os", os);
             logger.debug("choose platform " + os);
@@ -265,7 +266,6 @@ public class WebDriverWrapperFactory {
         capability.setCapability("browserstack.local", PropHelper.BROWSERSTACK_LOCAL);
         capability.setCapability("browserstack.localIdentifier", PropHelper.BROWSERSTACK_LOCAL_IDENTIFIER);
         capability.setCapability("browserstack.debug", PropHelper.BROWSERSTACK_DEBUG);
-        url = new URL(PropHelper.BROWSERSTACK_URL);
     }
 
     private void configBrowserCapabilities(DesiredCapabilities capability) {

@@ -74,7 +74,7 @@
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s) %s by %s (%s) @ %s", name, id, type.value().toLowerCase(), by.value(), expression_, page);
+		return String.format("%s (%s) %s by %s (%s) @ %s", name, id, type.value(), by.value(), expression_, page);
 	}
 	
 	private Page page;

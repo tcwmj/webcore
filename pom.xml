@@ -30,6 +30,7 @@
         <xml.apis.version>1.4.01</xml.apis.version>
         <jaxb2.basics.version>0.11.0</jaxb2.basics.version>
         <build.helper.plugin.version>1.4</build.helper.plugin.version>
+        <zaproxy.clientapi.wrapper.version>1.0.0-SNAPSHOT</zaproxy.clientapi.wrapper.version>
         <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
     </properties>
 
@@ -39,6 +40,11 @@
         <!--<artifactId>slf4j-log4j12</artifactId>-->
         <!--<version>${slf4j.version}</version>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.yiwan</groupId>
+            <artifactId>zaproxy-clientapi-wrapper</artifactId>
+            <version>${zaproxy.clientapi.wrapper.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -137,17 +143,17 @@
 
             <!-- generate a javasource -->
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-source-plugin</artifactId>-->
-                <!--<version>${maven.source.version}</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>attach-sources</id>-->
-                        <!--<goals>-->
-                            <!--<goal>jar</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-source-plugin</artifactId>-->
+            <!--<version>${maven.source.version}</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>attach-sources</id>-->
+            <!--<goals>-->
+            <!--<goal>jar</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
 
             <!-- generate a javadoc -->

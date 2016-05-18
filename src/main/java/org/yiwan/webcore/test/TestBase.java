@@ -3,6 +3,7 @@ package org.yiwan.webcore.test;
 import net.lightbody.bmp.client.ClientUtil;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Proxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -187,9 +188,21 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void createWebDriverWrapper() throws MalformedURLException {
         if (getProxyWrapper() != null) {
+            if (PropHelper.ENABLE_ZAP) {
+                getProxyWrapper().setChainedProxy(PropHelper.ZAP_SERVER_ADDRESS, PropHelper.ZAP_SERVER_PORT);
+            }
             webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy())).create();
         } else {
-            webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
+            if (PropHelper.ENABLE_ZAP) {
+                Proxy zaproxy = new Proxy();
+                zaproxy.setProxyType(Proxy.ProxyType.MANUAL);
+                String proxyStr = String.format("%s:%d", PropHelper.ZAP_SERVER_ADDRESS, PropHelper.ZAP_SERVER_PORT);
+                zaproxy.setHttpProxy(proxyStr);
+                zaproxy.setSslProxy(proxyStr);
+                webDriverWrapper = new WebDriverWrapperFactory(testCapability, zaproxy).create();
+            } else {
+                webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
+            }
         }
     }
 
