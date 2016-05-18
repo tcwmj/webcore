@@ -1,4 +1,4 @@
-package org.yiwan.bmproxy.observer;
+package org.yiwan.webcore.bmproxy.observer;
 
 /**
  * Created by Kenny Wang on 3/14/2016.

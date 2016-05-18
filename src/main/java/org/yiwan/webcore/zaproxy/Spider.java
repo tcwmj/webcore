@@ -1,4 +1,4 @@
-package org.yiwan.zaproxy;
+package org.yiwan.webcore.zaproxy;
 
 import java.util.List;
 

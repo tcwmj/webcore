@@ -1,4 +1,4 @@
-package org.yiwan.bmproxy;
+package org.yiwan.webcore.bmproxy;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;

@@ -1,8 +1,8 @@
-package org.yiwan.bmproxy.observer;
+package org.yiwan.webcore.bmproxy.observer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.bmproxy.ProxyWrapper;
+import org.yiwan.webcore.bmproxy.ProxyWrapper;
 import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.PropHelper;
 

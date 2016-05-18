@@ -1,4 +1,4 @@
-package org.yiwan.bmproxy.pojo;
+package org.yiwan.webcore.bmproxy.pojo;
 
 import java.util.List;
 

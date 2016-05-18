@@ -1,4 +1,4 @@
-package org.yiwan.bmproxy.observer;
+package org.yiwan.webcore.bmproxy.observer;
 
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
@@ -9,11 +9,11 @@ import net.lightbody.bmp.util.HttpMessageInfo;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.bmproxy.ProxyWrapper;
-import org.yiwan.bmproxy.pojo.HttpRequestDetail;
-import org.yiwan.bmproxy.pojo.HttpResponseDetail;
-import org.yiwan.bmproxy.pojo.UserTransactionDetail;
-import org.yiwan.bmproxy.pojo.TransactionDetail;
+import org.yiwan.webcore.bmproxy.ProxyWrapper;
+import org.yiwan.webcore.bmproxy.pojo.HttpRequestDetail;
+import org.yiwan.webcore.bmproxy.pojo.HttpResponseDetail;
+import org.yiwan.webcore.bmproxy.pojo.TransactionDetail;
+import org.yiwan.webcore.bmproxy.pojo.UserTransactionDetail;
 import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.PropHelper;
 

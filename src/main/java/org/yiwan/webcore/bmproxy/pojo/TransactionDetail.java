@@ -1,4 +1,4 @@
-package org.yiwan.bmproxy.pojo;
+package org.yiwan.webcore.bmproxy.pojo;
 
 /**
  * Created by Kenny Wang on 4/2/2016.

@@ -1,4 +1,4 @@
-package org.yiwan.zaproxy.model;
+package org.yiwan.webcore.zaproxy.model;
 
 import org.zaproxy.clientapi.core.ApiResponseSet;
 

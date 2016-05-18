@@ -22,7 +22,7 @@ public class TestEnvironmentTest {
     private static final Logger logger = LoggerFactory.getLogger(TestEnvironmentTest.class);
 
     @Test
-    public void JsonToTestEnviromentObjectTest() throws Exception {
+    public void testJsonToTestEnviroment() throws Exception {
         String json = "[{\"applicationServers\":[{\"name\":\"default\",\"url\":\"http://localhost:8080/\"}],\"databaseServers\":[{\"name\":\"default\",\"dump\":\"data/system/default.xml\"}]}]";
         List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
         });
@@ -30,7 +30,7 @@ public class TestEnvironmentTest {
     }
 
     @Test
-    public void TestEnviromentObjectToJsonTest() {
+    public void testTestEnviromentToJson() {
         TestEnvironment a = new TestEnvironment();
         ApplicationServer b = new ApplicationServer();
         DatabaseServer d = new DatabaseServer();

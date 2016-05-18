@@ -1,4 +1,4 @@
-package org.yiwan.zaproxy;
+package org.yiwan.webcore.zaproxy;
 
 import org.zaproxy.clientapi.core.Alert;
 
@@ -22,6 +22,7 @@ public interface ScanningProxy extends LoggingProxy {
     int getAlertsCount() throws ProxyException;
 
     public void deleteAlerts() throws ProxyException;
+
     /*
         Perform an active scan of everything that was logged by the proxy
      */
@@ -54,6 +55,7 @@ public interface ScanningProxy extends LoggingProxy {
 
     /**
      * Shuts down ZAP.
+     *
      * @throws ProxyException
      */
     public void shutdown() throws ProxyException;

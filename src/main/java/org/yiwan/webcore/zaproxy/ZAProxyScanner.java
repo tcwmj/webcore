@@ -1,4 +1,4 @@
-package org.yiwan.zaproxy;
+package org.yiwan.webcore.zaproxy;
 
 import edu.umass.cs.benchlab.har.HarEntry;
 import edu.umass.cs.benchlab.har.HarLog;
@@ -7,7 +7,7 @@ import edu.umass.cs.benchlab.har.tools.HarFileReader;
 import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
-import org.yiwan.zaproxy.model.ScanResponse;
+import org.yiwan.webcore.zaproxy.model.ScanResponse;
 import org.zaproxy.clientapi.core.*;
 
 import java.io.ByteArrayInputStream;
@@ -18,11 +18,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class ZAProxyScanner implements ScanningProxy, Spider {
-    Logger log = Logger.getLogger(ZAProxyScanner.class.getName());
-
     private static final String MINIMUM_ZAP_VERSION = System.getProperty("zaproxy.clientapi.version");
     private final ClientApi clientApi;
     private final String apiKey;
+    Logger log = Logger.getLogger(ZAProxyScanner.class.getName());
 
 
     public ZAProxyScanner(String host, int port, String apiKey) throws IllegalArgumentException, ProxyException {
@@ -47,6 +46,19 @@ public class ZAProxyScanner implements ScanningProxy, Spider {
         if (port <= 0 || port > 65535) {
             throw new IllegalArgumentException("Parameter port must be between 1 and 65535.");
         }
+    }
+
+    private static boolean validZAPVersion(String expected, String given) {
+        final String[] expectedVersion = expected.split("\\.");
+        final String[] givenVersion = given.split("\\.");
+
+        for (int i = 0; i < givenVersion.length; i++) {
+            if (i < expectedVersion.length) {
+                if (Integer.parseInt(givenVersion[i]) < Integer.parseInt(expectedVersion[i])) return false;
+            }
+        }
+
+        return true;
     }
 
     private void validateMinimumRequiredZapVersion() throws ProxyException {
@@ -173,7 +185,6 @@ public class ZAProxyScanner implements ScanningProxy, Spider {
         }
     }
 
-
     public int getAlertsCount() throws ProxyException {
         try {
             return ClientApiUtils.getInteger(clientApi.core.numberOfAlerts(""));
@@ -252,7 +263,6 @@ public class ZAProxyScanner implements ScanningProxy, Spider {
         return found;
     }
 
-
     public List<HarEntry> findInRequestHistory(String regex) throws ProxyException {
         try {
             return ClientApiUtils.getHarEntries(clientApi.search.harByRequestRegex(apiKey, regex, "", "-1", "-1"));
@@ -282,19 +292,6 @@ public class ZAProxyScanner implements ScanningProxy, Spider {
 
             throw new ProxyException(e);
         }
-    }
-
-    private static boolean validZAPVersion(String expected, String given) {
-        final String[] expectedVersion = expected.split("\\.");
-        final String[] givenVersion = given.split("\\.");
-
-        for (int i = 0; i < givenVersion.length; i++) {
-            if (i < expectedVersion.length) {
-                if (Integer.parseInt(givenVersion[i]) < Integer.parseInt(expectedVersion[i])) return false;
-            }
-        }
-
-        return true;
     }
 
     @Override
@@ -408,6 +405,21 @@ public class ZAProxyScanner implements ScanningProxy, Spider {
         return results;
     }
 
+    /**
+     * Shuts down ZAP.
+     *
+     * @throws ProxyException
+     */
+    @Override
+    public void shutdown() {
+        try {
+            clientApi.core.shutdown(apiKey);
+        } catch (ClientApiException e) {
+            e.printStackTrace();
+            throw new ProxyException(e);
+        }
+    }
+
     private static class ClientApiUtils {
 
         private ClientApiUtils() {
@@ -450,20 +462,5 @@ public class ZAProxyScanner implements ScanningProxy, Spider {
             return createHarLog(bytesHarLog).getEntries().getEntries();
         }
 
-    }
-
-    /**
-     * Shuts down ZAP.
-     *
-     * @throws ProxyException
-     */
-    @Override
-    public void shutdown() {
-        try {
-            clientApi.core.shutdown(apiKey);
-        } catch (ClientApiException e) {
-            e.printStackTrace();
-            throw new ProxyException(e);
-        }
     }
 }

@@ -1,10 +1,10 @@
-package org.yiwan.zaproxy;
+package org.yiwan.webcore.zaproxy;
 
 import edu.umass.cs.benchlab.har.HarHeader;
 import edu.umass.cs.benchlab.har.HarRequest;
 
 public class HarUtils {
-    public static HarRequest changeCookieValue(HarRequest request,String name,String value) {
+    public static HarRequest changeCookieValue(HarRequest request, String name, String value) {
         String patternMulti = "([; ]" + name + ")=[^;]*(.*)";
         String patternStart = "^(" + name + ")=[^;]*(.*)";
 

@@ -853,7 +853,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IWebDriverWrapper switchTo() {
-            	logger.debug("try to switch to frame {}", locator);
+                logger.debug("try to switch to frame {}", locator);
                 return waitThat(locator).frameToBeAvailableAndSwitchToIt();
             }
 

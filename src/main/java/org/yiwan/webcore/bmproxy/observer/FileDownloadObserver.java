@@ -1,4 +1,4 @@
-package org.yiwan.bmproxy.observer;
+package org.yiwan.webcore.bmproxy.observer;
 
 import io.netty.handler.codec.http.HttpResponse;
 import net.lightbody.bmp.filters.ResponseFilter;
@@ -7,7 +7,7 @@ import net.lightbody.bmp.util.HttpMessageInfo;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yiwan.bmproxy.ProxyWrapper;
+import org.yiwan.webcore.bmproxy.ProxyWrapper;
 import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;

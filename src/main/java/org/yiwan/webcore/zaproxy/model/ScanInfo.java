@@ -1,4 +1,4 @@
-package org.yiwan.zaproxy.model;
+package org.yiwan.webcore.zaproxy.model;
 
 import org.zaproxy.clientapi.core.ApiResponseSet;
 
@@ -9,16 +9,6 @@ public class ScanInfo {
     int progress;
     int id;
     State state;
-
-    public enum State {
-        FINISHED,
-        PAUSED,
-        RUNNING;
-
-        public static State parse(String s) {
-            return valueOf(s);
-        }
-    }
 
     public ScanInfo(ApiResponseSet response) {
         id = Integer.parseInt(response.getAttribute("id"));
@@ -48,5 +38,15 @@ public class ScanInfo {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public enum State {
+        FINISHED,
+        PAUSED,
+        RUNNING;
+
+        public static State parse(String s) {
+            return valueOf(s);
+        }
     }
 }

@@ -1,7 +1,7 @@
-package org.yiwan.bmproxy.subject;
+package org.yiwan.webcore.bmproxy.subject;
 
 
-import org.yiwan.bmproxy.observer.Observer;
+import org.yiwan.webcore.bmproxy.observer.Observer;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
