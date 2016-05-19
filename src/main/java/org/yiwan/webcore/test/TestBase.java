@@ -14,7 +14,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
-import org.yiwan.webcore.bmproxy.observer.*;
+import org.yiwan.webcore.bmproxy.observer.FileDownloadObserver;
+import org.yiwan.webcore.bmproxy.observer.HttpArchiveObserver;
+import org.yiwan.webcore.bmproxy.observer.ScreenshotObserver;
+import org.yiwan.webcore.bmproxy.observer.TimestampObserver;
 import org.yiwan.webcore.bmproxy.subject.Subject;
 import org.yiwan.webcore.bmproxy.subject.TransactionSubject;
 import org.yiwan.webcore.test.pojo.TestCapability;
@@ -176,9 +179,6 @@ public abstract class TestBase implements ITestBase {
         }
         if (PropHelper.ENABLE_FILE_DOWNLOAD) {
             subject.attach(new FileDownloadObserver(this));
-        }
-        if (PropHelper.ENABLE_PENETRATION_TEST) {
-            subject.attach(new WebSpiderObserver(this));
         }
     }
 

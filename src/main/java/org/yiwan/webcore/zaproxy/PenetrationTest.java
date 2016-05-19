@@ -3,6 +3,9 @@ package org.yiwan.webcore.zaproxy;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yiwan.webcore.test.TestCaseManager;
+import org.yiwan.webcore.test.pojo.ApplicationServer;
+import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.zaproxy.model.ScanInfo;
 import org.yiwan.webcore.zaproxy.model.ScanResponse;
@@ -25,7 +28,7 @@ public class PenetrationTest {
         if (PropHelper.ENABLE_PENETRATION_TEST) {
             try {
                 doPreActions();
-//                add shutdown hook for get penetration test report in the end
+//                add shutdown hook for crawling, scanning and get penetration test report in the end
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     @Override
                     public void run() {
@@ -47,22 +50,40 @@ public class PenetrationTest {
 
     static void doPostActions() {
         try {
-//            scan();
+            crawl();
+            scan();
             generateReport();
-//            Core.shutdown();
+            Core.shutdown();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
-    public static void doActions(String url) {
-        try {
-            Spider.scan(url);
-            Spider.waitScanningDone(Spider.getLastScannerId());
-            ActiveScanner.scan(url);
-            ActiveScanner.waitScanningDone(ActiveScanner.getLastScannerId());
-        } catch (ClientApiException | InterruptedException e) {
-            logger.error(e.getMessage(), e);
+    static void crawl() {
+        for (TestEnvironment testEnvironment : TestCaseManager.getTestEnvironments()) {
+            for (ApplicationServer applicationServer : testEnvironment.getApplicationServers()) {
+                try {
+                    String url = applicationServer.getUrl();
+                    Spider.scan(url);
+                    Spider.waitScanningDone(Spider.getLastScannerId());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    static void scan() {
+        for (TestEnvironment testEnvironment : TestCaseManager.getTestEnvironments()) {
+            for (ApplicationServer applicationServer : testEnvironment.getApplicationServers()) {
+                try {
+                    String url = applicationServer.getUrl();
+                    ActiveScanner.scan(url);
+                    ActiveScanner.waitScanningDone(ActiveScanner.getLastScannerId());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
         }
     }
 
