@@ -9,7 +9,7 @@ import net.lightbody.bmp.util.HttpMessageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
-import org.yiwan.webcore.bmproxy.TransactionTimestampRecorder;
+import org.yiwan.webcore.bmproxy.TimestampWriter;
 import org.yiwan.webcore.bmproxy.pojo.HttpRequestDetail;
 import org.yiwan.webcore.bmproxy.pojo.HttpResponseDetail;
 import org.yiwan.webcore.bmproxy.pojo.TransactionDetail;
@@ -46,7 +46,7 @@ public class TimestampObserver extends SampleObserver {
     public void stop() {
         super.stop();
         userTransactionDetail.setDocumentReadyTimestamp(System.currentTimeMillis());
-        TransactionTimestampRecorder.write(userTransactionDetail);
+        TimestampWriter.write(userTransactionDetail);
     }
 
     private void supprotRecordTimestamp() {

@@ -14,8 +14,8 @@ import java.io.IOException;
 /**
  * Created by Kenny Wang on 5/18/2016.
  */
-public class TransactionTimestampRecorder {
-    private static final Logger logger = LoggerFactory.getLogger(TransactionTimestampRecorder.class);
+public class TimestampWriter {
+    private static final Logger logger = LoggerFactory.getLogger(TimestampWriter.class);
     private static final File TRANSACTION_TIMESTAMPS_FILE = new File(PropHelper.TRANSACTION_TIMESTAMPS_FILE);
 
     public static void write(String sql) {
