@@ -12,8 +12,11 @@ import org.openqa.selenium.interactions.Action;
 import org.yiwan.webcore.locator.Locator;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Created by Kenny Wang on 4/4/2016.
@@ -24,22 +27,22 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         return new IBrowseNavigation() {
             @Override
             public IBrowseNavigation to(String url) {
-                return null;
+                return this;
             }
 
             @Override
             public IBrowseNavigation forward() {
-                return null;
+                return this;
             }
 
             @Override
             public IBrowseNavigation backward() {
-                return null;
+                return this;
             }
 
             @Override
             public IBrowseNavigation refresh() {
-                return null;
+                return this;
             }
         };
     }
@@ -71,17 +74,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public String getPageSource() {
-        return null;
+        return "";
     }
 
     @Override
     public String getCurrentUrl() {
-        return null;
+        return "";
     }
 
     @Override
     public Set<Cookie> getCookies() {
-        return null;
+        return new HashSet<>();
     }
 
     @Override
@@ -96,17 +99,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IWebDriverWrapper switchToFrame(int index) {
-        return null;
+        return this;
     }
 
     @Override
     public IWebDriverWrapper switchToFrame(String nameOrId) {
-        return null;
+        return this;
     }
 
     @Override
     public String getPageTitle() {
-        return null;
+        return "";
     }
 
     @Override
@@ -121,7 +124,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) {
-        return null;
+        return target.convertFromBase64Png("");
     }
 
     @Override
@@ -144,37 +147,37 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IActionsWrapper clickAndHold() {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper clickAndHold(Locator locator) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper contextClick() {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper contextClick(Locator locator) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper release() {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper release(Locator locator) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper doubleClick() {
-                return null;
+                return this;
             }
 
             @Override
@@ -184,32 +187,32 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IActionsWrapper dragAndDrop(Locator source, Locator target) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper dragAndDrop(Locator source, int xOffset, int yOffset) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper keyDown(Keys theKey) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper keyDown(Locator locator, Keys theKey) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper keyUp(Keys theKey) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper keyUp(Locator locator, Keys theKey) {
-                return null;
+                return this;
             }
 
             @Override
@@ -229,12 +232,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IActionsWrapper moveTo(Locator locator, int xOffset, int yOffset) {
-                return null;
+                return this;
             }
 
             @Override
             public IActionsWrapper moveTo(int xOffset, int yOffset) {
-                return null;
+                return this;
             }
 
             @Override
@@ -271,253 +274,252 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IWebElementWrapper click() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper clickSilently() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper clickForcedly() {
-                return null;
+                return this;
             }
 
             @Override
             public boolean clickSmartly() {
-                return false;
+                return true;
             }
 
             @Override
             public IWebElementWrapper clickByJavaScript() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper clickCircularly() throws InterruptedException {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper doubleClick() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper contextClick() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper dragAndDrop(Locator target) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper dragAndDrop(int xOffset, int yOffset) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper type(CharSequence... value) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper clear() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper input(String value) {
-                return null;
+                return this;
             }
 
             @Override
             public boolean inputSmartly(String value) {
-                return false;
+                return true;
             }
 
             @Override
             public IWebElementWrapper check(boolean checked) {
-                return null;
+                return this;
             }
-
 
             @Override
             public boolean isChecked() {
-                return false;
+                return true;
             }
 
             @Override
             public IWebElementWrapper selectAll() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper checkByJavaScript(boolean checked) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper selectByVisibleText(String text) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper deselectAll() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper deselectByVisibleText(String text) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper deselectByVisibleText(String... texts) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper deselectByIndex(int index) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper deselectByValue(String value) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper selectByVisibleText(String... texts) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper selectByIndex(int index) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper selectByValue(String value) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper moveTo() {
-                return null;
+                return this;
             }
 
             @Override
             public boolean isPresent() {
-                return false;
+                return true;
             }
 
             @Override
             public boolean isEnabled() {
-                return false;
+                return true;
             }
 
             @Override
             public boolean isDisplayed() {
-                return false;
+                return true;
             }
 
             @Override
             public boolean isSelected() {
-                return false;
+                return true;
             }
 
             @Override
             public String getAttribute(String attribute) {
-                return null;
+                return "";
             }
 
             @Override
             public String getCssValue(String attribute) {
-                return null;
+                return "";
             }
 
             @Override
             public String getInnerText() {
-                return null;
+                return "";
             }
 
             @Override
             public List<String> getAllInnerTexts() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public IWebElementWrapper setInnerText(String text) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper setValue(String value) {
-                return null;
+                return this;
             }
 
             @Override
             public List<WebElement> getAllSelectedOptions() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public List<WebElement> getAllOptions() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public List<String> getAllOptionTexts() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public String getSelectedText() {
-                return null;
+                return "";
             }
 
             @Override
             public List<String> getAllSelectedTexts() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public IWebElementWrapper triggerEvent(String event) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper fireEvent(String event) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper scrollTo() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper scrollIntoView() {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper setAttribute(String attribute, String value) {
-                return null;
+                return this;
             }
 
             @Override
             public IWebElementWrapper removeAttribute(String attribute) {
-                return null;
+                return this;
             }
 
             @Override
@@ -563,17 +565,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public Boolean toBeInvisible() {
-                return null;
+                return true;
             }
 
             @Override
             public Boolean toBeSelected() {
-                return null;
+                return true;
             }
 
             @Override
             public Boolean toBeDeselected() {
-                return null;
+                return true;
             }
 
             @Override
@@ -588,12 +590,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public List<WebElement> toBeAllPresent() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public Boolean toBeAbsent() {
-                return null;
+                return true;
             }
 
             @Override
@@ -618,32 +620,232 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public List<WebElement> toBeAllVisible() {
-                return null;
+                return new ArrayList<>();
             }
 
             @Override
             public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
-                return null;
+                return DummyDriverWrapper.this;
             }
 
             @Override
             public IFluentStringWait attributeValueOf(String attribute) {
-                return null;
+                return new IFluentStringWait() {
+                    @Override
+                    public Boolean toBe(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean startsWith(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean endsWith(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return true;
+                    }
+                };
             }
 
             @Override
             public IFluentStringWait cssValueOf(String cssAttribute) {
-                return null;
+                return new IFluentStringWait() {
+                    @Override
+                    public Boolean toBe(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean toBeEmpty() {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean notToBe(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean contains(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean notContains(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean startsWith(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean endsWith(String text) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean matches(Pattern pattern) {
+                        return true;
+                    }
+                };
             }
 
             @Override
             public IFluentNumberWait numberOfElements() {
-                return null;
+                return new IFluentNumberWait() {
+                    @Override
+                    public Boolean equalTo(int number) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean notEqualTo(int number) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean lessThan(int number) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean greaterThan(int number) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean equalToOrLessThan(int number) {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean equalToOrGreaterThan(int number) {
+                        return true;
+                    }
+                };
             }
 
             @Override
             public IFluentLocatorWait nestedElements(Locator locator) {
-                return null;
+                return new IFluentLocatorWait() {
+                    @Override
+                    public IFluentLocatorWait toBePresentIn(int milliseconds) {
+                        return this;
+                    }
+
+                    @Override
+                    public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
+                        return this;
+                    }
+
+                    @Override
+                    public List<WebElement> toBeAllPresent() {
+                        return new ArrayList<>();
+                    }
+
+                    @Override
+                    public WebElement toBePresent() {
+                        return null;
+                    }
+
+                    @Override
+                    public WebElement toBeEnable() {
+                        return null;
+                    }
+
+                    @Override
+                    public WebElement toBeClickable() {
+                        return null;
+                    }
+
+                    @Override
+                    public WebElement toBeVisible() {
+                        return null;
+                    }
+
+                    @Override
+                    public List<WebElement> toBeAllVisible() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBeAbsent() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBeInvisible() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBeSelected() {
+                        return null;
+                    }
+
+                    @Override
+                    public Boolean toBeDeselected() {
+                        return null;
+                    }
+
+                    @Override
+                    public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
+                        return null;
+                    }
+
+                    @Override
+                    public IFluentStringWait innerText() {
+                        return null;
+                    }
+
+                    @Override
+                    public IFluentStringWait attributeValueOf(String attribute) {
+                        return null;
+                    }
+
+                    @Override
+                    public IFluentStringWait cssValueOf(String cssAttribute) {
+                        return null;
+                    }
+
+                    @Override
+                    public IFluentNumberWait numberOfElements() {
+                        return null;
+                    }
+
+                    @Override
+                    public IFluentLocatorWait nestedElements(Locator locator) {
+                        return null;
+                    }
+                };
             }
         };
     }
@@ -659,22 +861,197 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IFluentDocumentWait document() {
-                return null;
+                return new IFluentDocumentWait() {
+                    @Override
+                    public Boolean toBeComplete() {
+                        return true;
+                    }
+                };
             }
 
             @Override
             public IFluentJQueryWait jQuery() {
-                return null;
+                return new IFluentJQueryWait() {
+                    @Override
+                    public boolean isJQuerySupported() {
+                        return true;
+                    }
+
+                    @Override
+                    public Boolean toBeInactive() {
+                        return true;
+                    }
+                };
             }
 
             @Override
             public IFluentAlertWait alert() {
-                return null;
+                return new IFluentAlertWait() {
+                    @Override
+                    public IAlertWrapper toBePresent() {
+                        return new IAlertWrapper() {
+                            @Override
+                            public void dismiss() {
+
+                            }
+
+                            @Override
+                            public void accept() {
+
+                            }
+
+                            @Override
+                            public String getText() {
+                                return "";
+                            }
+
+                            @Override
+                            public boolean present() {
+                                return true;
+                            }
+                        };
+                    }
+                };
             }
 
             @Override
             public IFluentPageWait page() {
-                return null;
+                return new IFluentPageWait() {
+                    @Override
+                    public IFluentStringWait title() {
+                        return new IFluentStringWait() {
+                            @Override
+                            public Boolean toBe(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean toBeEmpty() {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean notToBe(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean contains(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean notContains(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean startsWith(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean endsWith(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean matches(Pattern pattern) {
+                                return true;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public IFluentStringWait source() {
+                        return new IFluentStringWait() {
+                            @Override
+                            public Boolean toBe(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean toBeEmpty() {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean notToBe(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean contains(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean notContains(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean startsWith(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean endsWith(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean matches(Pattern pattern) {
+                                return true;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public IFluentStringWait url() {
+                        return new IFluentStringWait() {
+                            @Override
+                            public Boolean toBe(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean toBeEmpty() {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean notToBe(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean contains(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean notContains(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean startsWith(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean endsWith(String text) {
+                                return true;
+                            }
+
+                            @Override
+                            public Boolean matches(Pattern pattern) {
+                                return true;
+                            }
+                        };
+                    }
+                };
             }
 
 
@@ -741,7 +1118,67 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IFluentLocatorAssert nestedElements(Locator locator) {
-                return null;
+                return new IFluentLocatorAssert() {
+                    @Override
+                    public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractBooleanAssert<?> present() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractBooleanAssert<?> enabled() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractBooleanAssert<?> displayed() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractBooleanAssert<?> selected() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> innerText() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
+                        return null;
+                    }
+
+                    @Override
+                    public IFluentLocatorAssert nestedElements(Locator locator) {
+                        return null;
+                    }
+                };
             }
         };
     }
@@ -752,12 +1189,37 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IFluentAlertAssert alert() {
-                return null;
+                return new IFluentAlertAssert() {
+                    @Override
+                    public AbstractBooleanAssert<?> present() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> text() {
+                        return null;
+                    }
+                };
             }
 
             @Override
             public IFluentPageAssert page() {
-                return null;
+                return new IFluentPageAssert() {
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> title() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> source() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> url() {
+                        return null;
+                    }
+                };
             }
         };
     }
@@ -777,12 +1239,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public String getText() {
-                return null;
+                return "";
             }
 
             @Override
             public boolean present() {
-                return false;
+                return true;
             }
         };
     }
