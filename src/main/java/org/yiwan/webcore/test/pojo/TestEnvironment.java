@@ -35,12 +35,12 @@ public class TestEnvironment {
         this.applicationServers = applicationServers;
     }
 
-    public DatabaseServer getDatabaseServer(String name) throws Exception {
-        return (DatabaseServer) Helper.filterListByName(databaseServers, name);
+    public ApplicationServer getApplicationServer(int id) throws Exception {
+        return (ApplicationServer) Helper.filterListById(applicationServers, id);
     }
 
-    public ApplicationServer getApplicationServer(String name) throws Exception {
-        return (ApplicationServer) Helper.filterListByName(applicationServers, name);
+    public DatabaseServer getDatabaseServer(int id) throws Exception {
+        return (DatabaseServer) Helper.filterListById(databaseServers, id);
     }
 
     @Override

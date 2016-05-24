@@ -204,7 +204,7 @@ public class Helper {
      * @param id
      * @return an generic object
      */
-    public static <T> Object filterListById(List<T> list, String id) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static <T> Object filterListById(List<T> list, Object id) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         return filterListBy(list, "getId", id);
     }
 
@@ -215,7 +215,7 @@ public class Helper {
      * @param name
      * @return an generic object
      */
-    public static <T> Object filterListByName(List<T> list, String name) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static <T> Object filterListByName(List<T> list, Object name) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         return filterListBy(list, "getName", name);
     }
 
@@ -227,7 +227,7 @@ public class Helper {
      * @param value
      * @return an generic object
      */
-    public static <T> Object filterListBy(List<T> list, String by, String value) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public static <T> Object filterListBy(List<T> list, String by, Object value) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         if (!list.isEmpty()) {
             Method method = list.get(0).getClass().getDeclaredMethod(by);
             for (T element : list) {

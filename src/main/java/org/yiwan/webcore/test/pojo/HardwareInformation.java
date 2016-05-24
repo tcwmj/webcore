@@ -10,13 +10,23 @@ import org.slf4j.LoggerFactory;
  * Created by Kenny Wang on 5/12/2016.
  */
 
-public class Server {
+public class HardwareInformation {
     @JsonIgnore
-    private static final Logger logger = LoggerFactory.getLogger(Server.class);
+    private static final Logger logger = LoggerFactory.getLogger(HardwareInformation.class);
+    private String type;
     private String os;
     private String osVersion;
     private String cpu;
     private String memory;
+    private String bandwith;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getMemory() {
         return memory;
@@ -48,6 +58,14 @@ public class Server {
 
     public void setOs(String os) {
         this.os = os;
+    }
+
+    public String getBandwith() {
+        return bandwith;
+    }
+
+    public void setBandwith(String bandwith) {
+        this.bandwith = bandwith;
     }
 
     @Override

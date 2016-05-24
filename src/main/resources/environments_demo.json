@@ -2,6 +2,7 @@
   {
     "applicationServers": [
       {
+        "id": 0,
         "name": null,
         "url": null,
         "host": null,
@@ -9,16 +10,26 @@
         "version": null,
         "username": null,
         "password": null,
-        "configuration": {
+        "hardwareInformation": {
+          "type": null,
           "os": null,
           "osVersion": null,
           "cpu": null,
-          "memory": null
-        }
+          "memory": null,
+          "bandwith": null
+        },
+        "softwareInformations": [
+          {
+            "id": 0,
+            "name": null,
+            "version": null
+          }
+        ]
       }
     ],
     "databaseServers": [
       {
+        "id": 0,
         "name": null,
         "driver": null,
         "url": null,
@@ -30,12 +41,21 @@
         "dump": null,
         "username": null,
         "password": null,
-        "configuration": {
+        "hardwareInformation": {
+          "type": null,
           "os": null,
           "osVersion": null,
           "cpu": null,
-          "memory": null
-        }
+          "memory": null,
+          "bandwith": null
+        },
+        "softwareInformations": [
+          {
+            "id": 0,
+            "name": null,
+            "version": null
+          }
+        ]
       }
     ]
   }

@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
-import org.yiwan.webcore.test.pojo.ApplicationServer;
-import org.yiwan.webcore.test.pojo.DatabaseServer;
-import org.yiwan.webcore.test.pojo.Server;
-import org.yiwan.webcore.test.pojo.TestEnvironment;
+import org.yiwan.webcore.test.pojo.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,22 +20,25 @@ public class TestEnvironmentTest {
 
     @Test
     public void testJsonToTestEnviroment() throws Exception {
-        String json = "[{\"applicationServers\":[{\"name\":\"default\",\"url\":\"http://localhost:8080/\"}],\"databaseServers\":[{\"name\":\"default\",\"dump\":\"data/system/default.xml\"}]}]";
+        String json = "[{\"applicationServers\":[{\"id\":0,\"name\":\"default\",\"url\":\"http://localhost:8080/\"}],\"databaseServers\":[{\"name\":\"default\",\"dump\":\"data/system/default.xml\"}]}]";
         List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
         });
-        assertThat(testEnvironments.get(0).getApplicationServer("default").getUrl()).isEqualTo("http://localhost:8080/");
+        assertThat(testEnvironments.get(0).getApplicationServer(0).getUrl()).isEqualTo("http://localhost:8080/");
     }
 
     @Test
     public void testTestEnviromentToJson() {
-        TestEnvironment a = new TestEnvironment();
-        ApplicationServer b = new ApplicationServer();
-        DatabaseServer d = new DatabaseServer();
-        Server c = new Server();
-        b.setConfiguration(c);
-        d.setConfiguration(c);
-        a.setApplicationServers(Arrays.asList(b));
-        a.setDatabaseServers(Arrays.asList(d));
-        logger.info(a.toString());
+        TestEnvironment testEnvironment = new TestEnvironment();
+        ApplicationServer applicationServer = new ApplicationServer();
+        DatabaseServer databaseServer = new DatabaseServer();
+        HardwareInformation hardwareInformation = new HardwareInformation();
+        SoftwareInformation softwareInformation = new SoftwareInformation();
+        applicationServer.setHardwareInformation(hardwareInformation);
+        applicationServer.setSoftwareInformations(Arrays.asList(softwareInformation));
+        databaseServer.setHardwareInformation(hardwareInformation);
+        databaseServer.setSoftwareInformations(Arrays.asList(softwareInformation));
+        testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
+        testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
+        logger.info(testEnvironment.toString());
     }
 }

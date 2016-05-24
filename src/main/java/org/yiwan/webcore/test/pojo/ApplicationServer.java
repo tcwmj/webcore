@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * Created by Kenny Wang on 5/12/2016.
  */
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class ApplicationServer {
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(ApplicationServer.class);
+    private int id;
     private String name;
     private String url;
     private String host;
@@ -20,14 +23,31 @@ public class ApplicationServer {
     private String version;
     private String username;
     private String password;
-    private Server configuration;
+    private HardwareInformation hardwareInformation;
+    private List<SoftwareInformation> softwareInformations;
 
-    public Server getConfiguration() {
-        return configuration;
+    public List<SoftwareInformation> getSoftwareInformations() {
+        return softwareInformations;
     }
 
-    public void setConfiguration(Server configuration) {
-        this.configuration = configuration;
+    public void setSoftwareInformations(List<SoftwareInformation> softwareInformations) {
+        this.softwareInformations = softwareInformations;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public HardwareInformation getHardwareInformation() {
+        return hardwareInformation;
+    }
+
+    public void setHardwareInformation(HardwareInformation hardwareInformation) {
+        this.hardwareInformation = hardwareInformation;
     }
 
     public String getName() {
