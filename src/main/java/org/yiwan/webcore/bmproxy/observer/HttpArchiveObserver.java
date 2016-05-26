@@ -1,5 +1,6 @@
 package org.yiwan.webcore.bmproxy.observer;
 
+import net.lightbody.bmp.proxy.CaptureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
@@ -22,6 +23,9 @@ public class HttpArchiveObserver extends SampleObserver {
     public HttpArchiveObserver(ITestBase testCase) {
         this.testCase = testCase;
         this.proxyWrapper = testCase.getProxyWrapper();
+        proxyWrapper.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
+        // enable more detailed HAR capture, if desired (see CaptureType for the complete list)
+        proxyWrapper.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_CONTENT);
     }
 
     @Override

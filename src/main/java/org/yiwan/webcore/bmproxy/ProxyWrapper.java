@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.Set;
 
 public class ProxyWrapper {
     public final static String CONTENT_DISPOSITION = "Content-Disposition";
@@ -28,7 +29,6 @@ public class ProxyWrapper {
     }
 
     public void start() {
-        proxy.setHarCaptureTypes(CaptureType.getRequestCaptureTypes());
         proxy.start();
 
 //        shutdown hook was added inside the proxy
@@ -71,5 +71,17 @@ public class ProxyWrapper {
     public void setChainedProxy(String hostname, int port) {
         InetSocketAddress inetSocketAddress = new InetSocketAddress(hostname, port);
         proxy.setChainedProxy(inetSocketAddress);
+    }
+
+    public void setHarCaptureTypes(Set<CaptureType> captureTypes) {
+        proxy.setHarCaptureTypes(captureTypes);
+    }
+
+    public void setHarCaptureTypes(CaptureType... captureTypes) {
+        proxy.setHarCaptureTypes(captureTypes);
+    }
+
+    public void enableHarCaptureTypes(CaptureType... captureTypes) {
+        proxy.enableHarCaptureTypes(captureTypes);
     }
 }
