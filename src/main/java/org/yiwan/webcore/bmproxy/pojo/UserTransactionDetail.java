@@ -8,14 +8,14 @@ import java.util.List;
 public class UserTransactionDetail {
     private long userActionTimestamp;
     private long documentReadyTimestamp;
-    private List<TransactionDetail> transactionDetails;
+    private List<HttpTransactionDetail> httpTransactionDetails;
 
-    public List<TransactionDetail> getTransactionDetails() {
-        return transactionDetails;
+    public List<HttpTransactionDetail> getHttpTransactionDetails() {
+        return httpTransactionDetails;
     }
 
-    public void setTransactionDetails(List<TransactionDetail> transactionDetails) {
-        this.transactionDetails = transactionDetails;
+    public void setHttpTransactionDetails(List<HttpTransactionDetail> httpTransactionDetails) {
+        this.httpTransactionDetails = httpTransactionDetails;
     }
 
     public long getDocumentReadyTimestamp() {

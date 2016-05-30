@@ -3,7 +3,7 @@ package org.yiwan.webcore.bmproxy.pojo;
 /**
  * Created by Kenny Wang on 4/2/2016.
  */
-public class TransactionDetail {
+public class HttpTransactionDetail {
     private HttpRequestDetail httpRequestDetail;
     private HttpResponseDetail httpResponseDetail;
 
