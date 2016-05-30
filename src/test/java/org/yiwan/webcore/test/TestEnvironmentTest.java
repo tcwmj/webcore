@@ -41,4 +41,21 @@ public class TestEnvironmentTest {
         testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
         logger.info(testEnvironment.toString());
     }
+
+    @Test
+    public void testTestEnvironmentAndJsonConversionEachOther() throws Exception {
+        String url = "http://localhost:8080/";
+        TestEnvironment testEnvironment = new TestEnvironment();
+        ApplicationServer applicationServer = new ApplicationServer();
+        applicationServer.setUrl(url);
+        DatabaseServer databaseServer = new DatabaseServer();
+        databaseServer.setDump("data/system/default.xml");
+        testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
+        testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
+        String json = String.format("[%s]", testEnvironment.toString());
+        logger.info(json);
+        List<TestEnvironment> testEnvironments = (new ObjectMapper()).readValue(json, new TypeReference<List<TestEnvironment>>() {
+        });
+        assertThat(testEnvironments.get(0).getApplicationServer(0).getUrl()).isEqualTo(url);
+    }
 }

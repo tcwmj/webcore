@@ -4,10 +4,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yiwan.webcore.test.pojo.ApplicationServer;
+import org.yiwan.webcore.test.pojo.DatabaseServer;
+import org.yiwan.webcore.test.pojo.TestEnvironment;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import static java.lang.String.format;
@@ -55,7 +59,9 @@ public class PropHelper {
     public static final String BROWSERSTACK_LOCAL_IDENTIFIER = getProperty("browserstacklocalIdentifier");
     public static final String BROWSERSTACK_DEBUG = getProperty("browserstackdebug");
     // from test conf
-    public static final String SERVER_INFO = getServerInfo();
+    @Deprecated
+    public static final String SERVER_URL = getProperty("server.url");
+    public static final String SERVER_INFO = getServerInfo("server.info");
     public static final String CURRENT_LANG = getProperty("lang.current");
     public static final String PHANTOMJS_PATH = getProperty("path.phantomjs");
     public static final String FIREFOX_PATH = getProperty("path.firefox");
@@ -87,7 +93,8 @@ public class PropHelper {
     public static final String ZAP_SERVER_HOST = getProperty("zap.server.host");
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
     public static final String ZAP_API_KEY = getProperty("zap.api.key");
-    public static final String PENETRATION_TEST_HTML_REPORT_FILE = getProperty("penetration.test.html.report.file");;
+    public static final String PENETRATION_TEST_HTML_REPORT_FILE = getProperty("penetration.test.html.report.file");
+    ;
 
     /**
      * load properties from external file
@@ -129,20 +136,31 @@ public class PropHelper {
         return System.getProperty(key, props.getProperty(key));
     }
 
-    public static String getServerInfo() {
-        String url = getProperty("server.info");
-        String serverInfo = "";
-        try (InputStream is = ClassLoader.getSystemResourceAsStream(url)) {
-            if (null != is) {
-                serverInfo = IOUtils.toString(is, "UTF-8");
-                is.close();
-            } else {
-                serverInfo = FileUtils.readFileToString(new File(url), "UTF-8");
+    public static String getServerInfo(String key) {
+        if (SERVER_URL != null) {//for compatible with server.url
+            TestEnvironment testEnvironment = new TestEnvironment();
+            ApplicationServer applicationServer = new ApplicationServer();
+            applicationServer.setUrl(SERVER_URL);
+            DatabaseServer databaseServer = new DatabaseServer();
+            databaseServer.setDump("data/system/default.xml");
+            testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
+            testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
+            return String.format("[%s]", testEnvironment.toString());
+        } else {
+            String url = getProperty(key);
+            String serverInfo = "";
+            try (InputStream is = ClassLoader.getSystemResourceAsStream(url)) {
+                if (null != is) {
+                    serverInfo = IOUtils.toString(is, "UTF-8");
+                    is.close();
+                } else {
+                    serverInfo = FileUtils.readFileToString(new File(url), "UTF-8");
+                }
+            } catch (IOException e) {
+                logger.error(url, e);
             }
-        } catch (IOException e) {
-            logger.error(url, e);
+            return serverInfo;
         }
-        return serverInfo;
     }
 
 }
