@@ -258,14 +258,14 @@ public interface IWebDriverWrapper {
          *
          * @param milliseconds timeout
          */
-        IFluentLocatorWait toBePresentIn(int milliseconds);
+        IFluentLocatorWait toBePresentIn(long milliseconds);
 
         /**
          * wait the specified locator to be absent
          *
          * @param milliseconds timeout
          */
-        IFluentLocatorWait toBeAbsentIn(int milliseconds);
+        IFluentLocatorWait toBeAbsentIn(long milliseconds);
 
         java.util.List<WebElement> toBeAllPresent();
 
@@ -351,7 +351,7 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentWait {
-        void timeout(int milliseconds) throws InterruptedException;
+        void timeout(long milliseconds) throws InterruptedException;
 
         IFluentDocumentWait document();
 

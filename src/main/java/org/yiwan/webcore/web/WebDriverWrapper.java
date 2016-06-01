@@ -1041,7 +1041,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IFluentLocatorWait toBePresentIn(int milliseconds) {
+            public IFluentLocatorWait toBePresentIn(long milliseconds) {
                 long t = System.currentTimeMillis();
                 while (System.currentTimeMillis() - t < milliseconds) {
                     if (element(locator).isPresent()) {
@@ -1053,7 +1053,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
+            public IFluentLocatorWait toBeAbsentIn(long milliseconds) {
                 long t = System.currentTimeMillis();
                 while (System.currentTimeMillis() - t < milliseconds) {
                     if (!element(locator).isPresent()) {
@@ -1495,7 +1495,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public IFluentWait waitThat() {
         return new IFluentWait() {
             @Override
-            public void timeout(int milliseconds) throws InterruptedException {
+            public void timeout(long milliseconds) throws InterruptedException {
                 logger.debug("force to wait {} milliseconds", milliseconds);
                 Thread.sleep(milliseconds);
             }

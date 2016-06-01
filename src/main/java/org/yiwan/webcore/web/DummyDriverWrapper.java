@@ -599,12 +599,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IFluentLocatorWait toBePresentIn(int milliseconds) {
+            public IFluentLocatorWait toBePresentIn(long milliseconds) {
                 return null;
             }
 
             @Override
-            public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
+            public IFluentLocatorWait toBeAbsentIn(long milliseconds) {
                 return null;
             }
 
@@ -757,12 +757,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IFluentLocatorWait nestedElements(Locator locator) {
                 return new IFluentLocatorWait() {
                     @Override
-                    public IFluentLocatorWait toBePresentIn(int milliseconds) {
+                    public IFluentLocatorWait toBePresentIn(long milliseconds) {
                         return this;
                     }
 
                     @Override
-                    public IFluentLocatorWait toBeAbsentIn(int milliseconds) {
+                    public IFluentLocatorWait toBeAbsentIn(long milliseconds) {
                         return this;
                     }
 
@@ -855,7 +855,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         return new IFluentWait() {
 
             @Override
-            public void timeout(int milliseconds) throws InterruptedException {
+            public void timeout(long milliseconds) throws InterruptedException {
 
             }
 
