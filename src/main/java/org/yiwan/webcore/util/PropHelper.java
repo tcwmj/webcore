@@ -25,9 +25,9 @@ public class PropHelper {
     private static boolean hasloaded = false;
 
     // from base conf
-    public static final int TIMEOUT_INTERVAL = Integer.parseInt(getProperty("timeout.interval"));
-    public static final int TIMEOUT_NAVIGATION_INTERVAL = Integer.parseInt(getProperty("timeout.navigation.interval"));
-    public static final int TIMEOUT_POLLING_INTERVAL = Integer.parseInt(getProperty("timeout.polling.interval"));
+    public static final long TIMEOUT_INTERVAL = Long.parseLong(getProperty("timeout.interval"));
+    public static final long TIMEOUT_NAVIGATION_INTERVAL = Long.parseLong(getProperty("timeout.navigation.interval"));
+    public static final long TIMEOUT_POLLING_INTERVAL = Long.parseLong(getProperty("timeout.polling.interval"));
     public static final Integer TEST_RETRY_COUNT = Integer.valueOf(getProperty("test.retry.count"));
     public static final String RANDOM_RULE = getProperty("random.rule");
     public static final String SOURCE_CODE_PATH = getProperty("sourcecode.path");
@@ -41,8 +41,8 @@ public class PropHelper {
     public static final String HAR_FOLDER = getProperty("path.har.folder");
     public static final boolean DUMMY_TEST = Boolean.parseBoolean(getProperty("dummy.test"));
     // from biz conf
-    public static final int TIMEOUT_DIALOG_APPEAR = Integer.parseInt(getProperty("timeout.dialog.appear"));
-    public static final int TIMEOUT_DIALOG_DISAPPEAR = Integer.parseInt(getProperty("timeout.dialog.disappear"));
+    public static final long TIMEOUT_DIALOG_APPEAR = Long.parseLong(getProperty("timeout.dialog.appear"));
+    public static final long TIMEOUT_DIALOG_DISAPPEAR = Long.parseLong(getProperty("timeout.dialog.disappear"));
     public static final String DEFAULT_LANG = getProperty("lang.default");
     public static final String DATA_SCHEMA_FILE = getProperty("path.data.schema");
     public static final String LOCATORS_FILE = getProperty("path.locator");
