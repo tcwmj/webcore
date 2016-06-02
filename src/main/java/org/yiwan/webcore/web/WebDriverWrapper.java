@@ -804,7 +804,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IWebElementWrapper setAttribute(String attribute, String value) {
-                logger.debug("try to set attributeValueOf {} on {} to {}", attribute, locator, value);
+                logger.debug("try to set attribute value of {} on {} to {}", attribute, locator, value);
                 executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
                 waitThat().document().toBeComplete();
                 waitThat().jQuery().toBeInactive();
@@ -813,7 +813,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IWebElementWrapper removeAttribute(String attribute) {
-                logger.debug("try to remove attributeValueOf {} on {}", attribute, locator);
+                logger.debug("try to remove attribute {} on {}", attribute, locator);
                 executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
                 waitThat().document().toBeComplete();
                 waitThat().jQuery().toBeInactive();
