@@ -14,6 +14,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
+import org.yiwan.webcore.bmproxy.TimestampWriter;
 import org.yiwan.webcore.bmproxy.observer.FileDownloadObserver;
 import org.yiwan.webcore.bmproxy.observer.HttpArchiveObserver;
 import org.yiwan.webcore.bmproxy.observer.ScreenshotObserver;
@@ -442,6 +443,9 @@ public abstract class TestBase implements ITestBase {
         getTestCapability().setBrowser(browser);
         getTestCapability().setBrowserVersion(browserVersion);
         getTestCapability().setResolution(resolution);
+        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+            TimestampWriter.write(testCapability);
+        }
         report(String.format("test capability<br/>%s", getTestCapability()));
     }
 
@@ -458,6 +462,9 @@ public abstract class TestBase implements ITestBase {
         MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".html");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
+        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+            TimestampWriter.write(getTestEnvironment());
+        }
         report(String.format("test environment<br/>%s", getTestEnvironment()));
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
         if (PropHelper.ENABLE_PROXY) {//create proxyWrapper must before creating webdriverWrapper

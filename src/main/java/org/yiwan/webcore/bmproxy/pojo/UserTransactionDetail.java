@@ -1,21 +1,23 @@
 package org.yiwan.webcore.bmproxy.pojo;
 
-import java.util.List;
-
 /**
  * Created by Kenny Wang on 4/2/2016.
  */
 public class UserTransactionDetail {
+    private String transactionName;
     private long userActionTimestamp;
     private long documentReadyTimestamp;
-    private List<HttpTransactionDetail> httpTransactionDetails;
 
-    public List<HttpTransactionDetail> getHttpTransactionDetails() {
-        return httpTransactionDetails;
+    public UserTransactionDetail(String transactionName) {
+        this.transactionName = transactionName;
     }
 
-    public void setHttpTransactionDetails(List<HttpTransactionDetail> httpTransactionDetails) {
-        this.httpTransactionDetails = httpTransactionDetails;
+    public String getTransactionName() {
+        return transactionName;
+    }
+
+    public void setTransactionName(String transactionName) {
+        this.transactionName = transactionName;
     }
 
     public long getDocumentReadyTimestamp() {

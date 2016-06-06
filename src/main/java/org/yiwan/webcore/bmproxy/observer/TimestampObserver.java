@@ -12,11 +12,8 @@ import org.yiwan.webcore.bmproxy.ProxyWrapper;
 import org.yiwan.webcore.bmproxy.TimestampWriter;
 import org.yiwan.webcore.bmproxy.pojo.HttpRequestDetail;
 import org.yiwan.webcore.bmproxy.pojo.HttpResponseDetail;
-import org.yiwan.webcore.bmproxy.pojo.HttpTransactionDetail;
 import org.yiwan.webcore.bmproxy.pojo.UserTransactionDetail;
 import org.yiwan.webcore.test.ITestBase;
-
-import java.util.ArrayList;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
@@ -26,7 +23,6 @@ public class TimestampObserver extends SampleObserver {
     private ITestBase testcase;
     private ProxyWrapper proxyWrapper;
     private UserTransactionDetail userTransactionDetail;
-    private HttpTransactionDetail httpTransactionDetail;
 
     public TimestampObserver(ITestBase testCase) {
         this.testcase = testCase;
@@ -37,9 +33,8 @@ public class TimestampObserver extends SampleObserver {
     @Override
     public void start() {
         super.start();
-        userTransactionDetail = new UserTransactionDetail();
+        userTransactionDetail = new UserTransactionDetail(testcase.getTransactionName());
         userTransactionDetail.setUserActionTimestamp(System.currentTimeMillis());
-        userTransactionDetail.setHttpTransactionDetails(new ArrayList<HttpTransactionDetail>());
     }
 
     @Override
@@ -53,16 +48,14 @@ public class TimestampObserver extends SampleObserver {
         proxyWrapper.addReqeustFilter(new RequestFilter() {
             @Override
             public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents, HttpMessageInfo messageInfo) {
-                httpTransactionDetail = new HttpTransactionDetail();
-                userTransactionDetail.getHttpTransactionDetails().add(httpTransactionDetail);
-                httpTransactionDetail.setHttpRequestDetail(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
+                TimestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
                 return null;
             }
         });
         proxyWrapper.addResponseFilter(new ResponseFilter() {
             @Override
             public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
-                httpTransactionDetail.setHttpResponseDetail(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
+                TimestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
             }
         });
     }
