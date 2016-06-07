@@ -60,6 +60,11 @@ public abstract class TestBase implements ITestBase {
     private String transactionName;//unique http archive file name
     private String suiteName;//testng test suite name
     private String testName;//testng test name
+    private TimestampWriter timestampWriter = new TimestampWriter();
+
+    public TimestampWriter getTimestampWriter() {
+        return timestampWriter;
+    }
 
     /* (non-Javadoc)
      * @see org.yiwan.webcore.test.ITestBase#getTestCapability()
@@ -444,7 +449,7 @@ public abstract class TestBase implements ITestBase {
         getTestCapability().setBrowserVersion(browserVersion);
         getTestCapability().setResolution(resolution);
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            TimestampWriter.write(testCapability);
+            getTimestampWriter().write(testCapability);
         }
         report(String.format("test capability<br/>%s", getTestCapability()));
     }
@@ -463,7 +468,7 @@ public abstract class TestBase implements ITestBase {
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            TimestampWriter.write(getTestEnvironment());
+            getTimestampWriter().write(getTestEnvironment());
         }
         report(String.format("test environment<br/>%s", getTestEnvironment()));
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment

@@ -23,10 +23,12 @@ public class TimestampObserver extends SampleObserver {
     private ITestBase testcase;
     private ProxyWrapper proxyWrapper;
     private UserTransactionDetail userTransactionDetail;
+    private TimestampWriter timestampWriter;
 
     public TimestampObserver(ITestBase testCase) {
         this.testcase = testCase;
         this.proxyWrapper = testCase.getProxyWrapper();
+        this.timestampWriter = testCase.getTimestampWriter();
         supprotRecordTimestamp();
     }
 
@@ -41,21 +43,21 @@ public class TimestampObserver extends SampleObserver {
     public void stop() {
         super.stop();
         userTransactionDetail.setDocumentReadyTimestamp(System.currentTimeMillis());
-        TimestampWriter.write(userTransactionDetail);
+        timestampWriter.write(userTransactionDetail);
     }
 
     private void supprotRecordTimestamp() {
         proxyWrapper.addReqeustFilter(new RequestFilter() {
             @Override
             public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents, HttpMessageInfo messageInfo) {
-                TimestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
+                timestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
                 return null;
             }
         });
         proxyWrapper.addResponseFilter(new ResponseFilter() {
             @Override
             public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
-                TimestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
+                timestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
             }
         });
     }

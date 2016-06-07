@@ -2,6 +2,7 @@ package org.yiwan.webcore.test;
 
 import org.testng.ITestResult;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
+import org.yiwan.webcore.bmproxy.TimestampWriter;
 import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.web.IPageManager;
@@ -12,6 +13,8 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 public interface ITestBase {
+
+    TimestampWriter getTimestampWriter();
 
     TestCapability getTestCapability();
 

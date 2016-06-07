@@ -23,7 +23,7 @@ public class TimestampWriter {
     private static final Logger logger = LoggerFactory.getLogger(TimestampWriter.class);
     private static final File TRANSACTION_TIMESTAMPS_FILE = new File(PropHelper.TRANSACTION_TIMESTAMPS_FILE);
 
-    public static void write(String sql) {
+    public void write(String sql) {
         try {
             FileUtils.writeStringToFile(TRANSACTION_TIMESTAMPS_FILE, sql, "UTF-8", true);
         } catch (IOException e) {
@@ -31,12 +31,12 @@ public class TimestampWriter {
         }
     }
 
-    public static void write(TestCapability testCapability) {
+    public void write(TestCapability testCapability) {
         String sql = String.format("insert into DIM_CLIENT_ENV (client_os,client_os_version,client_browser_type,client_browser_version,client_resolution) values ('%s','%s','%s','%s','%s');\n", testCapability.getOs(), testCapability.getOsVersion(), testCapability.getBrowser(), testCapability.getBrowserVersion(), testCapability.getResolution());
         write(sql);
     }
 
-    public static void write(TestEnvironment testEnvironment) {
+    public void write(TestEnvironment testEnvironment) {
         StringBuilder sql = new StringBuilder();
         for (ApplicationServer applicationServer : testEnvironment.getApplicationServers()) {
             HardwareInformation hardwareInformation = applicationServer.getHardwareInformation();
@@ -59,7 +59,7 @@ public class TimestampWriter {
      *
      * @param userTransactionDetail
      */
-    public static void write(UserTransactionDetail userTransactionDetail) {
+    public void write(UserTransactionDetail userTransactionDetail) {
         String sql = String.format("insert into FCT_TEST_RESULT (transaction_id,user_action_time,dom_ready_time) values ('%s',%d,%d);\n", userTransactionDetail.getTransactionName(), userTransactionDetail.getUserActionTimestamp(), userTransactionDetail.getDocumentReadyTimestamp());
         write(sql);
     }
@@ -69,7 +69,7 @@ public class TimestampWriter {
      *
      * @param httpRequestDetail
      */
-    public static void write(HttpRequestDetail httpRequestDetail) {
+    public void write(HttpRequestDetail httpRequestDetail) {
         HttpRequest httpRequest = httpRequestDetail.getHttpRequest();
         HttpMessageContents httpMessageContents = httpRequestDetail.getHttpMessageContents();
         HttpMessageInfo httpMessageInfo = httpRequestDetail.getHttpMessageInfo();
@@ -82,7 +82,7 @@ public class TimestampWriter {
      *
      * @param httpResponseDetail
      */
-    public static void write(HttpResponseDetail httpResponseDetail) {
+    public void write(HttpResponseDetail httpResponseDetail) {
         HttpResponse httpResponse = httpResponseDetail.getHttpResponse();
         HttpMessageContents httpMessageContents = httpResponseDetail.getHttpMessageContents();
         HttpMessageInfo httpMessageInfo = httpResponseDetail.getHttpMessageInfo();
