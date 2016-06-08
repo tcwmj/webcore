@@ -92,13 +92,13 @@ public class FileDownloadObserver extends SampleObserver {
     /**
      * get attachment file name from response header Content-Disposition
      *
-     * @return string or null
+     * @return string
      */
     private String getAttachmentFileName(HttpResponse response) {
         if (response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
             return response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "").replace("\"", "").replace("'", "").trim();
         }
-        return null;
+        return "";
     }
 
     private void setDownloadFile(HttpResponse response, String filename, String extension) {

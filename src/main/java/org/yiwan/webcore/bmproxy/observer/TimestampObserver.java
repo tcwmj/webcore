@@ -29,7 +29,7 @@ public class TimestampObserver extends SampleObserver {
         this.testcase = testCase;
         this.proxyWrapper = testCase.getProxyWrapper();
         this.timestampWriter = testCase.getTimestampWriter();
-        supprotRecordTimestamp();
+//        supprotToRecordHttpTransactionTimestamp();
     }
 
     @Override
@@ -46,12 +46,12 @@ public class TimestampObserver extends SampleObserver {
         timestampWriter.write(userTransactionDetail);
     }
 
-    private void supprotRecordTimestamp() {
+    private void supprotToRecordHttpTransactionTimestamp() {
         proxyWrapper.addReqeustFilter(new RequestFilter() {
             @Override
             public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents, HttpMessageInfo messageInfo) {
                 //bug here, asynchronized thread may cause the timestamp is incorrect
-//                timestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
+                timestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
                 return null;
             }
         });
@@ -59,7 +59,7 @@ public class TimestampObserver extends SampleObserver {
             @Override
             public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
                 //bug here, asynchronized thread may cause the timestamp is incorrect
-//                timestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
+                timestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
             }
         });
     }
