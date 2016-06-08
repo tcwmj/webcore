@@ -50,14 +50,16 @@ public class TimestampObserver extends SampleObserver {
         proxyWrapper.addReqeustFilter(new RequestFilter() {
             @Override
             public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents, HttpMessageInfo messageInfo) {
-                timestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
+                //bug here, asynchronized thread may cause the timestamp is incorrect
+//                timestampWriter.write(new HttpRequestDetail(System.currentTimeMillis(), request, contents, messageInfo));
                 return null;
             }
         });
         proxyWrapper.addResponseFilter(new ResponseFilter() {
             @Override
             public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
-                timestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
+                //bug here, asynchronized thread may cause the timestamp is incorrect
+//                timestampWriter.write(new HttpResponseDetail(System.currentTimeMillis(), response, contents, messageInfo));
             }
         });
     }

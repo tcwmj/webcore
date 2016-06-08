@@ -448,9 +448,6 @@ public abstract class TestBase implements ITestBase {
         getTestCapability().setBrowser(browser);
         getTestCapability().setBrowserVersion(browserVersion);
         getTestCapability().setResolution(resolution);
-        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            getTimestampWriter().write(testCapability);
-        }
         report(String.format("test capability<br/>%s", getTestCapability()));
     }
 
@@ -462,16 +459,18 @@ public abstract class TestBase implements ITestBase {
         return "";
     }
 
+    /**
+     * feature id and scenario id should be set before invoking setUpTest
+     *
+     * @throws Exception
+     */
     @Override
     public void setUpTest() throws Exception {
         MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".html");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
-        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            getTimestampWriter().write(getTestEnvironment());
-        }
-        report(String.format("test environment<br/>%s", getTestEnvironment()));
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
+        report(String.format("test environment<br/>%s", getTestEnvironment()));
         if (PropHelper.ENABLE_PROXY) {//create proxyWrapper must before creating webdriverWrapper
             createProxyWrapper();
             getProxyWrapper().start();
@@ -479,6 +478,9 @@ public abstract class TestBase implements ITestBase {
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
         report(Helper.getTestReportStyle("../../../../" + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
+        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+            getTimestampWriter().write(this);
+        }
     }
 
     @Override
