@@ -551,6 +551,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public int getNumberOfMatches() {
                 return 0;
             }
+
+            @Override
+            public List<IWebElementWrapper> getAllMatchedElements() {
+                return new ArrayList<>();
+            }
         };
     }
 

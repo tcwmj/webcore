@@ -20,6 +20,7 @@ import org.yiwan.webcore.util.PropHelper;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -395,6 +396,463 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return js.executeAsyncScript(script, args);
     }
 
+    private IWebElementWrapper element(final WebElement webElement) {
+        return new IWebElementWrapper() {
+            @Override
+            public IWebElementWrapper click() {
+                logger.debug("try to click web element {}", webElement);
+                wait.until(ExpectedConditions.visibilityOf(webElement)).click();
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper clickSilently() {
+                logger.debug("try to click web element {} silently", webElement);
+                webElement.click();
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper clickForcedly() {
+                try {
+                    return click();
+                } catch (WebDriverException e) {
+                    return clickSilently();
+                }
+            }
+
+            @Override
+            public boolean clickSmartly() {
+                if (isDisplayed()) {
+                    click();
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public IWebElementWrapper clickByJavaScript() {
+                logger.debug("try to click web element {} by executing javascript", webElement.getText());
+                executeScript("arguments[0].click()", wait.until(ExpectedConditions.visibilityOf(webElement)));
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper clickCircularly() throws InterruptedException {
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Nullable
+                    @Override
+                    public Boolean apply(@Nullable WebDriver input) {
+                        click();
+                        return !isDisplayed();
+                    }
+                });
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper doubleClick() {
+                logger.debug("try to double click web element {}", webElement);
+                Actions actions = new Actions(driver);
+                actions.doubleClick(wait.until(ExpectedConditions.visibilityOf(webElement))).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper contextClick() {
+                logger.debug("try to context click web element {}", webElement);
+                Actions actions = new Actions(driver);
+                actions.contextClick(wait.until(ExpectedConditions.visibilityOf(webElement))).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper dragAndDrop(Locator target) {
+                logger.debug("try to drag web element {} and drop to {}", webElement, target);
+                Actions actions = new Actions(driver);
+                actions.dragAndDrop(wait.until(ExpectedConditions.visibilityOf(webElement)), waitThat(target).toBeVisible()).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper dragAndDrop(int xOffset, int yOffset) {
+                logger.debug("try to drag web element {} and drop to ({},{})", webElement, xOffset, yOffset);
+                Actions actions = new Actions(driver);
+                actions.dragAndDropBy(wait.until(ExpectedConditions.visibilityOf(webElement)), xOffset, yOffset).perform();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper type(CharSequence... value) {
+                logger.debug("try to type {} on {}", StringUtils.join(value), webElement);
+                wait.until(ExpectedConditions.visibilityOf(webElement)).sendKeys(value);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper clear() {
+                logger.debug("try to clear value on " + webElement);
+                wait.until(ExpectedConditions.visibilityOf(webElement)).clear();
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper input(String value) {
+                return clear().type(value);
+            }
+
+            @Override
+            public boolean inputSmartly(String value) {
+                if (isDisplayed()) {
+                    input(value);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public IWebElementWrapper check(boolean checked) {
+                logger.debug("try to check {} {}", checked ? "on" : "off", webElement);
+                if (isChecked() != checked) {
+                    click();
+                }
+                return this;
+            }
+
+            @Override
+            public boolean isChecked() {
+                return isSelected();
+            }
+
+            @Override
+            public IWebElementWrapper selectAll() {
+                Select select = new Select(wait.until(ExpectedConditions.visibilityOf(webElement)));
+                if (!select.isMultiple()) {
+                    throw new UnsupportedOperationException(String.format("You may only select all options of a multi-select {}", webElement));
+                }
+
+                for (String text : getAllOptionTexts()) {
+                    selectByVisibleText(text);
+                }
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper checkByJavaScript(boolean checked) {
+                logger.debug("try to check {} {} by javascript", checked ? "on" : "off", webElement);
+                if (checked) {
+                    setAttribute("checked", "checked");
+                } else {
+                    removeAttribute("checked");
+                }
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper selectByVisibleText(String text) {
+                logger.debug("try to select by visible text {} on {}", text, webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).selectByVisibleText(text);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper selectByVisibleText(String... texts) {
+                for (String text : texts) {
+                    selectByVisibleText(text);
+                }
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper selectByIndex(int index) {
+                logger.debug("try to select by index {} on {}", index, webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).selectByIndex(index);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper selectByValue(String value) {
+                logger.debug("try to select by value {} on {}", value, webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).selectByValue(value);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectAll() {
+                logger.debug("try to deselect all options on {}", webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectAll();
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByVisibleText(String text) {
+                logger.debug("try to deselect by visible text {} on {}", text, webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByVisibleText(text);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByVisibleText(String... texts) {
+                for (String text : texts) {
+                    deselectByVisibleText(text);
+                }
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByIndex(int index) {
+                logger.debug("try to deselect by index {} on {}", index, webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByIndex(index);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper deselectByValue(String value) {
+                logger.debug("try to deselect by value {} on {}", value, webElement);
+                new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByValue(value);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper moveTo() {
+                Actions actions = new Actions(driver);
+                actions.moveToElement(wait.until(ExpectedConditions.visibilityOf(webElement))).perform();
+                return this;
+            }
+
+            @Override
+            public boolean isPresent() {
+                return true;
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return wait.until(ExpectedConditions.visibilityOf(webElement)).isEnabled();
+            }
+
+            @Override
+            public boolean isDisplayed() {
+                return webElement.isDisplayed();
+            }
+
+            @Override
+            public boolean isSelected() {
+                return wait.until(ExpectedConditions.visibilityOf(webElement)).isSelected();
+            }
+
+            @Override
+            public String getAttribute(String attribute) {
+                return wait.until(ExpectedConditions.visibilityOf(webElement)).getAttribute(attribute);
+            }
+
+            @Override
+            public String getCssValue(String attribute) {
+                return wait.until(ExpectedConditions.visibilityOf(webElement)).getCssValue(attribute);
+            }
+
+            @Override
+            public String getInnerText() {
+                return wait.until(ExpectedConditions.visibilityOf(webElement)).getText();
+            }
+
+            @Override
+            public List<String> getAllInnerTexts() {
+                return Arrays.asList(getInnerText());
+            }
+
+            @Override
+            public IWebElementWrapper setInnerText(String text) {
+                logger.debug("try to set innertext of {} to {}", webElement, text);
+                executeScript("arguments[0].innerText=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), text);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper setValue(String value) {
+                logger.debug("try to set text of {} to {}", webElement, value);
+                executeScript("arguments[0].value=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), value);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public List<WebElement> getAllSelectedOptions() {
+                return new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).getAllSelectedOptions();
+            }
+
+            @Override
+            public List<WebElement> getAllOptions() {
+                return new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).getOptions();
+            }
+
+            @Override
+            public List<String> getAllOptionTexts() {
+                List<String> list = new ArrayList<String>();
+                List<WebElement> options = getAllOptions();
+                for (WebElement option : options) {
+                    list.add(option.getText());
+                }
+                return list;
+            }
+
+            @Override
+            public String getSelectedText() {
+                return getAllSelectedOptions().get(0).getText();
+            }
+
+            @Override
+            public List<String> getAllSelectedTexts() {
+                List<String> list = new ArrayList<String>();
+                List<WebElement> options = getAllSelectedOptions();
+                for (WebElement option : options) {
+                    list.add(option.getText());
+                }
+                return list;
+            }
+
+            @Override
+            public IWebElementWrapper triggerEvent(String event) {
+                logger.debug("try to trigger {} on {}", event, webElement);
+                JavascriptLibrary javascript = new JavascriptLibrary();
+                javascript.callEmbeddedSelenium(driver, "triggerEvent", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper fireEvent(String event) {
+                logger.debug("try to fire {} on {}", event, webElement);
+                executeScript("arguments[0].fireEvent(arguments[1]);", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper scrollTo() {
+                logger.debug("try to scroll to {}", webElement);
+                WebElement element = wait.until(ExpectedConditions.visibilityOf(webElement));
+                executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper scrollIntoView() {
+                scrollIntoView(true);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
+                logger.debug("try to scroll into view on {}, align to top is {}", webElement, bAlignToTop);
+                executeScript("arguments[0].scrollIntoView(arguments[1])", wait.until(ExpectedConditions.visibilityOf(webElement)), bAlignToTop);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper setAttribute(String attribute, String value) {
+                logger.debug("try to set attribute value of {} on {} to {}", attribute, webElement, value);
+                executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute, value);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public IWebElementWrapper removeAttribute(String attribute) {
+                logger.debug("try to remove attribute {} on {}", attribute, webElement);
+                executeScript("arguments[0].removeAttribute(arguments[1])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute);
+                waitThat().document().toBeComplete();
+                waitThat().jQuery().toBeInactive();
+                return this;
+            }
+
+            @Override
+            public long getCellRow() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].parentNode.rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
+                ret++;// row index starts with zero
+                return ret;
+            }
+
+            @Override
+            public long getCellColumn() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].cellIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
+                ret++;// column index starts with zero
+                return ret;
+            }
+
+            @Override
+            public long getRow() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
+                ret++;// row index starts with zero
+                return ret;
+            }
+
+            @Override
+            public long getRowCount() {
+                long ret = -1;
+                ret = (long) executeScript("return arguments[0].rows.length", wait.until(ExpectedConditions.visibilityOf(webElement)));
+                return ret;
+            }
+
+            @Override
+            public IWebDriverWrapper switchTo() {
+                logger.debug("try to switch to frame {}", webElement);
+                wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(webElement));
+                return null;
+            }
+
+            @Override
+            public int getNumberOfMatches() {
+                return 1;
+            }
+
+            @Override
+            public List<IWebElementWrapper> getAllMatchedElements() {
+                List<IWebElementWrapper> webElementWrappers = new ArrayList<>();
+                webElementWrappers.add(this);
+                return webElementWrappers;
+            }
+        };
+    }
+
     @Override
     public IWebElementWrapper element(final Locator locator) {
         return new IWebElementWrapper() {
@@ -696,11 +1154,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public List<String> getAllInnerTexts() {
-                List<String> Texts = new ArrayList<String>();
+                List<String> texts = new ArrayList<String>();
                 for (WebElement element : waitThat(locator).toBeAllPresent()) {
-                    Texts.add(element.getText());
+                    texts.add(element.getText());
                 }
-                return Texts;
+                return texts;
             }
 
             @Override
@@ -860,6 +1318,16 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public int getNumberOfMatches() {
                 return waitThat(locator).toBeAllPresent().size();
+            }
+
+            @Override
+            public List<IWebElementWrapper> getAllMatchedElements() {
+                List<WebElement> webElements = waitThat(locator).toBeAllPresent();
+                List<IWebElementWrapper> webElementWrappers = new ArrayList<>();
+                for (WebElement webElement : webElements) {
+                    webElementWrappers.add(element(webElement));
+                }
+                return webElementWrappers;
             }
         };
     }

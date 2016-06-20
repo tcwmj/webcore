@@ -702,6 +702,13 @@ public interface IWebDriverWrapper {
         IWebDriverWrapper switchTo();
 
         int getNumberOfMatches();
+
+        /**
+         * get all matched web elements
+         *
+         * @return List&gt;WebElement&lt;
+         */
+        java.util.List<IWebElementWrapper> getAllMatchedElements();
     }
 
 }
