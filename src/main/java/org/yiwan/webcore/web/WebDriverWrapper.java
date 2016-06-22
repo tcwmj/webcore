@@ -697,8 +697,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebElementWrapper setValue(String value) {
                 logger.debug("try to set text of {} to {}", webElement, value);
                 executeScript("arguments[0].value=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), value);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
@@ -787,8 +785,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebElementWrapper setAttribute(String attribute, String value) {
                 logger.debug("try to set attribute value of {} on {} to {}", attribute, webElement, value);
                 executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute, value);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
@@ -796,8 +792,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebElementWrapper removeAttribute(String attribute) {
                 logger.debug("try to remove attribute {} on {}", attribute, webElement);
                 executeScript("arguments[0].removeAttribute(arguments[1])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
@@ -1174,8 +1168,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebElementWrapper setValue(String value) {
                 logger.debug("try to set text of {} to {}", locator, value);
                 executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
@@ -1246,8 +1238,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             @Override
             public IWebElementWrapper scrollIntoView() {
                 scrollIntoView(true);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
@@ -1264,8 +1254,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebElementWrapper setAttribute(String attribute, String value) {
                 logger.debug("try to set attribute value of {} on {} to {}", attribute, locator, value);
                 executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
@@ -1273,8 +1261,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             public IWebElementWrapper removeAttribute(String attribute) {
                 logger.debug("try to remove attribute {} on {}", attribute, locator);
                 executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
-                waitThat().document().toBeComplete();
-                waitThat().jQuery().toBeInactive();
                 return this;
             }
 
