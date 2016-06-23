@@ -44,12 +44,12 @@ public abstract class TestBase implements ITestBase {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<String, String> testMap = new HashMap<>();
     private boolean skipTest = false;//whether to skip next execution of left test methods    
-    private Subject subject;
+    private final Subject subject = new TransactionSubject();
     private IWebDriverWrapper webDriverWrapper;
     private ITestDataManager testDataManager;
     private IPageManager pageManager;
     private ProxyWrapper proxyWrapper;
-    private TestCapability testCapability = new TestCapability();
+    private final TestCapability testCapability = new TestCapability();
     private boolean prepareToDownload = false;
     private String scenarioId;
     private String featureId;
@@ -60,7 +60,7 @@ public abstract class TestBase implements ITestBase {
     private String transactionName;//unique http archive file name
     private String suiteName;//testng test suite name
     private String testName;//testng test name
-    private TimestampWriter timestampWriter = new TimestampWriter();
+    private final TimestampWriter timestampWriter = new TimestampWriter();
 
     public TimestampWriter getTimestampWriter() {
         return timestampWriter;
@@ -172,19 +172,20 @@ public abstract class TestBase implements ITestBase {
 
     @Override
     public void createProxyWrapper() {
-        proxyWrapper = new ProxyWrapper();
-        this.subject = new TransactionSubject();
-        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            subject.attach(new TimestampObserver(this));
-        }
-        if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
-            subject.attach(new ScreenshotObserver(this));
-        }
-        if (PropHelper.ENABLE_HTTP_ARCHIVE) {
-            subject.attach(new HttpArchiveObserver(this));
-        }
-        if (PropHelper.ENABLE_FILE_DOWNLOAD) {
-            subject.attach(new FileDownloadObserver(this));
+        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD || PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE || PropHelper.ENABLE_HTTP_ARCHIVE || PropHelper.ENABLE_FILE_DOWNLOAD) {
+            proxyWrapper = new ProxyWrapper();
+            getProxyWrapper().start();            if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+                subject.attach(new TimestampObserver(this));
+            }
+            if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
+                subject.attach(new ScreenshotObserver(this));
+            }
+            if (PropHelper.ENABLE_HTTP_ARCHIVE) {
+                subject.attach(new HttpArchiveObserver(this));
+            }
+            if (PropHelper.ENABLE_FILE_DOWNLOAD) {
+                subject.attach(new FileDownloadObserver(this));
+            }
         }
     }
 
@@ -422,9 +423,7 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void startTransaction(String transactionName) {
         setTransactionName(transactionName);
-        if (subject != null) {
-            subject.nodifyObserversStart();
-        }
+        subject.nodifyObserversStart();
     }
 
     /* (non-Javadoc)
@@ -432,9 +431,7 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void stopTransaction() {
-        if (subject != null) {
-            subject.nodifyObserversStop();
-        }
+        subject.nodifyObserversStop();
     }
 
     @BeforeClass
@@ -471,10 +468,7 @@ public abstract class TestBase implements ITestBase {
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
         report(String.format("test environment<br/>%s", getTestEnvironment()));
-        if (PropHelper.ENABLE_PROXY) {//create proxyWrapper must before creating webdriverWrapper
-            createProxyWrapper();
-            getProxyWrapper().start();
-        }
+        createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
         report(Helper.getTestReportStyle("../../../../" + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));

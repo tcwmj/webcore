@@ -81,7 +81,6 @@ public class PropHelper {
     public static final boolean MAXIMIZE_BROWSER = Boolean.parseBoolean(getProperty("browser.maximize"));
     public static final boolean REMOTE = Boolean.parseBoolean(getProperty("remote"));
     public static final boolean BROWSERSTACK = Boolean.parseBoolean(getProperty("browserstack"));
-    public static final boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));
     public static final boolean ENABLE_FILE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
     public static final boolean HTTP_STATUS_TO_204 = Boolean.parseBoolean(getProperty("http.status.to.204"));
     public static final boolean ENABLE_HTTP_ARCHIVE = Boolean.parseBoolean(getProperty("har.enable"));
