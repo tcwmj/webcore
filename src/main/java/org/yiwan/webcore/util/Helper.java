@@ -245,7 +245,7 @@ public class Helper {
      */
     public static String randomize() {
         String ret;
-        if (PropHelper.RANDOM_RULE.equals("uuid")) {
+        if (PropHelper.RANDOM_POLICY.equals("uuid")) {
             String s = UUID.randomUUID().toString();
             ret = s.substring(0, 8) + s.substring(9, 13) + s.substring(14, 18) + s.substring(19, 23) + s.substring(24);
         } else {

@@ -22,14 +22,14 @@ import static java.lang.String.format;
 public class PropHelper {
     private final static Logger logger = LoggerFactory.getLogger(PropHelper.class);
     private final static Properties props = new Properties();
-    private static boolean hasloaded = false;
+    private static boolean hasLoaded = false;
 
     // from base conf
     public static final long TIMEOUT_INTERVAL = Long.parseLong(getProperty("timeout.interval"));
     public static final long TIMEOUT_NAVIGATION_INTERVAL = Long.parseLong(getProperty("timeout.navigation.interval"));
     public static final long TIMEOUT_POLLING_INTERVAL = Long.parseLong(getProperty("timeout.polling.interval"));
     public static final Integer TEST_RETRY_COUNT = Integer.valueOf(getProperty("test.retry.count"));
-    public static final String RANDOM_RULE = getProperty("random.rule");
+    public static final String RANDOM_POLICY = getProperty("random.policy");
     public static final String SOURCE_CODE_PATH = getProperty("sourcecode.path");
     public static final String SOURCE_CODE_ENCODING = getProperty("sourcecode.encoding");
     public static final String REPLACEMENT_SYMBOL = getProperty("symbol.replacement");
@@ -102,7 +102,6 @@ public class PropHelper {
      * @param file
      */
     private static void load(String file) {
-//        logger.debug("load property file in resource " + file);
         try (InputStream is = ClassLoader.getSystemResourceAsStream(file)) {
             if (is != null) {
                 props.load(is);
@@ -129,8 +128,8 @@ public class PropHelper {
      * @return property value
      */
     public static String getProperty(String key) {
-        if (!hasloaded) {
-            hasloaded = load();
+        if (!hasLoaded) {
+            hasLoaded = load();
         }
 //        return System.getProperty(key) == null ? props.getProperty(key) : System.getProperty(key);
         return System.getProperty(key, props.getProperty(key));
