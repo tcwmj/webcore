@@ -267,6 +267,10 @@ public interface IWebDriverWrapper {
          */
         IFluentLocatorWait toBeAbsentIn(long milliseconds);
 
+        IFluentLocatorWait toBeAppearedIn(long milliseconds);
+
+        IFluentLocatorWait toBeDisappearedIn(long milliseconds);
+
         java.util.List<WebElement> toBeAllPresent();
 
         WebElement toBePresent();

@@ -614,6 +614,16 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IFluentLocatorWait toBeAppearedIn(long milliseconds) {
+                return this;
+            }
+
+            @Override
+            public IFluentLocatorWait toBeDisappearedIn(long milliseconds) {
+                return this;
+            }
+
+            @Override
             public WebElement toBeClickable() {
                 return null;
             }
@@ -768,6 +778,16 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
                     @Override
                     public IFluentLocatorWait toBeAbsentIn(long milliseconds) {
+                        return this;
+                    }
+
+                    @Override
+                    public IFluentLocatorWait toBeAppearedIn(long milliseconds) {
+                        return this;
+                    }
+
+                    @Override
+                    public IFluentLocatorWait toBeDisappearedIn(long milliseconds) {
                         return this;
                     }
 

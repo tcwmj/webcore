@@ -1519,6 +1519,30 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public IFluentLocatorWait toBeAppearedIn(long milliseconds) {
+                long t = System.currentTimeMillis();
+                while (System.currentTimeMillis() - t < milliseconds) {
+                    if (element(locator).isDisplayed()) {
+                        return this;
+                    }
+                }
+                logger.warn("wait visibility of {} timed out in {} milliseconds", locator, milliseconds);
+                return this;
+            }
+
+            @Override
+            public IFluentLocatorWait toBeDisappearedIn(long milliseconds) {
+                long t = System.currentTimeMillis();
+                while (System.currentTimeMillis() - t < milliseconds) {
+                    if (!element(locator).isDisplayed()) {
+                        return this;
+                    }
+                }
+                logger.warn("wait invisibility of {} timed out in {} milliseconds", locator, milliseconds);
+                return this;
+            }
+
+            @Override
             public WebElement toBeClickable() {
                 return wait.until(ExpectedConditions.elementToBeClickable(locator.by()));
             }
