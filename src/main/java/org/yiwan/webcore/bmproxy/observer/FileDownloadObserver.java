@@ -1,6 +1,7 @@
 package org.yiwan.webcore.bmproxy.observer;
 
 import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import net.lightbody.bmp.filters.ResponseFilter;
 import net.lightbody.bmp.util.HttpMessageContents;
 import net.lightbody.bmp.util.HttpMessageInfo;
@@ -95,8 +96,9 @@ public class FileDownloadObserver extends SampleObserver {
      * @return string
      */
     private String getAttachmentFileName(HttpResponse response) {
-        if (response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
-            return response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).replace("attachment;filename=", "").replace(";", "").replace("\"", "").replace("'", "").trim();
+        String patternString = "( )*attachment( )*;( )*filename( )*=";
+        if (response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).matches(patternString + ".*")) {
+            return response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).replaceFirst(patternString, "").replaceAll("\"|'|;", "").trim();
         }
         return "";
     }
@@ -130,7 +132,9 @@ public class FileDownloadObserver extends SampleObserver {
 
     private void completeDownload(HttpResponse response) {
 //        prevent to get download prompt
-//        response.setStatus(HttpResponseStatus.NO_CONTENT);
+        if (PropHelper.HTTP_STATUS_TO_204) {
+            response.setStatus(HttpResponseStatus.NO_CONTENT);
+        }
         if (testCase.isPrepareToDownload()) {
             testCase.setPrepareToDownload(false);
         }

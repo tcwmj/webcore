@@ -83,6 +83,7 @@ public class PropHelper {
     public static final boolean BROWSERSTACK = Boolean.parseBoolean(getProperty("browserstack"));
     public static final boolean ENABLE_PROXY = Boolean.parseBoolean(getProperty("proxy.enable"));
     public static final boolean ENABLE_FILE_DOWNLOAD = Boolean.parseBoolean(getProperty("download.enable"));
+    public static final boolean HTTP_STATUS_TO_204 = Boolean.parseBoolean(getProperty("http.status.to.204"));
     public static final boolean ENABLE_HTTP_ARCHIVE = Boolean.parseBoolean(getProperty("har.enable"));
     public static final boolean ENABLE_TRANSACTION_TIMESTAMP_RECORD = Boolean.parseBoolean(getProperty("record.transaction.timestamp.enable"));
     public static final boolean ENABLE_TRANSACTION_SCREENSHOT_CAPTURE = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
