@@ -2546,7 +2546,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return new IFluentAlertAssert() {
                     @Override
                     public AbstractBooleanAssert<?> present() {
-                        return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().present()).as("assert alert present");
+                        return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("assert alert present");
                     }
 
                     @Override
@@ -2623,7 +2623,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public boolean present() {
+        public boolean isPresent() {
             try {
                 driver.switchTo().alert();
                 return true;

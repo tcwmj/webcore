@@ -186,7 +186,7 @@ public interface IWebDriverWrapper {
 
         String getText();
 
-        boolean present();
+        boolean isPresent();
     }
 
     interface IBrowseNavigation {

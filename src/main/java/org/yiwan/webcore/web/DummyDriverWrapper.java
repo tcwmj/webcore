@@ -931,7 +931,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
                             }
 
                             @Override
-                            public boolean present() {
+                            public boolean isPresent() {
                                 return true;
                             }
                         };
@@ -1268,7 +1268,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public boolean present() {
+            public boolean isPresent() {
                 return true;
             }
         };
