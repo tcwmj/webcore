@@ -353,6 +353,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public boolean tick(boolean checked) {
+                return true;
+            }
+
+            @Override
             public IWebElementWrapper selectAll() {
                 return this;
             }
@@ -881,6 +886,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public void timeout(long milliseconds) throws InterruptedException {
+
+            }
+
+            @Override
+            public void readyToPerformNextAction() {
 
             }
 

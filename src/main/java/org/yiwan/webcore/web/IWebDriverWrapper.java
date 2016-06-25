@@ -357,6 +357,8 @@ public interface IWebDriverWrapper {
     interface IFluentWait {
         void timeout(long milliseconds) throws InterruptedException;
 
+        void readyToPerformNextAction();
+
         IFluentDocumentWait document();
 
         IFluentJQueryWait jQuery();
@@ -457,6 +459,13 @@ public interface IWebDriverWrapper {
          * @return checked or not
          */
         boolean isChecked();
+
+        /**
+         * the same fucntion to method check, return true if it takes action
+         *
+         * @param checked on or off
+         */
+        boolean tick(boolean checked);
 
         /**
          * select all options
