@@ -2648,7 +2648,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public void enable() {
             logger.debug("try enable javascript alert");
-//            executeScript("window.alert = function(msg) { alert(msg); }; window.confirm = function(msg) { confirm(msg); }; window.prompt = function(msg) { prompt(msg); };");
+            executeScript("delete window.alert; delete window.confirm; delete window.prompt;");
         }
     }
 }
