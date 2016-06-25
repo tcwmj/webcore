@@ -59,7 +59,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public IWebDriverWrapper closeAll() {
         logger.debug("try to close all browser tabs");
-        close();
         for (String handle : driver.getWindowHandles()) {
             switchToWindow(handle);
             close();

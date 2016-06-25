@@ -174,7 +174,8 @@ public abstract class TestBase implements ITestBase {
     public void createProxyWrapper() {
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD || PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE || PropHelper.ENABLE_HTTP_ARCHIVE || PropHelper.ENABLE_FILE_DOWNLOAD) {
             proxyWrapper = new ProxyWrapper();
-            getProxyWrapper().start();            if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+            getProxyWrapper().start();
+            if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
                 subject.attach(new TimestampObserver(this));
             }
             if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
@@ -483,7 +484,7 @@ public abstract class TestBase implements ITestBase {
             TestCaseManager.putTestEnvironment(getTestEnvironment());
             setRecycleTestEnvironment(false);
         }
-        getWebDriverWrapper().close();
+        getWebDriverWrapper().closeAll();
         getWebDriverWrapper().quit();
         if (getProxyWrapper() != null) {
             getProxyWrapper().stop();
