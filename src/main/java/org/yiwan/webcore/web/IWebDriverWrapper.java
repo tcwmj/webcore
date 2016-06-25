@@ -187,6 +187,23 @@ public interface IWebDriverWrapper {
         String getText();
 
         boolean isPresent();
+
+        /**
+         * disable javascript alert by accepting all of them
+         */
+        void disable();
+
+        /**
+         * disable javascript alert
+         *
+         * @param accept true indicates accept all
+         */
+        void disable(boolean accept);
+
+        /**
+         * enable javascript alert
+         */
+        void enable();
     }
 
     interface IBrowseNavigation {

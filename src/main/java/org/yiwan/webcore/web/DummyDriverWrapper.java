@@ -924,27 +924,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
                 return new IFluentAlertWait() {
                     @Override
                     public IAlertWrapper toBePresent() {
-                        return new IAlertWrapper() {
-                            @Override
-                            public void dismiss() {
-
-                            }
-
-                            @Override
-                            public void accept() {
-
-                            }
-
-                            @Override
-                            public String getText() {
-                                return "";
-                            }
-
-                            @Override
-                            public boolean isPresent() {
-                                return true;
-                            }
-                        };
+                        return new AlertWrapper();
                     }
                 };
             }
@@ -1261,26 +1241,42 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IAlertWrapper alert() {
-        return new IAlertWrapper() {
-            @Override
-            public void dismiss() {
+        return new AlertWrapper();
+    }
 
-            }
+    private class AlertWrapper implements IAlertWrapper {
+        @Override
+        public void dismiss() {
 
-            @Override
-            public void accept() {
+        }
 
-            }
+        @Override
+        public void accept() {
 
-            @Override
-            public String getText() {
-                return "";
-            }
+        }
 
-            @Override
-            public boolean isPresent() {
-                return true;
-            }
-        };
+        @Override
+        public String getText() {
+            return "";
+        }
+
+        @Override
+        public boolean isPresent() {
+            return true;
+        }
+
+        @Override
+        public void disable() {
+        }
+
+        @Override
+        public void disable(boolean accept) {
+
+        }
+
+        @Override
+        public void enable() {
+
+        }
     }
 }

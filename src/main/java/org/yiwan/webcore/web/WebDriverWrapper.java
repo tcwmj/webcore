@@ -2633,5 +2633,22 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 return false;
             }
         }
+
+        @Override
+        public void disable() {
+            disable(true);
+        }
+
+        @Override
+        public void disable(boolean accept) {
+            logger.debug("try disable javascript alert by {}ing all of them", accept ? "accept" : "dismiss");
+            executeScript(String.format("window.alert = function(msg) {}; window.confirm = function(msg) { return %b; }; window.prompt = function(msg) { return %b; };", accept, accept));
+        }
+
+        @Override
+        public void enable() {
+            logger.debug("try enable javascript alert");
+//            executeScript("window.alert = function(msg) { alert(msg); }; window.confirm = function(msg) { confirm(msg); }; window.prompt = function(msg) { prompt(msg); };");
+        }
     }
 }
