@@ -298,12 +298,12 @@ public class WebDriverWrapperFactory {
 
     private void configPhantomJSCapabilities(DesiredCapabilities capability) {
         capability.setCapability("takesScreenshot", true);
-        String[] phantomjsCliArgs;
-        if (PropHelper.PHANTOMJS_CLI_ARGS != null && (phantomjsCliArgs = StringUtils.split(PropHelper.PHANTOMJS_CLI_ARGS.trim())).length > 0) {
+        String[] phantomjsCliArgs = StringUtils.split(PropHelper.PHANTOMJS_CLI_ARGS.trim());
+        if (PropHelper.PHANTOMJS_CLI_ARGS != null && phantomjsCliArgs.length > 0) {
             capability.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, Arrays.asList(phantomjsCliArgs));
         }
-        String[] phantomjsGhostdriverCliArgs;
-        if (PropHelper.PHANTOMJS_GHOSTDRIVER_CLI_ARGS != null && (phantomjsGhostdriverCliArgs = StringUtils.split(PropHelper.PHANTOMJS_GHOSTDRIVER_CLI_ARGS.trim())).length > 0) {
+        String[] phantomjsGhostdriverCliArgs = StringUtils.split(PropHelper.PHANTOMJS_GHOSTDRIVER_CLI_ARGS.trim());
+        if (PropHelper.PHANTOMJS_GHOSTDRIVER_CLI_ARGS != null && phantomjsGhostdriverCliArgs.length > 0) {
             capability.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, Arrays.asList(phantomjsGhostdriverCliArgs));
         }
     }
