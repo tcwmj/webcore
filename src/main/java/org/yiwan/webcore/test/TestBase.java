@@ -464,7 +464,7 @@ public abstract class TestBase implements ITestBase {
      */
     @Override
     public void setUpTest() throws Exception {
-        MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".html");
+        MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".log");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
