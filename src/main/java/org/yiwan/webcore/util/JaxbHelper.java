@@ -164,7 +164,7 @@ public class JaxbHelper {
         try {
             JAXBContext context = JAXBContext.newInstance(clazz);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            if (xsd != null) {
+            if (xsd != null && PropHelper.ENABLE_XSD_VALIDATION) {
                 SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// http://www.w3.org/2001/XMLSchema
                 Schema schema = factory.newSchema(new StreamSource(xsd));
                 unmarshaller.setSchema(schema);
@@ -192,7 +192,7 @@ public class JaxbHelper {
         try {
             JAXBContext context = JAXBContext.newInstance(clazz);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            if (xsd != null) {
+            if (xsd != null && PropHelper.ENABLE_XSD_VALIDATION) {
                 SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);// http://www.w3.org/2001/XMLSchema
                 Schema schema = factory.newSchema(new StreamSource(xsd));
                 unmarshaller.setSchema(schema);

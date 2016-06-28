@@ -94,7 +94,8 @@ public class PropHelper {
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
     public static final String ZAP_API_KEY = getProperty("zap.api.key");
     public static final String PENETRATION_TEST_HTML_REPORT_FILE = getProperty("penetration.test.html.report.file");
-    ;
+
+    public static final boolean ENABLE_XSD_VALIDATION = Boolean.parseBoolean(getProperty("xsd.validation.enable"));
 
     /**
      * load properties from external file
