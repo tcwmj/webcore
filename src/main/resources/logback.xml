@@ -68,34 +68,14 @@
             <level>ERROR</level>
         </filter>
     </appender>
-    <appender name="PROXY" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${output_folder}proxy.log</File>
-        <Append>true</Append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${output_folder}proxy.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
-        </filter>
-    </appender>
     <logger name="org.yiwan" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
     <logger name="com.lombardrisk" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
-    <logger name="org.littleshoot.proxy" level="DEBUG">
-        <appender-ref ref="PROXY"/>
-    </logger>
-    <logger name="net.lightbody.bmp" level="DEBUG">
-        <appender-ref ref="PROXY"/>
-    </logger>
+    <logger name="org.littleshoot.proxy" level="ERROR"/>
+    <logger name="net.lightbody.bmp" level="ERROR"/>
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="DEBUG"/>
