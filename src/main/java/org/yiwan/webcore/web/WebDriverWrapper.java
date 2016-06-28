@@ -1802,17 +1802,19 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     private class FluentWait implements IFluentWait {
         @Override
-        public void timeout(long milliseconds) throws InterruptedException {
+        public IFluentWait timeout(long milliseconds) throws InterruptedException {
             logger.debug("force to wait {} milliseconds", milliseconds);
             Thread.sleep(milliseconds);
+            return this;
         }
 
         @Override
-        public void readyToPerformNextAction() {
+        public IFluentWait readyToPerformNextAction() {
             if (!WebDriverWrapper.this.alert().isPresent()) {
                 document().toBeComplete();
                 jQuery().toBeInactive();
             }
+            return this;
         }
 
         @Override

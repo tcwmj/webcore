@@ -372,9 +372,9 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentWait {
-        void timeout(long milliseconds) throws InterruptedException;
+        IFluentWait timeout(long milliseconds) throws InterruptedException;
 
-        void readyToPerformNextAction();
+        IFluentWait readyToPerformNextAction();
 
         IFluentDocumentWait document();
 

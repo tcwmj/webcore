@@ -885,13 +885,13 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
         return new IFluentWait() {
 
             @Override
-            public void timeout(long milliseconds) throws InterruptedException {
-
+            public IFluentWait timeout(long milliseconds) throws InterruptedException {
+                return this;
             }
 
             @Override
-            public void readyToPerformNextAction() {
-
+            public IFluentWait readyToPerformNextAction() {
+                return this;
             }
 
             @Override
