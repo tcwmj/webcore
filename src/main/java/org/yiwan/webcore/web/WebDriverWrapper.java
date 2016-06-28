@@ -2639,7 +2639,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             if (alert != null) {
                 alert.dismiss();
             } else {
-                waitThat().alert().toBePresent().dismiss();
+                wait.until(ExpectedConditions.alertIsPresent()).dismiss();
             }
         }
 
@@ -2649,7 +2649,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             if (alert != null) {
                 alert.accept();
             } else {
-                waitThat().alert().toBePresent().accept();
+                wait.until(ExpectedConditions.alertIsPresent()).accept();
             }
         }
 
@@ -2658,7 +2658,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             if (alert != null) {
                 return alert.getText();
             } else {
-                return waitThat().alert().toBePresent().getText();
+                return wait.until(ExpectedConditions.alertIsPresent()).getText();
             }
         }
 
