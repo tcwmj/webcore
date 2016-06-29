@@ -3,6 +3,7 @@ package org.yiwan.webcore.bmproxy.observer;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import net.lightbody.bmp.filters.ResponseFilter;
+import net.lightbody.bmp.filters.ResponseFilterAdapter;
 import net.lightbody.bmp.util.HttpMessageContents;
 import net.lightbody.bmp.util.HttpMessageInfo;
 import org.apache.commons.io.FileUtils;
@@ -51,7 +52,7 @@ public class FileDownloadObserver extends SampleObserver {
     private void supportDownloadFile(final ITestBase testCase) {
         logger.debug("setup proxy to support file download mechianism");
         // set response filter rule for downloading files
-        proxyWrapper.addResponseFilter(new ResponseFilter() {
+        proxyWrapper.addFirstHttpFilterFactory(new ResponseFilterAdapter.FilterSource(new ResponseFilter() {
             @Override
             public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
                 if (testCase.isPrepareToDownload() && contents.getContentType() != null) {
@@ -87,7 +88,7 @@ public class FileDownloadObserver extends SampleObserver {
                     }
                 }
             }
-        });
+        }, PropHelper.MAXIMUM_RESPONSE_BUFFER_SIZE));
     }
 
     /**

@@ -5,6 +5,7 @@ import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.filters.RequestFilter;
 import net.lightbody.bmp.filters.ResponseFilter;
 import net.lightbody.bmp.proxy.CaptureType;
+import org.littleshoot.proxy.HttpFiltersSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,20 @@ public class ProxyWrapper {
     public void addResponseFilter(ResponseFilter filter) {
         logger.debug("add a new response filter to the proxy");
         proxy.addResponseFilter(filter);
+    }
+
+    /**
+     * Adds a new filter factory (request/response interceptor) to the beginning of the HttpFilters chain.
+     * <p/>
+     * <b>Usage note:</b> The actual filter (interceptor) instance is created on every request by implementing the
+     * {@link HttpFiltersSource#filterRequest(io.netty.handler.codec.http.HttpRequest, io.netty.channel.ChannelHandlerContext)} method and returning an
+     * {@link org.littleshoot.proxy.HttpFilters} instance (typically, a subclass of {@link org.littleshoot.proxy.HttpFiltersAdapter}).
+     * To disable or bypass a filter on a per-request basis, the filterRequest() method may return null.
+     *
+     * @param filterFactory factory to generate HttpFilters
+     */
+    public void addFirstHttpFilterFactory(HttpFiltersSource filterFactory) {
+        proxy.addFirstHttpFilterFactory(filterFactory);
     }
 
     /**

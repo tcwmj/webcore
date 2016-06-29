@@ -96,6 +96,7 @@ public class PropHelper {
     public static final String PENETRATION_TEST_HTML_REPORT_FILE = getProperty("penetration.test.html.report.file");
 
     public static final boolean ENABLE_XSD_VALIDATION = Boolean.parseBoolean(getProperty("xsd.validation.enable"));
+    public static final int MAXIMUM_RESPONSE_BUFFER_SIZE = Integer.parseInt(getProperty("maximum.response.buffer.size"));
 
     /**
      * load properties from external file
