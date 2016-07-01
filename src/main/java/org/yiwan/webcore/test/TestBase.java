@@ -383,10 +383,10 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void embedScreenshot() throws IOException {
-        if (getWebDriverWrapper().alert().isPresent()) {
-            logger.warn("dismiss unexpected alert {} before taking screenshot", getWebDriverWrapper().alert().getText());
-            getWebDriverWrapper().alert().dismiss();
-        }
+//        if (getWebDriverWrapper().alert().isPresent()) {
+//            logger.warn("dismiss unexpected alert {} before taking screenshot", getWebDriverWrapper().alert().getText());
+//            getWebDriverWrapper().alert().dismiss();
+//        }
         String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
         File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(screenshot, new File(saveTo));

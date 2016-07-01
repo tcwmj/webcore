@@ -890,11 +890,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IFluentWait readyToPerformNextAction() {
-                return this;
-            }
-
-            @Override
             public IFluentDocumentWait document() {
                 return new IFluentDocumentWait() {
                     @Override

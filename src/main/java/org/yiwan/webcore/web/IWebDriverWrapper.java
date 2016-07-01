@@ -374,8 +374,6 @@ public interface IWebDriverWrapper {
     interface IFluentWait {
         IFluentWait timeout(long milliseconds) throws InterruptedException;
 
-        IFluentWait readyToPerformNextAction();
-
         IFluentDocumentWait document();
 
         IFluentJQueryWait jQuery();
