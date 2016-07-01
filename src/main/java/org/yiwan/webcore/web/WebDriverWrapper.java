@@ -44,21 +44,21 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IWebDriverWrapper maximize() {
-        logger.debug("try to maximize browser");
+        logger.debug("maximizing browser");
         driver.manage().window().maximize();
         return this;
     }
 
     @Override
     public IWebDriverWrapper close() {
-        logger.debug("try to close browser tab with title {}", getPageTitle());
+        logger.debug("closing browser tab with title {}", getPageTitle());
         driver.close();
         return this;
     }
 
     @Override
     public IWebDriverWrapper closeAll() {
-        logger.debug("try to close all browser tabs");
+        logger.debug("closing all browser tabs");
         for (String handle : driver.getWindowHandles()) {
             switchToWindow(handle);
             close();
@@ -68,14 +68,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IWebDriverWrapper quit() {
-        logger.debug("try to quit driver");
+        logger.debug("quiting driver");
         driver.quit();
         return this;
     }
 
     @Override
     public IWebDriverWrapper deleteAllCookies() {
-        logger.debug("try to delete all cookies");
+        logger.debug("deleting all cookies");
         driver.manage().deleteAllCookies();
         return this;
     }
@@ -97,28 +97,28 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IWebDriverWrapper switchToWindow(String nameOrHandle) {
-        logger.debug("try to switch to window {}", nameOrHandle);
+        logger.debug("switching to window {}", nameOrHandle);
         driver.switchTo().window(nameOrHandle);
         return this;
     }
 
     @Override
     public IWebDriverWrapper switchToDefaultWindow() {
-        logger.debug("try to switch to default content");
+        logger.debug("switching to default content");
         driver.switchTo().defaultContent();
         return this;
     }
 
     @Override
     public IWebDriverWrapper switchToFrame(int index) {
-        logger.debug("try to switch to frame {}", index);
+        logger.debug("switching to frame {}", index);
         driver.switchTo().frame(index);
         return this;
     }
 
     @Override
     public IWebDriverWrapper switchToFrame(String nameOrId) {
-        logger.debug("try to switch to frame {}", nameOrId);
+        logger.debug("switching to frame {}", nameOrId);
         driver.switchTo().frame(nameOrId);
         return this;
     }
@@ -164,7 +164,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public IWebDriverWrapper typeKeyEvent(int key) throws AWTException {
-        logger.debug("type key event " + key);
+        logger.debug("typing key event " + key);
         Robot robot;
         robot = new Robot();
         robot.keyPress(key);
@@ -237,7 +237,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper click() {
-            logger.debug("try to click {}", locator);
+            logger.debug("clicking {}", locator);
             waitThat(locator).toBeClickable().click();
             doPostAction();
             return this;
@@ -245,7 +245,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clickSilently() {
-            logger.debug("try to click {} silently", locator);
+            logger.debug("clicking {} silently", locator);
             driver.findElement(locator.by()).click();
             doPostAction();
             return this;
@@ -271,7 +271,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clickByJavaScript() {
-            logger.debug("try to click {} by executing javascript", locator);
+            logger.debug("clicking {} by executing javascript", locator);
             executeScript("arguments[0].click()", waitThat(locator).toBePresent());
             doPostAction();
             return this;
@@ -287,15 +287,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return !isDisplayed();
                 }
             });
-//                long now = System.currentTimeMillis();
-//                while (isDisplayed()) {
-//                    click();
-//                    waitThat().timeout(PropHelper.TIMEOUT_NAVIGATION_INTERVAL);
-//                    if (System.currentTimeMillis() - now > PropHelper.TIMEOUT_INTERVAL * 1000) {
-//                        logger.warn("time out occurs on loop clicking {}", locator);
-//                        break;
-//                    }
-//                }
             return this;
         }
 
@@ -325,7 +316,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper type(CharSequence... value) {
-            logger.debug("try to type {} on {}", StringUtils.join(value), locator);
+            logger.debug("typing {} on {}", StringUtils.join(value), locator);
             waitThat(locator).toBeVisible().sendKeys(value);
             doPostAction();
             return this;
@@ -333,7 +324,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clear() {
-            logger.debug("try to clear value on " + locator);
+            logger.debug("clearing value on " + locator);
             waitThat(locator).toBeVisible().clear();
             doPostAction();
             return this;
@@ -355,7 +346,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper check(boolean checked) {
-            logger.debug("try to check {} {}", checked ? "on" : "off", locator);
+            logger.debug("checking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
                 click();
             }
@@ -375,7 +366,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public boolean tick(boolean checked) {
-            logger.debug("try to tick {} {}", checked ? "on" : "off", locator);
+            logger.debug("ticking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
                 click();
                 return true;
@@ -398,7 +389,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper checkByJavaScript(boolean checked) {
-            logger.debug("try to check {} {} by javascript", checked ? "on" : "off", locator);
+            logger.debug("checking {} {} by javascript", checked ? "on" : "off", locator);
             if (checked) {
                 setAttribute("checked", "checked");
             } else {
@@ -409,7 +400,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper selectByVisibleText(String text) {
-            logger.debug("try to select by visible text {} on {}", text, locator);
+            logger.debug("selecting by visible text {} on {}", text, locator);
             new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
             doPostAction();
             return this;
@@ -425,7 +416,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper selectByIndex(int index) {
-            logger.debug("try to select by index {} on {}", index, locator);
+            logger.debug("selecting by index {} on {}", index, locator);
             new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
             doPostAction();
             return this;
@@ -433,7 +424,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper selectByValue(String value) {
-            logger.debug("try to select by value {} on {}", value, locator);
+            logger.debug("selecting by value {} on {}", value, locator);
             new Select(waitThat(locator).toBeVisible()).selectByValue(value);
             doPostAction();
             return this;
@@ -441,7 +432,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectAll() {
-            logger.debug("try to deselect all options on {}", locator);
+            logger.debug("deselecting all options on {}", locator);
             new Select(waitThat(locator).toBeVisible()).deselectAll();
             doPostAction();
             return this;
@@ -449,7 +440,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectByVisibleText(String text) {
-            logger.debug("try to deselect by visible text {} on {}", text, locator);
+            logger.debug("deselecting by visible text {} on {}", text, locator);
             new Select(waitThat(locator).toBeVisible()).deselectByVisibleText(text);
             doPostAction();
             return this;
@@ -465,7 +456,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectByIndex(int index) {
-            logger.debug("try to deselect by index {} on {}", index, locator);
+            logger.debug("deselecting by index {} on {}", index, locator);
             new Select(waitThat(locator).toBeVisible()).deselectByIndex(index);
             doPostAction();
             return this;
@@ -473,7 +464,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectByValue(String value) {
-            logger.debug("try to deselect by value {} on {}", value, locator);
+            logger.debug("deselecting by value {} on {}", value, locator);
             new Select(waitThat(locator).toBeVisible()).deselectByValue(value);
             doPostAction();
             return this;
@@ -540,7 +531,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setInnerText(String text) {
-            logger.debug("try to set innertext {} on {}", text, locator);
+            logger.debug("setting innertext {} on {}", text, locator);
             executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
             doPostAction();
             return this;
@@ -548,7 +539,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setValue(String value) {
-            logger.debug("try to set text {} on {}", value, locator);
+            logger.debug("setting text {} on {}", value, locator);
             executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
             return this;
         }
@@ -590,7 +581,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper triggerEvent(String event) {
-            logger.debug("try to trigger {} on {}", event, locator);
+            logger.debug("triggering {} on {}", event, locator);
             JavascriptLibrary javascript = new JavascriptLibrary();
             javascript.callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBePresent(), event);
             doPostAction();
@@ -599,7 +590,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper fireEvent(String event) {
-            logger.debug("try to fire {} on {}", event, locator);
+            logger.debug("firing {} on {}", event, locator);
             try {
                 executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
             } catch (WebDriverException e) {
@@ -620,7 +611,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper scrollTo() {
-            logger.debug("try to scroll to {}", locator);
+            logger.debug("scrolling to {}", locator);
             WebElement element = waitThat(locator).toBePresent();
             executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
             doPostAction();
@@ -635,7 +626,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
-            logger.debug("try to scroll into view on {}, align to top is {}", locator, bAlignToTop);
+            logger.debug("scrolling into view {}on {}", bAlignToTop ? "by aligning to top " : "", locator);
             executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
             doPostAction();
             return this;
@@ -643,14 +634,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setAttribute(String attribute, String value) {
-            logger.debug("try to set attribute {} value {} on {}", attribute, value, locator);
+            logger.debug("setting attribute {} value {} on {}", attribute, value, locator);
             executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
             return this;
         }
 
         @Override
         public IWebElementWrapper removeAttribute(String attribute) {
-            logger.debug("try to remove attribute {} on {}", attribute, locator);
+            logger.debug("removing attribute {} on {}", attribute, locator);
             executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
             return this;
         }
@@ -688,7 +679,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebDriverWrapper switchTo() {
-            logger.debug("try to switch to frame {}", locator);
+            logger.debug("switching to frame {}", locator);
             return waitThat(locator).frameToBeAvailableAndSwitchToIt();
         }
 
@@ -717,7 +708,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper click() {
-            logger.debug("try to click web element {}", webElement);
+            logger.debug("clicking {}", webElement);
             wait.until(ExpectedConditions.visibilityOf(webElement)).click();
             doPostAction();
             return this;
@@ -725,7 +716,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clickSilently() {
-            logger.debug("try to click web element {} silently", webElement);
+            logger.debug("clicking {} silently", webElement);
             webElement.click();
             doPostAction();
             return this;
@@ -751,7 +742,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clickByJavaScript() {
-            logger.debug("try to click web element {} by executing javascript", webElement.getText());
+            logger.debug("clicking {} by executing javascript", webElement.getText());
             executeScript("arguments[0].click()", wait.until(ExpectedConditions.visibilityOf(webElement)));
             doPostAction();
             return this;
@@ -772,7 +763,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper doubleClick() {
-            logger.debug("try to double click web element {}", webElement);
+            logger.debug("double clicking {}", webElement);
             Actions actions = new Actions(driver);
             actions.doubleClick(wait.until(ExpectedConditions.visibilityOf(webElement))).perform();
             return this;
@@ -780,7 +771,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper contextClick() {
-            logger.debug("try to context click web element {}", webElement);
+            logger.debug("context clicking {}", webElement);
             Actions actions = new Actions(driver);
             actions.contextClick(wait.until(ExpectedConditions.visibilityOf(webElement))).perform();
             return this;
@@ -788,7 +779,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper dragAndDrop(Locator target) {
-            logger.debug("try to drag web element {} and drop to {}", webElement, target);
+            logger.debug("dragging {} and dropping to {}", webElement, target);
             Actions actions = new Actions(driver);
             actions.dragAndDrop(wait.until(ExpectedConditions.visibilityOf(webElement)), waitThat(target).toBeVisible()).perform();
             return this;
@@ -796,7 +787,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper dragAndDrop(int xOffset, int yOffset) {
-            logger.debug("try to drag web element {} and drop to ({},{})", webElement, xOffset, yOffset);
+            logger.debug("dragging {} and dropping to ({},{})", webElement, xOffset, yOffset);
             Actions actions = new Actions(driver);
             actions.dragAndDropBy(wait.until(ExpectedConditions.visibilityOf(webElement)), xOffset, yOffset).perform();
             return this;
@@ -804,7 +795,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper type(CharSequence... value) {
-            logger.debug("try to type {} on {}", StringUtils.join(value), webElement);
+            logger.debug("typing {} on {}", StringUtils.join(value), webElement);
             wait.until(ExpectedConditions.visibilityOf(webElement)).sendKeys(value);
             doPostAction();
             return this;
@@ -812,7 +803,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clear() {
-            logger.debug("try to clear value on " + webElement);
+            logger.debug("clearing value on " + webElement);
             wait.until(ExpectedConditions.visibilityOf(webElement)).clear();
             doPostAction();
             return this;
@@ -834,7 +825,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper check(boolean checked) {
-            logger.debug("try to check {} {}", checked ? "on" : "off", webElement);
+            logger.debug("checking {} {}", checked ? "on" : "off", webElement);
             if (isChecked() != checked) {
                 click();
             }
@@ -848,7 +839,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public boolean tick(boolean checked) {
-            logger.debug("try to tick {} {}", checked ? "on" : "off", webElement);
+            logger.debug("ticking {} {}", checked ? "on" : "off", webElement);
             if (isChecked() != checked) {
                 click();
                 return true;
@@ -871,7 +862,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper checkByJavaScript(boolean checked) {
-            logger.debug("try to check {} {} by javascript", checked ? "on" : "off", webElement);
+            logger.debug("checking {} {} by javascript", checked ? "on" : "off", webElement);
             if (checked) {
                 setAttribute("checked", "checked");
             } else {
@@ -882,7 +873,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper selectByVisibleText(String text) {
-            logger.debug("try to select by visible text {} on {}", text, webElement);
+            logger.debug("selecting by visible text {} on {}", text, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).selectByVisibleText(text);
             doPostAction();
             return this;
@@ -898,7 +889,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper selectByIndex(int index) {
-            logger.debug("try to select by index {} on {}", index, webElement);
+            logger.debug("selecting by index {} on {}", index, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).selectByIndex(index);
             doPostAction();
             return this;
@@ -906,7 +897,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper selectByValue(String value) {
-            logger.debug("try to select by value {} on {}", value, webElement);
+            logger.debug("selecting by value {} on {}", value, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).selectByValue(value);
             doPostAction();
             return this;
@@ -914,7 +905,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectAll() {
-            logger.debug("try to deselect all options on {}", webElement);
+            logger.debug("deselecting all options on {}", webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectAll();
             doPostAction();
             return this;
@@ -922,7 +913,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectByVisibleText(String text) {
-            logger.debug("try to deselect by visible text {} on {}", text, webElement);
+            logger.debug("deselecting by visible text {} on {}", text, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByVisibleText(text);
             doPostAction();
             return this;
@@ -938,7 +929,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectByIndex(int index) {
-            logger.debug("try to deselect by index {} on {}", index, webElement);
+            logger.debug("deselecting by index {} on {}", index, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByIndex(index);
             doPostAction();
             return this;
@@ -946,7 +937,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper deselectByValue(String value) {
-            logger.debug("try to deselect by value {} on {}", value, webElement);
+            logger.debug("deselecting by value {} on {}", value, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByValue(value);
             doPostAction();
             return this;
@@ -1001,7 +992,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setInnerText(String text) {
-            logger.debug("try to set innertext {} on {}", text, webElement);
+            logger.debug("setting innertext {} on {}", text, webElement);
             executeScript("arguments[0].innerText=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), text);
             doPostAction();
             return this;
@@ -1009,7 +1000,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setValue(String value) {
-            logger.debug("try to set text {} on {}", value, webElement);
+            logger.debug("setting text {} on {}", value, webElement);
             executeScript("arguments[0].value=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), value);
             return this;
         }
@@ -1051,7 +1042,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper triggerEvent(String event) {
-            logger.debug("try to trigger {} on {}", event, webElement);
+            logger.debug("triggering {} on {}", event, webElement);
             JavascriptLibrary javascript = new JavascriptLibrary();
             javascript.callEmbeddedSelenium(driver, "triggerEvent", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
             doPostAction();
@@ -1060,7 +1051,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper fireEvent(String event) {
-            logger.debug("try to fire {} on {}", event, webElement);
+            logger.debug("firing {} on {}", event, webElement);
             executeScript("arguments[0].fireEvent(arguments[1]);", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
             doPostAction();
             return this;
@@ -1068,7 +1059,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper scrollTo() {
-            logger.debug("try to scroll to {}", webElement);
+            logger.debug("scrolling to {}", webElement);
             WebElement element = wait.until(ExpectedConditions.visibilityOf(webElement));
             executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
             doPostAction();
@@ -1084,7 +1075,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
-            logger.debug("try to scroll into view on {}, align to top is {}", webElement, bAlignToTop);
+            logger.debug("scrolling into view {}on {}", bAlignToTop ? "by aligning to top " : "", webElement);
             executeScript("arguments[0].scrollIntoView(arguments[1])", wait.until(ExpectedConditions.visibilityOf(webElement)), bAlignToTop);
             doPostAction();
             return this;
@@ -1092,14 +1083,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setAttribute(String attribute, String value) {
-            logger.debug("try to set attribute {} value {} on {}", attribute, value, webElement);
+            logger.debug("setting attribute {} value {} on {}", attribute, value, webElement);
             executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute, value);
             return this;
         }
 
         @Override
         public IWebElementWrapper removeAttribute(String attribute) {
-            logger.debug("try to remove attribute {} on {}", attribute, webElement);
+            logger.debug("removing attribute {} on {}", attribute, webElement);
             executeScript("arguments[0].removeAttribute(arguments[1])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute);
             return this;
         }
@@ -1137,7 +1128,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebDriverWrapper switchTo() {
-            logger.debug("try to switch to frame {}", webElement);
+            logger.debug("switching to frame {}", webElement);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(webElement));
             return null;
         }
@@ -1811,7 +1802,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     private class FluentWait implements IFluentWait {
         @Override
         public IFluentWait timeout(long milliseconds) throws InterruptedException {
-            logger.debug("force to wait {} milliseconds", milliseconds);
+            logger.debug("wait {} milliseconds", milliseconds);
             Thread.sleep(milliseconds);
             return this;
         }
@@ -2418,7 +2409,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     private class BrowseNavigation implements IBrowseNavigation {
         @Override
         public IBrowseNavigation to(String url) {
-            logger.debug("try to navigate to url {}", url);
+            logger.debug("navigating to url {}", url);
             driver.navigate().to(url);
             doPostAction();
             return this;
@@ -2426,7 +2417,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IBrowseNavigation forward() {
-            logger.debug("try to navigate forward");
+            logger.debug("navigating forward");
             driver.navigate().forward();
             doPostAction();
             return this;
@@ -2434,7 +2425,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IBrowseNavigation backward() {
-            logger.debug("try to navigate back");
+            logger.debug("navigating back");
             driver.navigate().back();
             doPostAction();
             return this;
@@ -2442,7 +2433,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IBrowseNavigation refresh() {
-            logger.debug("try to refresh page");
+            logger.debug("refreshing page");
             driver.navigate().refresh();
             doPostAction();
             return this;
@@ -2634,7 +2625,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public void dismiss() {
-            logger.debug("try to dismiss alert {}", getText());
+            logger.debug("dismissing alert {}", getText());
             if (alert != null) {
                 alert.dismiss();
             } else {
@@ -2644,7 +2635,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public void accept() {
-            logger.debug("try accept alert {}", getText());
+            logger.debug("accepting alert {}", getText());
             if (alert != null) {
                 alert.accept();
             } else {
@@ -2678,13 +2669,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public void disable(boolean accept) {
-            logger.debug("try disable javascript alert by {}ing all of them", accept ? "accept" : "dismiss");
+            logger.debug("disabling javascript alert by {}ing all of them", accept ? "accept" : "dismiss");
             executeScript(String.format("window.alert = function(msg) {}; window.confirm = function(msg) { return %b; }; window.prompt = function(msg) { return %b; };", accept, accept));
         }
 
         @Override
         public void enable() {
-            logger.debug("try enable javascript alert");
+            logger.debug("enabling javascript alert");
             executeScript("delete window.alert; delete window.confirm; delete window.prompt;");
         }
     }
