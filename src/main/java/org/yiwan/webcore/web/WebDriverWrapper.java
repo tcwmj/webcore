@@ -540,7 +540,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setInnerText(String text) {
-            logger.debug("try to set innertext of {} to {}", locator, text);
+            logger.debug("try to set innertext {} on {}", text, locator);
             executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
             doPostAction();
             return this;
@@ -548,7 +548,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setValue(String value) {
-            logger.debug("try to set text of {} to {}", locator, value);
+            logger.debug("try to set text {} on {}", value, locator);
             executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
             return this;
         }
@@ -643,7 +643,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setAttribute(String attribute, String value) {
-            logger.debug("try to set attribute value of {} on {} to {}", attribute, locator, value);
+            logger.debug("try to set attribute {} value {} on {}", attribute, value, locator);
             executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
             return this;
         }
@@ -1001,7 +1001,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setInnerText(String text) {
-            logger.debug("try to set innertext of {} to {}", webElement, text);
+            logger.debug("try to set innertext {} on {}", text, webElement);
             executeScript("arguments[0].innerText=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), text);
             doPostAction();
             return this;
@@ -1009,7 +1009,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setValue(String value) {
-            logger.debug("try to set text of {} to {}", webElement, value);
+            logger.debug("try to set text {} on {}", value, webElement);
             executeScript("arguments[0].value=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), value);
             return this;
         }
@@ -1092,7 +1092,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setAttribute(String attribute, String value) {
-            logger.debug("try to set attribute value of {} on {} to {}", attribute, webElement, value);
+            logger.debug("try to set attribute {} value {} on {}", attribute, value, webElement);
             executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute, value);
             return this;
         }
@@ -1190,7 +1190,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait innerText of %s not to be %s, current value is %s", locator, text, currentValue);
+                            return String.format("wait innerText not to be %s, current value is %s, on %s", text, currentValue, locator);
                         }
                     });
                 }
@@ -1209,7 +1209,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait innerText of %s contains %s, current value is %s", locator, text, currentValue);
+                            return String.format("wait innerText contains %s, current value is %s, on %s", text, currentValue, locator);
                         }
                     });
                 }
@@ -1228,7 +1228,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait innerText of %s not contains %s, current value is %s", locator, text, currentValue);
+                            return String.format("wait innerText not contains %s, current value is %s, on %s", text, currentValue, locator);
                         }
                     });
                 }
@@ -1247,7 +1247,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait innerText of %s starts with %s, current value is %s", locator, text, currentValue);
+                            return String.format("wait innerText starts with %s, current value is %s, on %s", text, currentValue, locator);
                         }
                     });
                 }
@@ -1266,7 +1266,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait innerText of %s ends with %s, current value is %s", locator, text, currentValue);
+                            return String.format("wait innerText ends with %s, current value is %s, on %s", text, currentValue, locator);
                         }
                     });
                 }
@@ -1319,7 +1319,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                 @Override
                 public String toString() {
-                    return String.format("wait absence of element located by %s", locator);
+                    return String.format("wait absence of %s", locator);
                 }
             });
         }
@@ -1342,7 +1342,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return this;
                 }
             }
-            logger.warn("wait presence of {} timed out in {} milliseconds", locator, milliseconds);
+            logger.warn("wait presence of {} in {} milliseconds", locator, milliseconds);
             return this;
         }
 
@@ -1354,7 +1354,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return this;
                 }
             }
-            logger.warn("wait absence of {} timed out in {} milliseconds", locator, milliseconds);
+            logger.warn("wait absence of {} in {} milliseconds", locator, milliseconds);
             return this;
         }
 
@@ -1366,7 +1366,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return this;
                 }
             }
-            logger.warn("wait visibility of {} timed out in {} milliseconds", locator, milliseconds);
+            logger.warn("wait visibility of {} in {} milliseconds", locator, milliseconds);
             return this;
         }
 
@@ -1378,7 +1378,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return this;
                 }
             }
-            logger.warn("wait invisibility of {} timed out in {} milliseconds", locator, milliseconds);
+            logger.warn("wait invisibility of {} in {} milliseconds", locator, milliseconds);
             return this;
         }
 
@@ -1418,7 +1418,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s to be %s, current value is %s", locator, attribute, text.isEmpty() ? "empty" : text, currentValue);
+                            return String.format("wait attribute %s value to be %s, current value is %s, on %s", attribute, text.isEmpty() ? "empty" : text, currentValue, locator);
                         }
                     });
                 }
@@ -1441,7 +1441,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s not to be %s, current value is %s", locator, attribute, text.isEmpty() ? "empty" : text, currentValue);
+                            return String.format("wait attribute %s value not to be %s, current value is %s, on %s", attribute, text.isEmpty() ? "empty" : text, currentValue, locator);
                         }
                     });
                 }
@@ -1459,7 +1459,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s contains %s, current value is %s", locator, attribute, text, currentValue);
+                            return String.format("wait attribute %s value contains %s, current value is %s, on %s", attribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1477,7 +1477,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s not contains %s, current value is %s", locator, attribute, text, currentValue);
+                            return String.format("wait attribute %s value not contains %s, current value is %s, on %s", attribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1495,7 +1495,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s starts with %s, current value is %s", locator, attribute, text, currentValue);
+                            return String.format("wait attribute %s value starts with %s, current value is %s, on %s", attribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1513,7 +1513,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s ends with %s, current value is %s", locator, attribute, text, currentValue);
+                            return String.format("wait attribute %s value ends with %s, current value is %s, on %s", attribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1535,7 +1535,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s attribute value of %s to match pattern %s, current value is %s", locator, attribute, pattern.pattern(), currentValue);
+                            return String.format("wait attribute %s value matches pattern %s, current value is %s, on %s", attribute, pattern.pattern(), currentValue, locator);
                         }
                     });
                 }
@@ -1559,7 +1559,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s to be %s, current value is %s", locator, cssAttribute, text.isEmpty() ? "empty" : text, currentValue);
+                            return String.format("wait css attribute %s value to be %s, current value is %s, on %s", cssAttribute, text.isEmpty() ? "empty" : text, currentValue, locator);
                         }
                     });
                 }
@@ -1582,7 +1582,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s not to be %s, current value is %s", locator, cssAttribute, text.isEmpty() ? "empty" : text, currentValue);
+                            return String.format("wait css attribute %s value not to be %s, current value is %s, on %s", cssAttribute, text.isEmpty() ? "empty" : text, currentValue, locator);
                         }
                     });
                 }
@@ -1600,7 +1600,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s contains %s, current value is %s", locator, cssAttribute, text, currentValue);
+                            return String.format("wait css attribute %s value contains %s, current value is %s, on %s", cssAttribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1618,7 +1618,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s not contains %s, current value is %s", locator, cssAttribute, text, currentValue);
+                            return String.format("wait css attribute %s value not contains %s, current value is %s, on %s", cssAttribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1636,7 +1636,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s starts with %s, current value is %s", locator, cssAttribute, text, currentValue);
+                            return String.format("wait css attribute %s value starts with %s, current value is %s, on %s", cssAttribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1654,7 +1654,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s ends with %s, current value is %s", locator, cssAttribute, text, currentValue);
+                            return String.format("wait css attribute %s value ends with %s, current value is %s, on %s", cssAttribute, text, currentValue, locator);
                         }
                     });
                 }
@@ -1676,7 +1676,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait %s css value of %s to match pattern %s, current value is %s", locator, cssAttribute, pattern.pattern(), currentValue);
+                            return String.format("wait css attribute %s value matches pattern %s, current value is %s, on %s", cssAttribute, pattern.pattern(), currentValue, locator);
                         }
                     });
                 }
@@ -1700,7 +1700,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait number of elements %s to be equal to %d, current value is %d", locator, number, currentValue);
+                            return String.format("wait number of elements to be equal to %d, current value is %d, located by %s", number, currentValue, locator);
                         }
                     });
                 }
@@ -1719,7 +1719,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait number of elements %s to be not equal to %d, current value is %d", locator, number, currentValue);
+                            return String.format("wait number of elements to be not equal to %d, current value is %d, located by %s", number, currentValue, locator);
                         }
                     });
                 }
@@ -1738,7 +1738,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait number of elements %s to be less than %d, current value is %d", locator, number, currentValue);
+                            return String.format("wait number of elements to be less than %d, current value is %d, located by %s", number, currentValue, locator);
                         }
                     });
                 }
@@ -1757,7 +1757,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait number of elements %s to be greater than %d, current value is %d", locator, number, currentValue);
+                            return String.format("wait number of elements to be greater than %d, current value is %d, located by %s", number, currentValue, locator);
                         }
                     });
                 }
@@ -1776,7 +1776,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait number of elements %s to be equal to or less than %d, current value is %d", locator, number, currentValue);
+                            return String.format("wait number of elements to be equal to or less than %d, current value is %d, located by %s", number, currentValue, locator);
                         }
                     });
                 }
@@ -1795,7 +1795,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait number of elements %s to be equal to or greater than %d, current value is %d", locator, number, currentValue);
+                            return String.format("wait number of elements to be equal to or greater than %d, current value is %d, located by %s", number, currentValue, locator);
                         }
                     });
                 }
@@ -2159,7 +2159,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                                 @Override
                                 public String toString() {
-                                    return String.format("wait page source to match pattern %s, current value is %s", pattern.pattern(), currentValue);
+                                    return String.format("wait page source matches pattern %s, current value is %s", pattern.pattern(), currentValue);
                                 }
                             });
                         }
@@ -2300,7 +2300,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                                 @Override
                                 public String toString() {
-                                    return String.format("wait current url to match pattern %s, current value is %s", pattern.pattern(), currentValue);
+                                    return String.format("wait current url matches pattern %s, current value is %s", pattern.pattern(), currentValue);
                                 }
                             });
                         }
