@@ -1,5 +1,7 @@
 package org.yiwan.webcore.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -11,7 +13,9 @@ import org.yiwan.webcore.test.pojo.TestEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import static java.lang.String.format;
@@ -139,14 +143,24 @@ public class PropHelper {
 
     public static String getServerInfo(String key) {
         if (SERVER_URL != null) {//for compatible with server.url
-            TestEnvironment testEnvironment = new TestEnvironment();
-            ApplicationServer applicationServer = new ApplicationServer();
-            applicationServer.setUrl(SERVER_URL);
-            DatabaseServer databaseServer = new DatabaseServer();
-            databaseServer.setDump("data/system/default.xml");
-            testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
-            testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
-            return String.format("[%s]", testEnvironment.toString());
+            String[] urls = SERVER_URL.split(","); //server url may contain several urls separated by comma
+            List<TestEnvironment> testEnvironments = new ArrayList<>();
+            for (String url : urls) {
+                TestEnvironment testEnvironment = new TestEnvironment();
+                ApplicationServer applicationServer = new ApplicationServer();
+                applicationServer.setUrl(url.trim());
+                DatabaseServer databaseServer = new DatabaseServer();
+                databaseServer.setDump("data/system/default.xml");
+                testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
+                testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
+                testEnvironments.add(testEnvironment);
+            }
+            try {
+                return (new ObjectMapper()).writeValueAsString(testEnvironments);
+            } catch (JsonProcessingException e) {
+                logger.error(e.getMessage(), e);
+                return "";
+            }
         } else {
             String url = getProperty(key);
             String serverInfo = "";
