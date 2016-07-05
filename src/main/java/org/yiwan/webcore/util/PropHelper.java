@@ -142,7 +142,7 @@ public class PropHelper {
     }
 
     public static String getServerInfo(String key) {
-        if (SERVER_URL != null) {//for compatible with server.url
+        if (SERVER_URL != null && !SERVER_URL.isEmpty()) {//for compatible with server.url
             String[] urls = SERVER_URL.split(","); //server url may contain several urls separated by comma
             List<TestEnvironment> testEnvironments = new ArrayList<>();
             for (String url : urls) {

@@ -17,7 +17,7 @@ public class PropHelperTest {
 
     @Test
     public void testGetServerInfo() {
-        System.setProperty("server.url", "http://192.168.1.1/,http://192.168.1.2/");
+//        System.setProperty("server.url", "http://192.168.1.1/,http://192.168.1.2/");
         logger.info(PropHelper.SERVER_URL);
         logger.info(PropHelper.SERVER_INFO);
     }

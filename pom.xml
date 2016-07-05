@@ -16,6 +16,7 @@
         <maven.compiler.version>3.3</maven.compiler.version>
         <maven.source.version>2.4</maven.source.version>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
+        <maven.surefire.version>2.19.1</maven.surefire.version>
         <maven.jaxb21.version>0.13.1</maven.jaxb21.version>
         <maven.jacoco.plugin.version>0.7.6.201602180812</maven.jacoco.plugin.version>
         <slf4j.version>1.7.2</slf4j.version>
@@ -32,6 +33,8 @@
         <jaxb2.basics.version>0.11.0</jaxb2.basics.version>
         <build.helper.plugin.version>1.4</build.helper.plugin.version>
         <zaproxy.clientapi.version>2.4.3</zaproxy.clientapi.version>
+        <reportng.version>1.1.4</reportng.version>
+        <guice.version>3.0</guice.version>
         <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
     </properties>
 
@@ -123,6 +126,24 @@
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
             <version>${xml.apis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.uncommons</groupId>
+            <artifactId>reportng</artifactId>
+            <version>${reportng.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -259,6 +280,51 @@
                             If not specified, then "argLine" would be used for "jar" packaging -->
                             <!--<propertyName>failsafeArgLine</propertyName>-->
                             <destFile>${project.build.directory}/result/jacoco-it.exec</destFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-unit-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <!--<forkMode>once</forkMode>-->
+                            <!--<forkCount>0</forkCount>-->
+                            <!--<argLine>-Dfile.encoding=UTF-8</argLine>-->
+                            <!--<testFailureIgnore>true</testFailureIgnore>-->
+                            <!--<encoding>UTF-8</encoding>-->
+                            <includes>
+                                <include>org/yiwan/webcore/**/*.java</include>
+                            </includes>
+                            <!--<systemProperties>-->
+                            <!--<surefire.rerunFailingTestsCount>${surefire.rerunFailingTestsCount}</surefire.rerunFailingTestsCount>-->
+                            <!--</systemProperties>-->
+                            <properties>
+                                <!-- <xmlFileName>suites/default.xml</xmlFileName> -->
+                                <property>
+                                    <name>usedefaultlisteners</name>
+                                    <value>false</value>
+                                </property>
+                                <property>
+                                    <name>listener</name>
+                                    <!--experimental optional reports org.yiwan.webcore.testng.ResultListener,org.yiwan.webcore.testng.RetryListener,org.yiwan.webcore.testng.Hook,org.yiwan.webcore.testng.HTMLReporter,org.yiwan.webcore.testng.XLSReporter -->
+                                    <value>org.uncommons.reportng.HTMLReporter,org.uncommons.reportng.JUnitXMLReporter
+                                    </value>
+                                </property>
+                            </properties>
+                            <systemPropertyVariables>
+                                <org.uncommons.reportng.title>Unit Test Report</org.uncommons.reportng.title>
+                                <org.uncommons.reportng.escape-output>false</org.uncommons.reportng.escape-output>
+                            </systemPropertyVariables>
+                            <reportsDirectory>${project.build.directory}/result/unit-test-reports</reportsDirectory>
                         </configuration>
                     </execution>
                 </executions>
