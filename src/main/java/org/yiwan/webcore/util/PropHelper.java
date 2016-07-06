@@ -143,6 +143,7 @@ public class PropHelper {
 
     public static String getServerInfo(String key) {
         if (SERVER_URL != null && !SERVER_URL.isEmpty()) {//for compatible with server.url
+            String dump = getProperty("database");
             String[] urls = SERVER_URL.split(","); //server url may contain several urls separated by comma
             List<TestEnvironment> testEnvironments = new ArrayList<>();
             for (String url : urls) {
@@ -150,7 +151,7 @@ public class PropHelper {
                 ApplicationServer applicationServer = new ApplicationServer();
                 applicationServer.setUrl(url.trim());
                 DatabaseServer databaseServer = new DatabaseServer();
-                if (getProperty("database").equals("sqlserver")) {
+                if (dump != null && dump.equals("sqlserver")) {
                     databaseServer.setDump("data/system/sqlserver.xml");
                 } else {
                     databaseServer.setDump("data/system/default.xml");
