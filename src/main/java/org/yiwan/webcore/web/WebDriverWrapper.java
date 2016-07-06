@@ -317,7 +317,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper type(CharSequence... value) {
             logger.debug("typing {} on {}", StringUtils.join(value), locator);
-            waitThat(locator).toBeVisible().sendKeys(value);
+            waitThat(locator).toBeEnabled().sendKeys(value);
             doPostAction();
             return this;
         }
@@ -325,7 +325,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper clear() {
             logger.debug("clearing value on " + locator);
-            waitThat(locator).toBeVisible().clear();
+            waitThat(locator).toBeEnabled().clear();
             doPostAction();
             return this;
         }
@@ -1280,17 +1280,21 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public WebElement toBeEnable() {
+        public WebElement toBeEnabled() {
             return wait.until(new ExpectedCondition<WebElement>() {
-                @Nullable
                 @Override
-                public WebElement apply(@Nullable WebDriver input) {
+                public WebElement apply(WebDriver driver) {
                     try {
                         WebElement element = driver.findElement(locator.by());
-                        return element.isEnabled() ? element : null;
-                    } catch (StaleElementReferenceException e) {
+                        return (element.isDisplayed() && element.isEnabled()) ? element : null;
+                    } catch (NoSuchElementException | InvalidElementStateException e) {
                         return null;
                     }
+                }
+
+                @Override
+                public String toString() {
+                    return "visibility and feasibility of element located by " + locator;
                 }
             });
         }

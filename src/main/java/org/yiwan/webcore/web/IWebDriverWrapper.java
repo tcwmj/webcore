@@ -292,7 +292,7 @@ public interface IWebDriverWrapper {
 
         WebElement toBePresent();
 
-        WebElement toBeEnable();
+        WebElement toBeEnabled();
 
         WebElement toBeClickable();
 

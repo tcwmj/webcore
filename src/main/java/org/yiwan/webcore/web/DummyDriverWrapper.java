@@ -594,7 +594,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public WebElement toBeEnable() {
+            public WebElement toBeEnabled() {
                 return null;
             }
 
@@ -775,107 +775,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
 
             @Override
             public IFluentLocatorWait nestedElements(Locator locator) {
-                return new IFluentLocatorWait() {
-                    @Override
-                    public IFluentLocatorWait toBePresentIn(long milliseconds) {
-                        return this;
-                    }
-
-                    @Override
-                    public IFluentLocatorWait toBeAbsentIn(long milliseconds) {
-                        return this;
-                    }
-
-                    @Override
-                    public IFluentLocatorWait toBeAppearedIn(long milliseconds) {
-                        return this;
-                    }
-
-                    @Override
-                    public IFluentLocatorWait toBeDisappearedIn(long milliseconds) {
-                        return this;
-                    }
-
-                    @Override
-                    public List<WebElement> toBeAllPresent() {
-                        return new ArrayList<>();
-                    }
-
-                    @Override
-                    public WebElement toBePresent() {
-                        return null;
-                    }
-
-                    @Override
-                    public WebElement toBeEnable() {
-                        return null;
-                    }
-
-                    @Override
-                    public WebElement toBeClickable() {
-                        return null;
-                    }
-
-                    @Override
-                    public WebElement toBeVisible() {
-                        return null;
-                    }
-
-                    @Override
-                    public List<WebElement> toBeAllVisible() {
-                        return null;
-                    }
-
-                    @Override
-                    public Boolean toBeAbsent() {
-                        return null;
-                    }
-
-                    @Override
-                    public Boolean toBeInvisible() {
-                        return null;
-                    }
-
-                    @Override
-                    public Boolean toBeSelected() {
-                        return null;
-                    }
-
-                    @Override
-                    public Boolean toBeDeselected() {
-                        return null;
-                    }
-
-                    @Override
-                    public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
-                        return null;
-                    }
-
-                    @Override
-                    public IFluentStringWait innerText() {
-                        return null;
-                    }
-
-                    @Override
-                    public IFluentStringWait attributeValueOf(String attribute) {
-                        return null;
-                    }
-
-                    @Override
-                    public IFluentStringWait cssValueOf(String cssAttribute) {
-                        return null;
-                    }
-
-                    @Override
-                    public IFluentNumberWait numberOfElements() {
-                        return null;
-                    }
-
-                    @Override
-                    public IFluentLocatorWait nestedElements(Locator locator) {
-                        return null;
-                    }
-                };
+                return this;
             }
         };
     }
