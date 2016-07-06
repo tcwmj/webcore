@@ -150,7 +150,11 @@ public class PropHelper {
                 ApplicationServer applicationServer = new ApplicationServer();
                 applicationServer.setUrl(url.trim());
                 DatabaseServer databaseServer = new DatabaseServer();
-                databaseServer.setDump("data/system/default.xml");
+                if (getProperty("database").equals("sqlserver")) {
+                    databaseServer.setDump("data/system/sqlserver.xml");
+                } else {
+                    databaseServer.setDump("data/system/default.xml");
+                }
                 testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
                 testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
                 testEnvironments.add(testEnvironment);
