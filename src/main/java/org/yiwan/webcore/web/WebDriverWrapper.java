@@ -34,7 +34,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public WebDriverWrapper(WebDriver driver) {
         this.driver = driver;
         this.js = (JavascriptExecutor) driver;
-        this.wait = new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL).ignoring(StaleElementReferenceException.class).ignoring(NoSuchElementException.class).ignoring(UnreachableBrowserException.class);
+        this.wait = new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(NoSuchElementException.class)
+                .ignoring(UnreachableBrowserException.class)
+                .ignoring(InvalidElementStateException.class);
     }
 
     @Override
@@ -1284,12 +1288,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return wait.until(new ExpectedCondition<WebElement>() {
                 @Override
                 public WebElement apply(WebDriver driver) {
-                    try {
-                        WebElement element = driver.findElement(locator.by());
-                        return (element.isDisplayed() && element.isEnabled()) ? element : null;
-                    } catch (NoSuchElementException | InvalidElementStateException e) {
-                        return null;
-                    }
+                    WebElement element = driver.findElement(locator.by());
+                    return (element.isDisplayed() && element.isEnabled()) ? element : null;
                 }
 
                 @Override
