@@ -154,7 +154,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) {
-        TakesScreenshot takesScreenshot = null;
+        TakesScreenshot takesScreenshot;
         if (PropHelper.REMOTE) {
             // RemoteWebDriver does not implement the TakesScreenshot class if
             // the driver does have the Capabilities to take a screenshot then
@@ -526,7 +526,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public List<String> getAllInnerTexts() {
-            List<String> texts = new ArrayList<String>();
+            List<String> texts = new ArrayList<>();
             for (WebElement element : waitThat(locator).toBeAllPresent()) {
                 texts.add(element.getText());
             }
@@ -560,7 +560,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public List<String> getAllOptionTexts() {
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             List<WebElement> options = getAllOptions();
             for (WebElement option : options) {
                 list.add(option.getText());
@@ -575,7 +575,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public List<String> getAllSelectedTexts() {
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             List<WebElement> options = getAllSelectedOptions();
             for (WebElement option : options) {
                 list.add(option.getText());
@@ -652,33 +652,28 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public long getCellRow() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
+            long ret = (long) executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
             ret++;// row index starts with zero
             return ret;
         }
 
         @Override
         public long getCellColumn() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
+            long ret = (long) executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
             ret++;// column index starts with zero
             return ret;
         }
 
         @Override
         public long getRow() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
+            long ret = (long) executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
             ret++;// row index starts with zero
             return ret;
         }
 
         @Override
         public long getRowCount() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
-            return ret;
+            return (long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
         }
 
         @Override
@@ -1021,7 +1016,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public List<String> getAllOptionTexts() {
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             List<WebElement> options = getAllOptions();
             for (WebElement option : options) {
                 list.add(option.getText());
@@ -1036,7 +1031,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public List<String> getAllSelectedTexts() {
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             List<WebElement> options = getAllSelectedOptions();
             for (WebElement option : options) {
                 list.add(option.getText());
@@ -1101,33 +1096,28 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public long getCellRow() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].parentNode.rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
+            long ret = (long) executeScript("return arguments[0].parentNode.rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
             ret++;// row index starts with zero
             return ret;
         }
 
         @Override
         public long getCellColumn() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].cellIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
+            long ret = (long) executeScript("return arguments[0].cellIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
             ret++;// column index starts with zero
             return ret;
         }
 
         @Override
         public long getRow() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
+            long ret = (long) executeScript("return arguments[0].rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
             ret++;// row index starts with zero
             return ret;
         }
 
         @Override
         public long getRowCount() {
-            long ret = -1;
-            ret = (long) executeScript("return arguments[0].rows.length", wait.until(ExpectedConditions.visibilityOf(webElement)));
-            return ret;
+            return (long) executeScript("return arguments[0].rows.length", wait.until(ExpectedConditions.visibilityOf(webElement)));
         }
 
         @Override
