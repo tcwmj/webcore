@@ -207,23 +207,23 @@ public abstract class TestBase implements ITestBase {
 	 */
     @Override
     public void createWebDriverWrapper() throws MalformedURLException {
+        Proxy realProxy;
         if (getProxyWrapper() != null) {
             if (PropHelper.ENABLE_PENETRATION_TEST) {
                 getProxyWrapper().setChainedProxy(PropHelper.ZAP_SERVER_HOST, PropHelper.ZAP_SERVER_PORT);
             }
-            webDriverWrapper = new WebDriverWrapperFactory(testCapability, ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy())).create();
+            realProxy = ClientUtil.createSeleniumProxy(getProxyWrapper().getProxy());
         } else {
             if (PropHelper.ENABLE_PENETRATION_TEST) {
-                Proxy zaproxy = new Proxy();
-                zaproxy.setProxyType(Proxy.ProxyType.MANUAL);
                 String proxyStr = String.format("%s:%d", PropHelper.ZAP_SERVER_HOST, PropHelper.ZAP_SERVER_PORT);
-                zaproxy.setHttpProxy(proxyStr);
-                zaproxy.setSslProxy(proxyStr);
-                webDriverWrapper = new WebDriverWrapperFactory(testCapability, zaproxy).create();
+                realProxy = new Proxy().setProxyType(Proxy.ProxyType.MANUAL)
+                        .setHttpProxy(proxyStr)
+                        .setSslProxy(proxyStr);
             } else {
-                webDriverWrapper = new WebDriverWrapperFactory(testCapability).create();
+                realProxy = new Proxy().setProxyType(Proxy.ProxyType.DIRECT);
             }
         }
+        webDriverWrapper = new WebDriverWrapperFactory(testCapability, realProxy).create();
     }
 
     /* (non-Javadoc)
