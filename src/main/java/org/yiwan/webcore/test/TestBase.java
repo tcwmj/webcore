@@ -22,6 +22,7 @@ import org.yiwan.webcore.bmproxy.observer.ScreenshotObserver;
 import org.yiwan.webcore.bmproxy.observer.TimestampObserver;
 import org.yiwan.webcore.bmproxy.subject.Subject;
 import org.yiwan.webcore.bmproxy.subject.TransactionSubject;
+import org.yiwan.webcore.test.pojo.ApplicationServer;
 import org.yiwan.webcore.test.pojo.TestCapability;
 import org.yiwan.webcore.test.pojo.TestEnvironment;
 import org.yiwan.webcore.util.Helper;
@@ -34,9 +35,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by Kenny Wang on 3/14/2016.
@@ -175,6 +175,17 @@ public abstract class TestBase implements ITestBase {
     public void createProxyWrapper() {
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD || PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE || PropHelper.ENABLE_HTTP_ARCHIVE || PropHelper.ENABLE_FILE_DOWNLOAD) {
             proxyWrapper = new ProxyWrapper();
+            if (PropHelper.ENABLE_WHITELIST) {
+                // This are the patterns of our sites, in real life there are more...
+                List<String> allowUrlPatterns = new ArrayList<>();
+                for (ApplicationServer applicationServer : getTestEnvironment().getApplicationServers()) {
+                    if (applicationServer.getUrl() != null) {
+                        allowUrlPatterns.add(Pattern.quote(applicationServer.getUrl()) + ".*");
+                    }
+                }
+                // All the URLs that are not from our sites are blocked and a status code of 404 is returned
+                getProxyWrapper().whitelistRequests(allowUrlPatterns, 404);
+            }
             getProxyWrapper().start();
             if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
                 subject.attach(new TimestampObserver(this));

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.Collection;
 import java.util.Set;
 
 public class ProxyWrapper {
@@ -98,5 +99,9 @@ public class ProxyWrapper {
 
     public void enableHarCaptureTypes(CaptureType... captureTypes) {
         proxy.enableHarCaptureTypes(captureTypes);
+    }
+
+    public void whitelistRequests(Collection<String> urlPatterns, int statusCode) {
+        proxy.whitelistRequests(urlPatterns, statusCode);
     }
 }
