@@ -93,7 +93,7 @@ public class PropHelper {
     public static final boolean ENABLE_TRANSACTION_SCREENSHOT_CAPTURE = Boolean.parseBoolean(getProperty("capture.transaction.screeshot.enable"));
     public static final String PHANTOMJS_CLI_ARGS = getProperty("browser.phantomjs.cli.args");
     public static final String PHANTOMJS_GHOSTDRIVER_CLI_ARGS = getProperty("browser.phantomjs.ghostdriver.cli.args");
-    public static final String TRANSACTION_TIMESTAMPS_FILE = getProperty("trasaction.timestamps.file");
+    public static final String TRANSACTION_TIMESTAMPS_FILE = getProperty("transaction.timestamps.file");
     public static final boolean ENABLE_PENETRATION_TEST = Boolean.parseBoolean(getProperty("penetration.test.enable"));
     public static final String ZAP_SERVER_HOST = getProperty("zap.server.host");
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
