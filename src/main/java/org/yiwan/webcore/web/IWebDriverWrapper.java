@@ -390,16 +390,6 @@ public interface IWebDriverWrapper {
         IWebElementWrapper click();
 
         /**
-         * click element without considering anything, it may raise unexpected exception
-         */
-        IWebElementWrapper clickSilently();
-
-        /**
-         * forced to click element even if it's not clickable, it may raise unexpected exception, please use method click as default
-         */
-        IWebElementWrapper clickForcedly();
-
-        /**
          * click an element if it's displayed, otherwise skip this action
          *
          * @return boolean

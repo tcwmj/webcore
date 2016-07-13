@@ -278,16 +278,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper clickSilently() {
-                return this;
-            }
-
-            @Override
-            public IWebElementWrapper clickForcedly() {
-                return this;
-            }
-
-            @Override
             public boolean clickSmartly() {
                 return true;
             }
