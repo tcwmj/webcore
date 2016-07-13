@@ -358,7 +358,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper check(boolean checked) {
             logger.debug("checking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
-                click();
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(WebDriver driver) {
+                        waitThat(locator).toBeClickable().click();
+                        return true;
+                    }
+                });
             }
             return this;
         }
@@ -378,7 +384,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public boolean tick(boolean checked) {
             logger.debug("ticking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
-                click();
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(WebDriver driver) {
+                        waitThat(locator).toBeClickable().click();
+                        return true;
+                    }
+                });
                 return true;
             }
             return false;
