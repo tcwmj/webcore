@@ -145,6 +145,14 @@ public class PageBase {
         return webDriverWrapper.assertThat();
     }
 
+    protected IFluentLocatorAssert validateThat(Locator locator) {
+        return webDriverWrapper.validateThat(locator);
+    }
+
+    protected IFluentAssert validateThat() {
+        return webDriverWrapper.validateThat();
+    }
+
     protected IAlertWrapper alert() {
         return webDriverWrapper.alert();
     }

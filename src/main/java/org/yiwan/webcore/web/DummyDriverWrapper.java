@@ -1125,6 +1125,21 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public IFluentLocatorAssert validateThat(Locator locator) {
+        return assertThat(locator);
+    }
+
+    @Override
+    public IFluentAssert validateThat() {
+        return assertThat();
+    }
+
+    @Override
+    public void validateAll() {
+
+    }
+
+    @Override
     public IAlertWrapper alert() {
         return new AlertWrapper();
     }

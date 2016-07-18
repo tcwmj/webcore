@@ -508,6 +508,7 @@ public abstract class TestBase implements ITestBase {
             if (getProxyWrapper() != null) {
                 getProxyWrapper().stop();
             }
+            getWebDriverWrapper().validateAll();
         }
     }
 }

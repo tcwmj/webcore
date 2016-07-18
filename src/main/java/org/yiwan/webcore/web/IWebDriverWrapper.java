@@ -129,6 +129,12 @@ public interface IWebDriverWrapper {
 
     IFluentAssert assertThat();
 
+    IFluentLocatorAssert validateThat(Locator locator);
+
+    IFluentAssert validateThat();
+
+    void validateAll();
+
     IAlertWrapper alert();
 
     interface IActionsWrapper {
