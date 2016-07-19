@@ -109,51 +109,55 @@ public class PageBase {
         return webDriverWrapper.actions();
     }
 
-    protected Locator locator(String id, String... replacements) throws Exception {
-        return LOCATOR_BEAN.locator(id, replacements);
+    protected IAlertWrapper alert() {
+        return webDriverWrapper.alert();
     }
 
-    protected IWebElementWrapper element(String id, String... replacements) throws Exception {
-        return element(LOCATOR_BEAN.locator(id, replacements));
+    protected Locator locator(String id, String... replacements) throws Exception {
+        return LOCATOR_BEAN.locator(id, replacements);
     }
 
     protected IWebElementWrapper element(Locator locator) {
         return webDriverWrapper.element(locator);
     }
 
-    protected IFluentLocatorWait waitThat(String id, String... replacements) throws Exception {
-        return waitThat(LOCATOR_BEAN.locator(id, replacements));
-    }
-
-    protected IFluentLocatorWait waitThat(Locator locator) {
-        return webDriverWrapper.waitThat(locator);
+    protected IWebElementWrapper element(String id, String... replacements) throws Exception {
+        return element(locator(id, replacements));
     }
 
     protected IFluentWait waitThat() {
         return webDriverWrapper.waitThat();
     }
 
-    protected IFluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
-        return webDriverWrapper.assertThat(LOCATOR_BEAN.locator(id, replacements));
+    protected IFluentLocatorWait waitThat(Locator locator) {
+        return webDriverWrapper.waitThat(locator);
     }
 
-    protected IFluentLocatorAssert assertThat(Locator locator) {
-        return webDriverWrapper.assertThat(locator);
+    protected IFluentLocatorWait waitThat(String id, String... replacements) throws Exception {
+        return waitThat(locator(id, replacements));
     }
 
     protected IFluentAssert assertThat() {
         return webDriverWrapper.assertThat();
     }
 
-    protected IFluentLocatorAssert validateThat(Locator locator) {
-        return webDriverWrapper.validateThat(locator);
+    protected IFluentLocatorAssert assertThat(Locator locator) {
+        return webDriverWrapper.assertThat(locator);
+    }
+
+    protected IFluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
+        return assertThat(locator(id, replacements));
     }
 
     protected IFluentAssert validateThat() {
         return webDriverWrapper.validateThat();
     }
 
-    protected IAlertWrapper alert() {
-        return webDriverWrapper.alert();
+    protected IFluentLocatorAssert validateThat(Locator locator) {
+        return webDriverWrapper.validateThat(locator);
+    }
+
+    protected IFluentLocatorAssert validateThat(String id, String... replacements) throws Exception {
+        return validateThat(locator(id, replacements));
     }
 }
