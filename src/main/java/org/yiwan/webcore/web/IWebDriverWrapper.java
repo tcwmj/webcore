@@ -252,6 +252,8 @@ public interface IWebDriverWrapper {
     interface IFluentLocatorAssert {
         AbstractListAssert<? extends AbstractListAssert, ? extends java.util.List, String> allSelectedTexts();
 
+        AbstractCharSequenceAssert<?, String> selectedText();
+
         AbstractListAssert<? extends AbstractListAssert, ? extends java.util.List, String> allOptionTexts();
 
         AbstractBooleanAssert<?> present();

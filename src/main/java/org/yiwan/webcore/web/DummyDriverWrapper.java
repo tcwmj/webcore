@@ -967,6 +967,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
+            public AbstractCharSequenceAssert<?, String> selectedText() {
+                return null;
+            }
+
+            @Override
             public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
                 return null;
             }
@@ -1021,6 +1026,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
                 return new IFluentLocatorAssert() {
                     @Override
                     public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
+                        return null;
+                    }
+
+                    @Override
+                    public AbstractCharSequenceAssert<?, String> selectedText() {
                         return null;
                     }
 

@@ -2405,6 +2405,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
+        public AbstractCharSequenceAssert<?, String> selectedText() {
+            return org.assertj.core.api.Assertions.assertThat(element(locator).getSelectedText()).as("assert %s selected text", locator);
+        }
+
+        @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getAllOptionTexts()).as("assert %s all option texts", locator);
         }
@@ -2506,57 +2511,62 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
-            return softAssertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s all selected texts", locator);
+            return softAssertions.assertThat(element(locator).getAllSelectedTexts()).as("validate %s all selected texts", locator);
+        }
+
+        @Override
+        public AbstractCharSequenceAssert<?, String> selectedText() {
+            return softAssertions.assertThat(element(locator).getSelectedText()).as("validate %s selected text", locator);
         }
 
         @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
-            return softAssertions.assertThat(element(locator).getAllOptionTexts()).as("assert %s all option texts", locator);
+            return softAssertions.assertThat(element(locator).getAllOptionTexts()).as("validate %s all option texts", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> present() {
-            return softAssertions.assertThat(element(locator).isPresent()).as("assert %s present", locator);
+            return softAssertions.assertThat(element(locator).isPresent()).as("validate %s present", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> enabled() {
-            return softAssertions.assertThat(element(locator).isEnabled()).as("assert %s enabled", locator);
+            return softAssertions.assertThat(element(locator).isEnabled()).as("validate %s enabled", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> displayed() {
-            return softAssertions.assertThat(element(locator).isDisplayed()).as("assert %s displayed", locator);
+            return softAssertions.assertThat(element(locator).isDisplayed()).as("validate %s displayed", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> selected() {
-            return softAssertions.assertThat(element(locator).isSelected()).as("assert %s selected", locator);
+            return softAssertions.assertThat(element(locator).isSelected()).as("validate %s selected", locator);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> innerText() {
-            return softAssertions.assertThat(element(locator).getInnerText()).as("assert %s innertText", locator);
+            return softAssertions.assertThat(element(locator).getInnerText()).as("validate %s innertText", locator);
         }
 
         @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
-            return softAssertions.assertThat(element(locator).getAllInnerTexts()).as("assert %s all innerTexts", locator);
+            return softAssertions.assertThat(element(locator).getAllInnerTexts()).as("validate %s all innerTexts", locator);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
-            return softAssertions.assertThat(element(locator).getAttribute(attribute)).as("assert %s attribute value of %s", locator, attribute);
+            return softAssertions.assertThat(element(locator).getAttribute(attribute)).as("validate %s attribute value of %s", locator, attribute);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
-            return softAssertions.assertThat(element(locator).getCssValue(cssAttribute)).as("assert %s css value of %s", locator, cssAttribute);
+            return softAssertions.assertThat(element(locator).getCssValue(cssAttribute)).as("validate %s css value of %s", locator, cssAttribute);
         }
 
         @Override
         public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
-            return softAssertions.assertThat(driver.findElements(locator.by()).size()).as("assert number of elements %s", locator);
+            return softAssertions.assertThat(driver.findElements(locator.by()).size()).as("validate number of elements %s", locator);
         }
 
         @Override
@@ -2571,12 +2581,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentAlertAssert() {
                 @Override
                 public AbstractBooleanAssert<?> present() {
-                    return softAssertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("assert alert present");
+                    return softAssertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("validate alert present");
                 }
 
                 @Override
                 public AbstractCharSequenceAssert<?, String> text() {
-                    return softAssertions.assertThat(WebDriverWrapper.this.alert().getText()).as("assert alert text");
+                    return softAssertions.assertThat(WebDriverWrapper.this.alert().getText()).as("validate alert text");
                 }
             };
         }
@@ -2586,17 +2596,17 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentPageAssert() {
                 @Override
                 public AbstractCharSequenceAssert<?, String> title() {
-                    return softAssertions.assertThat(getPageTitle()).as("assert page title");
+                    return softAssertions.assertThat(getPageTitle()).as("validate page title");
                 }
 
                 @Override
                 public AbstractCharSequenceAssert<?, String> source() {
-                    return softAssertions.assertThat(getPageSource()).as("assert page source");
+                    return softAssertions.assertThat(getPageSource()).as("validate page source");
                 }
 
                 @Override
                 public AbstractCharSequenceAssert<?, String> url() {
-                    return softAssertions.assertThat(getCurrentUrl()).as("assert current url");
+                    return softAssertions.assertThat(getCurrentUrl()).as("validate current url");
                 }
             };
         }
