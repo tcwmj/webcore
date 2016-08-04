@@ -11,7 +11,7 @@ import org.yiwan.webcore.web.IWebDriverWrapper.*;
 /**
  * Created by Kenny Wang on 4/2/2016.
  */
-public class PageBase {
+public class PageBase extends org.assertj.core.api.Assertions{
     private final static LocatorBean LOCATOR_BEAN = JaxbHelper.unmarshal(ClassLoader.getSystemResourceAsStream(PropHelper.LOCATORS_FILE), ClassLoader.getSystemResourceAsStream(PropHelper.LOCATOR_SCHEMA), LocatorBean.class);
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     private IWebDriverWrapper webDriverWrapper;
