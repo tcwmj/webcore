@@ -240,7 +240,7 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentDocumentWait {
-        Boolean toBeComplete();
+        Boolean toBeReady();
     }
 
     interface IFluentJQueryWait {

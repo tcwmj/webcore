@@ -783,7 +783,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IFluentDocumentWait document() {
                 return new IFluentDocumentWait() {
                     @Override
-                    public Boolean toBeComplete() {
+                    public Boolean toBeReady() {
                         return true;
                     }
                 };

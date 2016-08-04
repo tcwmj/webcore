@@ -240,7 +240,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     public IWebDriverWrapper doPostAction() {
 //            if (!WebDriverWrapper.this.alert().isPresent()) {
-        waitThat().document().toBeComplete();
+        waitThat().document().toBeReady();
         waitThat().jQuery().toBeInactive();
 //            }
         return this;
@@ -684,15 +684,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             try {
                 executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
             } catch (WebDriverException e) {
-                String eventType = null;
-                switch (event.toLowerCase()) {
-                    case "onchange":
-                        eventType = "change";
-                        break;
-                    case "onclick":
-                        eventType = "click";
-                        break;
-                }
+                String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
                 executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", waitThat(locator).toBePresent(), eventType);
             }
             doPostAction();
@@ -1148,7 +1140,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper fireEvent(String event) {
             logger.debug("firing {} on {}", event, webElement);
-            executeScript("arguments[0].fireEvent(arguments[1]);", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
+            try {
+                executeScript("arguments[0].fireEvent(arguments[1]);", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
+            } catch (WebDriverException e) {
+                String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
+                executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", wait.until(ExpectedConditions.visibilityOf(webElement)), eventType);
+            }
             doPostAction();
             return this;
         }
@@ -1902,8 +1899,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IFluentDocumentWait document() {
             return new IFluentDocumentWait() {
                 @Override
-                public Boolean toBeComplete() {
-                    logger.warn("waiting document to be complete");
+                public Boolean toBeReady() {
+                    logger.debug("waiting document to be ready");
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
@@ -1911,16 +1908,16 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         public Boolean apply(WebDriver driver) {
                             try {
                                 currentValue = (String) executeScript("return document.readyState");
-                                return currentValue.equals("complete");
+                                return currentValue.equals("interactive") || currentValue.equals("complete");
                             } catch (WebDriverException e) {
-                                logger.warn("javascript error while waiting document to be complete");
+                                logger.warn("javascript error while waiting document to be ready");
                                 return true;
                             }
                         }
 
                         @Override
                         public String toString() {
-                            return String.format("wait document to be complete, current value is %s", currentValue);
+                            return String.format("wait document to be ready, current value is %s", currentValue);
                         }
                     });
                 }
@@ -1939,7 +1936,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     }
                 }
 
-                private void injectjQuery() {
+                private void injectJQuery() {
                     executeScript(" var headID = "
                             + "document.getElementsByTagName(\"head\")[0];"
                             + "var newScript = document.createElement('script');"
@@ -1952,7 +1949,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 @Override
                 public Boolean toBeInactive() {
                     if (isJQuerySupported()) {
-                        logger.warn("waiting jQuery to be inactive");
+                        logger.debug("waiting jQuery to be inactive");
                         return wait.until(new ExpectedCondition<Boolean>() {
                             private long currentValue = 0L;
 
