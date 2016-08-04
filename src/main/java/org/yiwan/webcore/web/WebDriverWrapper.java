@@ -1903,6 +1903,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentDocumentWait() {
                 @Override
                 public Boolean toBeComplete() {
+                    logger.warn("waiting document to be complete");
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
@@ -1951,6 +1952,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 @Override
                 public Boolean toBeInactive() {
                     if (isJQuerySupported()) {
+                        logger.warn("waiting jQuery to be inactive");
                         return wait.until(new ExpectedCondition<Boolean>() {
                             private long currentValue = 0L;
 
