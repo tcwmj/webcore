@@ -1094,6 +1094,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper) {
+        return null;
+    }
+
+    @Override
     public IFluentAssert assertThat() {
         return new IFluentAssert() {
 

@@ -214,6 +214,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper) {
+        return new FluentWebElementWrapperAssert(webElementWrapper);
+    }
+
+    @Override
     public IFluentAssert assertThat() {
         return new FluentAssert();
     }
@@ -2388,6 +2393,79 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     };
                 }
             };
+        }
+    }
+
+    private class FluentWebElementWrapperAssert implements IFluentLocatorAssert {
+        private IWebElementWrapper webElementWrapper;
+
+        public FluentWebElementWrapperAssert(IWebElementWrapper webElementWrapper) {
+            this.webElementWrapper = webElementWrapper;
+        }
+
+        @Override
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAllSelectedTexts()).as("assert %s all selected texts", webElementWrapper);
+        }
+
+        @Override
+        public AbstractCharSequenceAssert<?, String> selectedText() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getSelectedText()).as("assert %s selected text", webElementWrapper);
+        }
+
+        @Override
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAllOptionTexts()).as("assert %s all option texts", webElementWrapper);
+        }
+
+        @Override
+        public AbstractBooleanAssert<?> present() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isPresent()).as("assert %s present", webElementWrapper);
+        }
+
+        @Override
+        public AbstractBooleanAssert<?> enabled() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isEnabled()).as("assert %s enabled", webElementWrapper);
+        }
+
+        @Override
+        public AbstractBooleanAssert<?> displayed() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isDisplayed()).as("assert %s displayed", webElementWrapper);
+        }
+
+        @Override
+        public AbstractBooleanAssert<?> selected() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isSelected()).as("assert %s selected", webElementWrapper);
+        }
+
+        @Override
+        public AbstractCharSequenceAssert<?, String> innerText() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getInnerText()).as("assert %s innertText", webElementWrapper);
+        }
+
+        @Override
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAllInnerTexts()).as("assert %s all innerTexts", webElementWrapper);
+        }
+
+        @Override
+        public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAttribute(attribute)).as("assert %s attribute value of %s", webElementWrapper, attribute);
+        }
+
+        @Override
+        public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getCssValue(cssAttribute)).as("assert %s css value of %s", webElementWrapper, cssAttribute);
+        }
+
+        @Override
+        public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
+            return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getNumberOfMatches()).as("assert number of elements %s", webElementWrapper);
+        }
+
+        @Override
+        public IFluentLocatorAssert nestedElements(Locator locator) {
+            return null;
         }
     }
 

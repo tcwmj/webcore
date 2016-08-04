@@ -127,6 +127,8 @@ public interface IWebDriverWrapper {
 
     IFluentLocatorAssert assertThat(Locator locator);
 
+    IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper);
+
     IFluentAssert assertThat();
 
     IFluentLocatorAssert validateThat(Locator locator);

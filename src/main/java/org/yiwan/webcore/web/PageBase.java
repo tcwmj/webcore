@@ -145,6 +145,10 @@ public class PageBase {
         return webDriverWrapper.assertThat(locator);
     }
 
+    protected IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper) {
+        return webDriverWrapper.assertThat(webElementWrapper);
+    }
+
     protected IFluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
         return assertThat(locator(id, replacements));
     }
