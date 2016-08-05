@@ -191,6 +191,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <reportOutputDirectory>\\sha-nas-a\Users\Kenny Wang\doc\${project.artifactId}</reportOutputDirectory>
+                    <destDir>${project.version}</destDir>
+                </configuration>
             </plugin>
 
             <plugin>
