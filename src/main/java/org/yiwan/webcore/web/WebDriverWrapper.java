@@ -1905,7 +1905,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentDocumentWait() {
                 @Override
                 public Boolean toBeReady() {
-                    logger.debug("waiting document to be ready");
+//                    logger.debug("waiting document to be ready");
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
@@ -1954,7 +1954,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 @Override
                 public Boolean toBeInactive() {
                     if (isJQuerySupported()) {
-                        logger.debug("waiting jQuery to be inactive");
+//                        logger.debug("waiting jQuery to be inactive");
                         return wait.until(new ExpectedCondition<Boolean>() {
                             private long currentValue = 0L;
 
