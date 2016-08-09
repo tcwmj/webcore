@@ -1473,7 +1473,25 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public WebElement toBeVisible() {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator.by()));
+// following step has bug 'IEDriver: Error determining if element is displayed #7524'
+// logged at https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/7524
+//            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator.by()));
+            return wait.until(new ExpectedCondition<WebElement>() {
+                @Override
+                public WebElement apply(WebDriver driver) {
+                    try {
+                        WebElement webElement = driver.findElement(locator.by());
+                        return webElement.isDisplayed() ? webElement : null;
+                    } catch (WebDriverException e) {
+                        return null;
+                    }
+                }
+
+                @Override
+                public String toString() {
+                    return "visibility of element located by " + locator;
+                }
+            });
         }
 
         @Override
