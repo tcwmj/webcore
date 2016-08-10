@@ -61,6 +61,10 @@ public class FileDownloadObserver extends SampleObserver {
                         setDownloadFile(response, filename, "csv");
                         downloadTextFile(contents.getTextContents());
                         completeDownload(response);
+                    } else if (contents.getContentType().contains("text/plain")) {
+                        setDownloadFile(response, filename, "unknown");
+                        downloadTextFile(contents.getTextContents());
+                        completeDownload(response);
                     } else if (contents.getContentType().contains("text/xml")) {
                         setDownloadFile(response, filename, "xml");
                         downloadTextFile(contents.getTextContents());
