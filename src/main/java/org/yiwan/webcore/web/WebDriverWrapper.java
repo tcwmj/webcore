@@ -35,7 +35,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         this.wait = new WebDriverWait(driver, PropHelper.TIMEOUT_INTERVAL, PropHelper.TIMEOUT_POLLING_INTERVAL)
                 .ignoring(StaleElementReferenceException.class)
                 .ignoring(NoSuchElementException.class)
-                .ignoring(UnreachableBrowserException.class)
+//                .ignoring(UnreachableBrowserException.class)
                 .ignoring(InvalidElementStateException.class);
         this.softAssertions = new SoftAssertions();
     }
