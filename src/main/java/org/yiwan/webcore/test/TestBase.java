@@ -398,10 +398,11 @@ public abstract class TestBase implements ITestBase {
 //            logger.warn("dismiss unexpected alert {} before taking screenshot", getWebDriverWrapper().alert().getText());
 //            getWebDriverWrapper().alert().dismiss();
 //        }
-        String saveTo = PropHelper.SCREENSHOT_FOLDER + Helper.randomize() + ".png";
+        String saveTo = Helper.randomize() + ".png";
         File screenshot = getWebDriverWrapper().getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(screenshot, new File(saveTo));
-        report(Helper.getTestReportStyle("../../../../" + saveTo, "<img src=\"../../../../" + saveTo + "\" width=\"400\" height=\"300\"/>"));
+        FileUtils.copyFile(screenshot, new File(PropHelper.RESULT_FOLDER + PropHelper.SCREENSHOT_FOLDER + saveTo));
+        String refPath = "../../" + PropHelper.SCREENSHOT_FOLDER + saveTo;
+        report(Helper.getTestReportStyle(refPath, "<img src=\"" + refPath + "\" width=\"400\" height=\"300\"/>"));
     }
 
     /* (non-Javadoc)
@@ -480,7 +481,7 @@ public abstract class TestBase implements ITestBase {
      */
     @Override
     public void setUpTest() throws Exception {
-        MDC.put(PropHelper.DISCRIMINATOR_KEY, PropHelper.LOG_FOLDER + getSuiteTestSeparator() + getScenarioId() + ".log");
+        MDC.put(PropHelper.DISCRIMINATOR_KEY, getSuiteTestSeparator() + getScenarioId() + ".log");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         setTestEnvironment(TestCaseManager.takeTestEnvironment());//if no available test environment, no need create webdriver and test data
         setRecycleTestEnvironment(true);//must be after method setTestEnvironment
@@ -488,7 +489,7 @@ public abstract class TestBase implements ITestBase {
         createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
-        report(Helper.getTestReportStyle("../../../../" + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
+        report(Helper.getTestReportStyle("../../" + PropHelper.LOG_FOLDER + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
             getTimestampWriter().write(this);
         }
