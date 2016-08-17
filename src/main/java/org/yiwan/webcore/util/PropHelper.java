@@ -102,6 +102,8 @@ public class PropHelper {
 
     public static final boolean ENABLE_XSD_VALIDATION = Boolean.parseBoolean(getProperty("xsd.validation.enable"));
     public static final int MAXIMUM_RESPONSE_BUFFER_SIZE = Integer.parseInt(getProperty("maximum.response.buffer.size"));
+    public static final int REMOTE_CONNECTION_TIMEOUT = Integer.parseInt(getProperty("timeout.remote.connection"));
+    public static final int REMOTE_SOCKET_TIMEOUT = Integer.parseInt(getProperty("timeout.remote.socket"));
 
     /**
      * load properties from external file
