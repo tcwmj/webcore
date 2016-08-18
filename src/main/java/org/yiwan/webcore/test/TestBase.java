@@ -489,6 +489,9 @@ public abstract class TestBase implements ITestBase {
         createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
         createWebDriverWrapper();//create webdriverWrapper
         getWebDriverWrapper().deleteAllCookies();
+        if (PropHelper.MAXIMIZE_BROWSER) {
+            getWebDriverWrapper().maximize();
+        }
         report(Helper.getTestReportStyle("../../" + PropHelper.LOG_FOLDER + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
             getTimestampWriter().write(this);
