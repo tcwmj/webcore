@@ -7,7 +7,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class WebDriverWrapper implements IWebDriverWrapper {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(WebDriverWrapper.class);
     private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<org.openqa.selenium.WebDriver> wait;
@@ -261,24 +260,19 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper click() {
             logger.debug("clicking {}", locator);
-            try {
-                clickWithoutPostAction();
-            } catch (UnreachableBrowserException e) {
-                logger.warn("retrying last action since we got UnreachableBrowserException", e);
-                clickWithoutPostAction();
-            }
-            doPostAction();
-            return this;
-        }
-
-        private IWebElementWrapper clickWithoutPostAction() {
-            wait.until(new ExpectedCondition<Boolean>() {
+            new WebDriverRetrieableExecution().execute(new IWebDriverAction() {
                 @Override
-                public Boolean apply(WebDriver driver) {
-                    waitThat(locator).toBeClickable().click();
-                    return true;
+                public void execute() {
+                    wait.until(new ExpectedCondition<Boolean>() {
+                        @Override
+                        public Boolean apply(WebDriver driver) {
+                            waitThat(locator).toBeClickable().click();
+                            return true;
+                        }
+                    });
                 }
             });
+            doPostAction();
             return this;
         }
 
