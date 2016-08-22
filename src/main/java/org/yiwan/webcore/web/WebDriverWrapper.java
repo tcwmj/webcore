@@ -261,6 +261,17 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper click() {
             logger.debug("clicking {}", locator);
+            try {
+                clickWithoutPostAction();
+            } catch (UnreachableBrowserException e) {
+                logger.warn("retrying last action since we got UnreachableBrowserException", e);
+                clickWithoutPostAction();
+            }
+            doPostAction();
+            return this;
+        }
+
+        private IWebElementWrapper clickWithoutPostAction() {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
@@ -268,7 +279,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return true;
                 }
             });
-            doPostAction();
             return this;
         }
 
