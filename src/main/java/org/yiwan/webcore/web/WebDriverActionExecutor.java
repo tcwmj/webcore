@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
  * Created by Kenny Wang on 8/22/2016.
  * for resolving UnreachableBrowserException by retry last operation
  */
-public class WebDriverRetrieableExecution {
-    private final Logger logger = LoggerFactory.getLogger(WebDriverRetrieableExecution.class);
+public class WebDriverActionExecutor {
+    private final Logger logger = LoggerFactory.getLogger(WebDriverActionExecutor.class);
     private static final int MAX_RETRIES = 3;
 
     private Exception exception;

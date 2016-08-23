@@ -11,7 +11,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.yiwan.webcore.locator.Locator;
 
-import java.awt.*;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -107,11 +106,6 @@ public interface IWebDriverWrapper {
      * @return screenshot
      */
     <X> X getScreenshotAs(OutputType<X> target);
-
-    /**
-     * @param key
-     */
-    IWebDriverWrapper typeKeyEvent(int key) throws AWTException;
 
     IActionsWrapper actions();
 

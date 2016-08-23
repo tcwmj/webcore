@@ -11,7 +11,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.yiwan.webcore.locator.Locator;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -125,11 +124,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) {
         return target.convertFromBase64Png("");
-    }
-
-    @Override
-    public IWebDriverWrapper typeKeyEvent(int key) throws AWTException {
-        return this;
     }
 
     @Override
