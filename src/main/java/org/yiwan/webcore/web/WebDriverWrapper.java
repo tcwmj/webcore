@@ -250,20 +250,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     public IWebDriverWrapper doPostAction() {
-//            if (!WebDriverWrapper.this.alert().isPresent()) {
-        new WebDriverActionExecutor().execute(new IWebDriverAction() {
-            @Override
-            public void execute() {
-                waitThat().document().toBeReady();
-            }
-        });
-        new WebDriverActionExecutor().execute(new IWebDriverAction() {
-            @Override
-            public void execute() {
-                waitThat().jQuery().toBeInactive();
-            }
-        });
-//            }
+        if (!alert().isPresent()) {
+            waitThat().document().toBeReady();
+            waitThat().jQuery().toBeInactive();
+        }
         return this;
     }
 
@@ -305,7 +295,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper clickByJavaScript() {
             logger.debug("clicking {} by executing javascript", locator);
-            executeScript("arguments[0].click()", waitThat(locator).toBePresent());
+            executeScript("arguments[0].click()", waitThat(locator).toBeClickable());
             doPostAction();
             return this;
         }
@@ -361,7 +351,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     });
                 }
             });
-            doPostAction();
             return this;
         }
 
@@ -380,7 +369,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     });
                 }
             });
-            doPostAction();
             return this;
         }
 
@@ -532,7 +520,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     });
                 }
             });
-            doPostAction();
             return this;
         }
 
@@ -551,7 +538,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     });
                 }
             });
-            doPostAction();
             return this;
         }
 
@@ -578,7 +564,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     });
                 }
             });
-            doPostAction();
             return this;
         }
 
@@ -597,7 +582,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     });
                 }
             });
-            doPostAction();
             return this;
         }
 
@@ -715,7 +699,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             new WebDriverActionExecutor().execute(new IWebDriverAction() {
                 @Override
                 public void execute() {
-                    new JavascriptLibrary().callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBePresent(), event);
+                    new JavascriptLibrary().callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBeVisible(), event);
                 }
             });
             doPostAction();
@@ -726,10 +710,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper fireEvent(final String event) {
             logger.debug("firing {} on {}", event, locator);
             try {
-                executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBePresent(), event);
+                executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBeVisible(), event);
             } catch (WebDriverException e) {
                 String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
-                executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", waitThat(locator).toBePresent(), eventType);
+                executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", waitThat(locator).toBeVisible(), eventType);
             }
             doPostAction();
             return this;
@@ -740,7 +724,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             logger.debug("scrolling to {}", locator);
             WebElement element = waitThat(locator).toBePresent();
             executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
-            doPostAction();
             return this;
         }
 
@@ -754,7 +737,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper scrollIntoView(final boolean bAlignToTop) {
             logger.debug("scrolling into view {}on {}", bAlignToTop ? "by aligning to top " : "", locator);
             executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
-            doPostAction();
             return this;
         }
 
@@ -851,7 +833,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper clickByJavaScript() {
-            logger.debug("clicking {} by executing javascript", webElement.getText());
+            logger.debug("clicking {} by executing javascript", webElement);
             executeScript("arguments[0].click()", wait.until(ExpectedConditions.visibilityOf(webElement)));
             doPostAction();
             return this;
@@ -905,7 +887,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper type(CharSequence... value) {
             logger.debug("typing {} on {}", StringUtils.join(value), webElement);
             wait.until(ExpectedConditions.visibilityOf(webElement)).sendKeys(value);
-            doPostAction();
             return this;
         }
 
@@ -913,7 +894,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper clear() {
             logger.debug("clearing value on " + webElement);
             wait.until(ExpectedConditions.visibilityOf(webElement)).clear();
-            doPostAction();
             return this;
         }
 
@@ -1015,7 +995,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper deselectAll() {
             logger.debug("deselecting all options on {}", webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectAll();
-            doPostAction();
             return this;
         }
 
@@ -1023,7 +1002,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper deselectByVisibleText(String text) {
             logger.debug("deselecting by visible text {} on {}", text, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByVisibleText(text);
-            doPostAction();
             return this;
         }
 
@@ -1039,7 +1017,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper deselectByIndex(int index) {
             logger.debug("deselecting by index {} on {}", index, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByIndex(index);
-            doPostAction();
             return this;
         }
 
@@ -1047,7 +1024,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper deselectByValue(String value) {
             logger.debug("deselecting by value {} on {}", value, webElement);
             new Select(wait.until(ExpectedConditions.visibilityOf(webElement))).deselectByValue(value);
-            doPostAction();
             return this;
         }
 
@@ -1102,7 +1078,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper setInnerText(String text) {
             logger.debug("setting innertext {} on {}", text, webElement);
             executeScript("arguments[0].innerText=arguments[1]", wait.until(ExpectedConditions.visibilityOf(webElement)), text);
-            doPostAction();
             return this;
         }
 
@@ -1175,14 +1150,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             logger.debug("scrolling to {}", webElement);
             WebElement element = wait.until(ExpectedConditions.visibilityOf(webElement));
             executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
-            doPostAction();
             return this;
         }
 
         @Override
         public IWebElementWrapper scrollIntoView() {
             scrollIntoView(true);
-            doPostAction();
             return this;
         }
 
@@ -1190,7 +1163,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper scrollIntoView(boolean bAlignToTop) {
             logger.debug("scrolling into view {}on {}", bAlignToTop ? "by aligning to top " : "", webElement);
             executeScript("arguments[0].scrollIntoView(arguments[1])", wait.until(ExpectedConditions.visibilityOf(webElement)), bAlignToTop);
-            doPostAction();
             return this;
         }
 
