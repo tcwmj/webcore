@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class WebDriverWrapper implements IWebDriverWrapper {
-    private final Logger logger = LoggerFactory.getLogger(WebDriverWrapper.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private WebDriver driver;
     private JavascriptExecutor js;
     private Wait<org.openqa.selenium.WebDriver> wait;
