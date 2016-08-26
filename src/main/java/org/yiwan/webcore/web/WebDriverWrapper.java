@@ -264,6 +264,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             this.locator = locator;
         }
 
+        private WebElement findElement() {
+            return driver.findElement(locator.by());
+        }
+
+        private List<WebElement> findElements() {
+            return driver.findElements(locator.by());
+        }
+
         @Override
         public IWebElementWrapper click() {
             logger.debug("clicking {}", locator);
@@ -594,30 +602,38 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public boolean isPresent() {
             try {
-                driver.findElement(locator.by());
+                findElement();
                 return true;
-            } catch (WebDriverException e) {
+            } catch (NoSuchElementException e) {
                 return false;
             }
         }
 
         @Override
         public boolean isEnabled() {
-            return driver.findElement(locator.by()).isEnabled();
+            final boolean[] ret = new boolean[1];
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    ret[0] = findElement().isEnabled();
+                    return true;
+                }
+            });
+            return ret[0];
         }
 
         @Override
         public boolean isDisplayed() {
             try {
-                return driver.findElement(locator.by()).isDisplayed();
-            } catch (WebDriverException e) {
+                return findElement().isDisplayed();
+            } catch (NoSuchElementException e) {
                 return false;
             }
         }
 
         @Override
         public boolean isSelected() {
-            return waitThat(locator).toBePresent().isSelected();
+            return waitThat(locator).toBeVisible().isSelected();
         }
 
         @Override
@@ -722,7 +738,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper scrollTo() {
             logger.debug("scrolling to {}", locator);
-            WebElement element = waitThat(locator).toBePresent();
+            WebElement element = waitThat(locator).toBeVisible();
             executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
             return this;
         }
@@ -736,7 +752,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper scrollIntoView(final boolean bAlignToTop) {
             logger.debug("scrolling into view {}on {}", bAlignToTop ? "by aligning to top " : "", locator);
-            executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBePresent(), bAlignToTop);
+            executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBeVisible(), bAlignToTop);
             return this;
         }
 
