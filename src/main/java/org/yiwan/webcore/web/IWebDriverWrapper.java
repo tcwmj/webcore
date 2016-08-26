@@ -119,15 +119,15 @@ public interface IWebDriverWrapper {
 
     IFluentWait waitThat();
 
-    IFluentLocatorAssert assertThat(Locator locator);
+    IFluentLocatorAssertion assertThat(Locator locator);
 
-    IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper);
+    IFluentLocatorAssertion assertThat(IWebElementWrapper webElementWrapper);
 
-    IFluentAssert assertThat();
+    IFluentAssertion assertThat();
 
-    IFluentLocatorAssert validateThat(Locator locator);
+    IFluentLocatorAssertion validateThat(Locator locator);
 
-    IFluentAssert validateThat();
+    IFluentAssertion validateThat();
 
     void validateAll();
 
@@ -218,7 +218,7 @@ public interface IWebDriverWrapper {
         IBrowseNavigation refresh();
     }
 
-    interface IFluentAlertAssert {
+    interface IFluentAlertAssertion {
         AbstractBooleanAssert<?> present();
 
         AbstractCharSequenceAssert<?, String> text();
@@ -229,10 +229,10 @@ public interface IWebDriverWrapper {
         IAlertWrapper toBePresent();
     }
 
-    interface IFluentAssert {
-        IFluentAlertAssert alert();
+    interface IFluentAssertion {
+        IFluentAlertAssertion alert();
 
-        IFluentPageAssert page();
+        IFluentPageAssertion page();
     }
 
     interface IFluentDocumentWait {
@@ -245,7 +245,7 @@ public interface IWebDriverWrapper {
         Boolean toBeInactive();
     }
 
-    interface IFluentLocatorAssert {
+    interface IFluentLocatorAssertion {
         AbstractListAssert<? extends AbstractListAssert, ? extends java.util.List, String> allSelectedTexts();
 
         AbstractCharSequenceAssert<?, String> selectedText();
@@ -270,7 +270,7 @@ public interface IWebDriverWrapper {
 
         AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements();
 
-        IFluentLocatorAssert nestedElements(Locator locator);
+        IFluentLocatorAssertion nestedElements(Locator locator);
     }
 
     interface IFluentLocatorWait {
@@ -340,7 +340,7 @@ public interface IWebDriverWrapper {
         Boolean equalToOrGreaterThan(int number);
     }
 
-    interface IFluentPageAssert {
+    interface IFluentPageAssertion {
         AbstractCharSequenceAssert<?, String> title();
 
         AbstractCharSequenceAssert<?, String> source();

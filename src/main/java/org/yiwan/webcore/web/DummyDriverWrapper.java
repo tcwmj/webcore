@@ -953,8 +953,8 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IFluentLocatorAssert assertThat(final Locator locator) {
-        return new IFluentLocatorAssert() {
+    public IFluentLocatorAssertion assertThat(final Locator locator) {
+        return new IFluentLocatorAssertion() {
             @Override
             public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
                 return null;
@@ -1016,8 +1016,8 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IFluentLocatorAssert nestedElements(Locator locator) {
-                return new IFluentLocatorAssert() {
+            public IFluentLocatorAssertion nestedElements(Locator locator) {
+                return new IFluentLocatorAssertion() {
                     @Override
                     public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
                         return null;
@@ -1079,7 +1079,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public IFluentLocatorAssert nestedElements(Locator locator) {
+                    public IFluentLocatorAssertion nestedElements(Locator locator) {
                         return null;
                     }
                 };
@@ -1088,17 +1088,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper) {
+    public IFluentLocatorAssertion assertThat(IWebElementWrapper webElementWrapper) {
         return null;
     }
 
     @Override
-    public IFluentAssert assertThat() {
-        return new IFluentAssert() {
+    public IFluentAssertion assertThat() {
+        return new IFluentAssertion() {
 
             @Override
-            public IFluentAlertAssert alert() {
-                return new IFluentAlertAssert() {
+            public IFluentAlertAssertion alert() {
+                return new IFluentAlertAssertion() {
                     @Override
                     public AbstractBooleanAssert<?> present() {
                         return null;
@@ -1112,8 +1112,8 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IFluentPageAssert page() {
-                return new IFluentPageAssert() {
+            public IFluentPageAssertion page() {
+                return new IFluentPageAssertion() {
                     @Override
                     public AbstractCharSequenceAssert<?, String> title() {
                         return null;
@@ -1134,12 +1134,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IFluentLocatorAssert validateThat(Locator locator) {
+    public IFluentLocatorAssertion validateThat(Locator locator) {
         return assertThat(locator);
     }
 
     @Override
-    public IFluentAssert validateThat() {
+    public IFluentAssertion validateThat() {
         return assertThat();
     }
 

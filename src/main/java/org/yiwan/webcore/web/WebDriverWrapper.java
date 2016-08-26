@@ -215,27 +215,27 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IFluentLocatorAssert assertThat(Locator locator) {
-        return new FluentLocatorAssert(locator);
+    public IFluentLocatorAssertion assertThat(Locator locator) {
+        return new FluentLocatorAssertion(locator);
     }
 
     @Override
-    public IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper) {
-        return new FluentWebElementWrapperAssert(webElementWrapper);
+    public IFluentLocatorAssertion assertThat(IWebElementWrapper webElementWrapper) {
+        return new FluentWebElementWrapperAssertion(webElementWrapper);
     }
 
     @Override
-    public IFluentAssert assertThat() {
-        return new FluentAssert();
+    public IFluentAssertion assertThat() {
+        return new FluentAssertion();
     }
 
     @Override
-    public IFluentLocatorAssert validateThat(Locator locator) {
+    public IFluentLocatorAssertion validateThat(Locator locator) {
         return new FluentLocatorValidation(locator);
     }
 
     @Override
-    public IFluentAssert validateThat() {
+    public IFluentAssertion validateThat() {
         return new FluentValidation();
     }
 
@@ -2417,10 +2417,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
     }
 
-    private class FluentWebElementWrapperAssert implements IFluentLocatorAssert {
+    private class FluentWebElementWrapperAssertion implements IFluentLocatorAssertion {
         private IWebElementWrapper webElementWrapper;
 
-        public FluentWebElementWrapperAssert(IWebElementWrapper webElementWrapper) {
+        public FluentWebElementWrapperAssertion(IWebElementWrapper webElementWrapper) {
             this.webElementWrapper = webElementWrapper;
         }
 
@@ -2485,15 +2485,15 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public IFluentLocatorAssert nestedElements(Locator locator) {
+        public IFluentLocatorAssertion nestedElements(Locator locator) {
             return null;
         }
     }
 
-    private class FluentLocatorAssert implements IFluentLocatorAssert {
+    private class FluentLocatorAssertion implements IFluentLocatorAssertion {
         private Locator locator;
 
-        public FluentLocatorAssert(Locator locator) {
+        public FluentLocatorAssertion(Locator locator) {
             this.locator = locator;
         }
 
@@ -2558,15 +2558,15 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public IFluentLocatorAssert nestedElements(Locator locator) {
+        public IFluentLocatorAssertion nestedElements(Locator locator) {
             return null;
         }
     }
 
-    private class FluentAssert implements IFluentAssert {
+    private class FluentAssertion implements IFluentAssertion {
         @Override
-        public IFluentAlertAssert alert() {
-            return new IFluentAlertAssert() {
+        public IFluentAlertAssertion alert() {
+            return new IFluentAlertAssertion() {
                 @Override
                 public AbstractBooleanAssert<?> present() {
                     return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("assert alert present");
@@ -2580,8 +2580,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public IFluentPageAssert page() {
-            return new IFluentPageAssert() {
+        public IFluentPageAssertion page() {
+            return new IFluentPageAssertion() {
                 @Override
                 public AbstractCharSequenceAssert<?, String> title() {
                     return org.assertj.core.api.Assertions.assertThat(getPageTitle()).as("assert page title");
@@ -2600,7 +2600,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
     }
 
-    private class FluentLocatorValidation implements IFluentLocatorAssert {
+    private class FluentLocatorValidation implements IFluentLocatorAssertion {
         private Locator locator;
 
         public FluentLocatorValidation(Locator locator) {
@@ -2668,15 +2668,15 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public IFluentLocatorAssert nestedElements(Locator locator) {
+        public IFluentLocatorAssertion nestedElements(Locator locator) {
             return null;
         }
     }
 
-    private class FluentValidation implements IFluentAssert {
+    private class FluentValidation implements IFluentAssertion {
         @Override
-        public IFluentAlertAssert alert() {
-            return new IFluentAlertAssert() {
+        public IFluentAlertAssertion alert() {
+            return new IFluentAlertAssertion() {
                 @Override
                 public AbstractBooleanAssert<?> present() {
                     return softAssertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("validate alert present");
@@ -2690,8 +2690,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public IFluentPageAssert page() {
-            return new IFluentPageAssert() {
+        public IFluentPageAssertion page() {
+            return new IFluentPageAssertion() {
                 @Override
                 public AbstractCharSequenceAssert<?, String> title() {
                     return softAssertions.assertThat(getPageTitle()).as("validate page title");

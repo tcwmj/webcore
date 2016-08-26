@@ -137,31 +137,31 @@ public class PageBase {
         return waitThat(locator(id, replacements));
     }
 
-    protected IFluentAssert assertThat() {
+    protected IFluentAssertion assertThat() {
         return webDriverWrapper.assertThat();
     }
 
-    protected IFluentLocatorAssert assertThat(Locator locator) {
+    protected IFluentLocatorAssertion assertThat(Locator locator) {
         return webDriverWrapper.assertThat(locator);
     }
 
-    protected IFluentLocatorAssert assertThat(IWebElementWrapper webElementWrapper) {
+    protected IFluentLocatorAssertion assertThat(IWebElementWrapper webElementWrapper) {
         return webDriverWrapper.assertThat(webElementWrapper);
     }
 
-    protected IFluentLocatorAssert assertThat(String id, String... replacements) throws Exception {
+    protected IFluentLocatorAssertion assertThat(String id, String... replacements) throws Exception {
         return assertThat(locator(id, replacements));
     }
 
-    protected IFluentAssert validateThat() {
+    protected IFluentAssertion validateThat() {
         return webDriverWrapper.validateThat();
     }
 
-    protected IFluentLocatorAssert validateThat(Locator locator) {
+    protected IFluentLocatorAssertion validateThat(Locator locator) {
         return webDriverWrapper.validateThat(locator);
     }
 
-    protected IFluentLocatorAssert validateThat(String id, String... replacements) throws Exception {
+    protected IFluentLocatorAssertion validateThat(String id, String... replacements) throws Exception {
         return validateThat(locator(id, replacements));
     }
 }
