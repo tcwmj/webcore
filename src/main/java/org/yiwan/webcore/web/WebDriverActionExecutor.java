@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WebDriverActionExecutor {
     private final Logger logger = LoggerFactory.getLogger(WebDriverActionExecutor.class);
-    private static final int MAX_RETRIES = 3;
+    private static final int MAX_RETRY_COUNT = 3;
 
     private Exception exception;
 
@@ -18,15 +18,15 @@ public class WebDriverActionExecutor {
         execute(action, 0);
     }
 
-    private void execute(IWebDriverAction action, int retries) {
-        if (retries < MAX_RETRIES) {
+    private void execute(IWebDriverAction action, int retryTimes) {
+        if (retryTimes < MAX_RETRY_COUNT) {
             try {
                 action.execute();
 //        } catch (UnreachableBrowserException | TimeoutException t) {
             } catch (UnreachableBrowserException e) {
-                logger.warn("UnreachableBrowserException occurred", e);
+                logger.warn("UnreachableBrowserException occurred, retry {}", retryTimes);
                 exception = e;
-                execute(action, ++retries);
+                execute(action, ++retryTimes);
             }
         } else {
             throw new RuntimeException(exception);

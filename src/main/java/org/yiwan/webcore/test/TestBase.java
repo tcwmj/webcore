@@ -488,7 +488,7 @@ public abstract class TestBase implements ITestBase {
         report(String.format("test environment<br/>%s", getTestEnvironment()));
         createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
         createWebDriverWrapper();//create webdriverWrapper
-//        getWebDriverWrapper().deleteAllCookies();
+        getWebDriverWrapper().deleteAllCookies();
         if (PropHelper.MAXIMIZE_BROWSER) {
             getWebDriverWrapper().maximize();
         }
