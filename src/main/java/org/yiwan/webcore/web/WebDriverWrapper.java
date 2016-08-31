@@ -107,30 +107,54 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IWebDriverWrapper switchToWindow(String nameOrHandle) {
+    public IWebDriverWrapper switchToWindow(final String nameOrHandle) {
         logger.debug("switching to window {}", nameOrHandle);
-        driver.switchTo().window(nameOrHandle);
+        wait.until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                driver.switchTo().window(nameOrHandle);
+                return true;
+            }
+        });
         return this;
     }
 
     @Override
     public IWebDriverWrapper switchToDefaultWindow() {
         logger.debug("switching to default content");
-        driver.switchTo().defaultContent();
+        wait.until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                driver.switchTo().defaultContent();
+                return true;
+            }
+        });
         return this;
     }
 
     @Override
-    public IWebDriverWrapper switchToFrame(int index) {
+    public IWebDriverWrapper switchToFrame(final int index) {
         logger.debug("switching to frame {}", index);
-        driver.switchTo().frame(index);
+        wait.until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                driver.switchTo().frame(index);
+                return true;
+            }
+        });
         return this;
     }
 
     @Override
-    public IWebDriverWrapper switchToFrame(String nameOrId) {
+    public IWebDriverWrapper switchToFrame(final String nameOrId) {
         logger.debug("switching to frame {}", nameOrId);
-        driver.switchTo().frame(nameOrId);
+        wait.until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver driver) {
+                driver.switchTo().frame(nameOrId);
+                return true;
+            }
+        });
         return this;
     }
 
