@@ -16,9 +16,6 @@ import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.*;
-import org.openqa.selenium.remote.http.HttpClient;
-import org.openqa.selenium.remote.internal.ApacheHttpClient;
-import org.openqa.selenium.remote.internal.HttpClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.test.pojo.TestCapability;
@@ -28,7 +25,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author Kenny Wang
@@ -101,9 +97,10 @@ public class WebDriverWrapperFactory {
         setRemoteBrowserCapabilities(capabilities);
 
         URL addressOfRemoteServer = new URL(PropHelper.REMOTE_ADDRESS);
-        HttpClient.Factory factory = new ApacheHttpClient.Factory(new HttpClientFactory(PropHelper.REMOTE_CONNECTION_TIMEOUT, PropHelper.REMOTE_SOCKET_TIMEOUT));
-        HttpCommandExecutor executor = new HttpCommandExecutor(Collections.<String, CommandInfo>emptyMap(), addressOfRemoteServer, factory);
-        RemoteWebDriver rwd = new RemoteWebDriver(executor, capabilities);
+        RemoteWebDriver rwd = new RemoteWebDriver(addressOfRemoteServer, capabilities);
+//        HttpClient.Factory factory = new ApacheHttpClient.Factory(new HttpClientFactory(PropHelper.REMOTE_CONNECTION_TIMEOUT, PropHelper.REMOTE_SOCKET_TIMEOUT));
+//        HttpCommandExecutor executor = new HttpCommandExecutor(Collections.<String, CommandInfo>emptyMap(), addressOfRemoteServer, factory);
+//        RemoteWebDriver rwd = new RemoteWebDriver(executor, capabilities);
 
         rwd.setFileDetector(new LocalFileDetector());
         return wrapWebDriver(rwd);
