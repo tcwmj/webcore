@@ -31,6 +31,7 @@ public class ProxyWrapper {
     }
 
     public void start() {
+        logger.debug("starting proxy");
         proxy.start();
 
 //        shutdown hook was added inside the proxy
@@ -42,6 +43,7 @@ public class ProxyWrapper {
     }
 
     public void stop() {
+        logger.debug("stopping proxy");
         if (proxy.isStarted()) {
             proxy.stop();
         }
@@ -55,7 +57,7 @@ public class ProxyWrapper {
      */
 
     public void addResponseFilter(ResponseFilter filter) {
-        logger.debug("add a new response filter to the proxy");
+        logger.debug("adding a new response filter to the proxy");
         proxy.addResponseFilter(filter);
     }
 
@@ -80,7 +82,7 @@ public class ProxyWrapper {
      * @param filter filter instance
      */
     public void addReqeustFilter(RequestFilter filter) {
-        logger.debug("add a new request filter to the proxy");
+        logger.debug("adding a new request filter to the proxy");
         proxy.addRequestFilter(filter);
     }
 
