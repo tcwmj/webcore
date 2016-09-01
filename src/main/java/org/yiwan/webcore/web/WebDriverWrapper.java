@@ -2085,7 +2085,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         @Nullable
                         @Override
                         public Boolean apply(@Nullable WebDriver input) {
-                            currentValue = driver.findElements(locator.by()).size();
+                            currentValue = element(locator).getNumberOfMatches();
                             return currentValue == number;
                         }
 
@@ -2104,7 +2104,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         @Nullable
                         @Override
                         public Boolean apply(@Nullable WebDriver input) {
-                            currentValue = driver.findElements(locator.by()).size();
+                            currentValue = element(locator).getNumberOfMatches();
                             return currentValue != number;
                         }
 
@@ -2123,7 +2123,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         @Nullable
                         @Override
                         public Boolean apply(@Nullable WebDriver input) {
-                            currentValue = driver.findElements(locator.by()).size();
+                            currentValue = element(locator).getNumberOfMatches();
                             return currentValue < number;
                         }
 
@@ -2142,7 +2142,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         @Nullable
                         @Override
                         public Boolean apply(@Nullable WebDriver input) {
-                            currentValue = driver.findElements(locator.by()).size();
+                            currentValue = element(locator).getNumberOfMatches();
                             return currentValue > number;
                         }
 
@@ -2161,7 +2161,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         @Nullable
                         @Override
                         public Boolean apply(@Nullable WebDriver input) {
-                            currentValue = driver.findElements(locator.by()).size();
+                            currentValue = element(locator).getNumberOfMatches();
                             return currentValue <= number;
                         }
 
@@ -2180,7 +2180,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                         @Nullable
                         @Override
                         public Boolean apply(@Nullable WebDriver input) {
-                            currentValue = driver.findElements(locator.by()).size();
+                            currentValue = element(locator).getNumberOfMatches();
                             return currentValue >= number;
                         }
 
@@ -2840,7 +2840,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
-            return org.assertj.core.api.Assertions.assertThat(driver.findElements(locator.by()).size()).as("assert number of elements %s", locator);
+            return org.assertj.core.api.Assertions.assertThat(element(locator).getNumberOfMatches()).as("assert number of elements %s", locator);
         }
 
         @Override
@@ -2950,7 +2950,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
-            return softAssertions.assertThat(driver.findElements(locator.by()).size()).as("validate number of elements %s", locator);
+            return softAssertions.assertThat(element(locator).getNumberOfMatches()).as("validate number of elements %s", locator);
         }
 
         @Override
