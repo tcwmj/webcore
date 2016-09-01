@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.yiwan.webcore.locator.Locator;
 
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -63,20 +64,9 @@ public interface IWebDriverWrapper {
     Set<Cookie> getCookies();
 
     /**
-     * switch to a window with a specified name or handle
-     *
-     * @param nameOrHandle
+     * switch to a window or frame
      */
-    IWebDriverWrapper switchToWindow(String nameOrHandle);
-
-    /**
-     * Switch to default content from a frame
-     */
-    IWebDriverWrapper switchToDefaultWindow();
-
-    IWebDriverWrapper switchToFrame(int index);
-
-    IWebDriverWrapper switchToFrame(String nameOrId);
+    ITargetLocatorWrapper switchTo();
 
     /**
      * get current page title
@@ -246,11 +236,11 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentLocatorAssertion {
-        AbstractListAssert<? extends AbstractListAssert, ? extends java.util.List, String> allSelectedTexts();
+        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts();
 
         AbstractCharSequenceAssert<?, String> selectedText();
 
-        AbstractListAssert<? extends AbstractListAssert, ? extends java.util.List, String> allOptionTexts();
+        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts();
 
         AbstractBooleanAssert<?> present();
 
@@ -262,7 +252,7 @@ public interface IWebDriverWrapper {
 
         AbstractCharSequenceAssert<?, String> innerText();
 
-        AbstractListAssert<? extends AbstractListAssert, ? extends java.util.List, String> allInnerTexts();
+        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts();
 
         AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute);
 
@@ -292,7 +282,7 @@ public interface IWebDriverWrapper {
 
         IFluentLocatorWait toBeDisappearedIn(long milliseconds);
 
-        java.util.List<WebElement> toBeAllPresent();
+        List<WebElement> toBeAllPresent();
 
         WebElement toBePresent();
 
@@ -302,7 +292,7 @@ public interface IWebDriverWrapper {
 
         WebElement toBeVisible();
 
-        java.util.List<WebElement> toBeAllVisible();
+        List<WebElement> toBeAllVisible();
 
         Boolean toBeAbsent();
 
@@ -602,7 +592,7 @@ public interface IWebDriverWrapper {
          *
          * @return text list
          */
-        java.util.List<String> getAllInnerTexts();
+        List<String> getAllInnerTexts();
 
         /**
          * set value on such web element by javascript, an alternative approach for method input
@@ -616,21 +606,21 @@ public interface IWebDriverWrapper {
          *
          * @return List&gt;WebElement&lt;
          */
-        java.util.List<WebElement> getAllSelectedOptions();
+        List<WebElement> getAllSelectedOptions();
 
         /**
          * get all options in web list element
          *
          * @return List&gt;WebElement&lt;
          */
-        java.util.List<WebElement> getAllOptions();
+        List<WebElement> getAllOptions();
 
         /**
          * get all options text in web list element
          *
          * @return List&gt;String&lt;
          */
-        java.util.List<String> getAllOptionTexts();
+        List<String> getAllOptionTexts();
 
         /**
          * get first selected option's text in web list element
@@ -644,7 +634,7 @@ public interface IWebDriverWrapper {
          *
          * @return List&gt;String&lt;
          */
-        java.util.List<String> getAllSelectedTexts();
+        List<String> getAllSelectedTexts();
 
         /**
          * trigger an event on such element
@@ -728,9 +718,70 @@ public interface IWebDriverWrapper {
         /**
          * get all matched web elements
          *
-         * @return List&gt;WebElement&lt;
+         * @return List&lt;{@link IWebElementWrapper}&gt;
          */
-        java.util.List<IWebElementWrapper> getAllMatchedElements();
+        List<IWebElementWrapper> getAllMatchedElements();
     }
 
+    interface ITargetLocatorWrapper {
+        /**
+         * Switches to the element that currently has focus within the document currently "switched to", or the body element if this cannot be detected.
+         *
+         * @return {@link IWebElementWrapper}
+         */
+        IWebElementWrapper activeElement();
+
+        /**
+         * Switches to the currently active modal dialog for this particular driver instance.
+         *
+         * @return {@link IAlertWrapper}
+         */
+        IAlertWrapper alert();
+
+        /**
+         * Selects either the first frame on the page, or the main document when a page contains iframes.
+         *
+         * @return {@link IWebDriverWrapper}
+         */
+        IWebDriverWrapper defaultContent();
+
+        /**
+         * Select a frame by its (zero-based) index.
+         *
+         * @param index
+         * @return {@link IWebDriverWrapper}
+         */
+        IWebDriverWrapper frame(int index);
+
+        /**
+         * Select a frame by its name or ID.
+         *
+         * @param nameOrId
+         * @return {@link IWebDriverWrapper}
+         */
+        IWebDriverWrapper frame(String nameOrId);
+
+        /**
+         * Select a frame using its previously located WebElement.
+         *
+         * @param locator
+         * @return {@link IWebDriverWrapper}
+         */
+        IWebDriverWrapper frame(Locator locator);
+
+        /**
+         * Change focus to the parent context.
+         *
+         * @return {@link IWebDriverWrapper}
+         */
+        IWebDriverWrapper parentFrame();
+
+        /**
+         * Switch the focus of future commands for this driver to the window with the given name/handle.
+         *
+         * @param nameOrHandle
+         * @return {@link IWebDriverWrapper}
+         */
+        IWebDriverWrapper window(String nameOrHandle);
+    }
 }

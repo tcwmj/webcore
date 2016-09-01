@@ -54,13 +54,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public IWebDriverWrapper close() {
         logger.debug("closing browser tab with title {}", getPageTitle());
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                driver.close();
-                return true;
-            }
-        });
+        driver.close();
         return this;
     }
 
@@ -68,7 +62,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     public IWebDriverWrapper closeAll() {
         logger.debug("closing all browser tabs");
         for (String handle : driver.getWindowHandles()) {
-            switchToWindow(handle);
+            switchTo().window(handle);
             close();
         }
         return this;
@@ -77,13 +71,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public IWebDriverWrapper quit() {
         logger.debug("quiting driver");
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                driver.quit();
-                return true;
-            }
-        });
+        driver.quit();
         return this;
     }
 
@@ -110,55 +98,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IWebDriverWrapper switchToWindow(final String nameOrHandle) {
-        logger.debug("switching to window {}", nameOrHandle);
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                driver.switchTo().window(nameOrHandle);
-                return true;
-            }
-        });
-        return this;
-    }
-
-    @Override
-    public IWebDriverWrapper switchToDefaultWindow() {
-        logger.debug("switching to default content");
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                driver.switchTo().defaultContent();
-                return true;
-            }
-        });
-        return this;
-    }
-
-    @Override
-    public IWebDriverWrapper switchToFrame(final int index) {
-        logger.debug("switching to frame {}", index);
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                driver.switchTo().frame(index);
-                return true;
-            }
-        });
-        return this;
-    }
-
-    @Override
-    public IWebDriverWrapper switchToFrame(final String nameOrId) {
-        logger.debug("switching to frame {}", nameOrId);
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                driver.switchTo().frame(nameOrId);
-                return true;
-            }
-        });
-        return this;
+    public ITargetLocatorWrapper switchTo() {
+        return new TargetLocatorWrapper();
     }
 
     @Override
@@ -207,15 +148,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
     @Override
     public Object executeScript(final String script, final Object... args) {
-        final Object[] object = new Object[1];
-        wait.until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                object[0] = js.executeScript(script, args);
-                return true;
-            }
-        });
-        return object[0];
+        return js.executeScript(script, args);
     }
 
     @Override
@@ -285,6 +218,292 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         return this;
     }
 
+    private class ActionsWrapper implements IActionsWrapper {
+        private Actions actions = new Actions(driver);
+        private StringBuffer trace = new StringBuffer("try to perform following actions:");
+
+        @Override
+        public IActionsWrapper click() {
+            trace.append("click anywhere;");
+            actions.click();
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper click(Locator locator) {
+            trace.append(String.format("click %s;", locator));
+            actions.click(waitThat(locator).toBeClickable());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper clickAndHold() {
+            trace.append("click and hold anywhere;");
+            actions.clickAndHold();
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper clickAndHold(Locator locator) {
+            trace.append(String.format("click and hold %s;", locator));
+            actions.clickAndHold(waitThat(locator).toBeClickable());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper contextClick() {
+            trace.append("context click anywhere;");
+            actions.contextClick();
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper contextClick(Locator locator) {
+            trace.append(String.format("context click %s;", locator));
+            actions.contextClick(waitThat(locator).toBeClickable());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper release() {
+            trace.append("release on anywhere;");
+            actions.release();
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper release(Locator locator) {
+            trace.append(String.format("release on %s;", locator));
+            actions.release(waitThat(locator).toBeVisible());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper doubleClick() {
+            trace.append("double click anywhere;");
+            actions.doubleClick();
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper doubleClick(Locator locator) {
+            trace.append(String.format("double click %s;", locator));
+            actions.doubleClick(waitThat(locator).toBeClickable());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper dragAndDrop(Locator source, Locator target) {
+            trace.append(String.format("drag %s and drop on %s;", source, target));
+            actions.dragAndDrop(waitThat(source).toBeClickable(), waitThat(target).toBeVisible());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper dragAndDrop(Locator source, int xOffset, int yOffset) {
+            trace.append(String.format("drag %s and drop on (%d, %d);", source, xOffset, yOffset));
+            actions.dragAndDropBy(waitThat(source).toBeClickable(), xOffset, yOffset);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper keyDown(Keys theKey) {
+            trace.append(String.format("type key %s down on anywhere;", theKey));
+            actions.keyDown(theKey);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper keyDown(Locator locator, Keys theKey) {
+            trace.append(String.format("type key %s down on %s;", theKey, locator));
+            actions.keyDown(waitThat(locator).toBeVisible(), theKey);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper keyUp(Keys theKey) {
+            trace.append(String.format("type key %s up on anywhere;", theKey));
+            actions.keyUp(theKey);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper keyUp(Locator locator, Keys theKey) {
+            trace.append(String.format("type key %s up on %s;", theKey, locator));
+            actions.keyUp(waitThat(locator).toBeVisible(), theKey);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper sendKeys(Locator locator, CharSequence... keysToSend) {
+            trace.append(String.format("send keys %s on %s;", StringUtils.join(keysToSend), locator));
+            actions.sendKeys(waitThat(locator).toBeVisible(), keysToSend);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper sendKeys(CharSequence... keysToSend) {
+            trace.append(String.format("send keys %s on anywhere;", StringUtils.join(keysToSend)));
+            actions.sendKeys(keysToSend);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper moveTo(Locator locator) {
+            trace.append(String.format("move to %s;", locator));
+            actions.moveToElement(waitThat(locator).toBeVisible());
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper moveTo(Locator locator, int xOffset, int yOffset) {
+            trace.append(String.format("move to %s offset (%d, %d);", locator, xOffset, yOffset));
+            actions.moveToElement(waitThat(locator).toBeVisible(), xOffset, yOffset);
+            return this;
+        }
+
+        @Override
+        public IActionsWrapper moveTo(int xOffset, int yOffset) {
+            trace.append(String.format("move to (%d, %d);", xOffset, yOffset));
+            actions.moveByOffset(xOffset, yOffset);
+            return this;
+        }
+
+        @Override
+        public Action build() {
+            trace.append("build all actions");
+            final Action action = actions.build();
+            return new Action() {
+                @Override
+                public void perform() {
+                    logger.debug(trace.toString());
+                    wait.until(new ExpectedCondition<Boolean>() {
+                        @Override
+                        public Boolean apply(WebDriver driver) {
+                            action.perform();
+                            return true;
+                        }
+                    });
+                    doPostAction();
+                }
+            };
+        }
+
+        @Override
+        public void perform() {
+            logger.debug(trace.toString());
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    actions.perform();
+                    return true;
+                }
+            });
+            doPostAction();
+        }
+    }
+
+    private class AlertWrapper implements IAlertWrapper {
+        private Alert alert;
+
+        public AlertWrapper() {
+        }
+
+        public AlertWrapper(Alert alert) {
+            this.alert = alert;
+        }
+
+        @Override
+        public void dismiss() {
+            logger.debug("dismissing alert {}", getText());
+            if (alert != null) {
+                alert.dismiss();
+            } else {
+                waitThat().alert().toBePresent().dismiss();
+            }
+        }
+
+        @Override
+        public void accept() {
+            logger.debug("accepting alert {}", getText());
+            if (alert != null) {
+                alert.accept();
+            } else {
+                waitThat().alert().toBePresent().accept();
+            }
+        }
+
+        @Override
+        public String getText() {
+            if (alert != null) {
+                return alert.getText();
+            } else {
+                return waitThat().alert().toBePresent().getText();
+            }
+        }
+
+        @Override
+        public boolean isPresent() {
+            try {
+                driver.switchTo().alert();
+                return true;
+            } catch (WebDriverException e) {
+                return false;
+            }
+        }
+
+        @Override
+        public void disable() {
+            disable(true);
+        }
+
+        @Override
+        public void disable(boolean accept) {
+            logger.debug("disabling javascript alert by {}ing all of them", accept ? "accept" : "dismiss");
+            executeScript(String.format("window.alert = function(msg) {}; window.confirm = function(msg) { return %b; }; window.prompt = function(msg) { return %b; };", accept, accept));
+        }
+
+        @Override
+        public void enable() {
+            logger.debug("enabling javascript alert");
+            executeScript("delete window.alert; delete window.confirm; delete window.prompt;");
+        }
+    }
+
+    private class BrowseNavigation implements IBrowseNavigation {
+        @Override
+        public IBrowseNavigation to(final String url) {
+            logger.debug("navigating to url {}", url);
+            driver.navigate().to(url);
+            doPostAction();
+            return this;
+        }
+
+        @Override
+        public IBrowseNavigation forward() {
+            logger.debug("navigating forward");
+            driver.navigate().forward();
+            doPostAction();
+            return this;
+        }
+
+        @Override
+        public IBrowseNavigation backward() {
+            logger.debug("navigating back");
+            driver.navigate().back();
+            doPostAction();
+            return this;
+        }
+
+        @Override
+        public IBrowseNavigation refresh() {
+            logger.debug("refreshing page");
+            driver.navigate().refresh();
+            doPostAction();
+            return this;
+        }
+    }
+
     private class WebLocatorWrapper implements IWebElementWrapper {
         private Locator locator;
 
@@ -306,7 +525,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    waitThat(locator).toBeClickable().click();
+                    findElement().click();
                     return true;
                 }
             });
@@ -373,7 +592,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    waitThat(locator).toBeEnabled().sendKeys(value);
+                    findElement().sendKeys(value);
                     return true;
                 }
             });
@@ -386,7 +605,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    waitThat(locator).toBeEnabled().clear();
+                    findElement().clear();
                     return true;
                 }
             });
@@ -467,7 +686,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).selectByVisibleText(text);
+                    new Select(findElement()).selectByVisibleText(text);
                     return true;
                 }
             });
@@ -489,7 +708,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).selectByIndex(index);
+                    new Select(findElement()).selectByIndex(index);
                     return true;
                 }
             });
@@ -503,7 +722,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).selectByValue(value);
+                    new Select(findElement()).selectByValue(value);
                     return true;
                 }
             });
@@ -517,7 +736,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).deselectAll();
+                    new Select(findElement()).deselectAll();
                     return true;
                 }
             });
@@ -530,7 +749,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).deselectByVisibleText(text);
+                    new Select(findElement()).deselectByVisibleText(text);
                     return true;
                 }
             });
@@ -551,7 +770,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).deselectByIndex(index);
+                    new Select(findElement()).deselectByIndex(index);
                     return true;
                 }
             });
@@ -564,7 +783,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
-                    new Select(waitThat(locator).toBeVisible()).deselectByValue(value);
+                    new Select(findElement()).deselectByValue(value);
                     return true;
                 }
             });
@@ -582,7 +801,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             try {
                 findElement();
                 return true;
-            } catch (NoSuchElementException e) {
+            } catch (WebDriverException e) {
                 return false;
             }
         }
@@ -604,7 +823,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public boolean isDisplayed() {
             try {
                 return findElement().isDisplayed();
-            } catch (NoSuchElementException e) {
+            } catch (WebDriverException e) {
                 return false;
             }
         }
@@ -776,7 +995,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebDriverWrapper switchTo() {
-            logger.debug("switching to frame {}", locator);
+            logger.debug("switching to {}", locator);
             return waitThat(locator).frameToBeAvailableAndSwitchToIt();
         }
 
@@ -1172,22 +1391,19 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public long getCellRow() {
             long ret = (long) executeScript("return arguments[0].parentNode.rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
-            ret++;// row index starts with zero
-            return ret;
+            return ++ret;// row index starts with zero
         }
 
         @Override
         public long getCellColumn() {
             long ret = (long) executeScript("return arguments[0].cellIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
-            ret++;// column index starts with zero
-            return ret;
+            return ++ret;// column index starts with zero
         }
 
         @Override
         public long getRow() {
             long ret = (long) executeScript("return arguments[0].rowIndex", wait.until(ExpectedConditions.visibilityOf(webElement)));
-            ret++;// row index starts with zero
-            return ret;
+            return ++ret;// row index starts with zero
         }
 
         @Override
@@ -1197,9 +1413,9 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebDriverWrapper switchTo() {
-            logger.debug("switching to frame {}", webElement);
+            logger.debug("switching to {}", webElement);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(webElement));
-            return null;
+            return WebDriverWrapper.this;
         }
 
         @Override
@@ -1477,7 +1693,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebDriverWrapper frameToBeAvailableAndSwitchToIt() {
-            return new WebDriverWrapper(wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator.by())));
+            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(locator.by()));
+            return WebDriverWrapper.this;
         }
 
         @Override
@@ -2683,307 +2900,59 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
     }
 
-    private class BrowseNavigation implements IBrowseNavigation {
+    private class TargetLocatorWrapper implements ITargetLocatorWrapper {
         @Override
-        public IBrowseNavigation to(final String url) {
-            logger.debug("navigating to url {}", url);
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver driver) {
-                    driver.navigate().to(url);
-                    return true;
-                }
-            });
-            doPostAction();
-            return this;
+        public IWebElementWrapper activeElement() {
+            logger.debug("switching to active element");
+            return element(driver.switchTo().activeElement());
         }
 
         @Override
-        public IBrowseNavigation forward() {
-            logger.debug("navigating forward");
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver driver) {
-                    driver.navigate().forward();
-                    return true;
-                }
-            });
-            doPostAction();
-            return this;
+        public IAlertWrapper alert() {
+            logger.debug("switching to active modal dialog");
+            return new AlertWrapper(driver.switchTo().alert());
         }
 
         @Override
-        public IBrowseNavigation backward() {
-            logger.debug("navigating back");
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver driver) {
-                    driver.navigate().back();
-                    return true;
-                }
-            });
-            doPostAction();
-            return this;
+        public IWebDriverWrapper defaultContent() {
+            logger.debug("switching to default content");
+            driver.switchTo().defaultContent();
+            return WebDriverWrapper.this;
         }
 
         @Override
-        public IBrowseNavigation refresh() {
-            logger.debug("refreshing page");
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver driver) {
-                    driver.navigate().refresh();
-                    return true;
-                }
-            });
-            doPostAction();
-            return this;
-        }
-    }
-
-    private class ActionsWrapper implements IActionsWrapper {
-        private Actions actions = new Actions(driver);
-        private StringBuffer trace = new StringBuffer("try to perform following actions:");
-
-        @Override
-        public IActionsWrapper click() {
-            trace.append("click anywhere;");
-            actions.click();
-            return this;
+        public IWebDriverWrapper frame(int index) {
+            logger.debug("switching to frame {}", index);
+            driver.switchTo().frame(index);
+            return WebDriverWrapper.this;
         }
 
         @Override
-        public IActionsWrapper click(Locator locator) {
-            trace.append(String.format("click %s;", locator));
-            actions.click(waitThat(locator).toBeClickable());
-            return this;
+        public IWebDriverWrapper frame(String nameOrId) {
+            logger.debug("switching to frame {}", nameOrId);
+            driver.switchTo().frame(nameOrId);
+            return WebDriverWrapper.this;
         }
 
         @Override
-        public IActionsWrapper clickAndHold() {
-            trace.append("click and hold anywhere;");
-            actions.clickAndHold();
-            return this;
+        public IWebDriverWrapper frame(Locator locator) {
+            logger.debug("switching to frame {}", locator);
+            driver.switchTo().frame(driver.findElement(locator.by()));
+            return WebDriverWrapper.this;
         }
 
         @Override
-        public IActionsWrapper clickAndHold(Locator locator) {
-            trace.append(String.format("click and hold %s;", locator));
-            actions.clickAndHold(waitThat(locator).toBeClickable());
-            return this;
+        public IWebDriverWrapper parentFrame() {
+            logger.debug("switching to parent frame");
+            driver.switchTo().parentFrame();
+            return WebDriverWrapper.this;
         }
 
         @Override
-        public IActionsWrapper contextClick() {
-            trace.append("context click anywhere;");
-            actions.contextClick();
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper contextClick(Locator locator) {
-            trace.append(String.format("context click %s;", locator));
-            actions.contextClick(waitThat(locator).toBeClickable());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper release() {
-            trace.append("release on anywhere;");
-            actions.release();
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper release(Locator locator) {
-            trace.append(String.format("release on %s;", locator));
-            actions.release(waitThat(locator).toBeVisible());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper doubleClick() {
-            trace.append("double click anywhere;");
-            actions.doubleClick();
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper doubleClick(Locator locator) {
-            trace.append(String.format("double click %s;", locator));
-            actions.doubleClick(waitThat(locator).toBeClickable());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper dragAndDrop(Locator source, Locator target) {
-            trace.append(String.format("drag %s and drop on %s;", source, target));
-            actions.dragAndDrop(waitThat(source).toBeClickable(), waitThat(target).toBeVisible());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper dragAndDrop(Locator source, int xOffset, int yOffset) {
-            trace.append(String.format("drag %s and drop on (%d, %d);", source, xOffset, yOffset));
-            actions.dragAndDropBy(waitThat(source).toBeClickable(), xOffset, yOffset);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper keyDown(Keys theKey) {
-            trace.append(String.format("type key %s down on anywhere;", theKey));
-            actions.keyDown(theKey);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper keyDown(Locator locator, Keys theKey) {
-            trace.append(String.format("type key %s down on %s;", theKey, locator));
-            actions.keyDown(waitThat(locator).toBeVisible(), theKey);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper keyUp(Keys theKey) {
-            trace.append(String.format("type key %s up on anywhere;", theKey));
-            actions.keyUp(theKey);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper keyUp(Locator locator, Keys theKey) {
-            trace.append(String.format("type key %s up on %s;", theKey, locator));
-            actions.keyUp(waitThat(locator).toBeVisible(), theKey);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper sendKeys(Locator locator, CharSequence... keysToSend) {
-            trace.append(String.format("send keys %s on %s;", StringUtils.join(keysToSend), locator));
-            actions.sendKeys(waitThat(locator).toBeVisible(), keysToSend);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper sendKeys(CharSequence... keysToSend) {
-            trace.append(String.format("send keys %s on anywhere;", StringUtils.join(keysToSend)));
-            actions.sendKeys(keysToSend);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper moveTo(Locator locator) {
-            trace.append(String.format("move to %s;", locator));
-            actions.moveToElement(waitThat(locator).toBeVisible());
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper moveTo(Locator locator, int xOffset, int yOffset) {
-            trace.append(String.format("move to %s offset (%d, %d);", locator, xOffset, yOffset));
-            actions.moveToElement(waitThat(locator).toBeVisible(), xOffset, yOffset);
-            return this;
-        }
-
-        @Override
-        public IActionsWrapper moveTo(int xOffset, int yOffset) {
-            trace.append(String.format("move to (%d, %d);", xOffset, yOffset));
-            actions.moveByOffset(xOffset, yOffset);
-            return this;
-        }
-
-        @Override
-        public Action build() {
-            trace.append("build all actions");
-            final Action action = actions.build();
-            return new Action() {
-                @Override
-                public void perform() {
-                    logger.debug(trace.toString());
-                    action.perform();
-                    doPostAction();
-                }
-            };
-        }
-
-        @Override
-        public void perform() {
-            logger.debug(trace.toString());
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver driver) {
-                    actions.perform();
-                    return true;
-                }
-            });
-            doPostAction();
-        }
-    }
-
-    private class AlertWrapper implements IAlertWrapper {
-        private Alert alert;
-
-        public AlertWrapper() {
-        }
-
-        public AlertWrapper(Alert alert) {
-            this.alert = alert;
-        }
-
-        @Override
-        public void dismiss() {
-            logger.debug("dismissing alert {}", getText());
-            if (alert != null) {
-                alert.dismiss();
-            } else {
-                wait.until(ExpectedConditions.alertIsPresent()).dismiss();
-            }
-        }
-
-        @Override
-        public void accept() {
-            logger.debug("accepting alert {}", getText());
-            if (alert != null) {
-                alert.accept();
-            } else {
-                wait.until(ExpectedConditions.alertIsPresent()).accept();
-            }
-        }
-
-        @Override
-        public String getText() {
-            if (alert != null) {
-                return alert.getText();
-            } else {
-                return wait.until(ExpectedConditions.alertIsPresent()).getText();
-            }
-        }
-
-        @Override
-        public boolean isPresent() {
-            try {
-                driver.switchTo().alert();
-                return true;
-            } catch (WebDriverException e) {
-                return false;
-            }
-        }
-
-        @Override
-        public void disable() {
-            disable(true);
-        }
-
-        @Override
-        public void disable(boolean accept) {
-            logger.debug("disabling javascript alert by {}ing all of them", accept ? "accept" : "dismiss");
-            executeScript(String.format("window.alert = function(msg) {}; window.confirm = function(msg) { return %b; }; window.prompt = function(msg) { return %b; };", accept, accept));
-        }
-
-        @Override
-        public void enable() {
-            logger.debug("enabling javascript alert");
-            executeScript("delete window.alert; delete window.confirm; delete window.prompt;");
+        public IWebDriverWrapper window(String nameOrHandle) {
+            logger.debug("switching to window {}", nameOrHandle);
+            driver.switchTo().window(nameOrHandle);
+            return WebDriverWrapper.this;
         }
     }
 }

@@ -47,28 +47,10 @@ public class PageBase {
     }
 
     /**
-     * switch to a window with a specified name or handle
-     *
-     * @param nameOrHandle
+     * Switch to a window or frame
      */
-    protected IWebDriverWrapper switchToWindow(String nameOrHandle) {
-        return webDriverWrapper.switchToWindow(nameOrHandle);
-    }
-
-    /**
-     * Switch to default content from a frame
-     */
-    protected IWebDriverWrapper switchToDefaultWindow() {
-        return webDriverWrapper.switchToDefaultWindow();
-    }
-
-
-    protected IWebDriverWrapper switchToFrame(int index) {
-        return webDriverWrapper.switchToFrame(index);
-    }
-
-    protected IWebDriverWrapper switchToFrame(String nameOrId) {
-        return webDriverWrapper.switchToFrame(nameOrId);
+    protected IWebDriverWrapper.ITargetLocatorWrapper switchTo() {
+        return webDriverWrapper.switchTo();
     }
 
     /**

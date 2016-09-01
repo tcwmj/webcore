@@ -87,23 +87,48 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public IWebDriverWrapper switchToWindow(String nameOrHandle) {
-        return this;
-    }
+    public ITargetLocatorWrapper switchTo() {
+        return new ITargetLocatorWrapper() {
+            @Override
+            public IWebElementWrapper activeElement() {
+                return null;
+            }
 
-    @Override
-    public IWebDriverWrapper switchToDefaultWindow() {
-        return this;
-    }
+            @Override
+            public IAlertWrapper alert() {
+                return null;
+            }
 
-    @Override
-    public IWebDriverWrapper switchToFrame(int index) {
-        return this;
-    }
+            @Override
+            public IWebDriverWrapper defaultContent() {
+                return DummyDriverWrapper.this;
+            }
 
-    @Override
-    public IWebDriverWrapper switchToFrame(String nameOrId) {
-        return this;
+            @Override
+            public IWebDriverWrapper frame(int index) {
+                return DummyDriverWrapper.this;
+            }
+
+            @Override
+            public IWebDriverWrapper frame(String nameOrId) {
+                return DummyDriverWrapper.this;
+            }
+
+            @Override
+            public IWebDriverWrapper frame(Locator locator) {
+                return DummyDriverWrapper.this;
+            }
+
+            @Override
+            public IWebDriverWrapper parentFrame() {
+                return DummyDriverWrapper.this;
+            }
+
+            @Override
+            public IWebDriverWrapper window(String nameOrHandle) {
+                return DummyDriverWrapper.this;
+            }
+        };
     }
 
     @Override
