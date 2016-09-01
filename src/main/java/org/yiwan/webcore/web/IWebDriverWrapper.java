@@ -119,6 +119,9 @@ public interface IWebDriverWrapper {
 
     IFluentAssertion validateThat();
 
+    /**
+     * validationAll must be presented at the end of test when invoking validateThat
+     */
     void validateAll();
 
     IAlertWrapper alert();

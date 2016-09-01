@@ -545,7 +545,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper clickByJavaScript() {
             logger.debug("clicking {} by executing javascript", locator);
-            executeScript("arguments[0].click()", waitThat(locator).toBeClickable());
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    executeScript("arguments[0].click()", findElement());
+                    return true;
+                }
+            });
             doPostAction();
             return this;
         }
@@ -637,12 +643,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public boolean isChecked() {
-//                String checked = getAttribute("checked");
-//                if (checked == null || !checked.toLowerCase().equals("true")) {
-//                    return false;
-//                } else {
-//                    return true;
-//                }
             return isSelected();
         }
 
@@ -842,25 +842,40 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public String getAttribute(String attribute) {
-            return waitThat(locator).toBePresent().getAttribute(attribute);
+        public String getAttribute(final String attribute) {
+            return wait.until(new ExpectedCondition<String>() {
+                @Override
+                public String apply(WebDriver driver) {
+                    return findElement().getAttribute(attribute);
+                }
+            });
         }
 
         @Override
-        public String getCssValue(String attribute) {
-            return waitThat(locator).toBePresent().getCssValue(attribute);
+        public String getCssValue(final String attribute) {
+            return wait.until(new ExpectedCondition<String>() {
+                @Override
+                public String apply(WebDriver driver) {
+                    return findElement().getCssValue(attribute);
+                }
+            });
         }
 
         @Override
         public String getInnerText() {
-            return waitThat(locator).toBeVisible().getText();
+            return wait.until(new ExpectedCondition<String>() {
+                @Override
+                public String apply(WebDriver driver) {
+                    return findElement().getText();
+                }
+            });
         }
 
         @Override
         public List<String> getAllInnerTexts() {
             List<String> texts = new ArrayList<>();
-            for (WebElement element : waitThat(locator).toBeAllPresent()) {
-                texts.add(element.getText());
+            for (WebElement webElement : waitThat(locator).toBeAllVisible()) {
+                texts.add(element(webElement).getInnerText());
             }
             return texts;
         }
@@ -868,48 +883,68 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper setInnerText(final String text) {
             logger.debug("setting innertext {} on {}", text, locator);
-            executeScript("arguments[0].innerText=arguments[1]", waitThat(locator).toBePresent(), text);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    executeScript("arguments[0].innerText=arguments[1]", findElement(), text);
+                    return true;
+                }
+            });
             return this;
         }
 
         @Override
         public IWebElementWrapper setValue(final String value) {
             logger.debug("setting text {} on {}", value, locator);
-            executeScript("arguments[0].value=arguments[1]", waitThat(locator).toBePresent(), value);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    executeScript("arguments[0].value=arguments[1]", findElement(), value);
+                    return true;
+                }
+            });
             return this;
         }
 
         @Override
         public List<WebElement> getAllSelectedOptions() {
-            return new Select(waitThat(locator).toBeVisible()).getAllSelectedOptions();
+            return wait.until(new ExpectedCondition<List<WebElement>>() {
+                @Override
+                public List<WebElement> apply(WebDriver driver) {
+                    return new Select(findElement()).getAllSelectedOptions();
+                }
+            });
         }
 
         @Override
         public List<WebElement> getAllOptions() {
-            return new Select(waitThat(locator).toBeVisible()).getOptions();
+            return wait.until(new ExpectedCondition<List<WebElement>>() {
+                @Override
+                public List<WebElement> apply(WebDriver driver) {
+                    return new Select(findElement()).getOptions();
+                }
+            });
         }
 
         @Override
         public List<String> getAllOptionTexts() {
             List<String> list = new ArrayList<>();
-            List<WebElement> options = getAllOptions();
-            for (WebElement option : options) {
-                list.add(option.getText());
+            for (WebElement option : getAllOptions()) {
+                list.add(element(option).getInnerText());
             }
             return list;
         }
 
         @Override
         public String getSelectedText() {
-            return getAllSelectedOptions().get(0).getText();
+            return getAllSelectedTexts().get(0);
         }
 
         @Override
         public List<String> getAllSelectedTexts() {
             List<String> list = new ArrayList<>();
-            List<WebElement> options = getAllSelectedOptions();
-            for (WebElement option : options) {
-                list.add(option.getText());
+            for (WebElement option : getAllSelectedOptions()) {
+                list.add(element(option).getInnerText());
             }
             return list;
         }
@@ -917,7 +952,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper triggerEvent(final String event) {
             logger.debug("triggering {} on {}", event, locator);
-            new JavascriptLibrary().callEmbeddedSelenium(driver, "triggerEvent", waitThat(locator).toBeVisible(), event);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    new JavascriptLibrary().callEmbeddedSelenium(driver, "triggerEvent", findElement(), event);
+                    return true;
+                }
+            });
             doPostAction();
             return this;
         }
@@ -926,10 +967,22 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper fireEvent(final String event) {
             logger.debug("firing {} on {}", event, locator);
             try {
-                executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBeVisible(), event);
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(WebDriver driver) {
+                        executeScript("arguments[0].fireEvent(arguments[1]);", findElement(), event);//ie version < 9
+                        return true;
+                    }
+                });
             } catch (WebDriverException e) {
-                String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
-                executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", waitThat(locator).toBeVisible(), eventType);
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(WebDriver driver) {
+                        String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
+                        executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", findElement(), eventType);
+                        return true;
+                    }
+                });
             }
             doPostAction();
             return this;
@@ -938,8 +991,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper scrollTo() {
             logger.debug("scrolling to {}", locator);
-            WebElement element = waitThat(locator).toBeVisible();
-            executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    WebElement element = findElement();
+                    executeScript("window.scrollTo(arguments[0],arguments[1])", element.getLocation().x, element.getLocation().y);
+                    return true;
+                }
+            });
             return this;
         }
 
@@ -952,45 +1011,83 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebElementWrapper scrollIntoView(final boolean bAlignToTop) {
             logger.debug("scrolling into view {}on {}", bAlignToTop ? "by aligning to top " : "", locator);
-            executeScript("arguments[0].scrollIntoView(arguments[1])", waitThat(locator).toBeVisible(), bAlignToTop);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    executeScript("arguments[0].scrollIntoView(arguments[1])", findElement(), bAlignToTop);
+                    return true;
+                }
+            });
             return this;
         }
 
         @Override
         public IWebElementWrapper setAttribute(final String attribute, final String value) {
             logger.debug("setting attribute {} value {} on {}", attribute, value, locator);
-            executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", waitThat(locator).toBePresent(), attribute, value);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", findElement(), attribute, value);
+                    return true;
+                }
+            });
             return this;
         }
 
         @Override
         public IWebElementWrapper removeAttribute(final String attribute) {
             logger.debug("removing attribute {} on {}", attribute, locator);
-            executeScript("arguments[0].removeAttribute(arguments[1])", waitThat(locator).toBePresent(), attribute);
+            wait.until(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    executeScript("arguments[0].removeAttribute(arguments[1])", findElement(), attribute);
+                    return true;
+                }
+            });
             return this;
         }
 
         @Override
         public long getCellRow() {
-            long ret = (long) executeScript("return arguments[0].parentNode.rowIndex", waitThat(locator).toBePresent());
-            return ++ret;// row index starts with zero
+            return wait.until(new ExpectedCondition<Long>() {
+                @Override
+                public Long apply(WebDriver driver) {
+                    long ret = (long) executeScript("return arguments[0].parentNode.rowIndex", findElement());
+                    return ++ret;// row index starts with zero
+                }
+            });
         }
 
         @Override
         public long getCellColumn() {
-            long ret = (long) executeScript("return arguments[0].cellIndex", waitThat(locator).toBePresent());
-            return ++ret;// column index starts with zero
+            return wait.until(new ExpectedCondition<Long>() {
+                @Override
+                public Long apply(WebDriver driver) {
+                    long ret = (long) executeScript("return arguments[0].cellIndex", findElement());
+                    return ++ret;// column index starts with zero
+                }
+            });
         }
 
         @Override
         public long getRow() {
-            long ret = (long) executeScript("return arguments[0].rowIndex", waitThat(locator).toBePresent());
-            return ++ret;// row index starts with zero
+            return wait.until(new ExpectedCondition<Long>() {
+                @Override
+                public Long apply(WebDriver driver) {
+                    long ret = (long) executeScript("return arguments[0].rowIndex", findElement());
+                    return ++ret;// row index starts with zero
+                }
+            });
         }
 
         @Override
         public long getRowCount() {
-            return (long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
+            return wait.until(new ExpectedCondition<Long>() {
+                @Override
+                public Long apply(WebDriver driver) {
+                    return (Long) executeScript("return arguments[0].rows.length", waitThat(locator).toBePresent());
+                }
+            });
         }
 
         @Override
@@ -1001,14 +1098,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public int getNumberOfMatches() {
-            return waitThat(locator).toBeAllPresent().size();
+            return waitThat(locator).toBeAllVisible().size();
         }
 
         @Override
         public List<IWebElementWrapper> getAllMatchedElements() {
-            List<WebElement> webElements = waitThat(locator).toBeAllPresent();
             List<IWebElementWrapper> webElementWrappers = new ArrayList<>();
-            for (WebElement webElement : webElements) {
+            for (WebElement webElement : waitThat(locator).toBeAllVisible()) {
                 webElementWrappers.add(element(webElement));
             }
             return webElementWrappers;
@@ -1318,7 +1414,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public String getSelectedText() {
-            return getAllSelectedOptions().get(0).getText();
+            return getAllSelectedTexts().get(0);
         }
 
         @Override
@@ -2126,7 +2222,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                                 currentValue = (String) executeScript("return document.readyState");
                                 return currentValue.equals("interactive") || currentValue.equals("complete");
                             } catch (WebDriverException e) {
-                                logger.warn("javascript error while waiting document to be ready");
+                                logger.warn("javascript error while waiting document to be ready", e);
                                 return true;
                             }
                         }
@@ -2175,7 +2271,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                                     currentValue = (long) executeScript("return jQuery.active");
                                     return 0L == currentValue;
                                 } catch (WebDriverException e) {
-                                    logger.warn("javascript error while waiting jQuery to be inactive");
+                                    logger.warn("javascript error while waiting jQuery to be inactive", e);
                                     return true;
                                 }
                             }
