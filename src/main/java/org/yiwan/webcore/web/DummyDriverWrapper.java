@@ -802,8 +802,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IFluentDocumentWait document() {
                 return new IFluentDocumentWait() {
                     @Override
-                    public Boolean toBeReady() {
-                        return true;
+                    public void toBeReady() {
                     }
                 };
             }
@@ -817,8 +816,7 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
                     }
 
                     @Override
-                    public Boolean toBeInactive() {
-                        return true;
+                    public void toBeInactive() {
                     }
                 };
             }

@@ -229,13 +229,13 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentDocumentWait {
-        Boolean toBeReady();
+        void toBeReady();
     }
 
     interface IFluentJQueryWait {
         boolean isJQuerySupported();
 
-        Boolean toBeInactive();
+        void toBeInactive();
     }
 
     interface IFluentLocatorAssertion {
