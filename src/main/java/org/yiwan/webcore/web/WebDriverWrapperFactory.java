@@ -255,16 +255,16 @@ public class WebDriverWrapperFactory {
     }
 
     private void setFirefoxProfile(FirefoxProfile profile) {
-//        profile.setPreference("browser.download.folderList", 2);
-        profile.setPreference("browser.download.manager.showWhenStarting", false);
-//        profile.setPreference("browser.download.dir", "D:\\mydownloads\\");
         profile.setAcceptUntrustedCertificates(true);
+        profile.setPreference("browser.download.manager.showWhenStarting", false);
         profile.setPreference("browser.helperApps.alwaysAsk.force", false);
+        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/xml,text/csv,image/jpeg,application/zip,application/vnd.ms-excel,application/pdf,application/xml");
+//        profile.setEnableNativeEvents(PropHelper.NATIVE_EVENTS);
+//        profile.setPreference("browser.download.folderList", 2);
+//        profile.setPreference("browser.download.dir", "D:\\mydownloads\\");
 //        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream");
 //        profile.setPreference("browser.helperApps.neverAsk.openFile", "text/csv,application/pdf,application/x-msexcel,application/excel,application/x-excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,image/png,image/jpeg,text/html,text/plain,application/msword,application/xml");
 //        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/pdf,application/x-msexcel,application/excel,application/x-excel,application/excel,application/x-excel,application/excel,application/vnd.ms-excel,application/x-excel,application/x-msexcel,image/png,image/pjpeg,image/jpeg,text/html,text/plain,application/msword,application/xml,application/excel");
-        profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/xml,text/csv,image/jpeg,application/zip,application/vnd.ms-excel,application/pdf,application/xml");
-
 //        Then add the proxy setting to the Firefox profile we created
 //        profile.setPreference("network.proxy.http", "localhost");
 //        profile.setPreference("network.proxy.http_port", "8888");
