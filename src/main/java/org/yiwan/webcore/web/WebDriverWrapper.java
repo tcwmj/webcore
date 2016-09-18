@@ -211,10 +211,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     public IWebDriverWrapper doPostAction() {
-        if (!alert().isPresent()) {
-            waitThat().document().toBeReady();
-            waitThat().jQuery().toBeInactive();
-        }
+//        if (!alert().isPresent()) {
+//            waitThat().document().toBeReady();
+//            waitThat().jQuery().toBeInactive();
+//        }
         return this;
     }
 
