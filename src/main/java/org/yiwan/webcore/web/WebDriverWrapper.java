@@ -211,10 +211,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     public IWebDriverWrapper doPostAction() {
-//        if (!alert().isPresent()) {
-//            waitThat().document().toBeReady();
-//            waitThat().jQuery().toBeInactive();
-//        }
+        if (!alert().isPresent()) {
+            waitThat().document().toBeReady();
+            waitThat().jQuery().toBeInactive();
+        }
         return this;
     }
 
@@ -2212,7 +2212,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentDocumentWait() {
                 @Override
                 public void toBeReady() {
-//                    logger.debug("waiting document to be ready");
                     wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
@@ -2229,7 +2228,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                         @Override
                         public String toString() {
-                            return String.format("wait document to be ready, current value is %s", currentValue);
+                            return String.format("wait document to be ready, current value is %s while expect complete", currentValue);
                         }
                     });
                 }
@@ -2261,7 +2260,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 @Override
                 public void toBeInactive() {
                     if (isJQuerySupported()) {
-//                        logger.debug("waiting jQuery to be inactive");
                         wait.until(new ExpectedCondition<Boolean>() {
                             private long currentValue = 0L;
 
@@ -2278,7 +2276,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
                             @Override
                             public String toString() {
-                                return String.format("wait jQuery to be inactive, current value is %d", currentValue);
+                                return String.format("wait jQuery to be inactive, current value is %d while expect 0", currentValue);
                             }
                         });
                     }
