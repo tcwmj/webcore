@@ -93,6 +93,16 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public String getWindowHandle() {
+        return driver.getWindowHandle();
+    }
+
+    @Override
+    public Set<String> getWindowHandles() {
+        return driver.getWindowHandles();
+    }
+
+    @Override
     public Set<Cookie> getCookies() {
         return driver.manage().getCookies();
     }

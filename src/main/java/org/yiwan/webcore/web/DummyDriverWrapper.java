@@ -82,6 +82,16 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public String getWindowHandle() {
+        return "";
+    }
+
+    @Override
+    public Set<String> getWindowHandles() {
+        return new HashSet<String>();
+    }
+
+    @Override
     public Set<Cookie> getCookies() {
         return new HashSet<>();
     }

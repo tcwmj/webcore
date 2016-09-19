@@ -61,6 +61,20 @@ public interface IWebDriverWrapper {
      */
     String getCurrentUrl();
 
+    /**
+     * get current window handle
+     *
+     * @return string value of current window handle
+     */
+    String getWindowHandle();
+
+    /**
+     * get all window handles
+     *
+     * @return window handles
+     */
+    Set<String> getWindowHandles();
+
     Set<Cookie> getCookies();
 
     /**

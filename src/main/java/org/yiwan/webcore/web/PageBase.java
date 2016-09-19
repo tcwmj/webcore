@@ -8,6 +8,8 @@ import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.IWebDriverWrapper.*;
 
+import java.util.Set;
+
 /**
  * Created by Kenny Wang on 4/2/2016.
  */
@@ -44,6 +46,24 @@ public class PageBase {
      */
     protected String getCurrentUrl() {
         return webDriverWrapper.getCurrentUrl();
+    }
+
+    /**
+     * get current window handle
+     *
+     * @return string
+     */
+    protected String getWindowHandle() {
+        return webDriverWrapper.getWindowHandle();
+    }
+
+    /**
+     * get all window handles
+     *
+     * @return Set<string>
+     */
+    protected Set<String> getWindowHandles() {
+        return webDriverWrapper.getWindowHandles();
     }
 
     /**
