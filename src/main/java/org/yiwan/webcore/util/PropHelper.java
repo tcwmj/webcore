@@ -31,8 +31,6 @@ public class PropHelper {
     public static final long TIMEOUT_INTERVAL = Long.parseLong(getProperty("timeout.interval"));
     public static final long TIMEOUT_NAVIGATION_INTERVAL = Long.parseLong(getProperty("timeout.navigation.interval"));
     public static final long TIMEOUT_POLLING_INTERVAL = Long.parseLong(getProperty("timeout.polling.interval"));
-    public static final long TIMEOUT_DIALOG_APPEAR = Long.parseLong(getProperty("timeout.dialog.appear"));
-    public static final long TIMEOUT_DIALOG_DISAPPEAR = Long.parseLong(getProperty("timeout.dialog.disappear"));
 
     public static final int TEST_RETRY_COUNT = Integer.valueOf(getProperty("test.retry.count"));
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
@@ -138,29 +136,7 @@ public class PropHelper {
 
     public static String getServerInfo(String key) {
         if (SERVER_URL != null && !SERVER_URL.isEmpty()) {//for compatible with server.url
-            String dump = getProperty("database");
-            String[] urls = SERVER_URL.split(","); //server url may contain several urls separated by comma
-            List<TestEnvironment> testEnvironments = new ArrayList<>();
-            for (String url : urls) {
-                TestEnvironment testEnvironment = new TestEnvironment();
-                ApplicationServer applicationServer = new ApplicationServer();
-                applicationServer.setUrl(url.trim());
-                DatabaseServer databaseServer = new DatabaseServer();
-                if (dump != null && dump.equals("sqlserver")) {
-                    databaseServer.setDump("data/system/sqlserver.xml");
-                } else {
-                    databaseServer.setDump("data/system/default.xml");
-                }
-                testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
-                testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
-                testEnvironments.add(testEnvironment);
-            }
-            try {
-                return (new ObjectMapper()).writeValueAsString(testEnvironments);
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage(), e);
-                return "";
-            }
+            return getServerInfo();
         } else {
             String url = getProperty(key);
             String serverInfo = "";
@@ -175,6 +151,33 @@ public class PropHelper {
                 logger.error(url, e);
             }
             return serverInfo;
+        }
+    }
+
+    @Deprecated
+    public static String getServerInfo() {
+        String dump = getProperty("database");
+        String[] urls = SERVER_URL.split(","); //server url may contain several urls separated by comma
+        List<TestEnvironment> testEnvironments = new ArrayList<>();
+        for (String url : urls) {
+            TestEnvironment testEnvironment = new TestEnvironment();
+            ApplicationServer applicationServer = new ApplicationServer();
+            applicationServer.setUrl(url.trim());
+            DatabaseServer databaseServer = new DatabaseServer();
+            if (dump != null && dump.equals("sqlserver")) {
+                databaseServer.setDump("data/system/sqlserver.xml");
+            } else {
+                databaseServer.setDump("data/system/default.xml");
+            }
+            testEnvironment.setApplicationServers(Arrays.asList(applicationServer));
+            testEnvironment.setDatabaseServers(Arrays.asList(databaseServer));
+            testEnvironments.add(testEnvironment);
+        }
+        try {
+            return (new ObjectMapper()).writeValueAsString(testEnvironments);
+        } catch (JsonProcessingException e) {
+            logger.error(e.getMessage(), e);
+            return "";
         }
     }
 
