@@ -977,22 +977,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper fireEvent(final String event) {
             logger.debug("firing {} on {}", event, locator);
             try {
-                wait.until(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(WebDriver driver) {
-                        executeScript("arguments[0].fireEvent(arguments[1]);", findElement(), event);//ie version < 9
-                        return true;
-                    }
-                });
-            } catch (WebDriverException e) {
-                wait.until(new ExpectedCondition<Boolean>() {
-                    @Override
-                    public Boolean apply(WebDriver driver) {
-                        String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
-                        executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", findElement(), eventType);
-                        return true;
-                    }
-                });
+                String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
+                executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", waitThat(locator).toBeVisible(), eventType);
+            } catch (WebDriverException e) {// ie vith version less than 9
+                executeScript("arguments[0].fireEvent(arguments[1]);", waitThat(locator).toBeVisible(), event);
             }
             doPostAction();
             return this;
@@ -1450,10 +1438,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper fireEvent(String event) {
             logger.debug("firing {} on {}", event, webElement);
             try {
-                executeScript("arguments[0].fireEvent(arguments[1]);", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
-            } catch (WebDriverException e) {
                 String eventType = event.toLowerCase().startsWith("on") ? event.substring(2) : event;
                 executeScript("var evt = document.createEvent('HTMLEvents'); evt.initEvent(arguments[1], true, true); arguments[0].dispatchEvent(evt);", wait.until(ExpectedConditions.visibilityOf(webElement)), eventType);
+            } catch (WebDriverException e) {// ie vith version less than 9
+                executeScript("arguments[0].fireEvent(arguments[1]);", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
             }
             doPostAction();
             return this;
