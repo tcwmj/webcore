@@ -23,6 +23,7 @@ public class ApplicationServer {
     private String version;
     private String username;
     private String password;
+    private String key;
     private HardwareInformation hardwareInformation;
     private List<SoftwareInformation> softwareInformations;
 
@@ -104,6 +105,14 @@ public class ApplicationServer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override
