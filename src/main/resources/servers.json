@@ -10,6 +10,7 @@
         "version": null,
         "username": null,
         "password": null,
+        "key": null,
         "hardwareInformation": {
           "type": null,
           "os": null,
