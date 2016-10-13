@@ -509,6 +509,7 @@ public abstract class TestBase implements ITestBase {
         try {
             getWebDriverWrapper().quit();
         } catch (Exception ignored) {
+            logger.error(ignored.getMessage(), ignored);
         }
         getWebDriverWrapper().validateAll();
     }

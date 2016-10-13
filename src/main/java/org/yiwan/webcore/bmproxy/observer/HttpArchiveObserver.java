@@ -68,7 +68,9 @@ public class HttpArchiveObserver extends SampleObserver {
         String filePath = PropHelper.HAR_FOLDER + filename + "_" + (files == null ? 0 : files.length) + ".har";
         new File(PropHelper.HAR_FOLDER).mkdirs();
         try {
-            proxyWrapper.getProxy().getHar().writeTo(new FileWriter(filePath));
+            FileWriter fileWriter = new FileWriter(filePath);
+            proxyWrapper.getProxy().getHar().writeTo(fileWriter);
+            fileWriter.close();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
