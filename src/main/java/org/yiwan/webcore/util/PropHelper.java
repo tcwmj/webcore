@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.test.pojo.ApplicationServer;
 import org.yiwan.webcore.test.pojo.DatabaseServer;
+import org.yiwan.webcore.test.pojo.HardwareInformation;
 import org.yiwan.webcore.test.pojo.TestEnvironment;
 
 import java.io.File;
@@ -163,6 +164,11 @@ public class PropHelper {
             TestEnvironment testEnvironment = new TestEnvironment();
             ApplicationServer applicationServer = new ApplicationServer();
             applicationServer.setUrl(url.trim());
+            applicationServer.setUsername("FQA");
+            applicationServer.setKey("src/test/resources/id_rsa_FQA");
+            HardwareInformation hardwareInformation = new HardwareInformation();
+            hardwareInformation.setOs("linux");
+            applicationServer.setHardwareInformation(hardwareInformation);
             DatabaseServer databaseServer = new DatabaseServer();
             if (dump != null && dump.equals("sqlserver")) {
                 databaseServer.setDump("data/system/sqlserver.xml");
