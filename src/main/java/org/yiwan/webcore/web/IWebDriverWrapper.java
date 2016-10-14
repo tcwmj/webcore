@@ -654,13 +654,6 @@ public interface IWebDriverWrapper {
         List<String> getAllSelectedTexts();
 
         /**
-         * trigger an event on such element
-         *
-         * @param event String, such as "mouseover"
-         */
-        IWebElementWrapper triggerEvent(String event);
-
-        /**
          * fire an event on such element
          *
          * @param event String, such as "onchange"

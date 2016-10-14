@@ -1,6 +1,5 @@
 package org.yiwan.webcore.web;
 
-import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.*;
 import org.openqa.selenium.*;
@@ -964,20 +963,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public IWebElementWrapper triggerEvent(final String event) {
-            logger.debug("triggering {} on {}", event, locator);
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver driver) {
-                    new JavascriptLibrary().callEmbeddedSelenium(driver, "triggerEvent", findElement(), event);
-                    return true;
-                }
-            });
-            doPostAction();
-            return this;
-        }
-
-        @Override
         public IWebElementWrapper fireEvent(final String event) {
             logger.debug("firing {} on {}", event, locator);
             try {
@@ -1427,15 +1412,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 list.add(option.getText());
             }
             return list;
-        }
-
-        @Override
-        public IWebElementWrapper triggerEvent(String event) {
-            logger.debug("triggering {} on {}", event, webElement);
-            JavascriptLibrary javascript = new JavascriptLibrary();
-            javascript.callEmbeddedSelenium(driver, "triggerEvent", wait.until(ExpectedConditions.visibilityOf(webElement)), event);
-            doPostAction();
-            return this;
         }
 
         @Override

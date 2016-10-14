@@ -512,11 +512,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             }
 
             @Override
-            public IWebElementWrapper triggerEvent(String event) {
-                return this;
-            }
-
-            @Override
             public IWebElementWrapper fireEvent(String event) {
                 return this;
             }
