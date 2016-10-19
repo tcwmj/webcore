@@ -1025,7 +1025,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setAttribute(final String attribute, final String value) {
-            logger.debug("setting attribute {} value {} on {}", attribute, value, locator);
+            logger.debug("setting attribute value of {} to {} on {}", attribute, value, locator);
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
@@ -1474,7 +1474,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper setAttribute(String attribute, String value) {
-            logger.debug("setting attribute {} value {} on {}", attribute, value, webElement);
+            logger.debug("setting attribute value of {} to {} on {}", attribute, value, webElement);
             executeScript("arguments[0].setAttribute(arguments[1], arguments[2])", wait.until(ExpectedConditions.visibilityOf(webElement)), attribute, value);
             return this;
         }
