@@ -136,11 +136,11 @@ public class PropHelper {
     }
 
     public static String getServerInfo(String key) {
+        String serverInfo = "";
         if (SERVER_URL != null && !SERVER_URL.isEmpty()) {//for compatible with server.url
-            return getServerInfo();
+            serverInfo = getServerInfo();
         } else {
             String url = getProperty(key);
-            String serverInfo = "";
             try (InputStream is = ClassLoader.getSystemResourceAsStream(url)) {
                 if (null != is) {
                     serverInfo = IOUtils.toString(is, "UTF-8");
@@ -151,8 +151,9 @@ public class PropHelper {
             } catch (IOException e) {
                 logger.error(url, e);
             }
-            return serverInfo;
         }
+        logger.info("server information:\n" + serverInfo);
+        return serverInfo;
     }
 
     @Deprecated
