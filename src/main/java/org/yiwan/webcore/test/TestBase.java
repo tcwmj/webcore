@@ -4,6 +4,7 @@ import net.lightbody.bmp.client.ClientUtil;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -506,11 +507,23 @@ public abstract class TestBase implements ITestBase {
         if (getProxyWrapper() != null) {
             getProxyWrapper().stop();
         }
+        closeAlerts();
         try {
             getWebDriverWrapper().quit();
         } catch (Exception ignored) {
             logger.error(ignored.getMessage(), ignored);
         }
         getWebDriverWrapper().validateAll();
+    }
+
+    private void closeAlerts() {
+        int acceptAlerts = 0;
+        try {
+            while (getWebDriverWrapper().alert().isPresent() && acceptAlerts++ < 10) {
+                getWebDriverWrapper().alert().accept();
+            }
+        } catch (WebDriverException e) {
+            logger.warn(e.getMessage(), e);
+        }
     }
 }
