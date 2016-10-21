@@ -429,8 +429,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public void dismiss() {
-            logger.debug("dismissing alert {}", getText());
             if (alert != null) {
+                logger.debug("dismissing alert {}", alert.getText());
                 alert.dismiss();
             } else {
                 waitThat().alert().toBePresent().dismiss();
@@ -439,8 +439,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public void accept() {
-            logger.debug("accepting alert {}", getText());
             if (alert != null) {
+                logger.debug("accepting alert {}", alert.getText());
                 alert.accept();
             } else {
                 waitThat().alert().toBePresent().accept();
