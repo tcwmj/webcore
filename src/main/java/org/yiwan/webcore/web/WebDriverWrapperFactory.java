@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
@@ -177,7 +178,7 @@ public class WebDriverWrapperFactory {
     }
 
     private IWebDriverWrapper createInternetExplorerDriverWrapper() {
-        System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY, PropHelper.DEFAULT_IE_ARCH.equals("x64") ? PropHelper.IE_WEBDRIVER_X64 : PropHelper.IE_WEBDRIVER_X86);
+        System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY, PropHelper.IE_WEBDRIVER);
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
         setBrowserCapabilities(capabilities);
         setInternetExplorerCapabilities(capabilities);
@@ -185,9 +186,10 @@ public class WebDriverWrapperFactory {
     }
 
     private IWebDriverWrapper createFirefoxDriverWrapper() {
+//        System.setProperty(FirefoxDriver.SystemProperty.BROWSER_BINARY, PropHelper.FIREFOX_PATH);
+        System.setProperty("webdriver.gecko.driver", PropHelper.MARIONETTE_WEBDRIVER);
         FirefoxBinary firefoxBinary;
         if (PropHelper.FIREFOX_PATH != null && !PropHelper.FIREFOX_PATH.trim().isEmpty()) {
-//            System.setProperty(FirefoxDriver.SystemProperty.BROWSER_BINARY, PropHelper.FIREFOX_PATH);
             firefoxBinary = new FirefoxBinary(new File(PropHelper.FIREFOX_PATH));
         } else {
             firefoxBinary = new FirefoxBinary();
@@ -199,6 +201,10 @@ public class WebDriverWrapperFactory {
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
         setBrowserCapabilities(capabilities);
         setFirefoxCapabilities(capabilities);
+
+        if (capabilities.getCapability("marionette").equals(true)) {
+            return new FirefoxDriverWrapper(new MarionetteDriver(capabilities));
+        }
         return new FirefoxDriverWrapper(new FirefoxDriver(firefoxBinary, profile, capabilities));
     }
 
@@ -248,6 +254,10 @@ public class WebDriverWrapperFactory {
 
     private void setFirefoxCapabilities(DesiredCapabilities capabilities) {
         capabilities.setBrowserName(BrowserType.FIREFOX);
+        if (browser_version != null && Integer.parseInt(browser_version) > 47) {
+            logger.debug("choosing marionette mode");
+            capabilities.setCapability("marionette", true);
+        }
     }
 
     private void setChromeCapabilities(DesiredCapabilities capabilities) {
