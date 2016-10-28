@@ -258,6 +258,7 @@ public class WebDriverWrapperFactory {
             logger.debug("choosing marionette mode");
             capabilities.setCapability("marionette", true);
         }
+    }
 
     private void setChromeCapabilities(DesiredCapabilities capabilities) {
         capabilities.setBrowserName(BrowserType.CHROME);
