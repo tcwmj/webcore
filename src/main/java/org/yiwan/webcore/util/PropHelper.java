@@ -83,12 +83,11 @@ public class PropHelper {
     public static final String PHANTOMJS_PATH = getProperty("path.phantomjs");
     public static final String FIREFOX_PATH = getProperty("path.firefox");
     public static final String CHROME_WEBDRIVER = getProperty("path.webdriver.chrome");
-    public static final String IE_WEBDRIVER_X86 = getProperty("path.webdriver.ie.x86");
-    public static final String IE_WEBDRIVER_X64 = getProperty("path.webdriver.ie.x64");
+    public static final String IE_WEBDRIVER = getProperty("path.webdriver.ie");
+    public static final String MARIONETTE_WEBDRIVER = getProperty("path.webdriver.marionette");
     public static final String DEFAULT_BROWSER = getProperty("browser.default");
     public static final String INITIAL_BROWSER_URL = getProperty("browser.ie.initialBrowserUrl");
     public static final String UNEXPECTED_ALERT_BEHAVIOUR = getProperty("browser.unexpectedAlertBehaviour");
-    public static final String DEFAULT_IE_ARCH = getProperty("browser.ie.arch.default");
     public static final String PHANTOMJS_CLI_ARGS = getProperty("browser.phantomjs.cli.args");
     public static final String PHANTOMJS_GHOSTDRIVER_CLI_ARGS = getProperty("browser.phantomjs.ghostdriver.cli.args");
     public static final String TRANSACTION_TIMESTAMPS_FILE = getProperty("transaction.timestamps.file");
