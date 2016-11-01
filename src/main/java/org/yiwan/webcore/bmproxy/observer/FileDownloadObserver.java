@@ -57,9 +57,25 @@ public class FileDownloadObserver extends SampleObserver {
             public void filterResponse(HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
                 if (testCase.isPrepareToDownload() && contents.getContentType() != null) {
                     String filename = PropHelper.DOWNLOAD_FOLDER + Helper.randomize() + ".";
-                    if (contents.getContentType().contains("text/csv")) {
+                    if (contents.getContentType().contains("application/vnd.ms-excel")) {
+                        setDownloadFile(response, filename, "xls");
+                        downloadBinaryFile(contents.getBinaryContents());
+                        completeDownload(response);
+                    } else if (contents.getContentType().contains("text/csv")) {
                         setDownloadFile(response, filename, "csv");
                         downloadTextFile(contents.getTextContents());
+                        completeDownload(response);
+                    } else if (contents.getContentType().contains("application/pdf")) {
+                        setDownloadFile(response, filename, "pdf");
+                        downloadBinaryFile(contents.getBinaryContents());
+                        completeDownload(response);
+                    } else if (contents.getContentType().contains("application/zip")) {
+                        setDownloadFile(response, filename, "zip");
+                        downloadBinaryFile(contents.getBinaryContents());
+                        completeDownload(response);
+                    } else if (contents.getContentType().contains("application/gzip")) {
+                        setDownloadFile(response, filename, "gz");
+                        downloadBinaryFile(contents.getBinaryContents());
                         completeDownload(response);
                     } else if (contents.getContentType().contains("text/plain")) {
                         setDownloadFile(response, filename, "unknown");
@@ -71,18 +87,6 @@ public class FileDownloadObserver extends SampleObserver {
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/xml")) {
                         setDownloadFile(response, filename, "xml");
-                        downloadBinaryFile(contents.getBinaryContents());
-                        completeDownload(response);
-                    } else if (contents.getContentType().contains("application/vnd.ms-excel")) {
-                        setDownloadFile(response, filename, "xls");
-                        downloadBinaryFile(contents.getBinaryContents());
-                        completeDownload(response);
-                    } else if (contents.getContentType().contains("application/pdf")) {
-                        setDownloadFile(response, filename, "pdf");
-                        downloadBinaryFile(contents.getBinaryContents());
-                        completeDownload(response);
-                    } else if (contents.getContentType().contains("application/zip")) {
-                        setDownloadFile(response, filename, "zip");
                         downloadBinaryFile(contents.getBinaryContents());
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/octet-stream") && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
