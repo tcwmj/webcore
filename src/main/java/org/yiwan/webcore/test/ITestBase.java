@@ -1,5 +1,6 @@
 package org.yiwan.webcore.test;
 
+import org.assertj.core.api.SoftAssertions;
 import org.testng.ITestResult;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
 import org.yiwan.webcore.bmproxy.TimestampWriter;
@@ -139,4 +140,6 @@ public interface ITestBase {
     void setUpTest() throws Exception;
 
     void tearDownTest() throws Exception;
+
+    SoftAssertions getSoftAssertions();
 }

@@ -1172,11 +1172,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public void validateAll() {
-
-    }
-
-    @Override
     public IAlertWrapper alert() {
         return new AlertWrapper();
     }

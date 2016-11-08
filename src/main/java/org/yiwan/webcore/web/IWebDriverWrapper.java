@@ -133,11 +133,6 @@ public interface IWebDriverWrapper {
 
     IFluentAssertion validateThat();
 
-    /**
-     * validationAll must be presented at the end of test when invoking validateThat
-     */
-    void validateAll();
-
     IAlertWrapper alert();
 
     interface IActionsWrapper {
@@ -493,7 +488,7 @@ public interface IWebDriverWrapper {
         /**
          * Select all options that display text matching the argument. That is, when
          * given "Bar" this would select an option like:
-         * <p/>
+         * <p>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param text The visible text to match against
@@ -503,7 +498,7 @@ public interface IWebDriverWrapper {
         /**
          * Select all options that display text matching the argument. That is, when
          * given "Bar" this would select an option like:
-         * <p/>
+         * <p>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param texts The visible text to match against
@@ -521,7 +516,7 @@ public interface IWebDriverWrapper {
         /**
          * Select all options that have a value matching the argument. That is, when
          * given "foo" this would select an option like:
-         * <p/>
+         * <p>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param value The value to match against

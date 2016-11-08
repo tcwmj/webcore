@@ -11,9 +11,9 @@ import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
+import org.yiwan.webcore.test.TestCaseManager;
 import org.yiwan.webcore.util.PropHelper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +24,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private WebDriver driver;
     private JavascriptExecutor js;
-    private Wait<org.openqa.selenium.WebDriver> wait;
-    private SoftAssertions softAssertions;
+    private Wait<WebDriver> wait;
 
     public WebDriverWrapper(WebDriver driver) {
         this.driver = driver;
@@ -35,7 +34,10 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 .ignoring(NoSuchElementException.class)
                 .ignoring(UnreachableBrowserException.class)
                 .ignoring(InvalidElementStateException.class);
-        this.softAssertions = new SoftAssertions();
+    }
+
+    public SoftAssertions getSoftAssertions() {
+        return TestCaseManager.getTestCase().getSoftAssertions();
     }
 
     @Override
@@ -207,11 +209,6 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public IFluentAssertion validateThat() {
         return new FluentValidation();
-    }
-
-    @Override
-    public void validateAll() {
-        softAssertions.assertAll();
     }
 
     @Override
@@ -1531,9 +1528,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return !currentValue.equals(text);
                         }
@@ -1550,9 +1546,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return currentValue.contains(text);
                         }
@@ -1569,9 +1564,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return !currentValue.contains(text);
                         }
@@ -1588,9 +1582,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return currentValue.startsWith(text);
                         }
@@ -1607,9 +1600,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return currentValue.endsWith(text);
                         }
@@ -2060,9 +2052,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue == number;
                         }
@@ -2079,9 +2070,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue != number;
                         }
@@ -2098,9 +2088,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue < number;
                         }
@@ -2117,9 +2106,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue > number;
                         }
@@ -2136,9 +2124,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue <= number;
                         }
@@ -2155,9 +2142,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue >= number;
                         }
@@ -2869,62 +2855,62 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
-            return softAssertions.assertThat(element(locator).getAllSelectedTexts()).as("validate %s all selected texts", locator);
+            return getSoftAssertions().assertThat(element(locator).getAllSelectedTexts()).as("validate %s all selected texts", locator);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> selectedText() {
-            return softAssertions.assertThat(element(locator).getSelectedText()).as("validate %s selected text", locator);
+            return getSoftAssertions().assertThat(element(locator).getSelectedText()).as("validate %s selected text", locator);
         }
 
         @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
-            return softAssertions.assertThat(element(locator).getAllOptionTexts()).as("validate %s all option texts", locator);
+            return getSoftAssertions().assertThat(element(locator).getAllOptionTexts()).as("validate %s all option texts", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> present() {
-            return softAssertions.assertThat(element(locator).isPresent()).as("validate %s present", locator);
+            return getSoftAssertions().assertThat(element(locator).isPresent()).as("validate %s present", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> enabled() {
-            return softAssertions.assertThat(element(locator).isEnabled()).as("validate %s enabled", locator);
+            return getSoftAssertions().assertThat(element(locator).isEnabled()).as("validate %s enabled", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> displayed() {
-            return softAssertions.assertThat(element(locator).isDisplayed()).as("validate %s displayed", locator);
+            return getSoftAssertions().assertThat(element(locator).isDisplayed()).as("validate %s displayed", locator);
         }
 
         @Override
         public AbstractBooleanAssert<?> selected() {
-            return softAssertions.assertThat(element(locator).isSelected()).as("validate %s selected", locator);
+            return getSoftAssertions().assertThat(element(locator).isSelected()).as("validate %s selected", locator);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> innerText() {
-            return softAssertions.assertThat(element(locator).getInnerText()).as("validate %s innertText", locator);
+            return getSoftAssertions().assertThat(element(locator).getInnerText()).as("validate %s innertText", locator);
         }
 
         @Override
         public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
-            return softAssertions.assertThat(element(locator).getAllInnerTexts()).as("validate %s all innerTexts", locator);
+            return getSoftAssertions().assertThat(element(locator).getAllInnerTexts()).as("validate %s all innerTexts", locator);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
-            return softAssertions.assertThat(element(locator).getAttribute(attribute)).as("validate attribute value of %s on %s", attribute, locator);
+            return getSoftAssertions().assertThat(element(locator).getAttribute(attribute)).as("validate attribute value of %s on %s", attribute, locator);
         }
 
         @Override
         public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
-            return softAssertions.assertThat(element(locator).getCssValue(cssAttribute)).as("validate css attribute value of %s on %s", cssAttribute, locator);
+            return getSoftAssertions().assertThat(element(locator).getCssValue(cssAttribute)).as("validate css attribute value of %s on %s", cssAttribute, locator);
         }
 
         @Override
         public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
-            return softAssertions.assertThat(element(locator).getNumberOfMatches()).as("validate number of elements %s", locator);
+            return getSoftAssertions().assertThat(element(locator).getNumberOfMatches()).as("validate number of elements %s", locator);
         }
 
         @Override
@@ -2939,12 +2925,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentAlertAssertion() {
                 @Override
                 public AbstractBooleanAssert<?> present() {
-                    return softAssertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("validate alert present");
+                    return getSoftAssertions().assertThat(WebDriverWrapper.this.alert().isPresent()).as("validate alert present");
                 }
 
                 @Override
                 public AbstractCharSequenceAssert<?, String> text() {
-                    return softAssertions.assertThat(WebDriverWrapper.this.alert().getText()).as("validate alert text");
+                    return getSoftAssertions().assertThat(WebDriverWrapper.this.alert().getText()).as("validate alert text");
                 }
             };
         }
@@ -2954,17 +2940,17 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             return new IFluentPageAssertion() {
                 @Override
                 public AbstractCharSequenceAssert<?, String> title() {
-                    return softAssertions.assertThat(getPageTitle()).as("validate page title");
+                    return getSoftAssertions().assertThat(getPageTitle()).as("validate page title");
                 }
 
                 @Override
                 public AbstractCharSequenceAssert<?, String> source() {
-                    return softAssertions.assertThat(getPageSource()).as("validate page source");
+                    return getSoftAssertions().assertThat(getPageSource()).as("validate page source");
                 }
 
                 @Override
                 public AbstractCharSequenceAssert<?, String> url() {
-                    return softAssertions.assertThat(getCurrentUrl()).as("validate current url");
+                    return getSoftAssertions().assertThat(getCurrentUrl()).as("validate current url");
                 }
             };
         }

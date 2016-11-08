@@ -1,9 +1,11 @@
 package org.yiwan.webcore.web;
 
+import org.assertj.core.api.SoftAssertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.locator.LocatorBean;
+import org.yiwan.webcore.test.TestCaseManager;
 import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.IWebDriverWrapper.*;
@@ -165,5 +167,9 @@ public class PageBase {
 
     protected IFluentLocatorAssertion validateThat(String id, String... replacements) throws Exception {
         return validateThat(locator(id, replacements));
+    }
+
+    protected SoftAssertions getSoftAssertions() {
+        return TestCaseManager.getTestCase().getSoftAssertions();
     }
 }

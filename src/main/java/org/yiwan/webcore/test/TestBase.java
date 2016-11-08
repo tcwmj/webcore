@@ -2,6 +2,7 @@ package org.yiwan.webcore.test;
 
 import net.lightbody.bmp.client.ClientUtil;
 import org.apache.commons.io.FileUtils;
+import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriverException;
@@ -62,6 +63,7 @@ public abstract class TestBase implements ITestBase {
     private String suiteName;//testng test suite name
     private String testName;//testng test name
     private final TimestampWriter timestampWriter = new TimestampWriter();
+    private SoftAssertions softAssertions = new SoftAssertions();
 
     public TimestampWriter getTimestampWriter() {
         return timestampWriter;
@@ -513,7 +515,7 @@ public abstract class TestBase implements ITestBase {
         } catch (Exception ignored) {
             logger.error(ignored.getMessage(), ignored);
         }
-        getWebDriverWrapper().validateAll();
+        getSoftAssertions().assertAll();
     }
 
     private void closeAlerts() {
@@ -525,5 +527,10 @@ public abstract class TestBase implements ITestBase {
         } catch (WebDriverException e) {
             logger.warn(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public SoftAssertions getSoftAssertions() {
+        return softAssertions;
     }
 }
