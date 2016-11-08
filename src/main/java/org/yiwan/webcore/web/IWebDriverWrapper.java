@@ -1,9 +1,6 @@
 package org.yiwan.webcore.web;
 
-import org.assertj.core.api.AbstractBooleanAssert;
-import org.assertj.core.api.AbstractCharSequenceAssert;
-import org.assertj.core.api.AbstractIntegerAssert;
-import org.assertj.core.api.AbstractListAssert;
+import org.assertj.core.api.*;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
@@ -19,6 +16,8 @@ import java.util.regex.Pattern;
  * Created by Kenny Wang on 4/4/2016.
  */
 public interface IWebDriverWrapper {
+    SoftAssertions getSoftAssertions();
+
     IBrowseNavigation navigate();
 
     /**
@@ -493,7 +492,7 @@ public interface IWebDriverWrapper {
         /**
          * Select all options that display text matching the argument. That is, when
          * given "Bar" this would select an option like:
-         * <p/>
+         * <p>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param text The visible text to match against
@@ -503,7 +502,7 @@ public interface IWebDriverWrapper {
         /**
          * Select all options that display text matching the argument. That is, when
          * given "Bar" this would select an option like:
-         * <p/>
+         * <p>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param texts The visible text to match against
@@ -521,7 +520,7 @@ public interface IWebDriverWrapper {
         /**
          * Select all options that have a value matching the argument. That is, when
          * given "foo" this would select an option like:
-         * <p/>
+         * <p>
          * &lt;option value="foo"&gt;Bar&lt;/option&gt;
          *
          * @param value The value to match against

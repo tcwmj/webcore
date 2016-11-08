@@ -40,6 +40,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public SoftAssertions getSoftAssertions() {
+        return softAssertions;
+    }
+
+    @Override
     public IBrowseNavigation navigate() {
         return new BrowseNavigation();
     }
