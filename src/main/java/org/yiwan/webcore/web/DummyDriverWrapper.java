@@ -1,6 +1,9 @@
 package org.yiwan.webcore.web;
 
-import org.assertj.core.api.*;
+import org.assertj.core.api.AbstractBooleanAssert;
+import org.assertj.core.api.AbstractCharSequenceAssert;
+import org.assertj.core.api.AbstractIntegerAssert;
+import org.assertj.core.api.AbstractListAssert;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
@@ -18,11 +21,6 @@ import java.util.regex.Pattern;
  * Created by Kenny Wang on 4/4/2016.
  */
 public class DummyDriverWrapper implements IWebDriverWrapper {
-    @Override
-    public SoftAssertions getSoftAssertions() {
-        return null;
-    }
-
     @Override
     public IBrowseNavigation navigate() {
         return new IBrowseNavigation() {
@@ -1176,11 +1174,6 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     @Override
     public IFluentAssertion validateThat() {
         return assertThat();
-    }
-
-    @Override
-    public void validateAll() {
-
     }
 
     @Override

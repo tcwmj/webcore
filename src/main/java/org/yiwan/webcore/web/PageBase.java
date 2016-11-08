@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.locator.LocatorBean;
+import org.yiwan.webcore.test.TestCaseManager;
 import org.yiwan.webcore.util.JaxbHelper;
 import org.yiwan.webcore.util.PropHelper;
 import org.yiwan.webcore.web.IWebDriverWrapper.*;
@@ -169,6 +170,6 @@ public class PageBase {
     }
 
     protected SoftAssertions getSoftAssertions() {
-        return webDriverWrapper.getSoftAssertions();
+        return TestCaseManager.getTestCase().getSoftAssertions();
     }
 }

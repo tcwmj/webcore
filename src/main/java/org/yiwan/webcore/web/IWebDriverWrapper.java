@@ -1,6 +1,9 @@
 package org.yiwan.webcore.web;
 
-import org.assertj.core.api.*;
+import org.assertj.core.api.AbstractBooleanAssert;
+import org.assertj.core.api.AbstractCharSequenceAssert;
+import org.assertj.core.api.AbstractIntegerAssert;
+import org.assertj.core.api.AbstractListAssert;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
@@ -16,8 +19,6 @@ import java.util.regex.Pattern;
  * Created by Kenny Wang on 4/4/2016.
  */
 public interface IWebDriverWrapper {
-    SoftAssertions getSoftAssertions();
-
     IBrowseNavigation navigate();
 
     /**
@@ -131,11 +132,6 @@ public interface IWebDriverWrapper {
     IFluentLocatorAssertion validateThat(Locator locator);
 
     IFluentAssertion validateThat();
-
-    /**
-     * validationAll must be presented at the end of test when invoking validateThat
-     */
-    void validateAll();
 
     IAlertWrapper alert();
 
