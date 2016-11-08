@@ -15,7 +15,6 @@ import org.yiwan.webcore.locator.Locator;
 import org.yiwan.webcore.test.TestCaseManager;
 import org.yiwan.webcore.util.PropHelper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1553,9 +1552,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return !currentValue.equals(text);
                         }
@@ -1572,9 +1570,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return currentValue.contains(text);
                         }
@@ -1591,9 +1588,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return !currentValue.contains(text);
                         }
@@ -1610,9 +1606,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return currentValue.startsWith(text);
                         }
@@ -1629,9 +1624,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private String currentValue = null;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getInnerText();
                             return currentValue.endsWith(text);
                         }
@@ -2082,9 +2076,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue == number;
                         }
@@ -2101,9 +2094,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue != number;
                         }
@@ -2120,9 +2112,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue < number;
                         }
@@ -2139,9 +2130,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue > number;
                         }
@@ -2158,9 +2148,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue <= number;
                         }
@@ -2177,9 +2166,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                     return wait.until(new ExpectedCondition<Boolean>() {
                         private int currentValue = 0;
 
-                        @Nullable
                         @Override
-                        public Boolean apply(@Nullable WebDriver input) {
+                        public Boolean apply(WebDriver driver) {
                             currentValue = element(locator).getNumberOfMatches();
                             return currentValue >= number;
                         }
