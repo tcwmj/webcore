@@ -63,7 +63,7 @@ public abstract class TestBase implements ITestBase {
     private String suiteName;//testng test suite name
     private String testName;//testng test name
     private final TimestampWriter timestampWriter = new TimestampWriter();
-    private SoftAssertions softAssertions = new SoftAssertions();
+    private SoftAssertions softAssertions;
 
     public TimestampWriter getTimestampWriter() {
         return timestampWriter;
@@ -498,6 +498,7 @@ public abstract class TestBase implements ITestBase {
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
             getTimestampWriter().write(this);
         }
+        softAssertions = new SoftAssertions();
     }
 
     @Override
