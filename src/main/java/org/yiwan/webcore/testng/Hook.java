@@ -23,7 +23,7 @@ public class Hook implements IHookable {
         Method method;
         boolean skipTest = false;
         try {
-            method = testResult.getInstance().getClass().getMethod("getSkipTest");
+            method = testResult.getInstance().getClass().getMethod("isSkipTest");
             skipTest = (boolean) method.invoke(testResult.getInstance());
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             logger.error(e.getMessage(), e);

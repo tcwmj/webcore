@@ -15,67 +15,59 @@ import java.util.Map;
 
 public interface ITestBase {
 
-    TimestampWriter getTimestampWriter();
-
-    TestCapability getTestCapability();
-
-    IWebDriverWrapper getWebDriverWrapper();
-
-    IPageManager getPageManager();
-
-    void setPageManager(IPageManager pageManager);
-
-    String getSuiteName();
-
-    void setSuiteName(String suiteName);
-
-    String getTestName();
-
-    void setTestName(String testName);
-
-    Map<String, String> getTestMap();
-
-    TestEnvironment getTestEnvironment();
-
-    void setTestEnvironment(TestEnvironment testEnvironment);
-
-    boolean getSkipTest();
-
-    void setSkipTest(boolean skipTest);
-
-    void createProxyWrapper();
-
-    void createWebDriverWrapper() throws MalformedURLException;
-
-    ProxyWrapper getProxyWrapper();
-
-    boolean isPrepareToDownload();
-
-    void setPrepareToDownload(boolean prepareToDownload);
-
     String getDownloadFile();
-
-    void setDownloadFile(String downloadFile);
 
     String getDefaultDownloadFileName();
 
-    void setDefaultDownloadFileName(String defaultDownloadFileName);
-
     String getTransactionName();
 
-    void setTransactionName(String transactionName);
+    String getSuiteName();
 
-    ITestDataManager getTestDataManager();
-
-    void setTestDataManager(ITestDataManager testDataManager);
+    String getTestName();
 
     String getScenarioId();
 
-    void setScenarioId(String scenarioId);
-
     String getFeatureId();
 
+    String getSuiteTestSeparator();
+
+    boolean isSkipTest();
+
+    boolean isPrepareToDownload();
+
+    Map<String, String> getTestMap();
+
+    IWebDriverWrapper getWebDriverWrapper();
+
+    ITestDataManager getTestDataManager();
+
+    IPageManager getPageManager();
+
+    ProxyWrapper getProxyWrapper();
+
+    TestCapability getTestCapability();
+
+    TestEnvironment getTestEnvironment();
+
+    TimestampWriter getTimestampWriter();
+
+    SoftAssertions getSoftAssertions();
+
+    void setDownloadFile(String downloadFile);
+
+    void setDefaultDownloadFileName(String defaultDownloadFileName);
+
+    void setScenarioId(String scenarioId);
+
     void setFeatureId(String featureId);
+
+    void setSkipTest(boolean skipTest);
+
+    void setPrepareToDownload(boolean prepareToDownload);
+
+    void setTestDataManager(ITestDataManager testDataManager);
+
+    void setPageManager(IPageManager pageManager);
 
     /**
      * log the content into the report
@@ -127,19 +119,15 @@ public interface ITestBase {
 
     void embedTestData(Object o) throws Exception;
 
-    boolean isRecycleTestEnvironment();
-
-    void setRecycleTestEnvironment(boolean recycleTestEnvironment);
-
     void startTransaction(String transactionName);
 
     void stopTransaction();
 
-    String getSuiteTestSeparator();
+    void createProxyWrapper();
+
+    void createWebDriverWrapper() throws MalformedURLException;
 
     void setUpTest() throws Exception;
 
     void tearDownTest() throws Exception;
-
-    SoftAssertions getSoftAssertions();
 }
