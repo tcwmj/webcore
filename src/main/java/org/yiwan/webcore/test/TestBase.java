@@ -258,12 +258,16 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void startTransaction(String transactionName) {
         this.transactionName = transactionName;
-        subject.nodifyObserversStart();
+        if (subject != null) {
+            subject.nodifyObserversStart();
+        }
     }
 
     @Override
     public void stopTransaction() {
-        subject.nodifyObserversStop();
+        if (subject != null) {
+            subject.nodifyObserversStop();
+        }
     }
 
     @Override
