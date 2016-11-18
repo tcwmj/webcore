@@ -13,7 +13,7 @@ public class WebDriverActionExecutor {
     private int max_retry_times;
 
     public WebDriverActionExecutor() {
-        this(3);
+        this(2);
     }
 
     public WebDriverActionExecutor(int max_retry_times) {
@@ -35,16 +35,14 @@ public class WebDriverActionExecutor {
 
     private <T extends Exception> void execute(IWebDriverAction action, int retries, Class<T> exceptionType) {
         if (retries > max_retry_times) {
-            throw new RuntimeException("exceed retry times");
+            throw new RuntimeException("exceed retry times, max retry times is " + max_retry_times);
         } else {
-            if (retries > 0) {
-                logger.warn("{} occurred, retry {}", exceptionType.getName(), retries);
-            }
             try {
                 action.execute();
             } catch (Exception e) {
                 if (exceptionType.isInstance(e)) {
-                    execute(action, ++retries, exceptionType);
+                    logger.warn(String.format("%s occurred, retry %d", exceptionType.getName(), ++retries), e);
+                    execute(action, retries, exceptionType);
                 } else {
                     throw new RuntimeException(e);
                 }
