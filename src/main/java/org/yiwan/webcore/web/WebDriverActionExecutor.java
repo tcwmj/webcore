@@ -1,6 +1,6 @@
 package org.yiwan.webcore.web;
 
-import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,27 +10,43 @@ import org.slf4j.LoggerFactory;
  */
 public class WebDriverActionExecutor {
     private final Logger logger = LoggerFactory.getLogger(WebDriverActionExecutor.class);
-    private static final int MAX_RETRIES = 3;
+    private int max_retry_times;
 
-    private Exception exception;
-
-    public void execute(IWebDriverAction action) {
-        execute(action, 0);
+    public WebDriverActionExecutor() {
+        this(2);
     }
 
-    private void execute(IWebDriverAction action, int retries) {
-        if (retries > MAX_RETRIES) {
-            throw new RuntimeException(exception);
-        } else if (retries > 0) {
-            logger.warn("UnreachableBrowserException occurred, retry {}", retries);
-        }
+    public WebDriverActionExecutor(int max_retry_times) {
+        this.max_retry_times = max_retry_times;
+    }
 
-        try {
-            action.execute();
-//        } catch (UnreachableBrowserException | TimeoutException t) {
-        } catch (UnreachableBrowserException e) {
-            exception = e;
-            execute(action, ++retries);
+    public void execute(IWebDriverAction action) {
+        execute(action, WebDriverException.class);
+    }
+
+    /**
+     * @param action
+     * @param exceptionType any exception such as UnreachableBrowserException, TimeoutException, WebDriverException
+     * @param <T>
+     */
+    public <T extends Exception> void execute(IWebDriverAction action, Class<T> exceptionType) {
+        execute(action, 0, exceptionType);
+    }
+
+    private <T extends Exception> void execute(IWebDriverAction action, int retries, Class<T> exceptionType) {
+        if (retries > max_retry_times) {
+            throw new RuntimeException("exceed retry times, max retry times is " + max_retry_times);
+        } else {
+            try {
+                action.execute();
+            } catch (Exception e) {
+                if (exceptionType.isInstance(e)) {
+                    logger.warn(String.format("%s occurred, retry %d", exceptionType.getName(), ++retries), e);
+                    execute(action, retries, exceptionType);
+                } else {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }
