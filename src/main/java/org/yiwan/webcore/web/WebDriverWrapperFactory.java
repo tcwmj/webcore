@@ -45,11 +45,11 @@ public class WebDriverWrapperFactory {
     }
 
     public WebDriverWrapperFactory(TestCapability testCapability, Proxy seleniumProxy) {
-        this.os = testCapability.getOs() == null ? System.getProperty("os") : testCapability.getOs();
-        this.os_version = testCapability.getOsVersion() == null ? System.getProperty("os.version") : testCapability.getOsVersion();
-        this.browser = testCapability.getBrowser() == null ? System.getProperty("browser", PropHelper.DEFAULT_BROWSER) : testCapability.getBrowser();
-        this.browser_version = testCapability.getBrowserVersion() == null ? System.getProperty("browser.version") : testCapability.getBrowserVersion();
-        this.resolution = testCapability.getResolution() == null ? System.getProperty("resolution") : testCapability.getResolution();
+        this.os = (testCapability == null || testCapability.getOs() == null) ? System.getProperty("os") : testCapability.getOs();
+        this.os_version = (testCapability == null || testCapability.getOsVersion() == null) ? System.getProperty("os.version") : testCapability.getOsVersion();
+        this.browser = (testCapability == null || testCapability.getBrowser() == null) ? System.getProperty("browser", PropHelper.DEFAULT_BROWSER) : testCapability.getBrowser();
+        this.browser_version = (testCapability == null || testCapability.getBrowserVersion() == null) ? System.getProperty("browser.version") : testCapability.getBrowserVersion();
+        this.resolution = (testCapability == null || testCapability.getResolution() == null) ? System.getProperty("resolution") : testCapability.getResolution();
         this.seleniumProxy = seleniumProxy;
     }
 
