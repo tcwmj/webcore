@@ -164,10 +164,10 @@ public class PropHelper {
             TestEnvironment testEnvironment = new TestEnvironment();
             ApplicationServer applicationServer = new ApplicationServer();
             applicationServer.setUrl(url.trim());
-            applicationServer.setUsername("FQA");
-            applicationServer.setKey("src/test/resources/id_rsa_FQA");
+            applicationServer.setUsername(System.getProperty("applicationServer.username", "ec2-user"));
+            applicationServer.setKey(System.getProperty("applicationServer.key", "src/test/resources/lrmtech-colline-server-singapore.pem"));
             HardwareInformation hardwareInformation = new HardwareInformation();
-            hardwareInformation.setOs("linux");
+            hardwareInformation.setOs(System.getProperty("applicationServer.os", "linux"));
             applicationServer.setHardwareInformation(hardwareInformation);
             DatabaseServer databaseServer = new DatabaseServer();
             if (dump != null && dump.equals("sqlserver")) {
