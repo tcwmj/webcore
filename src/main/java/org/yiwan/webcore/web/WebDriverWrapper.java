@@ -1092,7 +1092,9 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebDriverWrapper switchTo() {
             logger.debug("switching to {}", locator);
-            return waitThat(locator).frameToBeAvailableAndSwitchToIt();
+            IWebDriverWrapper ret = waitThat(locator).frameToBeAvailableAndSwitchToIt();
+            doPostAction();
+            return ret;
         }
 
         @Override
@@ -1510,6 +1512,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper switchTo() {
             logger.debug("switching to {}", webElement);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(webElement));
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
