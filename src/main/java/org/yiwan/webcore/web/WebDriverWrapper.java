@@ -2997,6 +2997,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper defaultContent() {
             logger.debug("switching to default content");
             driver.switchTo().defaultContent();
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3004,6 +3005,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper frame(int index) {
             logger.debug("switching to frame {}", index);
             driver.switchTo().frame(index);
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3011,6 +3013,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper frame(String nameOrId) {
             logger.debug("switching to frame {}", nameOrId);
             driver.switchTo().frame(nameOrId);
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3018,6 +3021,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper frame(Locator locator) {
             logger.debug("switching to frame {}", locator);
             driver.switchTo().frame(driver.findElement(locator.by()));
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3025,6 +3029,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper parentFrame() {
             logger.debug("switching to parent frame");
             driver.switchTo().parentFrame();
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3032,6 +3037,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper window(String nameOrHandle) {
             logger.debug("switching to window {}", nameOrHandle);
             driver.switchTo().window(nameOrHandle);
+            doPostAction();
             return WebDriverWrapper.this;
         }
     }
