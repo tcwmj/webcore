@@ -531,11 +531,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper click() {
-            logger.debug("clicking {}", locator);
-            return clickWithoutLogging();
+            return click(true);
         }
 
-        private IWebElementWrapper clickWithoutLogging() {
+        private IWebElementWrapper click(boolean logging) {
+            if (logging) {
+                logger.debug("clicking {}", locator);
+            }
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
@@ -650,7 +652,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper check(boolean checked) {
             logger.debug("checking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
-                clickWithoutLogging();
+                click(false);
             }
             return this;
         }
@@ -664,7 +666,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public boolean tick(boolean checked) {
             logger.debug("ticking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
-                clickWithoutLogging();
+                click(false);
                 return true;
             }
             return false;
@@ -1110,11 +1112,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper click() {
-            logger.debug("clicking {}", webElement);
-            return clickWithoutLogging();
+            return click(true);
         }
 
-        public IWebElementWrapper clickWithoutLogging() {
+        public IWebElementWrapper click(boolean logging) {
+            if (logging) {
+                logger.debug("clicking {}", webElement);
+            }
             wait.until(ExpectedConditions.visibilityOf(webElement)).click();
             doPostAction();
             return this;
@@ -1213,7 +1217,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper check(boolean checked) {
             logger.debug("checking {} {}", checked ? "on" : "off", webElement);
             if (isChecked() != checked) {
-                clickWithoutLogging();
+                click(false);
             }
             return this;
         }
@@ -1227,7 +1231,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public boolean tick(boolean checked) {
             logger.debug("ticking {} {}", checked ? "on" : "off", webElement);
             if (isChecked() != checked) {
-                clickWithoutLogging();
+                click(false);
                 return true;
             }
             return false;
