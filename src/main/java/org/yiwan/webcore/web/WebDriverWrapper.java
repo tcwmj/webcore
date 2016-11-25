@@ -1105,14 +1105,22 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public int getNumberOfMatches() {
-            return waitThat(locator).toBeAllVisible().size();
+            int num = 0;
+            for (WebElement webElement : findElements()) {
+                if (webElement.isDisplayed()) {
+                    num++;
+                }
+            }
+            return num;
         }
 
         @Override
         public List<IWebElementWrapper> getAllMatchedElements() {
             List<IWebElementWrapper> webElementWrappers = new ArrayList<>();
-            for (WebElement webElement : waitThat(locator).toBeAllVisible()) {
-                webElementWrappers.add(element(webElement));
+            for (WebElement webElement : findElements()) {
+                if (webElement.isDisplayed()) {
+                    webElementWrappers.add(element(webElement));
+                }
             }
             return webElementWrappers;
         }
