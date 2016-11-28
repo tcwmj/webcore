@@ -7,6 +7,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
@@ -117,6 +118,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public String getPageTitle() {
         return driver.getTitle();
+    }
+
+    @Override
+    public String getSessionId() {
+        return ((RemoteWebDriver) driver).getSessionId().toString();
     }
 
     @Override
