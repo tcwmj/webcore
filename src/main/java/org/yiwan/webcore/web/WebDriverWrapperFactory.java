@@ -54,19 +54,22 @@ public class WebDriverWrapperFactory {
     }
 
     public IWebDriverWrapper create() throws MalformedURLException {
+        IWebDriverWrapper webDriverWrapper = null;
         if (PropHelper.DUMMY_TEST) {
-            return new DummyDriverWrapper();
+            webDriverWrapper = new DummyDriverWrapper();
         } else {
             if (PropHelper.REMOTE) {
                 logger.debug("choosing remote test mode");
-                return createRemoteWebDriverWrapper();
+                webDriverWrapper = createRemoteWebDriverWrapper();
             } else {
                 logger.debug("choosing local test mode");
-                return createWebDriverWrapper();
+                webDriverWrapper = createWebDriverWrapper();
             }
 //        use explicit wait to replace implicitly wait
 //        webDriver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
         }
+        logger.debug("created webdriver with session id {}", webDriverWrapper.getSessionId());
+        return webDriverWrapper;
     }
 
     private IWebDriverWrapper createWebDriverWrapper() {

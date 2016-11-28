@@ -50,7 +50,7 @@ public class FileDownloadObserver extends SampleObserver {
      * support download file mechanism through the proxy
      */
     private void supportDownloadFile(final ITestBase testCase) {
-        logger.debug("setup proxy to support file download mechianism");
+        logger.debug("setup proxy to support file download mechanism");
         // set response filter rule for downloading files
         proxyWrapper.addFirstHttpFilterFactory(new ResponseFilterAdapter.FilterSource(new ResponseFilter() {
             @Override
