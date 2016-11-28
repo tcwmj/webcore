@@ -228,9 +228,9 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentAlertAssertion {
-        AbstractBooleanAssert<?> present();
+        AbstractBooleanAssert present();
 
-        AbstractCharSequenceAssert<?, String> text();
+        AbstractCharSequenceAssert text();
 
     }
 
@@ -255,29 +255,29 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentLocatorAssertion {
-        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts();
+        AbstractListAssert allSelectedTexts();
 
-        AbstractCharSequenceAssert<?, String> selectedText();
+        AbstractCharSequenceAssert selectedText();
 
-        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts();
+        AbstractListAssert allOptionTexts();
 
-        AbstractBooleanAssert<?> present();
+        AbstractBooleanAssert present();
 
-        AbstractBooleanAssert<?> enabled();
+        AbstractBooleanAssert enabled();
 
-        AbstractBooleanAssert<?> displayed();
+        AbstractBooleanAssert displayed();
 
-        AbstractBooleanAssert<?> selected();
+        AbstractBooleanAssert selected();
 
-        AbstractCharSequenceAssert<?, String> innerText();
+        AbstractCharSequenceAssert innerText();
 
-        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts();
+        AbstractListAssert allInnerTexts();
 
-        AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute);
+        AbstractCharSequenceAssert attributeValueOf(String attribute);
 
-        AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute);
+        AbstractCharSequenceAssert cssValueOf(String cssAttribute);
 
-        AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements();
+        AbstractIntegerAssert numberOfElements();
 
         IFluentLocatorAssertion nestedElements(Locator locator);
     }
@@ -350,11 +350,11 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentPageAssertion {
-        AbstractCharSequenceAssert<?, String> title();
+        AbstractCharSequenceAssert title();
 
-        AbstractCharSequenceAssert<?, String> source();
+        AbstractCharSequenceAssert source();
 
-        AbstractCharSequenceAssert<?, String> url();
+        AbstractCharSequenceAssert url();
     }
 
     interface IFluentPageWait {
