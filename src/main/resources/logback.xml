@@ -74,8 +74,8 @@
     <logger name="com.lombardrisk" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
-    <logger name="org.littleshoot.proxy" level="ERROR"/>
-    <logger name="net.lightbody.bmp" level="ERROR"/>
+    <logger name="org.littleshoot.proxy" level="INFO"/>
+    <logger name="net.lightbody.bmp" level="INFO"/>
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="DEBUG"/>
