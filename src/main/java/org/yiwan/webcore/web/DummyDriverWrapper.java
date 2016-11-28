@@ -147,6 +147,11 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
+    public String getSessionId() {
+        return "";
+    }
+
+    @Override
     public IWebDriverWrapper clickSmartly(Locator... locators) {
         return this;
     }

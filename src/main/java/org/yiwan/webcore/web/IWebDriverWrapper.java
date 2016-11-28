@@ -90,6 +90,13 @@ public interface IWebDriverWrapper {
     String getPageTitle();
 
     /**
+     * get webdriver session id
+     *
+     * @return session id string
+     */
+    String getSessionId();
+
+    /**
      * click element if it's displayed, otherwise click the next one
      *
      * @param locators

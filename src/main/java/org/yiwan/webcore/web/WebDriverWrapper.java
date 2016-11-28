@@ -6,6 +6,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
@@ -116,6 +117,11 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public String getPageTitle() {
         return driver.getTitle();
+    }
+
+    @Override
+    public String getSessionId() {
+        return ((RemoteWebDriver) driver).getSessionId().toString();
     }
 
     @Override
@@ -531,7 +537,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper click() {
-            logger.debug("clicking {}", locator);
+            return click(true);
+        }
+
+        private IWebElementWrapper click(boolean logging) {
+            if (logging) {
+                logger.debug("clicking {}", locator);
+            }
             wait.until(new ExpectedCondition<Boolean>() {
                 @Override
                 public Boolean apply(WebDriver driver) {
@@ -646,7 +658,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper check(boolean checked) {
             logger.debug("checking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
-                click();
+                click(false);
             }
             return this;
         }
@@ -660,7 +672,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public boolean tick(boolean checked) {
             logger.debug("ticking {} {}", checked ? "on" : "off", locator);
             if (isChecked() != checked) {
-                click();
+                click(false);
                 return true;
             }
             return false;
@@ -1077,19 +1089,29 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public IWebDriverWrapper switchTo() {
             logger.debug("switching to {}", locator);
-            return waitThat(locator).frameToBeAvailableAndSwitchToIt();
+            IWebDriverWrapper ret = waitThat(locator).frameToBeAvailableAndSwitchToIt();
+            doPostAction();
+            return ret;
         }
 
         @Override
         public int getNumberOfMatches() {
-            return waitThat(locator).toBeAllVisible().size();
+            int num = 0;
+            for (WebElement webElement : findElements()) {
+                if (webElement.isDisplayed()) {
+                    num++;
+                }
+            }
+            return num;
         }
 
         @Override
         public List<IWebElementWrapper> getAllMatchedElements() {
             List<IWebElementWrapper> webElementWrappers = new ArrayList<>();
-            for (WebElement webElement : waitThat(locator).toBeAllVisible()) {
-                webElementWrappers.add(element(webElement));
+            for (WebElement webElement : findElements()) {
+                if (webElement.isDisplayed()) {
+                    webElementWrappers.add(element(webElement));
+                }
             }
             return webElementWrappers;
         }
@@ -1104,7 +1126,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 
         @Override
         public IWebElementWrapper click() {
-            logger.debug("clicking {}", webElement);
+            return click(true);
+        }
+
+        public IWebElementWrapper click(boolean logging) {
+            if (logging) {
+                logger.debug("clicking {}", webElement);
+            }
             wait.until(ExpectedConditions.visibilityOf(webElement)).click();
             doPostAction();
             return this;
@@ -1203,7 +1231,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebElementWrapper check(boolean checked) {
             logger.debug("checking {} {}", checked ? "on" : "off", webElement);
             if (isChecked() != checked) {
-                click();
+                click(false);
             }
             return this;
         }
@@ -1217,7 +1245,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public boolean tick(boolean checked) {
             logger.debug("ticking {} {}", checked ? "on" : "off", webElement);
             if (isChecked() != checked) {
-                click();
+                click(false);
                 return true;
             }
             return false;
@@ -1486,6 +1514,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper switchTo() {
             logger.debug("switching to {}", webElement);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(webElement));
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -2973,6 +3002,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper defaultContent() {
             logger.debug("switching to default content");
             driver.switchTo().defaultContent();
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -2980,6 +3010,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper frame(int index) {
             logger.debug("switching to frame {}", index);
             driver.switchTo().frame(index);
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -2987,6 +3018,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper frame(String nameOrId) {
             logger.debug("switching to frame {}", nameOrId);
             driver.switchTo().frame(nameOrId);
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -2994,6 +3026,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper frame(Locator locator) {
             logger.debug("switching to frame {}", locator);
             driver.switchTo().frame(driver.findElement(locator.by()));
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3001,6 +3034,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper parentFrame() {
             logger.debug("switching to parent frame");
             driver.switchTo().parentFrame();
+            doPostAction();
             return WebDriverWrapper.this;
         }
 
@@ -3008,6 +3042,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper window(String nameOrHandle) {
             logger.debug("switching to window {}", nameOrHandle);
             driver.switchTo().window(nameOrHandle);
+            doPostAction();
             return WebDriverWrapper.this;
         }
     }
