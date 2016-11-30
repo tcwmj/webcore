@@ -4,11 +4,9 @@ import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.remote.SessionId;
 import org.yiwan.webcore.locator.Locator;
 
 import java.util.List;
@@ -94,7 +92,9 @@ public interface IWebDriverWrapper {
      *
      * @return session id string
      */
-    String getSessionId();
+    SessionId getSessionId();
+
+    Capabilities getCapabilities();
 
     /**
      * click element if it's displayed, otherwise click the next one

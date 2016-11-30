@@ -4,11 +4,9 @@ import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.remote.SessionId;
 import org.yiwan.webcore.locator.Locator;
 
 import java.util.ArrayList;
@@ -147,8 +145,13 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public String getSessionId() {
-        return "";
+    public SessionId getSessionId() {
+        return null;
+    }
+
+    @Override
+    public Capabilities getCapabilities() {
+        return null;
     }
 
     @Override

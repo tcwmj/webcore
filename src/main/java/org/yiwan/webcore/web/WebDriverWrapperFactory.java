@@ -68,7 +68,7 @@ public class WebDriverWrapperFactory {
 //        use explicit wait to replace implicitly wait
 //        webDriver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
         }
-        logger.debug("created webdriver with session id {}", webDriverWrapper.getSessionId());
+        logger.debug("created web driver with following information\nSession ID: {}\n{}", webDriverWrapper.getSessionId(), webDriverWrapper.getCapabilities());
         return webDriverWrapper;
     }
 
