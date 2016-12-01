@@ -903,8 +903,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public List<String> getAllInnerTexts() {
             List<String> texts = new ArrayList<>();
-            for (WebElement webElement : waitThat(locator).toBeAllVisible()) {
-                texts.add(element(webElement).getInnerText());
+            for (IWebElementWrapper webElementWrapper : getAllMatchedElements()) {
+                texts.add(webElementWrapper.getInnerText());
             }
             return texts;
         }
