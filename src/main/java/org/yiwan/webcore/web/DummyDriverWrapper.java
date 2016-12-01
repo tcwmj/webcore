@@ -997,62 +997,62 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
     public IFluentLocatorAssertion assertThat(final Locator locator) {
         return new IFluentLocatorAssertion() {
             @Override
-            public AbstractListAssert allSelectedTexts() {
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
                 return null;
             }
 
             @Override
-            public AbstractCharSequenceAssert selectedText() {
+            public AbstractCharSequenceAssert<?, String> selectedText() {
                 return null;
             }
 
             @Override
-            public AbstractListAssert allOptionTexts() {
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
                 return null;
             }
 
             @Override
-            public AbstractBooleanAssert present() {
+            public AbstractBooleanAssert<?> present() {
                 return null;
             }
 
             @Override
-            public AbstractBooleanAssert enabled() {
+            public AbstractBooleanAssert<?> enabled() {
                 return null;
             }
 
             @Override
-            public AbstractBooleanAssert displayed() {
+            public AbstractBooleanAssert<?> displayed() {
                 return null;
             }
 
             @Override
-            public AbstractBooleanAssert selected() {
+            public AbstractBooleanAssert<?> selected() {
                 return null;
             }
 
             @Override
-            public AbstractCharSequenceAssert innerText() {
+            public AbstractCharSequenceAssert<?, String> innerText() {
                 return null;
             }
 
             @Override
-            public AbstractListAssert allInnerTexts() {
+            public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
                 return null;
             }
 
             @Override
-            public AbstractCharSequenceAssert attributeValueOf(String attribute) {
+            public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
                 return null;
             }
 
             @Override
-            public AbstractCharSequenceAssert cssValueOf(String cssAttribute) {
+            public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
                 return null;
             }
 
             @Override
-            public AbstractIntegerAssert numberOfElements() {
+            public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
                 return null;
             }
 
@@ -1060,62 +1060,62 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IFluentLocatorAssertion nestedElements(Locator locator) {
                 return new IFluentLocatorAssertion() {
                     @Override
-                    public AbstractListAssert allSelectedTexts() {
+                    public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert selectedText() {
+                    public AbstractCharSequenceAssert<?, String> selectedText() {
                         return null;
                     }
 
                     @Override
-                    public AbstractListAssert allOptionTexts() {
+                    public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
                         return null;
                     }
 
                     @Override
-                    public AbstractBooleanAssert present() {
+                    public AbstractBooleanAssert<?> present() {
                         return null;
                     }
 
                     @Override
-                    public AbstractBooleanAssert enabled() {
+                    public AbstractBooleanAssert<?> enabled() {
                         return null;
                     }
 
                     @Override
-                    public AbstractBooleanAssert displayed() {
+                    public AbstractBooleanAssert<?> displayed() {
                         return null;
                     }
 
                     @Override
-                    public AbstractBooleanAssert selected() {
+                    public AbstractBooleanAssert<?> selected() {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert innerText() {
+                    public AbstractCharSequenceAssert<?, String> innerText() {
                         return null;
                     }
 
                     @Override
-                    public AbstractListAssert allInnerTexts() {
+                    public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert attributeValueOf(String attribute) {
+                    public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert cssValueOf(String cssAttribute) {
+                    public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
                         return null;
                     }
 
                     @Override
-                    public AbstractIntegerAssert numberOfElements() {
+                    public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
                         return null;
                     }
 
@@ -1141,12 +1141,12 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IFluentAlertAssertion alert() {
                 return new IFluentAlertAssertion() {
                     @Override
-                    public AbstractBooleanAssert present() {
+                    public AbstractBooleanAssert<?> present() {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert text() {
+                    public AbstractCharSequenceAssert<?, String> text() {
                         return null;
                     }
                 };
@@ -1156,17 +1156,17 @@ public class DummyDriverWrapper implements IWebDriverWrapper {
             public IFluentPageAssertion page() {
                 return new IFluentPageAssertion() {
                     @Override
-                    public AbstractCharSequenceAssert title() {
+                    public AbstractCharSequenceAssert<?, String> title() {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert source() {
+                    public AbstractCharSequenceAssert<?, String> source() {
                         return null;
                     }
 
                     @Override
-                    public AbstractCharSequenceAssert url() {
+                    public AbstractCharSequenceAssert<?, String> url() {
                         return null;
                     }
                 };
