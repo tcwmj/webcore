@@ -4,11 +4,9 @@ import org.assertj.core.api.AbstractBooleanAssert;
 import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.AbstractListAssert;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.remote.SessionId;
 import org.yiwan.webcore.locator.Locator;
 
 import java.util.List;
@@ -94,7 +92,9 @@ public interface IWebDriverWrapper {
      *
      * @return session id string
      */
-    String getSessionId();
+    SessionId getSessionId();
+
+    Capabilities getCapabilities();
 
     /**
      * click element if it's displayed, otherwise click the next one
@@ -228,9 +228,9 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentAlertAssertion {
-        AbstractBooleanAssert present();
+        AbstractBooleanAssert<?> present();
 
-        AbstractCharSequenceAssert text();
+        AbstractCharSequenceAssert<?, String> text();
 
     }
 
@@ -255,29 +255,29 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentLocatorAssertion {
-        AbstractListAssert allSelectedTexts();
+        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts();
 
-        AbstractCharSequenceAssert selectedText();
+        AbstractCharSequenceAssert<?, String> selectedText();
 
-        AbstractListAssert allOptionTexts();
+        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts();
 
-        AbstractBooleanAssert present();
+        AbstractBooleanAssert<?> present();
 
-        AbstractBooleanAssert enabled();
+        AbstractBooleanAssert<?> enabled();
 
-        AbstractBooleanAssert displayed();
+        AbstractBooleanAssert<?> displayed();
 
-        AbstractBooleanAssert selected();
+        AbstractBooleanAssert<?> selected();
 
-        AbstractCharSequenceAssert innerText();
+        AbstractCharSequenceAssert<?, String> innerText();
 
-        AbstractListAssert allInnerTexts();
+        AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts();
 
-        AbstractCharSequenceAssert attributeValueOf(String attribute);
+        AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute);
 
-        AbstractCharSequenceAssert cssValueOf(String cssAttribute);
+        AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute);
 
-        AbstractIntegerAssert numberOfElements();
+        AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements();
 
         IFluentLocatorAssertion nestedElements(Locator locator);
     }
@@ -350,11 +350,11 @@ public interface IWebDriverWrapper {
     }
 
     interface IFluentPageAssertion {
-        AbstractCharSequenceAssert title();
+        AbstractCharSequenceAssert<?, String> title();
 
-        AbstractCharSequenceAssert source();
+        AbstractCharSequenceAssert<?, String> source();
 
-        AbstractCharSequenceAssert url();
+        AbstractCharSequenceAssert<?, String> url();
     }
 
     interface IFluentPageWait {

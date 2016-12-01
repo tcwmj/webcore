@@ -7,6 +7,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
@@ -120,8 +121,13 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     @Override
-    public String getSessionId() {
-        return ((RemoteWebDriver) driver).getSessionId().toString();
+    public SessionId getSessionId() {
+        return ((RemoteWebDriver) driver).getSessionId();
+    }
+
+    @Override
+    public Capabilities getCapabilities() {
+        return ((RemoteWebDriver) driver).getCapabilities();
     }
 
     @Override
@@ -223,14 +229,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     public IWebDriverWrapper doPostAction() {
-        if (!alert().isPresent()) {
-            try {
-                waitThat().document().toBeReady();
-                waitThat().jQuery().toBeInactive();
-            } catch (TimeoutException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
+//        if (!alert().isPresent()) {
+//            try {
+//                waitThat().document().toBeReady();
+//                waitThat().jQuery().toBeInactive();
+//            } catch (TimeoutException e) {
+//                logger.error(e.getMessage(), e);
+//            }
+//        }
         return this;
     }
 
@@ -896,8 +902,8 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         @Override
         public List<String> getAllInnerTexts() {
             List<String> texts = new ArrayList<>();
-            for (WebElement webElement : waitThat(locator).toBeAllVisible()) {
-                texts.add(element(webElement).getInnerText());
+            for (IWebElementWrapper webElementWrapper : getAllMatchedElements()) {
+                texts.add(webElementWrapper.getInnerText());
             }
             return texts;
         }
@@ -2700,62 +2706,62 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert allSelectedTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAllSelectedTexts()).as("assert %s all selected texts", webElementWrapper);
         }
 
         @Override
-        public AbstractCharSequenceAssert selectedText() {
+        public AbstractCharSequenceAssert<?, String> selectedText() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getSelectedText()).as("assert %s selected text", webElementWrapper);
         }
 
         @Override
-        public AbstractListAssert allOptionTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAllOptionTexts()).as("assert %s all option texts", webElementWrapper);
         }
 
         @Override
-        public AbstractBooleanAssert present() {
+        public AbstractBooleanAssert<?> present() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isPresent()).as("assert %s present", webElementWrapper);
         }
 
         @Override
-        public AbstractBooleanAssert enabled() {
+        public AbstractBooleanAssert<?> enabled() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isEnabled()).as("assert %s enabled", webElementWrapper);
         }
 
         @Override
-        public AbstractBooleanAssert displayed() {
+        public AbstractBooleanAssert<?> displayed() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isDisplayed()).as("assert %s displayed", webElementWrapper);
         }
 
         @Override
-        public AbstractBooleanAssert selected() {
+        public AbstractBooleanAssert<?> selected() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.isSelected()).as("assert %s selected", webElementWrapper);
         }
 
         @Override
-        public AbstractCharSequenceAssert innerText() {
+        public AbstractCharSequenceAssert<?, String> innerText() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getInnerText()).as("assert %s innertText", webElementWrapper);
         }
 
         @Override
-        public AbstractListAssert allInnerTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAllInnerTexts()).as("assert %s all innerTexts", webElementWrapper);
         }
 
         @Override
-        public AbstractCharSequenceAssert attributeValueOf(String attribute) {
+        public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getAttribute(attribute)).as("assert attribute value of %s on %s", attribute, webElementWrapper);
         }
 
         @Override
-        public AbstractCharSequenceAssert cssValueOf(String cssAttribute) {
+        public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getCssValue(cssAttribute)).as("assert css attribute value of %s on %s", cssAttribute, webElementWrapper);
         }
 
         @Override
-        public AbstractIntegerAssert numberOfElements() {
+        public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
             return org.assertj.core.api.Assertions.assertThat(webElementWrapper.getNumberOfMatches()).as("assert number of elements %s", webElementWrapper);
         }
 
@@ -2773,62 +2779,62 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert allSelectedTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getAllSelectedTexts()).as("assert %s all selected texts", locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert selectedText() {
+        public AbstractCharSequenceAssert<?, String> selectedText() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getSelectedText()).as("assert %s selected text", locator);
         }
 
         @Override
-        public AbstractListAssert allOptionTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getAllOptionTexts()).as("assert %s all option texts", locator);
         }
 
         @Override
-        public AbstractBooleanAssert present() {
+        public AbstractBooleanAssert<?> present() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).isPresent()).as("assert %s present", locator);
         }
 
         @Override
-        public AbstractBooleanAssert enabled() {
+        public AbstractBooleanAssert<?> enabled() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).isEnabled()).as("assert %s enabled", locator);
         }
 
         @Override
-        public AbstractBooleanAssert displayed() {
+        public AbstractBooleanAssert<?> displayed() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).isDisplayed()).as("assert %s displayed", locator);
         }
 
         @Override
-        public AbstractBooleanAssert selected() {
+        public AbstractBooleanAssert<?> selected() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).isSelected()).as("assert %s selected", locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert innerText() {
+        public AbstractCharSequenceAssert<?, String> innerText() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getInnerText()).as("assert %s innertText", locator);
         }
 
         @Override
-        public AbstractListAssert allInnerTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getAllInnerTexts()).as("assert %s all innerTexts", locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert attributeValueOf(String attribute) {
+        public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getAttribute(attribute)).as("assert attribute value of %s on %s", attribute, locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert cssValueOf(String cssAttribute) {
+        public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getCssValue(cssAttribute)).as("assert css attribute value of %s on %s", cssAttribute, locator);
         }
 
         @Override
-        public AbstractIntegerAssert numberOfElements() {
+        public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
             return org.assertj.core.api.Assertions.assertThat(element(locator).getNumberOfMatches()).as("assert number of elements %s", locator);
         }
 
@@ -2843,12 +2849,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IFluentAlertAssertion alert() {
             return new IFluentAlertAssertion() {
                 @Override
-                public AbstractBooleanAssert present() {
+                public AbstractBooleanAssert<?> present() {
                     return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().isPresent()).as("assert alert present");
                 }
 
                 @Override
-                public AbstractCharSequenceAssert text() {
+                public AbstractCharSequenceAssert<?, String> text() {
                     return org.assertj.core.api.Assertions.assertThat(WebDriverWrapper.this.alert().getText()).as("assert alert text");
                 }
             };
@@ -2858,17 +2864,17 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IFluentPageAssertion page() {
             return new IFluentPageAssertion() {
                 @Override
-                public AbstractCharSequenceAssert title() {
+                public AbstractCharSequenceAssert<?, String> title() {
                     return org.assertj.core.api.Assertions.assertThat(getPageTitle()).as("assert page title");
                 }
 
                 @Override
-                public AbstractCharSequenceAssert source() {
+                public AbstractCharSequenceAssert<?, String> source() {
                     return org.assertj.core.api.Assertions.assertThat(getPageSource()).as("assert page source");
                 }
 
                 @Override
-                public AbstractCharSequenceAssert url() {
+                public AbstractCharSequenceAssert<?, String> url() {
                     return org.assertj.core.api.Assertions.assertThat(getCurrentUrl()).as("assert current url");
                 }
             };
@@ -2883,62 +2889,62 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         }
 
         @Override
-        public AbstractListAssert allSelectedTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allSelectedTexts() {
             return getSoftAssertions().assertThat(element(locator).getAllSelectedTexts()).as("validate %s all selected texts", locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert selectedText() {
+        public AbstractCharSequenceAssert<?, String> selectedText() {
             return getSoftAssertions().assertThat(element(locator).getSelectedText()).as("validate %s selected text", locator);
         }
 
         @Override
-        public AbstractListAssert allOptionTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allOptionTexts() {
             return getSoftAssertions().assertThat(element(locator).getAllOptionTexts()).as("validate %s all option texts", locator);
         }
 
         @Override
-        public AbstractBooleanAssert present() {
+        public AbstractBooleanAssert<?> present() {
             return getSoftAssertions().assertThat(element(locator).isPresent()).as("validate %s present", locator);
         }
 
         @Override
-        public AbstractBooleanAssert enabled() {
+        public AbstractBooleanAssert<?> enabled() {
             return getSoftAssertions().assertThat(element(locator).isEnabled()).as("validate %s enabled", locator);
         }
 
         @Override
-        public AbstractBooleanAssert displayed() {
+        public AbstractBooleanAssert<?> displayed() {
             return getSoftAssertions().assertThat(element(locator).isDisplayed()).as("validate %s displayed", locator);
         }
 
         @Override
-        public AbstractBooleanAssert selected() {
+        public AbstractBooleanAssert<?> selected() {
             return getSoftAssertions().assertThat(element(locator).isSelected()).as("validate %s selected", locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert innerText() {
+        public AbstractCharSequenceAssert<?, String> innerText() {
             return getSoftAssertions().assertThat(element(locator).getInnerText()).as("validate %s innertText", locator);
         }
 
         @Override
-        public AbstractListAssert allInnerTexts() {
+        public AbstractListAssert<? extends AbstractListAssert, ? extends List, String> allInnerTexts() {
             return getSoftAssertions().assertThat(element(locator).getAllInnerTexts()).as("validate %s all innerTexts", locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert attributeValueOf(String attribute) {
+        public AbstractCharSequenceAssert<?, String> attributeValueOf(String attribute) {
             return getSoftAssertions().assertThat(element(locator).getAttribute(attribute)).as("validate attribute value of %s on %s", attribute, locator);
         }
 
         @Override
-        public AbstractCharSequenceAssert cssValueOf(String cssAttribute) {
+        public AbstractCharSequenceAssert<?, String> cssValueOf(String cssAttribute) {
             return getSoftAssertions().assertThat(element(locator).getCssValue(cssAttribute)).as("validate css attribute value of %s on %s", cssAttribute, locator);
         }
 
         @Override
-        public AbstractIntegerAssert numberOfElements() {
+        public AbstractIntegerAssert<? extends AbstractIntegerAssert<?>> numberOfElements() {
             return getSoftAssertions().assertThat(element(locator).getNumberOfMatches()).as("validate number of elements %s", locator);
         }
 
@@ -2953,12 +2959,12 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IFluentAlertAssertion alert() {
             return new IFluentAlertAssertion() {
                 @Override
-                public AbstractBooleanAssert present() {
+                public AbstractBooleanAssert<?> present() {
                     return getSoftAssertions().assertThat(WebDriverWrapper.this.alert().isPresent()).as("validate alert present");
                 }
 
                 @Override
-                public AbstractCharSequenceAssert text() {
+                public AbstractCharSequenceAssert<?, String> text() {
                     return getSoftAssertions().assertThat(WebDriverWrapper.this.alert().getText()).as("validate alert text");
                 }
             };
@@ -2968,17 +2974,17 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IFluentPageAssertion page() {
             return new IFluentPageAssertion() {
                 @Override
-                public AbstractCharSequenceAssert title() {
+                public AbstractCharSequenceAssert<?, String> title() {
                     return getSoftAssertions().assertThat(getPageTitle()).as("validate page title");
                 }
 
                 @Override
-                public AbstractCharSequenceAssert source() {
+                public AbstractCharSequenceAssert<?, String> source() {
                     return getSoftAssertions().assertThat(getPageSource()).as("validate page source");
                 }
 
                 @Override
-                public AbstractCharSequenceAssert url() {
+                public AbstractCharSequenceAssert<?, String> url() {
                     return getSoftAssertions().assertThat(getCurrentUrl()).as("validate current url");
                 }
             };
@@ -3002,48 +3008,42 @@ public class WebDriverWrapper implements IWebDriverWrapper {
         public IWebDriverWrapper defaultContent() {
             logger.debug("switching to default content");
             driver.switchTo().defaultContent();
-            doPostAction();
-            return WebDriverWrapper.this;
+            return doPostAction();
         }
 
         @Override
         public IWebDriverWrapper frame(int index) {
             logger.debug("switching to frame {}", index);
             driver.switchTo().frame(index);
-            doPostAction();
-            return WebDriverWrapper.this;
+            return doPostAction();
         }
 
         @Override
         public IWebDriverWrapper frame(String nameOrId) {
             logger.debug("switching to frame {}", nameOrId);
             driver.switchTo().frame(nameOrId);
-            doPostAction();
-            return WebDriverWrapper.this;
+            return doPostAction();
         }
 
         @Override
         public IWebDriverWrapper frame(Locator locator) {
             logger.debug("switching to frame {}", locator);
             driver.switchTo().frame(driver.findElement(locator.by()));
-            doPostAction();
-            return WebDriverWrapper.this;
+            return doPostAction();
         }
 
         @Override
         public IWebDriverWrapper parentFrame() {
             logger.debug("switching to parent frame");
             driver.switchTo().parentFrame();
-            doPostAction();
-            return WebDriverWrapper.this;
+            return doPostAction();
         }
 
         @Override
         public IWebDriverWrapper window(String nameOrHandle) {
             logger.debug("switching to window {}", nameOrHandle);
             driver.switchTo().window(nameOrHandle);
-            doPostAction();
-            return WebDriverWrapper.this;
+            return doPostAction();
         }
     }
 }
