@@ -230,14 +230,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     }
 
     public IWebDriverWrapper doPostAction() {
-//        if (!alert().isPresent()) {
-//            try {
-//                waitThat().document().toBeReady();
-//                waitThat().jQuery().toBeInactive();
-//            } catch (TimeoutException e) {
-//                logger.error(e.getMessage(), e);
-//            }
-//        }
+        if (!alert().isPresent()) {
+            try {
+                waitThat().document().toBeReady();
+                waitThat().jQuery().toBeInactive();
+            } catch (TimeoutException e) {
+                logger.warn(e.getMessage());
+            }
+        }
         return this;
     }
 
@@ -2244,7 +2244,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                                 currentValue = (String) executeScript("return document.readyState");
                                 return currentValue.equals("interactive") || currentValue.equals("complete");
                             } catch (WebDriverException e) {
-                                logger.warn("javascript error while waiting document to be ready", e);
+                                logger.warn("javascript error while waiting document ready");
                                 return true;
                             }
                         }
@@ -2292,7 +2292,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                                     currentValue = (long) executeScript("return jQuery.active");
                                     return 0L == currentValue;
                                 } catch (WebDriverException e) {
-                                    logger.warn("javascript error while waiting jQuery to be inactive", e);
+                                    logger.warn("javascript error while waiting jQuery inactive");
                                     return true;
                                 }
                             }
