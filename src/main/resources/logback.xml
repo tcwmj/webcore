@@ -23,9 +23,9 @@
                 <file>${output_folder}${scenario}</file>
                 <Append>true</Append>
                 <!--<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">-->
-                    <!--<layout class="ch.qos.logback.classic.html.HTMLLayout">-->
-                        <!--<pattern>%d{HH:mm:ss.SSS}%thread%level%logger%msg</pattern>-->
-                    <!--</layout>-->
+                <!--<layout class="ch.qos.logback.classic.html.HTMLLayout">-->
+                <!--<pattern>%d{HH:mm:ss.SSS}%thread%level%logger%msg</pattern>-->
+                <!--</layout>-->
                 <!--</encoder>-->
                 <layout class="ch.qos.logback.classic.PatternLayout">
                     <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
@@ -52,6 +52,38 @@
             <level>DEBUG</level>
         </filter>
     </appender>
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${output_folder}info.log</File>
+        <Append>true</Append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${output_folder}info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${output_folder}warn.log</File>
+        <Append>true</Append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${output_folder}warn.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${output_folder}error.log</File>
         <Append>true</Append>
@@ -74,11 +106,13 @@
     <logger name="com.lombardrisk" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
-    <logger name="org.littleshoot.proxy" level="INFO"/>
-    <logger name="net.lightbody.bmp" level="INFO"/>
+    <logger name="org.littleshoot.proxy" level="WARN"/>
+    <logger name="net.lightbody.bmp" level="WARN"/>
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="DEBUG"/>
-        <appender-ref ref="ERROR"/>
+        <!--<appender-ref ref="DEBUG"/>-->
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="WARN"/>
+        <!--<appender-ref ref="ERROR"/>-->
     </root>
 </configuration>
