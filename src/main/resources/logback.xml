@@ -36,28 +36,12 @@
             </appender>
         </sift>
     </appender>
-    <!--<appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<File>${output_folder}debug.log</File>-->
-        <!--<Append>true</Append>-->
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-            <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
-            <!--<fileNamePattern>${output_folder}debug.%d{yyyy-MM-dd}.log</fileNamePattern>-->
-            <!--&lt;!&ndash; keep 30 days' worth of history &ndash;&gt;-->
-            <!--<maxHistory>30</maxHistory>-->
-        <!--</rollingPolicy>-->
-        <!--<encoder>-->
-            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>-->
-        <!--</encoder>-->
-        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-            <!--<level>DEBUG</level>-->
-        <!--</filter>-->
-    <!--</appender>-->
-    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${output_folder}info.log</File>
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${output_folder}debug.log</File>
         <Append>true</Append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${output_folder}info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${output_folder}debug.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
@@ -65,31 +49,15 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
         </filter>
     </appender>
-    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${output_folder}warn.log</File>
-        <Append>true</Append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${output_folder}warn.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
-        </filter>
-    </appender>
-    <!--<appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<File>${output_folder}error.log</File>-->
+    <!--<appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<File>${output_folder}info.log</File>-->
         <!--<Append>true</Append>-->
         <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
             <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
-            <!--<fileNamePattern>${output_folder}error.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+            <!--<fileNamePattern>${output_folder}info.%d{yyyy-MM-dd}.log</fileNamePattern>-->
             <!--&lt;!&ndash; keep 30 days' worth of history &ndash;&gt;-->
             <!--<maxHistory>30</maxHistory>-->
         <!--</rollingPolicy>-->
@@ -97,22 +65,54 @@
             <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>-->
         <!--</encoder>-->
         <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-            <!--<level>ERROR</level>-->
+            <!--<level>INFO</level>-->
         <!--</filter>-->
     <!--</appender>-->
+    <!--<appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<File>${output_folder}warn.log</File>-->
+        <!--<Append>true</Append>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
+            <!--<fileNamePattern>${output_folder}warn.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+            <!--&lt;!&ndash; keep 30 days' worth of history &ndash;&gt;-->
+            <!--<maxHistory>30</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+            <!--<level>WARN</level>-->
+        <!--</filter>-->
+    <!--</appender>-->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${output_folder}error.log</File>
+        <Append>true</Append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${output_folder}error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
     <logger name="org.yiwan" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
     <logger name="com.lombardrisk" level="DEBUG">
         <appender-ref ref="SIFT"/>
     </logger>
-    <logger name="org.littleshoot.proxy" level="WARN"/>
-    <logger name="net.lightbody.bmp" level="WARN"/>
+    <logger name="org.littleshoot.proxy" level="ERROR"/>
+    <logger name="net.lightbody.bmp" level="ERROR"/>
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <!--<appender-ref ref="DEBUG"/>-->
-        <appender-ref ref="INFO"/>
-        <appender-ref ref="WARN"/>
-        <!--<appender-ref ref="ERROR"/>-->
+        <appender-ref ref="DEBUG"/>
+        <!--<appender-ref ref="INFO"/>-->
+        <!--<appender-ref ref="WARN"/>-->
+        <appender-ref ref="ERROR"/>
     </root>
 </configuration>
