@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Proxy;
-import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -341,18 +340,19 @@ public abstract class TestBase implements ITestBase {
         //if no available test environment, no need create webdriver and test data
         testEnvironment = TestCaseManager.takeTestEnvironment();
         recycleTestEnvironment = true;//must be after method setTestEnvironment
-        report(String.format("test environment<br/>%s", testEnvironment));
         createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
         createWebDriverWrapper();//create webdriverWrapper
         webDriverWrapper.deleteAllCookies();
         if (PropHelper.MAXIMIZE_BROWSER) {
             webDriverWrapper.maximize();
         }
-        report(Helper.getTestReportStyle("../../" + PropHelper.LOG_FOLDER + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
         if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
             timestampWriter = new TimestampWriter();
             timestampWriter.write(this);
         }
+
+        report(String.format("taken test environment<br/>%s", testEnvironment));
+        report(Helper.getTestReportStyle("../../" + PropHelper.LOG_FOLDER + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
     }
 
     @Override
@@ -364,23 +364,21 @@ public abstract class TestBase implements ITestBase {
         if (proxyWrapper != null) {
             proxyWrapper.stop();
         }
-        closeAlerts();
-        try {
-            webDriverWrapper.quit();
-        } catch (Exception ignored) {
-            logger.error(ignored.getMessage(), ignored);
+        if (webDriverWrapper != null) {
+            try {
+                closeAlerts();
+                webDriverWrapper.quit();
+            } catch (Exception ignored) {
+                logger.error(ignored.getMessage(), ignored);
+            }
         }
         softAssertions.assertAll();
     }
 
     private void closeAlerts() {
         int acceptAlerts = 0;
-        try {
-            while (webDriverWrapper.alert().isPresent() && acceptAlerts++ < 10) {
-                webDriverWrapper.alert().accept();
-            }
-        } catch (WebDriverException e) {
-            logger.warn(e.getMessage(), e);
+        while (webDriverWrapper.alert().isPresent() && acceptAlerts++ < 10) {
+            webDriverWrapper.alert().accept();
         }
     }
 

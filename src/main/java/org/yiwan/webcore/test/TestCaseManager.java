@@ -50,12 +50,14 @@ public class TestCaseManager {
     }
 
     public static TestEnvironment takeTestEnvironment() throws InterruptedException {
-        logger.info("taking test environment, {} available", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
-        return TEST_ENVIRONMENT_BLOCKING_QUEUE.take();
+        logger.debug("{} test environments is available before taking", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
+        TestEnvironment testEnvironment = TEST_ENVIRONMENT_BLOCKING_QUEUE.take();
+        logger.debug(String.format("taken test environment\n%s", testEnvironment));
+        return testEnvironment;
     }
 
     public static void putTestEnvironment(TestEnvironment testEnvironment) throws InterruptedException {
         TEST_ENVIRONMENT_BLOCKING_QUEUE.put(testEnvironment);
-        logger.info("returned test environment, {} available", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
+        logger.debug("{} test environments is available after return", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
     }
 }
