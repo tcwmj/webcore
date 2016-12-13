@@ -50,7 +50,7 @@ public class FileDownloadObserver extends SampleObserver {
      * support download file mechanism through the proxy
      */
     private void supportDownloadFile(final ITestBase testCase) {
-        logger.debug("setup proxy to support file download mechanism");
+        logger.info("setup proxy to support file download mechanism");
         // set response filter rule for downloading files
         proxyWrapper.addFirstHttpFilterFactory(new ResponseFilterAdapter.FilterSource(new ResponseFilter() {
             @Override
@@ -122,7 +122,7 @@ public class FileDownloadObserver extends SampleObserver {
     }
 
     private void downloadTextFile(String text) {
-        logger.debug("saving text file to " + testCase.getDownloadFile());
+        logger.info("saving text file to " + testCase.getDownloadFile());
         try {
             FileUtils.writeStringToFile(new File(testCase.getDownloadFile()), text);
         } catch (UnsupportedCharsetException | IOException e) {
@@ -131,7 +131,7 @@ public class FileDownloadObserver extends SampleObserver {
     }
 
     private void downloadBinaryFile(byte[] bytes) {
-        logger.debug("saving binary file to " + testCase.getDownloadFile());
+        logger.info("saving binary file to " + testCase.getDownloadFile());
         try {
             FileUtils.writeByteArrayToFile(new File(testCase.getDownloadFile()), bytes);
         } catch (IOException e) {

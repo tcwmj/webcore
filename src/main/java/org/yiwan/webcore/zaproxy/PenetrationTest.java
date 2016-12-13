@@ -157,7 +157,7 @@ public class PenetrationTest {
             int progress = 0;
             while (progress < 100) {
                 progress = getScanningProgress(id);
-                logger.debug(String.format("scanner id=%d scanning progress=%d", id, progress));
+                logger.info(String.format("scanner id=%d scanning progress=%d", id, progress));
                 Thread.sleep(1000);
             }
             logger.info("active scanning done");
@@ -255,7 +255,7 @@ public class PenetrationTest {
             int progress = 0;
             while (progress < 100) {
                 progress = getScanningProgress(id);
-                logger.debug(String.format("scanner id=%d scanning progress=%d", id, progress));
+                logger.info(String.format("scanner id=%d scanning progress=%d", id, progress));
                 Thread.sleep(1000);
             }
             logger.info("spider scanning done");
