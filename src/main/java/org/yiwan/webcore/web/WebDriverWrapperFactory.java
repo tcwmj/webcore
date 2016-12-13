@@ -59,16 +59,16 @@ public class WebDriverWrapperFactory {
             webDriverWrapper = new DummyDriverWrapper();
         } else {
             if (PropHelper.REMOTE) {
-                logger.debug("choosing remote test mode");
+                logger.info("choosing remote test mode");
                 webDriverWrapper = createRemoteWebDriverWrapper();
             } else {
-                logger.debug("choosing local test mode");
+                logger.info("choosing local test mode");
                 webDriverWrapper = createWebDriverWrapper();
             }
 //        use explicit wait to replace implicitly wait
 //        webDriver.manage().timeouts().implicitlyWait(PropHelper.TIMEOUT_INTERVAL, TimeUnit.SECONDS);
         }
-        logger.debug("created web driver with following information\nSession ID: {}\n{}", webDriverWrapper.getSessionId(), webDriverWrapper.getCapabilities());
+        logger.info("created web driver with following information\nSession ID: {}\n{}", webDriverWrapper.getSessionId(), webDriverWrapper.getCapabilities());
         return webDriverWrapper;
     }
 
@@ -92,7 +92,7 @@ public class WebDriverWrapperFactory {
     private IWebDriverWrapper createRemoteWebDriverWrapper() throws MalformedURLException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         if (os != null) {
-            logger.debug("choosing platform " + os + (os_version == null ? "" : " " + os_version));
+            logger.info("choosing platform " + os + (os_version == null ? "" : " " + os_version));
             capabilities.setPlatform(Platform.fromString(os));
             if (os_version != null) {
                 capabilities.setCapability("os_version", os_version);
@@ -221,7 +221,7 @@ public class WebDriverWrapperFactory {
     }
 
     private void setBrowserCapabilities(DesiredCapabilities capabilities) {
-        logger.debug("choosing browser " + browser + (browser_version == null ? "" : " " + browser_version));
+        logger.info("choosing browser " + browser + (browser_version == null ? "" : " " + browser_version));
         if (browser_version != null) {
             capabilities.setVersion(browser_version);
         }
@@ -267,7 +267,7 @@ public class WebDriverWrapperFactory {
     private void setFirefoxCapabilities(DesiredCapabilities capabilities) {
         capabilities.setBrowserName(BrowserType.FIREFOX);
         if (browser_version != null && Integer.parseInt(browser_version) > 47) {
-            logger.debug("choosing marionette mode");
+            logger.info("choosing marionette mode");
             capabilities.setCapability("marionette", true);
         }
     }
