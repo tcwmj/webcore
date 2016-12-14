@@ -54,7 +54,7 @@ public abstract class TestBase implements ITestBase {
 
     private boolean skipTest;//whether to skip next execution of left test methods
     private boolean prepareToDownload;
-    private boolean recycleTestEnvironment = false;
+    private boolean recycleTestEnvironment;
 
     private Map<String, String> testMap;
     private Subject subject;
@@ -336,6 +336,7 @@ public abstract class TestBase implements ITestBase {
         testMap = new HashMap<>();
         skipTest = false;
         prepareToDownload = false;
+        recycleTestEnvironment = false;
 
         //if no available test environment, no need create webdriver and test data
         testEnvironment = TestCaseManager.pollTestEnvironment();
