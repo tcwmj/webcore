@@ -331,6 +331,7 @@ public abstract class TestBase implements ITestBase {
     public void setUpTest() throws Exception {
         MDC.put(PropHelper.DISCRIMINATOR_KEY, getSuiteTestSeparator() + scenarioId + ".log");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
+        logger.info("setup test before starting feature id {}, scenario id {}", featureId, scenarioId);
 
         softAssertions = new SoftAssertions();
         testMap = new HashMap<>();
@@ -362,6 +363,7 @@ public abstract class TestBase implements ITestBase {
 
     @Override
     public void tearDownTest() throws Exception {
+        logger.info("teardown test after finishing feature id {}, scenario id {}", featureId, scenarioId);
         if (recycleTestEnvironment) {
             TestCaseManager.offerTestEnvironment(testEnvironment);
             recycleTestEnvironment = false;
