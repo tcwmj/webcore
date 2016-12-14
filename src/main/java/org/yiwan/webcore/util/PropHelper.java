@@ -32,6 +32,8 @@ public class PropHelper {
     public static final long TIMEOUT_INTERVAL = Long.parseLong(getProperty("timeout.interval"));
     public static final long TIMEOUT_NAVIGATION_INTERVAL = Long.parseLong(getProperty("timeout.navigation.interval"));
     public static final long TIMEOUT_POLLING_INTERVAL = Long.parseLong(getProperty("timeout.polling.interval"));
+    public static final long TIMEOUT_POLLING_ENVIRONMENT = Long.parseLong(getProperty("timeout.polling.environment"));
+    public static final long TIMEOUT_OFFERING_ENVIRONMENT = Long.parseLong(getProperty("timeout.offering.environment"));
 
     public static final int TEST_RETRY_COUNT = Integer.valueOf(getProperty("test.retry.count"));
     public static final int ZAP_SERVER_PORT = Integer.parseInt(getProperty("zap.server.port"));
