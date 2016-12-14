@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Kenny Wang on 3/28/2016.
@@ -56,8 +57,20 @@ public class TestCaseManager {
         return testEnvironment;
     }
 
+    public static TestEnvironment pollTestEnvironment() throws InterruptedException {
+        logger.info("{} test environments is available before polling", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
+        TestEnvironment testEnvironment = TEST_ENVIRONMENT_BLOCKING_QUEUE.poll(PropHelper.TIMEOUT_POLLING_ENVIRONMENT, TimeUnit.MILLISECONDS);
+        logger.info(String.format("polled test environment\n%s", testEnvironment));
+        return testEnvironment;
+    }
+
     public static void putTestEnvironment(TestEnvironment testEnvironment) throws InterruptedException {
         TEST_ENVIRONMENT_BLOCKING_QUEUE.put(testEnvironment);
-        logger.info("{} test environments is available after return", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
+        logger.info("{} test environments is available after putting", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
+    }
+
+    public static void offerTestEnvironment(TestEnvironment testEnvironment) throws InterruptedException {
+        TEST_ENVIRONMENT_BLOCKING_QUEUE.offer(testEnvironment, PropHelper.TIMEOUT_OFFERING_ENVIRONMENT, TimeUnit.MILLISECONDS);
+        logger.info("{} test environments is available after offering", TEST_ENVIRONMENT_BLOCKING_QUEUE.size());
     }
 }

@@ -338,27 +338,31 @@ public abstract class TestBase implements ITestBase {
         prepareToDownload = false;
 
         //if no available test environment, no need create webdriver and test data
-        testEnvironment = TestCaseManager.takeTestEnvironment();
-        recycleTestEnvironment = true;//must be after method setTestEnvironment
-        createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
-        createWebDriverWrapper();//create webdriverWrapper
-        webDriverWrapper.deleteAllCookies();
-        if (PropHelper.MAXIMIZE_BROWSER) {
-            webDriverWrapper.maximize();
-        }
-        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-            timestampWriter = new TimestampWriter();
-            timestampWriter.write(this);
-        }
+        testEnvironment = TestCaseManager.pollTestEnvironment();
+        if (testEnvironment != null) {
+            recycleTestEnvironment = true;//must be after method setTestEnvironment
+            createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
+            createWebDriverWrapper();//create webdriverWrapper
+            webDriverWrapper.deleteAllCookies();
+            if (PropHelper.MAXIMIZE_BROWSER) {
+                webDriverWrapper.maximize();
+            }
+            if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+                timestampWriter = new TimestampWriter();
+                timestampWriter.write(this);
+            }
 
-        report(String.format("taken test environment<br/>%s", testEnvironment));
-        report(Helper.getTestReportStyle("../../" + PropHelper.LOG_FOLDER + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
+            report(String.format("taken test environment<br/>%s", testEnvironment));
+            report(Helper.getTestReportStyle("../../" + PropHelper.LOG_FOLDER + MDC.get(PropHelper.DISCRIMINATOR_KEY), "open test execution log"));
+        } else {
+            throw new RuntimeException("couldn't get a valid test environment");
+        }
     }
 
     @Override
     public void tearDownTest() throws Exception {
         if (recycleTestEnvironment) {
-            TestCaseManager.putTestEnvironment(testEnvironment);
+            TestCaseManager.offerTestEnvironment(testEnvironment);
             recycleTestEnvironment = false;
         }
         if (proxyWrapper != null) {
