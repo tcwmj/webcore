@@ -90,7 +90,7 @@ public class WebDriverWrapperFactory {
     }
 
     private IWebDriverWrapper createRemoteWebDriverWrapper() throws MalformedURLException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        final DesiredCapabilities capabilities = new DesiredCapabilities();
         if (os != null) {
             logger.info("choosing platform " + os + (os_version == null ? "" : " " + os_version));
             capabilities.setPlatform(Platform.fromString(os));
@@ -100,23 +100,22 @@ public class WebDriverWrapperFactory {
         }
         setRemoteBrowserCapabilities(capabilities);
 
-        URL addressOfRemoteServer = new URL(PropHelper.REMOTE_ADDRESS);
-        RemoteWebDriver rwd = new RemoteWebDriver(addressOfRemoteServer, capabilities);
 //        resolve selenium grid issue of "org.openqa.selenium.WebDriverException: Error forwarding the new session Error forwarding the request Read timed out"
-//        final RemoteWebDriver[] rwd = new RemoteWebDriver[1];
-//        new WebDriverActionExecutor().execute(new IWebDriverAction() {
-//            @Override
-//            public void execute() {
-//                rwd[0] = new RemoteWebDriver(addressOfRemoteServer, capabilities);
-//            }
-//        });
+        final URL addressOfRemoteServer = new URL(PropHelper.REMOTE_ADDRESS);
+        final RemoteWebDriver[] rwd = new RemoteWebDriver[1];
+        new WebDriverActionExecutor().execute(new IWebDriverAction() {
+            @Override
+            public void execute() {
+                rwd[0] = new RemoteWebDriver(addressOfRemoteServer, capabilities);
+            }
+        });
 
 //        HttpClient.Factory factory = new ApacheHttpClient.Factory(new HttpClientFactory(PropHelper.REMOTE_CONNECTION_TIMEOUT, PropHelper.REMOTE_SOCKET_TIMEOUT));
 //        HttpCommandExecutor executor = new HttpCommandExecutor(Collections.<String, CommandInfo>emptyMap(), addressOfRemoteServer, factory);
 //        RemoteWebDriver rwd = new RemoteWebDriver(executor, capabilities);
 
-        rwd.setFileDetector(new LocalFileDetector());
-        return wrapWebDriver(rwd);
+        rwd[0].setFileDetector(new LocalFileDetector());
+        return wrapWebDriver(rwd[0]);
     }
 
     private IWebDriverWrapper wrapWebDriver(WebDriver webDriver) {

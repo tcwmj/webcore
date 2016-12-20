@@ -41,7 +41,12 @@ public class WebDriverActionExecutor {
                 action.execute();
             } catch (Exception e) {
                 if (exceptionType.isInstance(e)) {
-                    logger.warn(String.format("%s occurred, retry %d", exceptionType.getName(), ++retries), e);
+                    logger.warn(String.format("retry %d time(s) due to %s:\n%s", ++retries, exceptionType.getName(), e.getMessage()));
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException ie) {
+                        logger.error(ie.getMessage(), ie);
+                    }
                     execute(action, retries, exceptionType);
                 } else {
                     throw new RuntimeException(e);
