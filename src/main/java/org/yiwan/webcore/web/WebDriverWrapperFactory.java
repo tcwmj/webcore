@@ -20,6 +20,7 @@ import org.openqa.selenium.remote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.test.pojo.TestCapability;
+import org.yiwan.webcore.util.IAction;
 import org.yiwan.webcore.util.PropHelper;
 
 import java.io.File;
@@ -103,7 +104,7 @@ public class WebDriverWrapperFactory {
 //        resolve selenium grid issue of "org.openqa.selenium.WebDriverException: Error forwarding the new session Error forwarding the request Read timed out"
         final URL addressOfRemoteServer = new URL(PropHelper.REMOTE_ADDRESS);
         final RemoteWebDriver[] rwd = new RemoteWebDriver[1];
-        new WebDriverActionExecutor().execute(new IWebDriverAction() {
+        new WebDriverActionExecutor().execute(new IAction() {
             @Override
             public void execute() {
                 rwd[0] = new RemoteWebDriver(addressOfRemoteServer, capabilities);
