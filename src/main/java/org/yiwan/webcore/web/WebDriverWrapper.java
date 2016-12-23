@@ -154,14 +154,14 @@ public class WebDriverWrapper implements IWebDriverWrapper {
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) {
         TakesScreenshot takesScreenshot;
-        if (PropHelper.REMOTE) {
-            // RemoteWebDriver does not implement the TakesScreenshot class if
-            // the driver does have the Capabilities to take a screenshot then
-            // Augmenter will add the TakesScreenshot methods to the instance
-            takesScreenshot = (TakesScreenshot) (new Augmenter().augment(driver));
-        } else {
+//        if (PropHelper.REMOTE) {
+//            // RemoteWebDriver does not implement the TakesScreenshot class if
+//            // the driver does have the Capabilities to take a screenshot then
+//            // Augmenter will add the TakesScreenshot methods to the instance
+//            takesScreenshot = (TakesScreenshot) (new Augmenter().augment(driver));
+//        } else {
             takesScreenshot = (TakesScreenshot) driver;
-        }
+//        }
         return takesScreenshot.getScreenshotAs(target);
     }
 
