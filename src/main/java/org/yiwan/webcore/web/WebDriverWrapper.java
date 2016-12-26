@@ -159,7 +159,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
 //            // Augmenter will add the TakesScreenshot methods to the instance
 //            takesScreenshot = (TakesScreenshot) (new Augmenter().augment(driver));
 //        } else {
-            takesScreenshot = (TakesScreenshot) driver;
+        takesScreenshot = (TakesScreenshot) driver;
 //        }
         return takesScreenshot.getScreenshotAs(target);
     }
@@ -666,6 +666,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             if (isChecked() != checked) {
                 click(false);
             }
+            assertThat(locator).selected().isEqualTo(checked);
             return this;
         }
 
@@ -681,6 +682,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 click(false);
                 return true;
             }
+            assertThat(locator).selected().isEqualTo(checked);
             return false;
         }
 
@@ -1239,6 +1241,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
             if (isChecked() != checked) {
                 click(false);
             }
+            assertThat(new WebElementWrapper(webElement)).selected().isEqualTo(checked);
             return this;
         }
 
@@ -1254,6 +1257,7 @@ public class WebDriverWrapper implements IWebDriverWrapper {
                 click(false);
                 return true;
             }
+            assertThat(new WebElementWrapper(webElement)).selected().isEqualTo(checked);
             return false;
         }
 
