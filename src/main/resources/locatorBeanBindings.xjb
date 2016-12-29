@@ -31,11 +31,14 @@
 			if (locator.getPage() == null)
 				locator.setPage(this);
 			String expression = locator.getExpression();
+			String expression_temp = "";
 			for (int i = 0; i &lt; replacements.length; i++) {
 				int index = expression.indexOf(org.yiwan.webcore.util.PropHelper.REPLACEMENT_SYMBOL);
-				expression = expression.substring(0, index) + replacements[i] + expression.substring(index + 1);
+				expression_temp += expression.substring(0, index) + replacements[i];
+				expression = expression.substring(index + 1);
 			}
-			locator.setExpression_(expression);
+			expression_temp += expression;
+			locator.setExpression_(expression_temp);
 		}
 		return locator;
 	}
