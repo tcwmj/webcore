@@ -37,7 +37,7 @@ public class ActionExecutor {
                 if (exceptionType.isInstance(e)) {
                     logger.warn(String.format("retry %d time(s) due to %s:\n%s", ++retries, exceptionType.getName(), e.getMessage()));
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(PropHelper.ACTION_EXECUTE_INTERVAL);
                     } catch (InterruptedException ie) {
                         logger.error(ie.getMessage(), ie);
                     }
