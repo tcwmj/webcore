@@ -129,5 +129,7 @@ public interface ITestBase {
 
     void setUpTest() throws Exception;
 
+    void setUpTest(boolean proxied) throws Exception;
+
     void tearDownTest() throws Exception;
 }

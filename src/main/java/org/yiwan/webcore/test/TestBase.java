@@ -11,6 +11,7 @@ import org.slf4j.MDC;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.Reporter;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -271,33 +272,31 @@ public abstract class TestBase implements ITestBase {
 
     @Override
     public void createProxyWrapper() {
-        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD || PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE || PropHelper.ENABLE_HTTP_ARCHIVE || PropHelper.ENABLE_FILE_DOWNLOAD) {
-            proxyWrapper = new ProxyWrapper();
-            if (PropHelper.ENABLE_WHITELIST) {
-                // This are the patterns of our sites, in real life there are more...
-                List<String> allowUrlPatterns = new ArrayList<>();
-                for (ApplicationServer applicationServer : testEnvironment.getApplicationServers()) {
-                    if (applicationServer.getUrl() != null) {
-                        allowUrlPatterns.add(Pattern.quote(applicationServer.getUrl()) + ".*");
-                    }
+        proxyWrapper = new ProxyWrapper();
+        if (PropHelper.ENABLE_WHITELIST) {
+            // This are the patterns of our sites, in real life there are more...
+            List<String> allowUrlPatterns = new ArrayList<>();
+            for (ApplicationServer applicationServer : testEnvironment.getApplicationServers()) {
+                if (applicationServer.getUrl() != null) {
+                    allowUrlPatterns.add(Pattern.quote(applicationServer.getUrl()) + ".*");
                 }
-                // All the URLs that are not from our sites are blocked and a status code of 404 is returned
-                proxyWrapper.whitelistRequests(allowUrlPatterns, 404);
             }
-            proxyWrapper.start();
-            subject = new TransactionSubject();
-            if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
-                subject.attach(new TimestampObserver(this));
-            }
-            if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
-                subject.attach(new ScreenshotObserver(this));
-            }
-            if (PropHelper.ENABLE_HTTP_ARCHIVE) {
-                subject.attach(new HttpArchiveObserver(this));
-            }
-            if (PropHelper.ENABLE_FILE_DOWNLOAD) {
-                subject.attach(new FileDownloadObserver(this));
-            }
+            // All the URLs that are not from our sites are blocked and a status code of 404 is returned
+            proxyWrapper.whitelistRequests(allowUrlPatterns, 404);
+        }
+        proxyWrapper.start();
+        subject = new TransactionSubject();
+        if (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD) {
+            subject.attach(new TimestampObserver(this));
+        }
+        if (PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE) {
+            subject.attach(new ScreenshotObserver(this));
+        }
+        if (PropHelper.ENABLE_HTTP_ARCHIVE) {
+            subject.attach(new HttpArchiveObserver(this));
+        }
+        if (PropHelper.ENABLE_FILE_DOWNLOAD) {
+            subject.attach(new FileDownloadObserver(this));
         }
     }
 
@@ -329,6 +328,17 @@ public abstract class TestBase implements ITestBase {
      */
     @Override
     public void setUpTest() throws Exception {
+        setUpTest(true);
+    }
+
+    /**
+     * feature id and scenario id should be set before invoking setUpTest
+     *
+     * @param proxied enable proxy by test scenario or not
+     * @throws Exception
+     */
+    @Override
+    public void setUpTest(boolean proxied) throws Exception {
         MDC.put(PropHelper.DISCRIMINATOR_KEY, getSuiteTestSeparator() + scenarioId + ".log");
         (new File(PropHelper.TARGET_SCENARIO_DATA_FOLDER)).mkdirs();
         logger.info("setup test before starting feature id {}, scenario id {}", featureId, scenarioId);
@@ -343,7 +353,12 @@ public abstract class TestBase implements ITestBase {
         testEnvironment = TestCaseManager.pollTestEnvironment();
         if (testEnvironment != null) {
             recycleTestEnvironment = true;//must be after method setTestEnvironment
-            createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
+            if (proxied && (PropHelper.ENABLE_TRANSACTION_TIMESTAMP_RECORD ||
+                    PropHelper.ENABLE_TRANSACTION_SCREENSHOT_CAPTURE ||
+                    PropHelper.ENABLE_HTTP_ARCHIVE ||
+                    PropHelper.ENABLE_FILE_DOWNLOAD)) {
+                createProxyWrapper();//create proxyWrapper must before creating webdriverWrapper
+            }
             createWebDriverWrapper();//create webdriverWrapper
             webDriverWrapper.deleteAllCookies();
             if (PropHelper.MAXIMIZE_BROWSER) {
@@ -405,5 +420,10 @@ public abstract class TestBase implements ITestBase {
         testCapability.setResolution(resolution);
 
         report(String.format("test capability<br/>%s", testCapability));
+    }
+
+    @AfterClass
+    protected void afterClass() {
+//        do something
     }
 }
