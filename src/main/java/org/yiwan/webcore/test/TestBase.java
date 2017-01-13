@@ -35,6 +35,8 @@ import org.yiwan.webcore.web.WebDriverWrapperFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -67,6 +69,7 @@ public abstract class TestBase implements ITestBase {
     private TestEnvironment testEnvironment;
     private TimestampWriter timestampWriter;
     private SoftAssertions softAssertions;
+    private Charset defaultDownloadFileCharset;
 
     @Override
     public String getDownloadFile() {
@@ -166,6 +169,10 @@ public abstract class TestBase implements ITestBase {
         return softAssertions;
     }
 
+    public Charset getDefaultDownloadFileCharset() {
+        return defaultDownloadFileCharset;
+    }
+
     @Override
     public void setDownloadFile(String downloadFile) {
         this.downloadFile = downloadFile;
@@ -204,6 +211,10 @@ public abstract class TestBase implements ITestBase {
     @Override
     public void setPageManager(IPageManager pageManager) {
         this.pageManager = pageManager;
+    }
+
+    public void setDefaultDownloadFileCharset(Charset defaultDownloadFileCharset) {
+        this.defaultDownloadFileCharset = defaultDownloadFileCharset;
     }
 
     @Override
@@ -349,8 +360,9 @@ public abstract class TestBase implements ITestBase {
         prepareToDownload = false;
         recycleTestEnvironment = false;
         proxyWrapper = null;
+        defaultDownloadFileCharset = StandardCharsets.UTF_8;
 
-                //if no available test environment, no need create webdriver and test data
+        //if no available test environment, no need create webdriver and test data
         testEnvironment = TestCaseManager.pollTestEnvironment();
         if (testEnvironment != null) {
             recycleTestEnvironment = true;//must be after method setTestEnvironment
