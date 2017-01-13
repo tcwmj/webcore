@@ -348,8 +348,9 @@ public abstract class TestBase implements ITestBase {
         skipTest = false;
         prepareToDownload = false;
         recycleTestEnvironment = false;
+        proxyWrapper = null;
 
-        //if no available test environment, no need create webdriver and test data
+                //if no available test environment, no need create webdriver and test data
         testEnvironment = TestCaseManager.pollTestEnvironment();
         if (testEnvironment != null) {
             recycleTestEnvironment = true;//must be after method setTestEnvironment
