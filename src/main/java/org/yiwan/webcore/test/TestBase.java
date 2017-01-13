@@ -169,6 +169,7 @@ public abstract class TestBase implements ITestBase {
         return softAssertions;
     }
 
+    @Override
     public Charset getDefaultDownloadFileCharset() {
         return defaultDownloadFileCharset;
     }
@@ -213,6 +214,7 @@ public abstract class TestBase implements ITestBase {
         this.pageManager = pageManager;
     }
 
+    @Override
     public void setDefaultDownloadFileCharset(Charset defaultDownloadFileCharset) {
         this.defaultDownloadFileCharset = defaultDownloadFileCharset;
     }

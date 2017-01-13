@@ -72,7 +72,7 @@ public interface ITestBase {
 
     void setPageManager(IPageManager pageManager);
 
-    void setDownloadFileCharset();
+    void setDefaultDownloadFileCharset(Charset defaultDownloadFileCharset);
 
     /**
      * log the content into the report
