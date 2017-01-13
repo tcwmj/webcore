@@ -124,7 +124,7 @@ public class FileDownloadObserver extends SampleObserver {
     private void downloadTextFile(String text) {
         logger.info("saving text file to " + testCase.getDownloadFile());
         try {
-            FileUtils.writeStringToFile(new File(testCase.getDownloadFile()), text);
+            FileUtils.writeStringToFile(new File(testCase.getDownloadFile()), text, testCase.getDefaultDownloadFileCharset());
         } catch (UnsupportedCharsetException | IOException e) {
             logger.error(e.getMessage(), e);
         }

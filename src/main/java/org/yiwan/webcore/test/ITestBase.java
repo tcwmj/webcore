@@ -11,6 +11,7 @@ import org.yiwan.webcore.web.IWebDriverWrapper;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 public interface ITestBase {
@@ -53,6 +54,8 @@ public interface ITestBase {
 
     SoftAssertions getSoftAssertions();
 
+    Charset getDefaultDownloadFileCharset();
+
     void setDownloadFile(String downloadFile);
 
     void setDefaultDownloadFileName(String defaultDownloadFileName);
@@ -68,6 +71,8 @@ public interface ITestBase {
     void setTestDataManager(ITestDataManager testDataManager);
 
     void setPageManager(IPageManager pageManager);
+
+    void setDownloadFileCharset();
 
     /**
      * log the content into the report
