@@ -10,12 +10,14 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yiwan.webcore.bmproxy.ProxyWrapper;
+import org.yiwan.webcore.test.FileFormat;
 import org.yiwan.webcore.test.ITestBase;
 import org.yiwan.webcore.util.Helper;
 import org.yiwan.webcore.util.PropHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 
 /**
@@ -59,39 +61,39 @@ public class FileDownloadObserver extends SampleObserver {
                     String filename = PropHelper.DOWNLOAD_FOLDER + Helper.randomize() + ".";
                     if (contents.getContentType().contains("application/vnd.ms-excel")) {
                         setDownloadFile(response, filename, "xls");
-                        downloadBinaryFile(contents.getBinaryContents());
+                        downloadFile(contents, FileFormat.BINARY);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("text/csv")) {
                         setDownloadFile(response, filename, "csv");
-                        downloadTextFile(contents.getTextContents());
+                        downloadFile(contents, FileFormat.TEXT);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/pdf")) {
                         setDownloadFile(response, filename, "pdf");
-                        downloadBinaryFile(contents.getBinaryContents());
+                        downloadFile(contents, FileFormat.BINARY);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/zip")) {
                         setDownloadFile(response, filename, "zip");
-                        downloadBinaryFile(contents.getBinaryContents());
+                        downloadFile(contents, FileFormat.BINARY);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/gzip")) {
                         setDownloadFile(response, filename, "gz");
-                        downloadBinaryFile(contents.getBinaryContents());
+                        downloadFile(contents, FileFormat.BINARY);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("text/plain")) {
                         setDownloadFile(response, filename, "unknown");
-                        downloadTextFile(contents.getTextContents());
+                        downloadFile(contents, FileFormat.TEXT);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("text/xml")) {
                         setDownloadFile(response, filename, "xml");
-                        downloadTextFile(contents.getTextContents());
+                        downloadFile(contents, FileFormat.TEXT);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/xml")) {
                         setDownloadFile(response, filename, "xml");
-                        downloadBinaryFile(contents.getBinaryContents());
+                        downloadFile(contents, FileFormat.BINARY);
                         completeDownload(response);
                     } else if (contents.getContentType().contains("application/octet-stream") && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION) != null && response.headers().get(ProxyWrapper.CONTENT_DISPOSITION).contains("attachment;filename=")) {
                         setDownloadFile(response, filename, "unknown");
-                        downloadBinaryFile(contents.getBinaryContents());
+                        downloadFile(contents, FileFormat.BINARY);
                         completeDownload(response);
                     }
                 }
@@ -121,10 +123,26 @@ public class FileDownloadObserver extends SampleObserver {
         }
     }
 
+    private void downloadFile(HttpMessageContents contents, FileFormat defaultFileFormat) {
+        if (!testCase.getDownloadFileFormat().equals(FileFormat.DEFAULT)) {
+            if (testCase.getDownloadFileFormat().equals(FileFormat.TEXT)) {
+                downloadTextFile(contents.getTextContents());
+            } else if (testCase.getDownloadFileFormat().equals(FileFormat.BINARY)) {
+                downloadBinaryFile(contents.getBinaryContents());
+            }
+        } else {
+            if (defaultFileFormat.equals(FileFormat.TEXT)) {
+                downloadTextFile(contents.getTextContents());
+            } else if (defaultFileFormat.equals(FileFormat.BINARY)) {
+                downloadBinaryFile(contents.getBinaryContents());
+            }
+        }
+    }
+
     private void downloadTextFile(String text) {
         logger.info("saving text file to " + testCase.getDownloadFile());
         try {
-            FileUtils.writeStringToFile(new File(testCase.getDownloadFile()), text, testCase.getDefaultDownloadFileCharset());
+            FileUtils.writeStringToFile(new File(testCase.getDownloadFile()), text, testCase.getDownloadFileCharset());
         } catch (UnsupportedCharsetException | IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -144,9 +162,9 @@ public class FileDownloadObserver extends SampleObserver {
         if (PropHelper.HTTP_STATUS_TO_204) {
             response.setStatus(HttpResponseStatus.NO_CONTENT);
         }
-        if (testCase.isPrepareToDownload()) {
-            testCase.setPrepareToDownload(false);
-        }
+        testCase.setPrepareToDownload(false);
+        testCase.setDownloadFileCharset(StandardCharsets.UTF_8);
+        testCase.setDownloadFileFormat(FileFormat.DEFAULT);
     }
 
 }
